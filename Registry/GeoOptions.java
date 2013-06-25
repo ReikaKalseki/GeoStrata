@@ -16,7 +16,7 @@ import Reika.GeoGen.GeoGen;
 
 public enum GeoOptions {
 
-	NULL("", true);
+	COBBLERECIPES("Alternate Cobble Recipes", true);
 
 	private String label;
 	private boolean defaultState;

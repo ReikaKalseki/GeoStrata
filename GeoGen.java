@@ -11,7 +11,8 @@ package Reika.GeoGen;
 
 import java.net.URL;
 
-import Reika.DragonAPI.Interfaces.DragonAPIMod;
+import net.minecraft.item.Item;
+import Reika.DragonAPI.Base.DragonAPIMod;
 import Reika.RotaryCraft.ClientPackets;
 import Reika.RotaryCraft.ServerPackets;
 import cpw.mods.fml.common.Mod;
@@ -30,25 +31,34 @@ import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 clientPacketHandlerSpec = @SidedPacketHandler(channels = { "GeoGenData" }, packetHandler = ClientPackets.class),
 serverPacketHandlerSpec = @SidedPacketHandler(channels = { "GeoGenData" }, packetHandler = ServerPackets.class))
 
-public class GeoGen implements DragonAPIMod {
+public class GeoGen extends DragonAPIMod {
 
 	@Instance("GeoGen")
 	public static GeoGen instance = new GeoGen();
 
+	public static Item shard;
+
+	@Override
 	@PreInit
 	public void preload(FMLPreInitializationEvent evt) {
 		GeoConfig.initProps(evt);
 
 	}
 
+	@Override
 	@Init
 	public void load(FMLInitializationEvent event) {
 
 	}
 
+	@Override
 	@PostInit // Like the modsLoaded thing from ModLoader
 	public void postload(FMLPostInitializationEvent evt) {
 
+	}
+
+	public static void loadClasses() {
+		shard = new ItemCrystalShard(3000);
 	}
 
 	@Override
@@ -75,5 +85,4 @@ public class GeoGen implements DragonAPIMod {
 	public URL getWiki() {
 		return null;
 	}
-
 }
