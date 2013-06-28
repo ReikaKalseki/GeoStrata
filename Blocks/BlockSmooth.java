@@ -11,13 +11,14 @@ package Reika.GeoGen.Blocks;
 
 import java.util.Random;
 
+import net.minecraft.block.material.Material;
 import Reika.GeoGen.Base.RockBlock;
 import Reika.GeoGen.Registry.GeoBlocks;
 
 public class BlockSmooth extends RockBlock {
 
-	public BlockSmooth(int ID) {
-		super(ID);
+	public BlockSmooth(int ID, Material mat) {
+		super(ID, mat);
 	}
 
 	@Override

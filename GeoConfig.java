@@ -15,6 +15,8 @@ import java.io.PrintWriter;
 
 import net.minecraftforge.common.Configuration;
 import Reika.DragonAPI.Libraries.ReikaJavaLibrary;
+import Reika.GeoGen.Registry.GeoBlocks;
+import Reika.GeoGen.Registry.GeoItems;
 import Reika.GeoGen.Registry.GeoOptions;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
@@ -23,11 +25,13 @@ public class GeoConfig {
 	public static Configuration config;
 
 	/** Change this to cause auto-deletion of users' config files to load new copies */
-	private static final int CURRENT_CONFIG_ID = 1;
+	private static final int CURRENT_CONFIG_ID = 0;
 	private static int readID;
 	private static File configFile;
 
 	public static Object[] controls = new Object[GeoOptions.optionList.length];
+	public static int[] blockIDs = new int[GeoBlocks.blockList.length];
+	public static int[] itemIDs = new int[GeoItems.itemList.length];
 
 	public static void initProps(FMLPreInitializationEvent event) {
 
@@ -51,6 +55,16 @@ public class GeoConfig {
 				controls[i] = GeoOptions.optionList[i].setState(config);
 			if (GeoOptions.optionList[i].isNumeric())
 				controls[i] = GeoOptions.optionList[i].setValue(config);
+		}
+
+		for (int i = 0; i < GeoBlocks.blockList.length; i++) {
+			String name = GeoBlocks.blockList[i].getBasicName();
+			blockIDs[i] = config.get("Rock Block IDs", name, 800+i).getInt();
+		}
+
+		for (int i = 0; i < GeoItems.itemList.length; i++) {
+			String name = GeoItems.itemList[i].getBasicName();
+			itemIDs[i] = config.get("Item IDs", name, 10000+i).getInt();
 		}
 
 		/*******************************/

@@ -11,12 +11,13 @@ package Reika.GeoGen.Blocks;
 
 import java.util.Random;
 
+import net.minecraft.block.material.Material;
 import Reika.GeoGen.Base.RockBlock;
 
 public class BlockRockCobble extends RockBlock {
 
-	public BlockRockCobble(int ID) {
-		super(ID);
+	public BlockRockCobble(int ID, Material mat) {
+		super(ID, mat);
 	}
 
 	@Override

@@ -16,12 +16,14 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import Reika.GeoGen.GeoGen;
 import Reika.GeoGen.Registry.RockTypes;
 
 public abstract class RockBlock extends Block {
 
-	public RockBlock(int ID) {
-		super(ID, Material.rock);
+	public RockBlock(int ID, Material mat) {
+		super(ID, mat);
+		this.setCreativeTab(GeoGen.tabGeo);
 	}
 
 	@Override

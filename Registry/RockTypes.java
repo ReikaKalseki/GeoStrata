@@ -37,7 +37,7 @@ public enum RockTypes {
 	private float blastResistance; //stone has 5
 	private EnumToolMaterial harvestTool; //null for hand break
 
-	private static final RockTypes[] rockList = RockTypes.values();
+	public static final RockTypes[] rockList = RockTypes.values();
 
 	private RockTypes(float hard, float blast, EnumToolMaterial tool) {
 		blastResistance = blast;
@@ -46,7 +46,7 @@ public enum RockTypes {
 	}
 
 	public String getName() {
-		return this.name().substring(0, 1)+this.name().substring(1).toLowerCase()+" Rock";
+		return this.name().substring(0, 1)+this.name().substring(1).toLowerCase();
 	}
 
 	public Block instantiate() {

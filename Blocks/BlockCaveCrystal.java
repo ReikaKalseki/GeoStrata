@@ -12,19 +12,19 @@ package Reika.GeoGen.Blocks;
 import java.util.Random;
 
 import net.minecraft.block.material.Material;
-import Reika.GeoGen.GeoGen;
 import Reika.GeoGen.Base.CrystalBlock;
+import Reika.GeoGen.Registry.GeoItems;
 
 public class BlockCaveCrystal extends CrystalBlock {
 
 	public BlockCaveCrystal(int ID, Material mat) {
 		super(ID, mat);
-		this.setLightValue(0.5F);
+		this.setLightValue(0.65F);
 	}
 
 	@Override
 	public final int idDropped(int id, Random r, int fortune) {
-		return GeoGen.shard.itemID;
+		return GeoItems.SHARD.getShiftedItemID();
 	}
 
 	@Override

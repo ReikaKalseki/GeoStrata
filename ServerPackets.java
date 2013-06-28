@@ -9,11 +9,16 @@
  ******************************************************************************/
 package Reika.GeoGen;
 
-import net.minecraft.item.Item;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.world.World;
 
-public class ItemCrystalShard extends Item {
+public class ServerPackets extends GeoPackets {
 
-	public ItemCrystalShard(int ID) {
-		super(ID);
+	@Override
+	public void process(Packet250CustomPayload packet, EntityPlayer ep) {
+		World world = ep.worldObj;
+		this.handleData(packet, world);
 	}
+
 }
