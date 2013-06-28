@@ -15,11 +15,14 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import Reika.GeoGen.GeoGen;
 import Reika.GeoGen.Registry.RockTypes;
 
 public abstract class RockBlock extends Block {
+
+	protected Icon[] icons = new Icon[RockTypes.rockList.length];
 
 	public RockBlock(int ID, Material mat) {
 		super(ID, mat);
