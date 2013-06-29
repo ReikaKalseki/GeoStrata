@@ -11,10 +11,10 @@ package Reika.GeoGen.Registry;
 
 import net.minecraftforge.common.Configuration;
 import Reika.DragonAPI.Exception.RegistrationException;
-import Reika.GeoGen.GeoConfig;
+import Reika.DragonAPI.Interfaces.ConfigRegistry;
 import Reika.GeoGen.GeoGen;
 
-public enum GeoOptions {
+public enum GeoOptions implements ConfigRegistry {
 
 	COBBLERECIPES("Alternate Cobble Recipes", true);
 
@@ -66,11 +66,11 @@ public enum GeoOptions {
 	}
 
 	public boolean getState() {
-		return (Boolean)GeoConfig.controls[this.ordinal()];
+		return (Boolean)GeoGen.config.getControl(this.ordinal());
 	}
 
 	public int getValue() {
-		return (Integer)GeoConfig.controls[this.ordinal()];
+		return (Integer)GeoGen.config.getControl(this.ordinal());
 	}
 
 }

@@ -12,9 +12,10 @@ package Reika.GeoGen.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
+import Reika.DragonAPI.Interfaces.IDRegistry;
 import Reika.DragonAPI.Interfaces.RegistrationList;
 import Reika.DragonAPI.Libraries.ReikaJavaLibrary;
-import Reika.GeoGen.GeoConfig;
+import Reika.GeoGen.GeoGen;
 import Reika.GeoGen.Base.CrystalBlock;
 import Reika.GeoGen.Blocks.BlockCaveCrystal;
 import Reika.GeoGen.Blocks.BlockCrystalLamp;
@@ -24,7 +25,7 @@ import Reika.GeoGen.Blocks.BlockSmooth;
 import Reika.GeoGen.Items.ItemBlockCrystal;
 import Reika.GeoGen.Items.ItemBlockRock;
 
-public enum GeoBlocks implements RegistrationList {
+public enum GeoBlocks implements RegistrationList, IDRegistry {
 
 	SMOOTH(BlockSmooth.class, ItemBlockRock.class, "Smooth Rock"),
 	COBBLE(BlockRockCobble.class, ItemBlockRock.class, "Rock Cobble"),
@@ -47,7 +48,7 @@ public enum GeoBlocks implements RegistrationList {
 	}
 
 	public int getBlockID() {
-		return GeoConfig.blockIDs[this.ordinal()];
+		return GeoGen.config.getBlockID(this.ordinal());
 	}
 
 	public Material getBlockMaterial() {
@@ -104,5 +105,30 @@ public enum GeoBlocks implements RegistrationList {
 	@Override
 	public boolean hasItemBlock() {
 		return true;
+	}
+
+	@Override
+	public String getConfigName() {
+		return this.getBasicName();
+	}
+
+	@Override
+	public int getDefaultID() {
+		return 800+this.ordinal();
+	}
+
+	@Override
+	public boolean isBlock() {
+		return true;
+	}
+
+	@Override
+	public boolean isItem() {
+		return false;
+	}
+
+	@Override
+	public String getCategory() {
+		return "Rock Blocks";
 	}
 }

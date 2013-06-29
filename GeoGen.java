@@ -18,11 +18,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.oredict.OreDictionary;
 import Reika.DragonAPI.Base.DragonAPIMod;
+import Reika.DragonAPI.Instantiable.ControlledConfig;
 import Reika.DragonAPI.Libraries.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.ReikaItemHelper;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
 import Reika.GeoGen.Registry.GeoBlocks;
 import Reika.GeoGen.Registry.GeoItems;
+import Reika.GeoGen.Registry.GeoOptions;
 import Reika.GeoGen.Registry.RockTypes;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -47,6 +49,8 @@ public class GeoGen extends DragonAPIMod {
 	@Instance("GeoGen")
 	public static GeoGen instance = new GeoGen();
 
+	public static final ControlledConfig config = new ControlledConfig(instance, GeoOptions.optionList, GeoBlocks.blockList, GeoItems.itemList, null, 1);
+
 	public static final String packetChannel = "GeoGenData";
 
 	public static CreativeTabs tabGeo = new GeoTab(CreativeTabs.getNextID(),"GeoGen");
@@ -57,7 +61,7 @@ public class GeoGen extends DragonAPIMod {
 	@Override
 	@PreInit
 	public void preload(FMLPreInitializationEvent evt) {
-		GeoConfig.initProps(evt);
+		config.initProps(evt);
 	}
 
 	@Override

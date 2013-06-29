@@ -11,12 +11,13 @@ package Reika.GeoGen.Registry;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import Reika.DragonAPI.Interfaces.IDRegistry;
 import Reika.DragonAPI.Interfaces.RegistrationList;
 import Reika.DragonAPI.Libraries.ReikaJavaLibrary;
-import Reika.GeoGen.GeoConfig;
+import Reika.GeoGen.GeoGen;
 import Reika.GeoGen.Items.GeoItem;
 
-public enum GeoItems implements RegistrationList {
+public enum GeoItems implements RegistrationList, IDRegistry {
 
 	SHARD(0, "Crystal Shard", GeoItem.class);
 
@@ -39,7 +40,7 @@ public enum GeoItems implements RegistrationList {
 
 	@Override
 	public Object[] getConstructorParams() {
-		return new Object[]{GeoConfig.itemIDs[this.ordinal()], spriteIndex};
+		return new Object[]{this.getItemID(), spriteIndex};
 	}
 
 	@Override
@@ -73,11 +74,11 @@ public enum GeoItems implements RegistrationList {
 	}
 
 	public int getItemID() {
-		return GeoConfig.itemIDs[this.ordinal()];
+		return GeoGen.config.getItemID(this.ordinal());
 	}
 
 	public int getShiftedItemID() {
-		return GeoConfig.itemIDs[this.ordinal()]+256;
+		return GeoGen.config.getItemID(this.ordinal())+256;
 	}
 
 	@Override
@@ -88,6 +89,31 @@ public enum GeoItems implements RegistrationList {
 	@Override
 	public boolean hasItemBlock() {
 		return false;
+	}
+
+	@Override
+	public String getConfigName() {
+		return this.getBasicName();
+	}
+
+	@Override
+	public int getDefaultID() {
+		return 10000;
+	}
+
+	@Override
+	public boolean isBlock() {
+		return false;
+	}
+
+	@Override
+	public boolean isItem() {
+		return true;
+	}
+
+	@Override
+	public String getCategory() {
+		return "Item IDs";
 	}
 
 }
