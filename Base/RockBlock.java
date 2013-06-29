@@ -31,7 +31,7 @@ public abstract class RockBlock extends Block {
 
 	@Override
 	public final float getBlockHardness(World world, int x, int y, int z) {
-		return RockTypes.getTypeAtCoords(world, x, y, z).getHardness();
+		return RockTypes.getTypeAtCoords(world, x, y, z).getHardness()/4F;
 	}
 
 	@Override

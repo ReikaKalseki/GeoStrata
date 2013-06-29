@@ -35,6 +35,7 @@ public abstract class CrystalBlock extends Block {
 	public CrystalBlock(int ID, Material mat) {
 		super(ID, mat);
 		this.setCreativeTab(GeoGen.tabGeo);
+		this.setHardness(1F);
 	}
 
 	@Override

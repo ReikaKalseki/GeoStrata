@@ -36,4 +36,9 @@ public class BlockCaveCrystal extends CrystalBlock {
 	public final int quantityDropped(Random r) {
 		return 1+r.nextInt(6)+r.nextInt(3);
 	}
+
+	@Override
+	public boolean canSilkHarvest() {
+		return true;
+	}
 }
