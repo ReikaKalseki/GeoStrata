@@ -11,10 +11,10 @@ package Reika.GeoStrata.Registry;
 
 import net.minecraftforge.common.Configuration;
 import Reika.DragonAPI.Exception.RegistrationException;
-import Reika.DragonAPI.Interfaces.ConfigRegistry;
+import Reika.DragonAPI.Interfaces.ConfigList;
 import Reika.GeoStrata.GeoStrata;
 
-public enum GeoOptions implements ConfigRegistry {
+public enum GeoOptions implements ConfigList {
 
 	COBBLERECIPES("Alternate Cobble Recipes", true);
 

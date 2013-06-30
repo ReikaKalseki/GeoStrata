@@ -14,6 +14,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntityMob;
@@ -21,6 +22,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.ReikaMathLibrary;
@@ -70,6 +72,22 @@ public abstract class CrystalBlock extends Block {
 			ReikaPacketHelper.sendUpdatePacket(GeoStrata.packetChannel, 0, world, x, y, z);
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public boolean addBlockHitEffects(World world, MovingObjectPosition target, EffectRenderer effectRenderer)
+	{
+		Random rand = new Random();
+		int x = target.blockX;
+		int y = target.blockY;
+		int z = target.blockZ;
+		int color = world.getBlockMetadata(x, y, z);
+		double[] v = ReikaDyeHelper.getColorFromDamage(color).getRedstoneParticleVelocityForColor();
+		for (int i = 0; i < 4; i++)
+			world.spawnParticle("reddust", x+rand.nextDouble(), y+rand.nextDouble(), z+rand.nextDouble(), v[0], v[1], v[2]);
+		ReikaPacketHelper.sendUpdatePacket(GeoStrata.packetChannel, 0, world, x, y, z);
+		return false;
+	}
+
 	public void updateEffects(World world, int x, int y, int z) {
 		Random rand = new Random();
 		world.playSoundEffect(x+0.5, y+0.5, z+0.5, "random.orb", 0.1F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.8F));
@@ -88,7 +106,6 @@ public abstract class CrystalBlock extends Block {
 		int dura = 200;
 		switch(color) {
 		case BLACK:
-			//e.addPotionEffect(new PotionEffect(Potion.blindness.id, dura, 0));
 			if (e instanceof EntityMob) {
 				EntityMob m = (EntityMob)e;
 				m.setAttackTarget(null);
@@ -99,7 +116,6 @@ public abstract class CrystalBlock extends Block {
 			e.addPotionEffect(new PotionEffect(Potion.nightVision.id, dura, 0));
 			break;
 		case BROWN:
-			//e.addPotionEffect(new PotionEffect(Potion.nightVision.id, dura, 0));
 			if (e instanceof EntityPlayer) {
 				EntityPlayer ep = (EntityPlayer)e;
 				float sat = ep.getFoodStats().getSaturationLevel();
@@ -135,7 +151,6 @@ public abstract class CrystalBlock extends Block {
 			e.addPotionEffect(new PotionEffect(Potion.damageBoost.id, dura, 0));
 			break;
 		case PURPLE:
-			//e.addPotionEffect(new PotionEffect(Potion.nightVision.id, dura, 0));
 			if (!e.worldObj.isRemote && new Random().nextInt(12) == 0)
 				e.worldObj.spawnEntityInWorld(new EntityXPOrb(e.worldObj, e.posX, e.posY, e.posZ, 1));
 			break;
@@ -143,7 +158,6 @@ public abstract class CrystalBlock extends Block {
 			e.addPotionEffect(new PotionEffect(Potion.resistance.id, dura, 0));
 			break;
 		case WHITE:
-			//e.addPotionEffect(new PotionEffect(Potion.nightVision.id, dura, 0));
 			e.clearActivePotions();
 			break;
 		case YELLOW:
