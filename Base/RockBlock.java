@@ -7,7 +7,7 @@
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
  ******************************************************************************/
-package Reika.GeoGen.Base;
+package Reika.GeoStrata.Base;
 
 import java.util.Random;
 
@@ -17,8 +17,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import Reika.GeoGen.GeoGen;
-import Reika.GeoGen.Registry.RockTypes;
+import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.Registry.RockTypes;
 
 public abstract class RockBlock extends Block {
 
@@ -26,7 +26,7 @@ public abstract class RockBlock extends Block {
 
 	public RockBlock(int ID, Material mat) {
 		super(ID, mat);
-		this.setCreativeTab(GeoGen.tabGeo);
+		this.setCreativeTab(GeoStrata.tabGeo);
 	}
 
 	@Override

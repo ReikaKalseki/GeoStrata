@@ -7,23 +7,25 @@
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
  ******************************************************************************/
-package Reika.GeoGen.Registry;
+package Reika.GeoStrata.Registry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
 import Reika.DragonAPI.Interfaces.IDRegistry;
 import Reika.DragonAPI.Interfaces.RegistrationList;
+import Reika.DragonAPI.Libraries.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.ReikaJavaLibrary;
-import Reika.GeoGen.GeoGen;
-import Reika.GeoGen.Base.CrystalBlock;
-import Reika.GeoGen.Blocks.BlockCaveCrystal;
-import Reika.GeoGen.Blocks.BlockCrystalLamp;
-import Reika.GeoGen.Blocks.BlockRockBrick;
-import Reika.GeoGen.Blocks.BlockRockCobble;
-import Reika.GeoGen.Blocks.BlockSmooth;
-import Reika.GeoGen.Items.ItemBlockCrystal;
-import Reika.GeoGen.Items.ItemBlockRock;
+import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.Base.CrystalBlock;
+import Reika.GeoStrata.Base.RockBlock;
+import Reika.GeoStrata.Blocks.BlockCaveCrystal;
+import Reika.GeoStrata.Blocks.BlockCrystalLamp;
+import Reika.GeoStrata.Blocks.BlockRockBrick;
+import Reika.GeoStrata.Blocks.BlockRockCobble;
+import Reika.GeoStrata.Blocks.BlockSmooth;
+import Reika.GeoStrata.Items.ItemBlockCrystal;
+import Reika.GeoStrata.Items.ItemBlockRock;
 
 public enum GeoBlocks implements RegistrationList, IDRegistry {
 
@@ -48,13 +50,21 @@ public enum GeoBlocks implements RegistrationList, IDRegistry {
 	}
 
 	public int getBlockID() {
-		return GeoGen.config.getBlockID(this.ordinal());
+		return GeoStrata.config.getBlockID(this.ordinal());
 	}
 
 	public Material getBlockMaterial() {
 		if (CrystalBlock.class.isAssignableFrom(blockClass))
 			return Material.glass;
 		return Material.rock;
+	}
+
+	public boolean isRock() {
+		return RockBlock.class.isAssignableFrom(blockClass);
+	}
+
+	public boolean isCrystal() {
+		return CrystalBlock.class.isAssignableFrom(blockClass);
 	}
 
 	@Override
@@ -84,16 +94,30 @@ public enum GeoBlocks implements RegistrationList, IDRegistry {
 
 	@Override
 	public String getMultiValuedName(int meta) {
+		if (this == SMOOTH)
+			return 	"Smooth "+RockTypes.rockList[meta].getName();
+		if (this == COBBLE)
+			return RockTypes.rockList[meta].getName()+" Cobblestone";
+		if (this == BRICK)
+			return RockTypes.rockList[meta].getName()+" Bricks";
+		if (this == CRYSTAL)
+			return ReikaDyeHelper.dyes[meta].getName()+" "+GeoBlocks.CRYSTAL.getBasicName();
+		if (this == LAMP)
+			return ReikaDyeHelper.dyes[meta].getName()+" "+GeoBlocks.LAMP.getBasicName();
 		return null;
 	}
 
 	@Override
 	public boolean hasMultiValuedName() {
-		return false;
+		return true;
 	}
 
 	@Override
 	public int getNumberMetadatas() {
+		if (this.isCrystal())
+			return ReikaDyeHelper.dyes.length;
+		if (this.isRock())
+			return RockTypes.rockList.length;
 		return 1;
 	}
 

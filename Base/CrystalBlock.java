@@ -7,7 +7,7 @@
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
  ******************************************************************************/
-package Reika.GeoGen.Base;
+package Reika.GeoStrata.Base;
 
 import java.util.List;
 import java.util.Random;
@@ -25,8 +25,8 @@ import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.ReikaPacketHelper;
-import Reika.GeoGen.GeoGen;
-import Reika.GeoGen.Blocks.BlockCaveCrystal;
+import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.Blocks.BlockCaveCrystal;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -34,13 +34,13 @@ public abstract class CrystalBlock extends Block {
 
 	public CrystalBlock(int ID, Material mat) {
 		super(ID, mat);
-		this.setCreativeTab(GeoGen.tabGeo);
+		this.setCreativeTab(GeoStrata.tabGeo);
 		this.setHardness(1F);
 	}
 
 	@Override
 	public final int getRenderType() {
-		return 1;
+		return 6;
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public abstract class CrystalBlock extends Block {
 		//ReikaJavaLibrary.pConsole(FMLCommonHandler.instance().getEffectiveSide());
 		world.playSoundEffect(x+0.5, y+0.5, z+0.5, "random.orb", 1F, 1);*/
 		if (rand.nextInt(3) == 0)
-			ReikaPacketHelper.sendUpdatePacket(GeoGen.packetChannel, 0, world, x, y, z);
+			ReikaPacketHelper.sendUpdatePacket(GeoStrata.packetChannel, 0, world, x, y, z);
 	}
 
 	public void updateEffects(World world, int x, int y, int z) {
@@ -125,7 +125,7 @@ public abstract class CrystalBlock extends Block {
 		case LIME:
 			e.addPotionEffect(new PotionEffect(Potion.jump.id, dura, 0));
 			break;
-		case MAGNETA:
+		case MAGENTA:
 			e.addPotionEffect(new PotionEffect(Potion.regeneration.id, dura, 0));
 			break;
 		case ORANGE:

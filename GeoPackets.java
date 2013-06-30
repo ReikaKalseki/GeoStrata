@@ -7,7 +7,7 @@
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
  ******************************************************************************/
-package Reika.GeoGen;
+package Reika.GeoStrata;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -20,7 +20,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.world.World;
 import Reika.DragonAPI.Auxiliary.PacketTypes;
-import Reika.GeoGen.Base.CrystalBlock;
+import Reika.GeoStrata.Base.CrystalBlock;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 

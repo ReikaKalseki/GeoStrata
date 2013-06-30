@@ -7,14 +7,14 @@
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
  ******************************************************************************/
-package Reika.GeoGen.Items;
+package Reika.GeoStrata.Items;
 
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import Reika.GeoGen.Registry.RockTypes;
+import Reika.GeoStrata.Registry.RockTypes;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -36,8 +36,7 @@ public class ItemBlockRock extends ItemBlock {
 	}
 
 	@Override
-	public final String getUnlocalizedName(ItemStack is)
-	{
+	public final String getUnlocalizedName(ItemStack is) {
 		int d = is.getItemDamage();
 		return super.getUnlocalizedName() + "." + d;
 	}

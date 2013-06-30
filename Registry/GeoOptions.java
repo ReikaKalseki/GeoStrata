@@ -7,12 +7,12 @@
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
  ******************************************************************************/
-package Reika.GeoGen.Registry;
+package Reika.GeoStrata.Registry;
 
 import net.minecraftforge.common.Configuration;
 import Reika.DragonAPI.Exception.RegistrationException;
 import Reika.DragonAPI.Interfaces.ConfigRegistry;
-import Reika.GeoGen.GeoGen;
+import Reika.GeoStrata.GeoStrata;
 
 public enum GeoOptions implements ConfigRegistry {
 
@@ -51,7 +51,7 @@ public enum GeoOptions implements ConfigRegistry {
 
 	public int setValue(Configuration config) {
 		if (!this.isNumeric())
-			throw new RegistrationException(GeoGen.instance, "Config Property \""+this.getLabel()+"\" is not numerical!");
+			throw new RegistrationException(GeoStrata.instance, "Config Property \""+this.getLabel()+"\" is not numerical!");
 		return config.get("Control Setup", this.getLabel(), defaultValue).getInt();
 	}
 
@@ -61,16 +61,16 @@ public enum GeoOptions implements ConfigRegistry {
 
 	public boolean setState(Configuration config) {
 		if (!this.isBoolean())
-			throw new RegistrationException(GeoGen.instance, "Config Property \""+this.getLabel()+"\" is not boolean!");
+			throw new RegistrationException(GeoStrata.instance, "Config Property \""+this.getLabel()+"\" is not boolean!");
 		return config.get("Control Setup", this.getLabel(), defaultState).getBoolean(defaultState);
 	}
 
 	public boolean getState() {
-		return (Boolean)GeoGen.config.getControl(this.ordinal());
+		return (Boolean)GeoStrata.config.getControl(this.ordinal());
 	}
 
 	public int getValue() {
-		return (Integer)GeoGen.config.getControl(this.ordinal());
+		return (Integer)GeoStrata.config.getControl(this.ordinal());
 	}
 
 }

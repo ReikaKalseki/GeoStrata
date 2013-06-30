@@ -7,11 +7,12 @@
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
  ******************************************************************************/
-package Reika.GeoGen;
+package Reika.GeoStrata;
 
-import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
+import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Registry.RockTypes;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -24,12 +25,12 @@ public class GeoTab extends CreativeTabs {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ItemStack getIconItemStack() {
-		return new ItemStack(Block.lavaMoving);
+		return new ItemStack(GeoBlocks.SMOOTH.getBlockID(), 1, RockTypes.GRANITE.ordinal());
 	}
 
 	@Override
 	public String getTranslatedTabLabel() {
-		return "GeoGen"; //The name of the tab ingame
+		return "GeoStrata"; //The name of the tab ingame
 	}
 
 }

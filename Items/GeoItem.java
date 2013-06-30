@@ -7,14 +7,14 @@
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
  ******************************************************************************/
-package Reika.GeoGen.Items;
+package Reika.GeoStrata.Items;
 
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import Reika.GeoGen.GeoGen;
+import Reika.GeoStrata.GeoStrata;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -22,7 +22,7 @@ public class GeoItem extends Item {
 
 	public GeoItem(int ID, int tex) {
 		super(ID);
-		this.setCreativeTab(GeoGen.tabGeo);
+		this.setCreativeTab(GeoStrata.tabGeo);
 	}
 
 	@Override

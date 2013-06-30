@@ -7,15 +7,15 @@
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
  ******************************************************************************/
-package Reika.GeoGen.Registry;
+package Reika.GeoStrata.Registry;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import Reika.DragonAPI.Interfaces.IDRegistry;
 import Reika.DragonAPI.Interfaces.RegistrationList;
 import Reika.DragonAPI.Libraries.ReikaJavaLibrary;
-import Reika.GeoGen.GeoGen;
-import Reika.GeoGen.Items.GeoItem;
+import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.Items.GeoItem;
 
 public enum GeoItems implements RegistrationList, IDRegistry {
 
@@ -74,11 +74,11 @@ public enum GeoItems implements RegistrationList, IDRegistry {
 	}
 
 	public int getItemID() {
-		return GeoGen.config.getItemID(this.ordinal());
+		return GeoStrata.config.getItemID(this.ordinal());
 	}
 
 	public int getShiftedItemID() {
-		return GeoGen.config.getItemID(this.ordinal())+256;
+		return GeoStrata.config.getItemID(this.ordinal())+256;
 	}
 
 	@Override

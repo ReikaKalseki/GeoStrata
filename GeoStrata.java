@@ -7,7 +7,7 @@
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
  ******************************************************************************/
-package Reika.GeoGen;
+package Reika.GeoStrata;
 
 import java.net.URL;
 
@@ -19,13 +19,12 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.oredict.OreDictionary;
 import Reika.DragonAPI.Base.DragonAPIMod;
 import Reika.DragonAPI.Instantiable.ControlledConfig;
-import Reika.DragonAPI.Libraries.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.ReikaItemHelper;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
-import Reika.GeoGen.Registry.GeoBlocks;
-import Reika.GeoGen.Registry.GeoItems;
-import Reika.GeoGen.Registry.GeoOptions;
-import Reika.GeoGen.Registry.RockTypes;
+import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Registry.GeoItems;
+import Reika.GeoStrata.Registry.GeoOptions;
+import Reika.GeoStrata.Registry.RockTypes;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
@@ -37,23 +36,22 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod( modid = "GeoGen", name="GeoGen", version="beta", certificateFingerprint = "@GET_FINGERPRINT@")
+@Mod( modid = "GeoStrata", name="GeoStrata", version="beta", certificateFingerprint = "@GET_FINGERPRINT@")
 @NetworkMod(clientSideRequired = true, serverSideRequired = true,
-clientPacketHandlerSpec = @SidedPacketHandler(channels = { "GeoGenData" }, packetHandler = ClientPackets.class),
-serverPacketHandlerSpec = @SidedPacketHandler(channels = { "GeoGenData" }, packetHandler = ServerPackets.class))
+clientPacketHandlerSpec = @SidedPacketHandler(channels = { "GeoStrataData" }, packetHandler = ClientPackets.class),
+serverPacketHandlerSpec = @SidedPacketHandler(channels = { "GeoStrataData" }, packetHandler = ServerPackets.class))
 
-public class GeoGen extends DragonAPIMod {
+public class GeoStrata extends DragonAPIMod {
 
-	@Instance("GeoGen")
-	public static GeoGen instance = new GeoGen();
+	@Instance("GeoStrata")
+	public static GeoStrata instance = new GeoStrata();
 
 	public static final ControlledConfig config = new ControlledConfig(instance, GeoOptions.optionList, GeoBlocks.blockList, GeoItems.itemList, null, 1);
 
-	public static final String packetChannel = "GeoGenData";
+	public static final String packetChannel = "GeoStrataData";
 
-	public static CreativeTabs tabGeo = new GeoTab(CreativeTabs.getNextID(),"GeoGen");
+	public static CreativeTabs tabGeo = new GeoTab(CreativeTabs.getNextID(),"GeoStrata");
 
 	public static Item[] items = new Item[GeoItems.itemList.length];
 	public static Block[] blocks = new Block[GeoBlocks.blockList.length];
@@ -85,21 +83,10 @@ public class GeoGen extends DragonAPIMod {
 	}
 
 	public static void loadNames() {
+		OreDictionary.initVanillaEntries();
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
-			ItemStack smooth = new ItemStack(GeoBlocks.SMOOTH.getBlockID(), 1, i);
 			ItemStack cobble = new ItemStack(GeoBlocks.COBBLE.getBlockID(), 1, i);
-			ItemStack brick = new ItemStack(GeoBlocks.BRICK.getBlockID(), 1, i);
-			LanguageRegistry.addName(smooth, "Smooth "+RockTypes.rockList[i].getName());
-			LanguageRegistry.addName(cobble, RockTypes.rockList[i].getName()+" Cobblestone");
-			LanguageRegistry.addName(brick, RockTypes.rockList[i].getName()+" Bricks");
-			OreDictionary.initVanillaEntries();
 			OreDictionary.registerOre("blockCobble", cobble);
-		}
-		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
-			ItemStack crystal = new ItemStack(GeoBlocks.CRYSTAL.getBlockID(), 1, i);
-			ItemStack lamp = new ItemStack(GeoBlocks.LAMP.getBlockID(), 1, i);
-			LanguageRegistry.addName(crystal, ReikaDyeHelper.dyes[i].getName()+" "+GeoBlocks.CRYSTAL.getBasicName());
-			LanguageRegistry.addName(lamp, ReikaDyeHelper.dyes[i].getName()+" "+GeoBlocks.LAMP.getBasicName());
 		}
 	}
 
@@ -120,7 +107,7 @@ public class GeoGen extends DragonAPIMod {
 
 	@Override
 	public String getDisplayName() {
-		return "GeoGen";
+		return "GeoStrata";
 	}
 
 	@Override

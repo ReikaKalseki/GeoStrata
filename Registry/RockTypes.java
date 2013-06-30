@@ -7,7 +7,7 @@
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
  ******************************************************************************/
-package Reika.GeoGen.Registry;
+package Reika.GeoStrata.Registry;
 
 import java.util.List;
 

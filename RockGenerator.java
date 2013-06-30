@@ -7,7 +7,7 @@
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
  ******************************************************************************/
-package Reika.GeoGen;
+package Reika.GeoStrata;
 
 import java.util.Random;
 
@@ -15,8 +15,8 @@ import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.feature.WorldGenMinable;
-import Reika.GeoGen.Registry.GeoBlocks;
-import Reika.GeoGen.Registry.RockTypes;
+import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Registry.RockTypes;
 import cpw.mods.fml.common.IWorldGenerator;
 
 public class RockGenerator implements IWorldGenerator {

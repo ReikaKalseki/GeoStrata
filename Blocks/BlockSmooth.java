@@ -7,16 +7,16 @@
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
  ******************************************************************************/
-package Reika.GeoGen.Blocks;
+package Reika.GeoStrata.Blocks;
 
 import java.util.Random;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.Icon;
-import Reika.GeoGen.Base.RockBlock;
-import Reika.GeoGen.Registry.GeoBlocks;
-import Reika.GeoGen.Registry.RockTypes;
+import Reika.GeoStrata.Base.RockBlock;
+import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Registry.RockTypes;
 
 public class BlockSmooth extends RockBlock {
 
@@ -42,7 +42,7 @@ public class BlockSmooth extends RockBlock {
 	@Override
 	public void registerIcons(IconRegister ico) {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
-			icons[i] = ico.registerIcon("GeoGen:"+RockTypes.rockList[i].getName().toLowerCase());
+			icons[i] = ico.registerIcon("GeoStrata:"+RockTypes.rockList[i].getName().toLowerCase());
 		}
 	}
 

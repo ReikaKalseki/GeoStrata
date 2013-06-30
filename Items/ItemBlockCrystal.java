@@ -7,14 +7,18 @@
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
  ******************************************************************************/
-package Reika.GeoGen.Items;
+package Reika.GeoStrata.Items;
 
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Icon;
 import Reika.DragonAPI.Libraries.ReikaDyeHelper;
+import Reika.GeoStrata.Blocks.BlockCaveCrystal;
+import Reika.GeoStrata.Blocks.BlockCrystalLamp;
+import Reika.GeoStrata.Registry.GeoBlocks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -44,6 +48,15 @@ public class ItemBlockCrystal extends ItemBlock {
 	@Override
 	public int getMetadata(int meta) {
 		return meta;
+	}
+
+	@Override
+	public Icon getIconFromDamage(int dmg) {
+		if (itemID == GeoBlocks.CRYSTAL.getBlockID())
+			return BlockCaveCrystal.icons[dmg];
+		if (itemID == GeoBlocks.LAMP.getBlockID())
+			return BlockCrystalLamp.icons[dmg];
+		return null;
 	}
 
 }
