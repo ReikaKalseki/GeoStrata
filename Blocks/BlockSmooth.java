@@ -13,7 +13,7 @@ import java.util.Random;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.util.Icon;
+import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.RockTypes;
@@ -43,11 +43,7 @@ public class BlockSmooth extends RockBlock {
 	public void registerIcons(IconRegister ico) {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
 			icons[i] = ico.registerIcon("GeoStrata:"+RockTypes.rockList[i].getName().toLowerCase());
+			GeoStrata.logger.log("Adding "+RockTypes.rockList[i].getName()+" rock icon "+icons[i].getIconName());
 		}
-	}
-
-	@Override
-	public Icon getIcon(int s, int meta) {
-		return icons[meta];
 	}
 }

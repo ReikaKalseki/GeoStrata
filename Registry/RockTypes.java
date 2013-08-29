@@ -14,11 +14,12 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import Reika.DragonAPI.Libraries.ReikaBiomeHelper;
+import Reika.DragonAPI.Libraries.ReikaJavaLibrary;
+import Reika.DragonAPI.ModInteract.TinkerToolHandler;
 
 public enum RockTypes {
 
@@ -79,7 +80,7 @@ public enum RockTypes {
 	}
 
 	public String getName() {
-		return this.name().substring(0, 1)+this.name().substring(1).toLowerCase();
+		return ReikaJavaLibrary.capFirstChar(this.name());
 	}
 
 	public Block instantiate() {
@@ -109,17 +110,33 @@ public enum RockTypes {
 	public boolean isHarvestable(ItemStack held) {
 		if (held == null)
 			return harvestTool == null;
+		if (TinkerToolHandler.getInstance().isPick(held)) {
+			switch(harvestTool) {
+			case WOOD:
+				return true;
+			case STONE:
+			case GOLD:
+				return TinkerToolHandler.getInstance().isStoneOrBetterPick(held);
+			case IRON:
+				return TinkerToolHandler.getInstance().isIronOrBetterPick(held);
+			case EMERALD:
+				return TinkerToolHandler.getInstance().isDiamondOrBetterPick(held);
+			default:
+				return false;
+			}
+		}
+		Item i = held.getItem();
 		switch (harvestTool) {
 		case EMERALD: //Diamond
-			return held.itemID == Item.pickaxeDiamond.itemID || (held.getItem() instanceof ItemPickaxe && (((ItemPickaxe)held.getItem()).getToolMaterialName().equals("EMERALD")));
+			return held.canHarvestBlock(Block.obsidian);
 		case GOLD:
-			return held.getItem() instanceof ItemPickaxe;
+			return held.canHarvestBlock(Block.stone);
 		case IRON:
-			return held.getItem() instanceof ItemPickaxe && held.itemID != Item.pickaxeWood.itemID && held.itemID != Item.pickaxeStone.itemID;
+			return held.canHarvestBlock(Block.oreGold);
 		case STONE:
-			return held.getItem() instanceof ItemPickaxe && held.itemID != Item.pickaxeWood.itemID;
+			return held.canHarvestBlock(Block.oreIron);
 		case WOOD:
-			return held.getItem() instanceof ItemPickaxe;
+			return held.canHarvestBlock(Block.stone);
 		}
 		return false;
 	}

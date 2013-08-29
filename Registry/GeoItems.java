@@ -13,34 +13,33 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import Reika.DragonAPI.Interfaces.IDRegistry;
 import Reika.DragonAPI.Interfaces.RegistrationList;
+import Reika.DragonAPI.Libraries.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.ReikaJavaLibrary;
 import Reika.GeoStrata.GeoStrata;
-import Reika.GeoStrata.Items.GeoItem;
+import Reika.GeoStrata.Items.ItemCrystalShard;
 
 public enum GeoItems implements RegistrationList, IDRegistry {
 
-	SHARD(0, "Crystal Shard", GeoItem.class);
+	SHARD("Crystal Shard", ItemCrystalShard.class);
 
 	private String name;
 	private Class itemClass;
-	private int spriteIndex;
 
 	public static final GeoItems[] itemList = GeoItems.values();
 
-	private GeoItems(int ind, String n, Class<? extends Item> cl) {
+	private GeoItems(String n, Class<? extends Item> cl) {
 		name = n;
 		itemClass = cl;
-		spriteIndex = ind;
 	}
 
 	@Override
 	public Class[] getConstructorParamTypes() {
-		return new Class[]{int.class, int.class};
+		return new Class[]{int.class};
 	}
 
 	@Override
 	public Object[] getConstructorParams() {
-		return new Object[]{this.getItemID(), spriteIndex};
+		return new Object[]{this.getItemID()};
 	}
 
 	@Override
@@ -60,17 +59,32 @@ public enum GeoItems implements RegistrationList, IDRegistry {
 
 	@Override
 	public String getMultiValuedName(int meta) {
-		return null;
+		switch(this) {
+		case SHARD:
+			return ReikaDyeHelper.dyes[meta].getName()+" "+this.getBasicName();
+		default:
+			return "";
+		}
 	}
 
 	@Override
 	public boolean hasMultiValuedName() {
-		return false;
+		switch(this) {
+		case SHARD:
+			return true;
+		default:
+			return false;
+		}
 	}
 
 	@Override
 	public int getNumberMetadatas() {
-		return 16;
+		switch(this) {
+		case SHARD:
+			return 16;
+		default:
+			return 1;
+		}
 	}
 
 	public int getItemID() {
@@ -114,6 +128,10 @@ public enum GeoItems implements RegistrationList, IDRegistry {
 	@Override
 	public String getCategory() {
 		return "Item IDs";
+	}
+
+	public boolean isDummiedOut() {
+		return itemClass == null;
 	}
 
 }

@@ -30,7 +30,7 @@ public class GeoTab extends CreativeTabs {
 
 	@Override
 	public String getTranslatedTabLabel() {
-		return "GeoStrata"; //The name of the tab ingame
+		return GeoStrata.MOD_NAME;
 	}
 
 }

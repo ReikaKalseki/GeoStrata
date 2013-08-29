@@ -11,12 +11,8 @@ package Reika.GeoStrata;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.feature.WorldGenMinable;
-import Reika.GeoStrata.Registry.GeoBlocks;
-import Reika.GeoStrata.Registry.RockTypes;
 import cpw.mods.fml.common.IWorldGenerator;
 
 public class RockGenerator implements IWorldGenerator {
@@ -37,18 +33,7 @@ public class RockGenerator implements IWorldGenerator {
 	}
 
 	private void generateOverworld(World world, Random random, int chunkX, int chunkZ) {
-		for (int k = 0; k < RockTypes.rockList.length; k++) {
-			RockTypes rock = RockTypes.rockList[k];
-			if (rock.canGenerateInBiome(world.getBiomeGenForCoords(chunkX, chunkZ))) {
-				int spawnChance = (int)(100*rock.getRarity());
-				for(int i = 0; i < spawnChance; i ++){
-					int posX = chunkX + random.nextInt(16);
-					int posZ = chunkZ + random.nextInt(16);
-					int posY = rock.getMinY() + random.nextInt(rock.getMaxY()-rock.getMinY());
-					(new WorldGenMinable(GeoBlocks.SMOOTH.getBlockID(), k, 16, Block.stone.blockID)).generate(world, random, posX, posY, posZ);
-				}
-			}
-		}
+
 	}
 
 }

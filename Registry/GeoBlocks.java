@@ -23,9 +23,11 @@ import Reika.GeoStrata.Blocks.BlockCaveCrystal;
 import Reika.GeoStrata.Blocks.BlockCrystalLamp;
 import Reika.GeoStrata.Blocks.BlockRockBrick;
 import Reika.GeoStrata.Blocks.BlockRockCobble;
+import Reika.GeoStrata.Blocks.BlockRockDeco;
 import Reika.GeoStrata.Blocks.BlockSmooth;
 import Reika.GeoStrata.Items.ItemBlockCrystal;
 import Reika.GeoStrata.Items.ItemBlockRock;
+import Reika.GeoStrata.Items.ItemBlockRockDeco;
 
 public enum GeoBlocks implements RegistrationList, IDRegistry {
 
@@ -33,9 +35,8 @@ public enum GeoBlocks implements RegistrationList, IDRegistry {
 	COBBLE(BlockRockCobble.class, ItemBlockRock.class, "Rock Cobble"),
 	BRICK(BlockRockBrick.class, ItemBlockRock.class, "Rock Brick"),
 	CRYSTAL(BlockCaveCrystal.class, ItemBlockCrystal.class, "Cave Crystal"), //Comes in all dye colors
-	LAMP(BlockCrystalLamp.class, ItemBlockCrystal.class, "Crystal Lamp");/*
-	SLAB(),
-	STAIR();*/
+	LAMP(BlockCrystalLamp.class, ItemBlockCrystal.class, "Crystal Lamp"),
+	DECO(BlockRockDeco.class, ItemBlockRockDeco.class, "Deco Blocks");
 
 	private Class blockClass;
 	private String blockName;
@@ -54,7 +55,7 @@ public enum GeoBlocks implements RegistrationList, IDRegistry {
 	}
 
 	public Material getBlockMaterial() {
-		if (CrystalBlock.class.isAssignableFrom(blockClass))
+		if (this.isCrystal())
 			return Material.glass;
 		return Material.rock;
 	}
@@ -94,17 +95,22 @@ public enum GeoBlocks implements RegistrationList, IDRegistry {
 
 	@Override
 	public String getMultiValuedName(int meta) {
-		if (this == SMOOTH)
-			return 	"Smooth "+RockTypes.rockList[meta].getName();
-		if (this == COBBLE)
+		switch(this) {
+		case SMOOTH:
+			return "Smooth "+RockTypes.rockList[meta].getName();
+		case COBBLE:
 			return RockTypes.rockList[meta].getName()+" Cobblestone";
-		if (this == BRICK)
+		case BRICK:
 			return RockTypes.rockList[meta].getName()+" Bricks";
-		if (this == CRYSTAL)
+		case CRYSTAL:
 			return ReikaDyeHelper.dyes[meta].getName()+" "+GeoBlocks.CRYSTAL.getBasicName();
-		if (this == LAMP)
+		case LAMP:
 			return ReikaDyeHelper.dyes[meta].getName()+" "+GeoBlocks.LAMP.getBasicName();
-		return null;
+		case DECO:
+			return DecoBlocks.list[meta].getName();
+		default:
+			return "";
+		}
 	}
 
 	@Override
@@ -118,6 +124,8 @@ public enum GeoBlocks implements RegistrationList, IDRegistry {
 			return ReikaDyeHelper.dyes.length;
 		if (this.isRock())
 			return RockTypes.rockList.length;
+		if (this == DECO)
+			return DecoBlocks.list.length;
 		return 1;
 	}
 
@@ -154,5 +162,9 @@ public enum GeoBlocks implements RegistrationList, IDRegistry {
 	@Override
 	public String getCategory() {
 		return "Rock Blocks";
+	}
+
+	public boolean isDummiedOut() {
+		return blockClass == null;
 	}
 }

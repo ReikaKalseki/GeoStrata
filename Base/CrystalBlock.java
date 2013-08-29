@@ -22,6 +22,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.ReikaDyeHelper;
@@ -34,10 +35,18 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class CrystalBlock extends Block {
 
+	protected final Icon[] icons = new Icon[ReikaDyeHelper.dyes.length];
+
 	public CrystalBlock(int ID, Material mat) {
 		super(ID, mat);
 		this.setCreativeTab(GeoStrata.tabGeo);
 		this.setHardness(1F);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public final Icon getIcon(int s, int meta) {
+		return icons[meta];
 	}
 
 	@Override

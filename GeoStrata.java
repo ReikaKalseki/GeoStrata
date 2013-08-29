@@ -19,6 +19,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.oredict.OreDictionary;
 import Reika.DragonAPI.Base.DragonAPIMod;
 import Reika.DragonAPI.Instantiable.ControlledConfig;
+import Reika.DragonAPI.Instantiable.ModLogger;
 import Reika.DragonAPI.Libraries.ReikaItemHelper;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
 import Reika.GeoStrata.Registry.GeoBlocks;
@@ -37,21 +38,25 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod( modid = "GeoStrata", name="GeoStrata", version="beta", certificateFingerprint = "@GET_FINGERPRINT@")
+@Mod( modid = GeoStrata.MOD_NAME, name=GeoStrata.MOD_NAME, version="beta", certificateFingerprint = "@GET_FINGERPRINT@")
 @NetworkMod(clientSideRequired = true, serverSideRequired = true,
-clientPacketHandlerSpec = @SidedPacketHandler(channels = { "GeoStrataData" }, packetHandler = ClientPackets.class),
-serverPacketHandlerSpec = @SidedPacketHandler(channels = { "GeoStrataData" }, packetHandler = ServerPackets.class))
+clientPacketHandlerSpec = @SidedPacketHandler(channels = { GeoStrata.MOD_NAME+"Data" }, packetHandler = ClientPackets.class),
+serverPacketHandlerSpec = @SidedPacketHandler(channels = { GeoStrata.MOD_NAME+"Data" }, packetHandler = ServerPackets.class))
 
 public class GeoStrata extends DragonAPIMod {
 
-	@Instance("GeoStrata")
+	public static final String MOD_NAME = "GeoStrata";
+
+	@Instance(GeoStrata.MOD_NAME)
 	public static GeoStrata instance = new GeoStrata();
 
 	public static final ControlledConfig config = new ControlledConfig(instance, GeoOptions.optionList, GeoBlocks.blockList, GeoItems.itemList, null, 1);
 
-	public static final String packetChannel = "GeoStrataData";
+	public static final String packetChannel = GeoStrata.MOD_NAME+"Data";
 
-	public static CreativeTabs tabGeo = new GeoTab(CreativeTabs.getNextID(),"GeoStrata");
+	public static CreativeTabs tabGeo = new GeoTab(CreativeTabs.getNextID(), GeoStrata.MOD_NAME);
+
+	public static ModLogger logger;
 
 	public static Item[] items = new Item[GeoItems.itemList.length];
 	public static Block[] blocks = new Block[GeoBlocks.blockList.length];
@@ -60,6 +65,7 @@ public class GeoStrata extends DragonAPIMod {
 	@PreInit
 	public void preload(FMLPreInitializationEvent evt) {
 		config.initProps(evt);
+		logger = new ModLogger(instance, GeoOptions.LOGLOADING.getState(), GeoOptions.DEBUGMODE.getState(), false);
 	}
 
 	@Override
@@ -78,8 +84,8 @@ public class GeoStrata extends DragonAPIMod {
 	}
 
 	public static void loadClasses() {
-		ReikaRegistryHelper.instantiateAndRegisterBlocks(instance, GeoBlocks.blockList, blocks, true);
-		ReikaRegistryHelper.instantiateAndRegisterItems(instance, GeoItems.itemList, items, true);
+		ReikaRegistryHelper.instantiateAndRegisterBlocks(instance, GeoBlocks.blockList, blocks, logger.shouldLog());
+		ReikaRegistryHelper.instantiateAndRegisterItems(instance, GeoItems.itemList, items, logger.shouldLog());
 	}
 
 	public static void loadNames() {
@@ -107,7 +113,7 @@ public class GeoStrata extends DragonAPIMod {
 
 	@Override
 	public String getDisplayName() {
-		return "GeoStrata";
+		return GeoStrata.MOD_NAME;
 	}
 
 	@Override
@@ -128,5 +134,15 @@ public class GeoStrata extends DragonAPIMod {
 	@Override
 	public URL getWiki() {
 		return null;
+	}
+
+	@Override
+	public boolean hasVersion() {
+		return true;
+	}
+
+	@Override
+	public String getVersionName() {
+		return "Beta V0.02";
 	}
 }

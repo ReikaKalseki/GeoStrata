@@ -7,27 +7,39 @@
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
  ******************************************************************************/
-package Reika.GeoStrata.Base;
-
-import java.util.Random;
+package Reika.GeoStrata.Blocks;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import Reika.GeoStrata.GeoStrata;
-import Reika.GeoStrata.Registry.RockTypes;
+import Reika.GeoStrata.Registry.DecoBlocks;
 
-public abstract class RockBlock extends Block {
+public class BlockRockDeco extends Block {
 
-	protected Icon[] icons = new Icon[RockTypes.rockList.length];
+	private Icon[] icons = new Icon[DecoBlocks.list.length];
 
-	public RockBlock(int ID, Material mat) {
-		super(ID, mat);
+	public BlockRockDeco(int par1, Material par2Material) {
+		super(par1, par2Material);
 		this.setCreativeTab(GeoStrata.tabGeo);
+	}
+
+	@Override
+	public void registerIcons(IconRegister ico) {
+		for (int i = 0; i < DecoBlocks.list.length; i++) {
+			icons[i] = ico.registerIcon("GeoStrata:"+DecoBlocks.list[i].getTex());
+			GeoStrata.logger.log("Adding "+DecoBlocks.list[i].getName()+" decorative block icon "+icons[i].getIconName());
+		}
+	}
+
+	@Override
+	public Icon getIcon(int s, int m) {
+		return icons[m];
 	}
 
 	@Override
@@ -35,41 +47,22 @@ public abstract class RockBlock extends Block {
 		ItemStack is = ep.getCurrentEquippedItem();
 		int meta = world.getBlockMetadata(x, y, z);
 		if (!this.canHarvestBlock(ep, meta))
-			return 0.1F/RockTypes.getTypeAtCoords(world, x, y, z).getHardness();
+			return 0.1F/DecoBlocks.getTypeAtCoords(world, x, y, z).getHardness();
 		if (is == null)
-			return 0.4F/RockTypes.getTypeAtCoords(world, x, y, z).getHardness();
-		return 0.1875F/RockTypes.getTypeAtCoords(world, x, y, z).getHardness()*is.getItem().getStrVsBlock(is, this);
+			return 0.4F/DecoBlocks.getTypeAtCoords(world, x, y, z).getHardness();
+		return 0.1F/DecoBlocks.getTypeAtCoords(world, x, y, z).getHardness()*is.getItem().getStrVsBlock(is, this);
 	}
 
 	@Override
 	public final float getExplosionResistance(Entity e, World world, int x, int y, int z, double eX, double eY, double eZ) {
-		return RockTypes.getTypeAtCoords(world, x, y, z).getResistance()/5F; // /5F is in vanilla code
-	}
-
-	@Override
-	protected final boolean canSilkHarvest() {
-		return true;
+		return DecoBlocks.getTypeAtCoords(world, x, y, z).getResistance()/5F; // /5F is in vanilla code
 	}
 
 	@Override
 	public final boolean canHarvestBlock(EntityPlayer player, int meta) {
 		if (player.capabilities.isCreativeMode)
 			return false;
-		return RockTypes.getTypeFromMetadata(meta).isHarvestable(player.getCurrentEquippedItem());
+		return DecoBlocks.getTypeFromMetadata(meta).isHarvestable(player.getCurrentEquippedItem());
 	}
-
-	@Override
-	public final Icon getIcon(int s, int meta) {
-		return icons[meta];
-	}
-
-	@Override
-	public abstract int idDropped(int id, Random r, int fortune);
-
-	@Override
-	public abstract int damageDropped(int meta);
-
-	@Override
-	public abstract int quantityDropped(Random r);
 
 }

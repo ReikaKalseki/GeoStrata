@@ -13,7 +13,6 @@ import java.util.Random;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.util.Icon;
 import Reika.DragonAPI.Libraries.ReikaDyeHelper;
 import Reika.GeoStrata.Base.CrystalBlock;
 import Reika.GeoStrata.Registry.GeoItems;
@@ -21,8 +20,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockCaveCrystal extends CrystalBlock {
-
-	public static Icon[] icons = new Icon[ReikaDyeHelper.dyes.length];
 
 	public BlockCaveCrystal(int ID, Material mat) {
 		super(ID, mat);
@@ -55,11 +52,5 @@ public class BlockCaveCrystal extends CrystalBlock {
 		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
 			icons[i] = ico.registerIcon("GeoStrata:"+"crystal_"+ReikaDyeHelper.dyes[i].name().toLowerCase());
 		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public Icon getIcon(int s, int meta) {
-		return icons[meta];
 	}
 }

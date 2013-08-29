@@ -13,14 +13,18 @@ import net.minecraftforge.common.Configuration;
 import Reika.DragonAPI.Exception.RegistrationException;
 import Reika.DragonAPI.Interfaces.ConfigList;
 import Reika.GeoStrata.GeoStrata;
+import Reika.RotaryCraft.RotaryCraft;
 
 public enum GeoOptions implements ConfigList {
 
-	COBBLERECIPES("Alternate Cobble Recipes", true);
+	COBBLERECIPES("Alternate Cobble Recipes", true),
+	LOGLOADING("Console Loading Info", true),
+	DEBUGMODE("Debug Mode", false);
 
 	private String label;
 	private boolean defaultState;
 	private int defaultValue;
+	private float defaultFloat;
 	private Class type;
 
 	public static final GeoOptions[] optionList = GeoOptions.values();
@@ -43,6 +47,20 @@ public enum GeoOptions implements ConfigList {
 
 	public boolean isNumeric() {
 		return type == int.class;
+	}
+
+	public boolean isDecimal() {
+		return type == float.class;
+	}
+
+	public float setDecimal(Configuration config) {
+		if (!this.isDecimal())
+			throw new RegistrationException(RotaryCraft.instance, "Config Property \""+this.getLabel()+"\" is not decimal!");
+		return (float)config.get("Control Setup", this.getLabel(), defaultFloat).getDouble(defaultFloat);
+	}
+
+	public float getFloat() {
+		return (Float)RotaryCraft.config.getControl(this.ordinal());
 	}
 
 	public Class getPropertyType() {
@@ -71,6 +89,10 @@ public enum GeoOptions implements ConfigList {
 
 	public int getValue() {
 		return (Integer)GeoStrata.config.getControl(this.ordinal());
+	}
+
+	public boolean isDummiedOut() {
+		return type == null;
 	}
 
 }
