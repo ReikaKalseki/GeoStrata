@@ -9,8 +9,6 @@
  ******************************************************************************/
 package Reika.GeoStrata;
 
-//TEST LINE
-
 import java.net.URL;
 
 import net.minecraft.block.Block;
