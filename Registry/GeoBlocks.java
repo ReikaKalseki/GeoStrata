@@ -14,8 +14,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
 import Reika.DragonAPI.Interfaces.IDRegistry;
 import Reika.DragonAPI.Interfaces.RegistrationList;
-import Reika.DragonAPI.Libraries.ReikaDyeHelper;
-import Reika.DragonAPI.Libraries.ReikaJavaLibrary;
+import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
+import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.CrystalBlock;
 import Reika.GeoStrata.Base.RockBlock;
@@ -80,7 +80,7 @@ public enum GeoBlocks implements RegistrationList, IDRegistry {
 
 	@Override
 	public String getUnlocalizedName() {
-		return ReikaJavaLibrary.stripSpaces(blockName);
+		return ReikaStringParser.stripSpaces(blockName);
 	}
 
 	@Override

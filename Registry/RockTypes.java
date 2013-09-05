@@ -17,8 +17,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import Reika.DragonAPI.Libraries.ReikaBiomeHelper;
-import Reika.DragonAPI.Libraries.ReikaJavaLibrary;
+import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
+import Reika.DragonAPI.Libraries.World.ReikaBiomeHelper;
 import Reika.DragonAPI.ModInteract.TinkerToolHandler;
 
 public enum RockTypes {
@@ -80,7 +80,7 @@ public enum RockTypes {
 	}
 
 	public String getName() {
-		return ReikaJavaLibrary.capFirstChar(this.name());
+		return ReikaStringParser.capFirstChar(this.name());
 	}
 
 	public Block instantiate() {

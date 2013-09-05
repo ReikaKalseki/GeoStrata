@@ -13,8 +13,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import Reika.DragonAPI.Interfaces.IDRegistry;
 import Reika.DragonAPI.Interfaces.RegistrationList;
-import Reika.DragonAPI.Libraries.ReikaDyeHelper;
-import Reika.DragonAPI.Libraries.ReikaJavaLibrary;
+import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
+import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Items.ItemCrystalShard;
 
@@ -44,7 +44,7 @@ public enum GeoItems implements RegistrationList, IDRegistry {
 
 	@Override
 	public String getUnlocalizedName() {
-		return ReikaJavaLibrary.stripSpaces(name);
+		return ReikaStringParser.stripSpaces(name);
 	}
 
 	@Override

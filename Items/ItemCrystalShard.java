@@ -10,7 +10,7 @@
 package Reika.GeoStrata.Items;
 
 import net.minecraft.client.renderer.texture.IconRegister;
-import Reika.DragonAPI.Libraries.ReikaDyeHelper;
+import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.GeoItem;
 

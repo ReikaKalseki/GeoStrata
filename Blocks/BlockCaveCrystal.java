@@ -13,7 +13,7 @@ import java.util.Random;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
-import Reika.DragonAPI.Libraries.ReikaDyeHelper;
+import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.GeoStrata.Base.CrystalBlock;
 import Reika.GeoStrata.Registry.GeoItems;
 import cpw.mods.fml.relauncher.Side;
