@@ -31,6 +31,7 @@ import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -61,11 +62,15 @@ public class GeoStrata extends DragonAPIMod {
 	public static Item[] items = new Item[GeoItems.itemList.length];
 	public static Block[] blocks = new Block[GeoBlocks.blockList.length];
 
+	@SidedProxy(clientSide="Reika.GeoStrata.GeoClient", serverSide="Reika.GeoStrata.GeoCommon")
+	public static GeoCommon proxy;
+
 	@Override
 	@PreInit
 	public void preload(FMLPreInitializationEvent evt) {
 		config.initProps(evt);
 		logger = new ModLogger(instance, GeoOptions.LOGLOADING.getState(), GeoOptions.DEBUGMODE.getState(), false);
+		proxy.registerSounds();
 	}
 
 	@Override
@@ -75,6 +80,7 @@ public class GeoStrata extends DragonAPIMod {
 		this.loadNames();
 		this.genRocks();
 		this.addRecipes();
+		proxy.registerRenderers();
 	}
 
 	@Override
@@ -98,6 +104,7 @@ public class GeoStrata extends DragonAPIMod {
 
 	public static void genRocks() {
 		GameRegistry.registerWorldGenerator(new RockGenerator());
+		GameRegistry.registerWorldGenerator(new CrystalGenerator());
 	}
 
 	public static void addRecipes() {

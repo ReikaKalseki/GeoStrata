@@ -51,7 +51,7 @@ public abstract class CrystalBlock extends Block {
 
 	@Override
 	public final int getRenderType() {
-		return 6;
+		return GeoStrata.proxy.crystalRender; //6 was crops
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public abstract class CrystalBlock extends Block {
 
 	@Override
 	public final int getRenderBlockPass() {
-		return 1;
+		return 0;
 	}
 
 	@SideOnly(Side.CLIENT)
