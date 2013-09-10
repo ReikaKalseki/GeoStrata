@@ -66,7 +66,7 @@ public abstract class CrystalBlock extends Block {
 
 	@Override
 	public final int getRenderBlockPass() {
-		return 0;
+		return 1;
 	}
 
 	@SideOnly(Side.CLIENT)
