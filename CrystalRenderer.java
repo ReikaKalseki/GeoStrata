@@ -103,7 +103,7 @@ public class CrystalRenderer implements ISimpleBlockRenderingHandler {
 
 		this.renderSpike(v5, u, v, xu, xv, w);
 		int val = Math.abs(x)%9+Math.abs(z)%9; //16 combos -> binary selector
-		if (val > 15 || world.getBlockId(x, y-1, z) == Block.obsidian.blockID)
+		if (val > 15 || world.getBlockId(x, y-1, z) == Block.stoneDoubleSlab.blockID)
 			val = 15;
 		if ((val & 8) == 8)
 			this.renderXAngledSpike(v5, u, v, xu, xv, 0.1875, w); //8,9,10,11,12,13,14,15
