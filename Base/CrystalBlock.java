@@ -41,6 +41,7 @@ public abstract class CrystalBlock extends Block {
 		super(ID, mat);
 		this.setCreativeTab(GeoStrata.tabGeo);
 		this.setHardness(1F);
+		this.setResistance(2F);
 	}
 
 	@SideOnly(Side.CLIENT)
