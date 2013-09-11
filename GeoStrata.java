@@ -21,7 +21,9 @@ import Reika.DragonAPI.Base.DragonAPIMod;
 import Reika.DragonAPI.Instantiable.ControlledConfig;
 import Reika.DragonAPI.Instantiable.ModLogger;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
+import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
+import Reika.GeoStrata.Registry.DecoBlocks;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoItems;
 import Reika.GeoStrata.Registry.GeoOptions;
@@ -95,7 +97,6 @@ public class GeoStrata extends DragonAPIMod {
 	}
 
 	public static void loadNames() {
-		OreDictionary.initVanillaEntries();
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
 			ItemStack cobble = new ItemStack(GeoBlocks.COBBLE.getBlockID(), 1, i);
 			OreDictionary.registerOre("blockCobble", cobble);
@@ -116,6 +117,19 @@ public class GeoStrata extends DragonAPIMod {
 				"SS", "SS", 'S', smooth});
 			FurnaceRecipes.smelting().addSmelting(cobble.itemID, cobble.getItemDamage(), smooth, 0.2F);
 		}
+
+		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
+			ItemStack shard = GeoItems.SHARD.getStackOfMetadata(i);
+			ItemStack lamp = new ItemStack(GeoBlocks.LAMP.getBlockID(), 0, i);
+			GameRegistry.addRecipe(lamp, " s ", "sss", "SSS", 's', shard, 'S', ReikaItemHelper.stoneSlab);
+		}
+
+		DecoBlocks.EMERALDBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.blockEmerald);
+		DecoBlocks.REDBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.blockRedstone);
+		DecoBlocks.QUARTZBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.blockNetherQuartz);
+		DecoBlocks.OBSIDIBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.obsidian);
+		DecoBlocks.GLOWBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.glowStone);
+		DecoBlocks.LAPISBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.blockLapis);
 	}
 
 	@Override

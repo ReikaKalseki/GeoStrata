@@ -167,4 +167,8 @@ public enum GeoBlocks implements RegistrationList, IDRegistry {
 	public boolean isDummiedOut() {
 		return blockClass == null;
 	}
+
+	public Block getBlockInstance() {
+		return GeoStrata.blocks[this.ordinal()];
+	}
 }

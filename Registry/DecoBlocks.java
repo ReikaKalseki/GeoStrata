@@ -14,10 +14,17 @@ import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.DragonAPI.ModInteract.TinkerToolHandler;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public enum DecoBlocks {
-	OBSIDIBRICKS("Obsidian Bricks", 30F, 2000F, EnumToolMaterial.EMERALD);
+	OBSIDIBRICKS("Obsidian Bricks", 30F, 2000F, EnumToolMaterial.EMERALD),
+	QUARTZBRICKS("Nether Quartz Bricks", 1.2F, 5F, EnumToolMaterial.IRON),
+	GLOWBRICKS("Glowstone Bricks", 0.75F, 3F, EnumToolMaterial.WOOD),
+	REDBRICKS("Redstone Bricks", 1F, 4F, EnumToolMaterial.IRON),
+	LAPISBRICKS("Lapis Lazuli Bricks", 1F, 4F, EnumToolMaterial.STONE),
+	EMERALDBRICKS("Emerald Bricks", 1F, 4F, EnumToolMaterial.IRON);
 
 	private String name;
 	private float blockHardness;
@@ -31,6 +38,18 @@ public enum DecoBlocks {
 		mat = tool;
 		blastResistance = blast;
 		blockHardness = hard;
+	}
+
+	public void addCrafting(Object... data) {
+		GameRegistry.addRecipe(this.getItem(), data);
+	}
+
+	public void addSizedCrafting(int num, Object... data) {
+		GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(this.getItem(), num), data);
+	}
+
+	public ItemStack getItem() {
+		return new ItemStack(GeoBlocks.DECO.getBlockID(), 1, this.ordinal());
 	}
 
 	public String getName() {

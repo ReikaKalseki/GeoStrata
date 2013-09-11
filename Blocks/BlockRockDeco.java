@@ -16,6 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.DecoBlocks;
@@ -43,6 +44,11 @@ public class BlockRockDeco extends Block {
 	}
 
 	@Override
+	public int damageDropped(int dmg) {
+		return dmg;
+	}
+
+	@Override
 	public final float getPlayerRelativeBlockHardness(EntityPlayer ep, World world, int x, int y, int z) {
 		ItemStack is = ep.getCurrentEquippedItem();
 		int meta = world.getBlockMetadata(x, y, z);
@@ -63,6 +69,24 @@ public class BlockRockDeco extends Block {
 		if (player.capabilities.isCreativeMode)
 			return false;
 		return DecoBlocks.getTypeFromMetadata(meta).isHarvestable(player.getCurrentEquippedItem());
+	}
+
+	@Override
+	public boolean canProvidePower()
+	{
+		return true;
+	}
+
+	@Override
+	public int isProvidingWeakPower(IBlockAccess iba, int x, int y, int z, int side)
+	{
+		return iba.getBlockMetadata(x, y, z) == DecoBlocks.REDBRICKS.ordinal() ? 15 : 0;
+	}
+
+	@Override
+	public int getLightValue(IBlockAccess iba, int x, int y, int z)
+	{
+		return iba.getBlockMetadata(x, y, z) == DecoBlocks.GLOWBRICKS.ordinal() ? 15 : 0;
 	}
 
 }

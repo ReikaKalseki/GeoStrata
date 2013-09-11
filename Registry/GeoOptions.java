@@ -13,7 +13,6 @@ import net.minecraftforge.common.Configuration;
 import Reika.DragonAPI.Exception.RegistrationException;
 import Reika.DragonAPI.Interfaces.ConfigList;
 import Reika.GeoStrata.GeoStrata;
-import Reika.RotaryCraft.RotaryCraft;
 
 public enum GeoOptions implements ConfigList {
 
@@ -58,12 +57,12 @@ public enum GeoOptions implements ConfigList {
 
 	public float setDecimal(Configuration config) {
 		if (!this.isDecimal())
-			throw new RegistrationException(RotaryCraft.instance, "Config Property \""+this.getLabel()+"\" is not decimal!");
+			throw new RegistrationException(GeoStrata.instance, "Config Property \""+this.getLabel()+"\" is not decimal!");
 		return (float)config.get("Control Setup", this.getLabel(), defaultFloat).getDouble(defaultFloat);
 	}
 
 	public float getFloat() {
-		return (Float)RotaryCraft.config.getControl(this.ordinal());
+		return (Float)GeoStrata.config.getControl(this.ordinal());
 	}
 
 	public Class getPropertyType() {

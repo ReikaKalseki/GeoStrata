@@ -31,7 +31,7 @@ public class CrystalGenerator implements IWorldGenerator {
 		for (int i = 0; i < PER_CHUNK*this.getDensityFactor(world, chunkX, chunkZ); i++) {
 			int posX = chunkX + random.nextInt(16);
 			int posZ = chunkZ + random.nextInt(16);
-			int posY = random.nextInt(64);
+			int posY = 4+random.nextInt(64-4);
 			int id = GeoBlocks.CRYSTAL.getBlockID();
 			int meta = random.nextInt(16);
 			if (world.getBlockId(posX, posY, posZ) == 0 && world.getBlockId(posX, posY-1, posZ) == Block.stone.blockID) {

@@ -52,9 +52,9 @@ public class BlockCaveCrystal extends CrystalBlock {
 		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
 			//icons[i] = ico.registerIcon("GeoStrata:"+"crystal_"+ReikaDyeHelper.dyes[i].name().toLowerCase());
 			//if (GeoOptions.OUTLINE.getState())
-			//	icons[i] = ico.registerIcon("GeoStrata:crystal_outline");
+			icons[i] = ico.registerIcon("GeoStrata:crystal_outline");
 			//else
-			icons[i] = ico.registerIcon("GeoStrata:crystal");
+			//icons[i] = ico.registerIcon("GeoStrata:crystal");
 		}
 	}
 }

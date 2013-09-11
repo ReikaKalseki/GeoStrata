@@ -11,6 +11,7 @@ package Reika.GeoStrata.Registry;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import Reika.DragonAPI.Interfaces.IDRegistry;
 import Reika.DragonAPI.Interfaces.RegistrationList;
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
@@ -30,6 +31,14 @@ public enum GeoItems implements RegistrationList, IDRegistry {
 	private GeoItems(String n, Class<? extends Item> cl) {
 		name = n;
 		itemClass = cl;
+	}
+
+	public ItemStack getStackOf() {
+		return new ItemStack(this.getShiftedItemID(), 1, 0);
+	}
+
+	public ItemStack getStackOfMetadata(int meta) {
+		return new ItemStack(this.getShiftedItemID(), 1, meta);
 	}
 
 	@Override
