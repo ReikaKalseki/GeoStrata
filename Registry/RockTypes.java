@@ -38,12 +38,12 @@ public enum RockTypes {
 	HORNFEL(30, 5, 16, 48, 0.8F, EnumToolMaterial.STONE, new BiomeGenBase[]{}, true),
 	MIGMATITE(30, 5, 0, 16, 0.6F, EnumToolMaterial.STONE, new BiomeGenBase[]{}, true);
 
-	private float blockHardness; //stone has 30
-	private float blastResistance; //stone has 5
+	public final float blockHardness; //stone has 30
+	public final float blastResistance; //stone has 5
 	private EnumToolMaterial harvestTool; //null for hand break
-	private int minY;
-	private int maxY;
-	private float rarity;
+	public final int minY;
+	public final int maxY;
+	public final float rarity;
 	private boolean allBiomes = false;
 	private List<BiomeGenBase> biomeList;
 
@@ -95,14 +95,6 @@ public enum RockTypes {
 		return rockList[world.getBlockMetadata(x, y, z)];
 	}
 
-	public float getHardness() {
-		return blockHardness;
-	}
-
-	public float getResistance() {
-		return blastResistance;
-	}
-
 	public EnumToolMaterial getHarvestMin() {
 		return harvestTool;
 	}
@@ -139,18 +131,6 @@ public enum RockTypes {
 			return held.canHarvestBlock(Block.stone);
 		}
 		return false;
-	}
-
-	public float getRarity() {
-		return rarity;
-	}
-
-	public int getMaxY() {
-		return maxY;
-	}
-
-	public int getMinY() {
-		return minY;
 	}
 
 	public boolean canGenerateInBiome(BiomeGenBase biome) {

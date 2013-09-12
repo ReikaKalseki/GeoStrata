@@ -15,6 +15,8 @@ import net.minecraft.block.Block;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
+import Reika.DragonAPI.Libraries.World.ReikaBlockHelper;
+import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.DragonAPI.ModInteract.ReikaTwilightHelper;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import cpw.mods.fml.common.IWorldGenerator;
@@ -34,7 +36,7 @@ public class CrystalGenerator implements IWorldGenerator {
 			int posY = 4+random.nextInt(64-4);
 			int id = GeoBlocks.CRYSTAL.getBlockID();
 			int meta = random.nextInt(16);
-			if (world.getBlockId(posX, posY, posZ) == 0 && world.getBlockId(posX, posY-1, posZ) == Block.stone.blockID) {
+			if (this.canGenerateAt(world, posX, posY, posZ)) {
 				world.setBlock(posX, posY, posZ, id, meta, 3);
 				//ReikaJavaLibrary.pConsole("Generating "+ReikaDyeHelper.dyes[meta].getName()+" Crystal at "+posX+", "+posY+", "+posZ);
 			}
@@ -47,6 +49,43 @@ public class CrystalGenerator implements IWorldGenerator {
 				}
 			}
 		}
+	}
+
+	public boolean canGenerateAt(World world, int x, int y, int z) {
+		int id = world.getBlockId(x, y, z);
+		int idb = world.getBlockId(x, y-1, z);
+		int metab = world.getBlockMetadata(x, y-1, z);
+		if (id != 0 && !ReikaWorldHelper.softBlocks(world, x, y, z))
+			return false;
+		if (!this.canGenerateOn(idb, metab))
+			return false;
+		return ReikaWorldHelper.checkForAdjBlock(world, x, y, z, 0) != -1;
+	}
+
+	public boolean canGenerateOn(int id, int meta) {
+		if (id == Block.stone.blockID)
+			return true;
+		if (id == Block.dirt.blockID)
+			return true;
+		if (id == Block.planks.blockID) //mineshafts
+			return true;
+		if (id == Block.bedrock.blockID)
+			return true;
+		if (id == Block.obsidian.blockID)
+			return true;
+		if (id == Block.stoneBrick.blockID) //strongholds
+			return true;
+		if (id == Block.silverfish.blockID)
+			return true;
+		if (id == Block.cobblestone.blockID)
+			return true;
+		if (id == Block.cobblestoneMossy.blockID)
+			return true;
+		if (id == GeoBlocks.SMOOTH.getBlockID())
+			return true;
+		if (ReikaBlockHelper.isOre(id, meta))
+			return true;
+		return false;
 	}
 
 	public float getDensityFactor(World world, int x, int z) {

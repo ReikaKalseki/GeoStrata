@@ -35,15 +35,15 @@ public abstract class RockBlock extends Block {
 		ItemStack is = ep.getCurrentEquippedItem();
 		int meta = world.getBlockMetadata(x, y, z);
 		if (!this.canHarvestBlock(ep, meta))
-			return 0.1F/RockTypes.getTypeAtCoords(world, x, y, z).getHardness();
+			return 0.1F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness;
 		if (is == null)
-			return 0.4F/RockTypes.getTypeAtCoords(world, x, y, z).getHardness();
-		return 0.1875F/RockTypes.getTypeAtCoords(world, x, y, z).getHardness()*is.getItem().getStrVsBlock(is, this);
+			return 0.4F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness;
+		return 0.1875F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness*is.getItem().getStrVsBlock(is, this);
 	}
 
 	@Override
 	public final float getExplosionResistance(Entity e, World world, int x, int y, int z, double eX, double eY, double eZ) {
-		return RockTypes.getTypeAtCoords(world, x, y, z).getResistance()/5F; // /5F is in vanilla code
+		return RockTypes.getTypeAtCoords(world, x, y, z).blastResistance/5F; // /5F is in vanilla code
 	}
 
 	@Override
