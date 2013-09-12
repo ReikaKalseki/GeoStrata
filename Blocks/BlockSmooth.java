@@ -11,8 +11,10 @@ package Reika.GeoStrata.Blocks;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.world.World;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Registry.GeoBlocks;
@@ -45,5 +47,11 @@ public class BlockSmooth extends RockBlock {
 			icons[i] = ico.registerIcon("GeoStrata:"+RockTypes.rockList[i].getName().toLowerCase());
 			GeoStrata.logger.log("Adding "+RockTypes.rockList[i].getName()+" rock icon "+icons[i].getIconName());
 		}
+	}
+
+	@Override
+	public boolean isGenMineableReplaceable(World world, int x, int y, int z, int target)
+	{
+		return target == blockID || target == Block.stone.blockID;
 	}
 }

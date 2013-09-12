@@ -12,6 +12,7 @@ package Reika.GeoStrata;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFluid;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -57,6 +58,8 @@ public class CrystalGenerator implements IWorldGenerator {
 		int metab = world.getBlockMetadata(x, y-1, z);
 		if (id != 0 && !ReikaWorldHelper.softBlocks(world, x, y, z))
 			return false;
+		if (Block.blocksList[id] instanceof BlockFluid)
+			return false;
 		if (!this.canGenerateOn(idb, metab))
 			return false;
 		return ReikaWorldHelper.checkForAdjBlock(world, x, y, z, 0) != -1;
@@ -96,6 +99,8 @@ public class CrystalGenerator implements IWorldGenerator {
 			return 1.5F;
 		if (biome == BiomeGenBase.ocean || biome == BiomeGenBase.frozenOcean)
 			return 1.25F;
+		if (biome == BiomeGenBase.extremeHills || biome == BiomeGenBase.extremeHillsEdge)
+			return 1.125F;
 		return 1F;
 	}
 
