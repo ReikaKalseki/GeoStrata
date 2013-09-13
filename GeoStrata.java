@@ -79,7 +79,7 @@ public class GeoStrata extends DragonAPIMod {
 	@Init
 	public void load(FMLInitializationEvent event) {
 		this.loadClasses();
-		this.loadNames();
+		this.loadDictionary();
 		this.genRocks();
 		this.addRecipes();
 		proxy.registerRenderers();
@@ -96,7 +96,7 @@ public class GeoStrata extends DragonAPIMod {
 		ReikaRegistryHelper.instantiateAndRegisterItems(instance, GeoItems.itemList, items, logger.shouldLog());
 	}
 
-	public static void loadNames() {
+	public static void loadDictionary() {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
 			ItemStack cobble = new ItemStack(GeoBlocks.COBBLE.getBlockID(), 1, i);
 			OreDictionary.registerOre("blockCobble", cobble);

@@ -9,6 +9,8 @@
  ******************************************************************************/
 package Reika.GeoStrata.Registry;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -17,6 +19,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
+import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.ModInteract.TinkerToolHandler;
 
 public enum RockTypes {
@@ -112,39 +115,77 @@ public enum RockTypes {
 	}
 
 	public boolean canGenerateAt(World world, int x, int y, int z, Random r) {
+		int dist = 12;
+		if (y > maxY)
+			return false;
+		if (y < minY)
+			return false;
 		switch(this) {
 		case BASALT:
-			break;
+			return true;
 		case GRANITE:
-			break;
+			return true;
 		case GNEISS:
 			return GRANITE.canGenerateAt(world, x, y, z, r);
 		case GRANULITE:
 			break;
 		case HORNFEL:
-			break;
+			return world.getBiomeGenForCoords(x, z).getEnableSnow();
 		case LIMESTONE:
-			break;
+			return true;
 		case MARBLE:
 			break;
 		case MIGMATITE:
-			break;
+			return true;
 		case PERIDOTITE:
 			break;
 		case PUMICE:
-			break;
+			return true;
 		case QUARTZ:
 			break;
 		case SANDSTONE:
-			break;
+			return true;
 		case SHALE:
-			break;
+			return true;
 		case SLATE:
 			return SHALE.canGenerateAt(world, x, y, z, r);
 		default:
 			return true;
 		}
 		return true;
+	}
+
+	public static List<RockTypes> getGennableTypesAt(World world, int x, int y, int z) {
+		List<RockTypes> types = new ArrayList();
+		Random r = new Random();
+		for (int i = 0; i < rockList.length; i++) {
+			RockTypes rock = rockList[i];
+			if (rock.canGenerateAt(world, x, y, z, r))
+				types.add(rock);
+		}
+		return types;
+	}
+
+	public static int getNumberTypesGennableAt(World world, int x, int y, int z) {
+		int types = 0;
+		Random r = new Random();
+		for (int i = 0; i < rockList.length; i++) {
+			RockTypes rock = rockList[i];
+			if (rock.canGenerateAt(world, x, y, z, r))
+				types++;
+		}
+		return types;
+	}
+
+	public List<RockTypes> getCoincidentTypes() {
+		List<RockTypes> types = new ArrayList();
+		Random r = new Random();
+		for (int i = 0; i < rockList.length; i++) {
+			RockTypes rock = rockList[i];
+			if (ReikaMathLibrary.doRangesOverLap(minY, maxY, rock.minY, rock.maxY))
+				types.add(rock);
+		}
+		return types;
 	}
 
 }

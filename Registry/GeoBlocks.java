@@ -97,7 +97,7 @@ public enum GeoBlocks implements RegistrationList, IDRegistry {
 	public String getMultiValuedName(int meta) {
 		switch(this) {
 		case SMOOTH:
-			return "Smooth "+RockTypes.rockList[meta].getName();
+			return RockTypes.rockList[meta].getName();
 		case COBBLE:
 			return RockTypes.rockList[meta].getName()+" Cobblestone";
 		case BRICK:
