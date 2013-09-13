@@ -115,10 +115,10 @@ public enum RockTypes {
 		switch(this) {
 		case BASALT:
 			break;
-		case GNEISS:
-			break;
 		case GRANITE:
 			break;
+		case GNEISS:
+			return GRANITE.canGenerateAt(world, x, y, z, r);
 		case GRANULITE:
 			break;
 		case HORNFEL:
@@ -140,7 +140,7 @@ public enum RockTypes {
 		case SHALE:
 			break;
 		case SLATE:
-			break;
+			return SHALE.canGenerateAt(world, x, y, z, r);
 		default:
 			return true;
 		}
