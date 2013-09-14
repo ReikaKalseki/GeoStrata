@@ -20,6 +20,7 @@ import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.CrystalBlock;
 import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Blocks.BlockCaveCrystal;
+import Reika.GeoStrata.Blocks.BlockCrystalBrewer;
 import Reika.GeoStrata.Blocks.BlockCrystalLamp;
 import Reika.GeoStrata.Blocks.BlockRockBrick;
 import Reika.GeoStrata.Blocks.BlockRockCobble;
@@ -29,6 +30,8 @@ import Reika.GeoStrata.Items.ItemBlockCrystal;
 import Reika.GeoStrata.Items.ItemBlockRock;
 import Reika.GeoStrata.Items.ItemBlockRockDeco;
 
+import Reika.GeoStrata.Items.ItemBlockRockDeco;
+
 public enum GeoBlocks implements RegistrationList, IDRegistry {
 
 	SMOOTH(BlockSmooth.class, ItemBlockRock.class, "Smooth Rock"),
@@ -36,7 +39,8 @@ public enum GeoBlocks implements RegistrationList, IDRegistry {
 	BRICK(BlockRockBrick.class, ItemBlockRock.class, "Rock Brick"),
 	CRYSTAL(BlockCaveCrystal.class, ItemBlockCrystal.class, "Cave Crystal"), //Comes in all dye colors
 	LAMP(BlockCrystalLamp.class, ItemBlockCrystal.class, "Crystal Lamp"),
-	DECO(BlockRockDeco.class, ItemBlockRockDeco.class, "Deco Blocks");
+	DECO(BlockRockDeco.class, ItemBlockRockDeco.class, "Deco Blocks"),
+	BREWER(BlockCrystalBrewer.class, null, "Crystal Brewery");
 
 	private Class blockClass;
 	private String blockName;
@@ -115,7 +119,12 @@ public enum GeoBlocks implements RegistrationList, IDRegistry {
 
 	@Override
 	public boolean hasMultiValuedName() {
-		return true;
+		switch(this) {
+		case BREWER:
+			return false;
+		default:
+			return true;
+		}
 	}
 
 	@Override
@@ -136,7 +145,7 @@ public enum GeoBlocks implements RegistrationList, IDRegistry {
 
 	@Override
 	public boolean hasItemBlock() {
-		return true;
+		return itemBlock != null;
 	}
 
 	@Override

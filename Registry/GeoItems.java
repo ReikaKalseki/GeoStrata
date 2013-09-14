@@ -17,11 +17,13 @@ import Reika.DragonAPI.Interfaces.RegistrationList;
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.Items.ItemCrystalPotion;
 import Reika.GeoStrata.Items.ItemCrystalShard;
 
 public enum GeoItems implements RegistrationList, IDRegistry {
 
-	SHARD("Crystal Shard", ItemCrystalShard.class);
+	SHARD("Crystal Shard", ItemCrystalShard.class),
+	POTION("Crystal Potion", ItemCrystalPotion.class);
 
 	private String name;
 	private Class itemClass;
@@ -70,6 +72,7 @@ public enum GeoItems implements RegistrationList, IDRegistry {
 	public String getMultiValuedName(int meta) {
 		switch(this) {
 		case SHARD:
+		case POTION:
 			return ReikaDyeHelper.dyes[meta].getName()+" "+this.getBasicName();
 		default:
 			return "";
@@ -80,6 +83,7 @@ public enum GeoItems implements RegistrationList, IDRegistry {
 	public boolean hasMultiValuedName() {
 		switch(this) {
 		case SHARD:
+		case POTION:
 			return true;
 		default:
 			return false;
@@ -90,6 +94,8 @@ public enum GeoItems implements RegistrationList, IDRegistry {
 	public int getNumberMetadatas() {
 		switch(this) {
 		case SHARD:
+			return 16;
+		case POTION:
 			return 16;
 		default:
 			return 1;
@@ -121,7 +127,7 @@ public enum GeoItems implements RegistrationList, IDRegistry {
 
 	@Override
 	public int getDefaultID() {
-		return 10000;
+		return 10000+this.ordinal();
 	}
 
 	@Override

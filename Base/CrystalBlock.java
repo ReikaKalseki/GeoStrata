@@ -19,7 +19,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
@@ -28,6 +27,7 @@ import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.IO.ReikaPacketHelper;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
+import Reika.GeoStrata.CrystalPotionController;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Blocks.BlockCaveCrystal;
 import cpw.mods.fml.relauncher.Side;
@@ -116,14 +116,11 @@ public abstract class CrystalBlock extends Block {
 		int dura = 200;
 		switch(color) {
 		case BLACK:
-			if (e instanceof EntityMob) {
+			if (e instanceof EntityMob) {  //clear AI
 				EntityMob m = (EntityMob)e;
 				m.setAttackTarget(null);
 				m.getNavigator().clearPathEntity();
 			}
-			break;
-		case BLUE:
-			e.addPotionEffect(new PotionEffect(Potion.nightVision.id, dura, 0));
 			break;
 		case BROWN:
 			if (e instanceof EntityPlayer) {
@@ -133,48 +130,14 @@ public abstract class CrystalBlock extends Block {
 				ep.getFoodStats().setFoodSaturationLevel(sat);
 				break;
 			}
-		case CYAN:
-			e.addPotionEffect(new PotionEffect(Potion.waterBreathing.id, dura, 0));
-			break;
-		case GRAY:
-			e.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, dura, 0));
-			break;
-		case GREEN:
-			e.addPotionEffect(new PotionEffect(Potion.poison.id, dura, 0));
-			break;
-		case LIGHTBLUE:
-			e.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, dura, 0));
-			break;
-		case LIGHTGRAY:
-			e.addPotionEffect(new PotionEffect(Potion.weakness.id, dura, 0));
-			break;
-		case LIME:
-			e.addPotionEffect(new PotionEffect(Potion.jump.id, dura, 0));
-			break;
-		case MAGENTA:
-			e.addPotionEffect(new PotionEffect(Potion.regeneration.id, dura, 0));
-			break;
-		case ORANGE:
-			e.addPotionEffect(new PotionEffect(Potion.fireResistance.id, dura, 0));
-			break;
-		case PINK:
-			e.addPotionEffect(new PotionEffect(Potion.damageBoost.id, dura, 0));
-			break;
 		case PURPLE:
-			if (!e.worldObj.isRemote && new Random().nextInt(12) == 0)
+			if (!e.worldObj.isRemote && new Random().nextInt(5) == 0)
 				e.worldObj.spawnEntityInWorld(new EntityXPOrb(e.worldObj, e.posX, e.posY, e.posZ, 1));
 			break;
-		case RED:
-			e.addPotionEffect(new PotionEffect(Potion.resistance.id, dura, 0));
-			break;
-		case WHITE:
-			e.clearActivePotions();
-			break;
-		case YELLOW:
-			e.addPotionEffect(new PotionEffect(Potion.digSpeed.id, dura, 0));
-			break;
 		default:
-			break;
+			PotionEffect eff = CrystalPotionController.getEffectFromColor(color, dura, 0);
+			if (eff != null)
+				e.addPotionEffect(eff);
 		}
 	}
 }

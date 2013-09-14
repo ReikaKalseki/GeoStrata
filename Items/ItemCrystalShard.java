@@ -9,10 +9,14 @@
  ******************************************************************************/
 package Reika.GeoStrata.Items;
 
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
+import Reika.GeoStrata.CrystalPotionController;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.GeoItem;
 
@@ -41,7 +45,13 @@ public class ItemCrystalShard extends GeoItem {
 	@Override
 	public boolean isPotionIngredient()
 	{
-		return true;
+		return false;
+	}
+
+	@Override
+	public String getPotionEffect()
+	{
+		return "";
 	}
 
 	@Override
@@ -54,35 +64,46 @@ public class ItemCrystalShard extends GeoItem {
 		case BLUE:
 			return PotionHelper.goldenCarrotEffect;
 		case BROWN:
-			return null;
+			return PotionHelper.redstoneEffect;
 		case CYAN: //water breathing
-			return null;
+			return "";
 		case GRAY: //slowness
-			return null;
+			return PotionHelper.sugarEffect;
 		case GREEN:
 			return PotionHelper.spiderEyeEffect;
 		case LIGHTBLUE:
 			return PotionHelper.sugarEffect;
 		case LIGHTGRAY: //weakness
-			return null;
+			return PotionHelper.blazePowderEffect;
 		case LIME: //jump boost
-			return null;
+			return "";
 		case MAGENTA:
 			return PotionHelper.ghastTearEffect;
 		case ORANGE:
 			return PotionHelper.magmaCreamEffect;
 		case PINK:
 			return PotionHelper.blazePowderEffect;
-		case PURPLE: //xp
-			return null;
+		case PURPLE: //xp -> level2?
+			return PotionHelper.glowstoneEffect;
 		case RED: //resistance
-			return null;
+			return "";
 		case WHITE:
-			return "+4";
+			return PotionHelper.goldenCarrotEffect;
 		case YELLOW: //haste
-			return null;
+			return "";
 		default:
-			return null;
+			return "";
 		}
+	}
+
+	@Override
+	public void addInformation(ItemStack is, EntityPlayer ep, List li, boolean verbose)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("Good for ");
+		ReikaDyeHelper color = ReikaDyeHelper.getColorFromItem(is);
+		sb.append(CrystalPotionController.getPotionName(color));
+		sb.append(" Potions");
+		li.add(sb.toString());
 	}
 }

@@ -21,7 +21,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class GeoItem extends Item {
 
-	protected final Icon[] icons = new Icon[16];
+	protected final Icon[] icons = new Icon[this.getNumberTypes()];
 
 	public GeoItem(int ID) {
 		super(ID);
@@ -48,7 +48,9 @@ public abstract class GeoItem extends Item {
 	public abstract int getNumberTypes();
 
 	@Override
-	public final Icon getIconFromDamage(int dmg) {
+	public Icon getIconFromDamage(int dmg) {
+		if (dmg >= icons.length)
+			return null;
 		return icons[dmg];
 	}
 }

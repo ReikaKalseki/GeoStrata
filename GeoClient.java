@@ -10,13 +10,13 @@
 package Reika.GeoStrata;
 
 import net.minecraft.world.World;
+import Reika.GeoStrata.Rendering.CrystalRenderer;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class GeoClient extends GeoCommon {
 
 	public static final CrystalRenderer crystal = new CrystalRenderer();
-	public static final OreRenderer ore = new OreRenderer();
 
 	@Override
 	public void registerSounds() {
@@ -29,7 +29,6 @@ public class GeoClient extends GeoCommon {
 		crystalRender = RenderingRegistry.getNextAvailableRenderId();
 		oreRender = RenderingRegistry.getNextAvailableRenderId();
 		RenderingRegistry.registerBlockHandler(crystalRender, crystal);
-		RenderingRegistry.registerBlockHandler(oreRender, ore);
 	}
 
 	// Override any other methods that need to be handled differently client side.
