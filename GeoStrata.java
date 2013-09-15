@@ -136,6 +136,8 @@ public class GeoStrata extends DragonAPIMod {
 		DecoBlocks.OBSIDIBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.obsidian);
 		DecoBlocks.GLOWBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.glowStone);
 		DecoBlocks.LAPISBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.blockLapis);
+
+		GameRegistry.addRecipe(new ItemStack(GeoBlocks.BREWER.getBlockID(), 1, 0), "NNN", "NBN", "SSS", 'N', Item.netherQuartz, 'S', Block.stone, 'B', Item.brewingStand);
 	}
 
 	@Override

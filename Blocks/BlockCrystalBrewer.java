@@ -30,8 +30,8 @@ public class BlockCrystalBrewer extends Block {
 	private Icon bottom;
 	private float w = 0.75F;
 
-	public BlockCrystalBrewer(int par1, Material xMaterial) {
-		super(par1, xMaterial);
+	public BlockCrystalBrewer(int par1, Material mat) {
+		super(par1, mat);
 		this.setCreativeTab(GeoStrata.tabGeo);
 		//this.setBlockBounds(0.5F-w/2, 0, 0.5F-w/2, 0.5F+w/2, 0.875F, 0.5F+w/2);
 	}

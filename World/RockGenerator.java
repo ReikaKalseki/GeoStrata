@@ -24,7 +24,7 @@ import cpw.mods.fml.common.IWorldGenerator;
 
 public class RockGenerator implements IWorldGenerator {
 
-	public static final int BASE_GEN = 10;
+	public static final int BASE_GEN = 24;
 	public static final int VEIN_SIZE = 32;
 	public static final int REPLACE_PERCENT = 15;
 
