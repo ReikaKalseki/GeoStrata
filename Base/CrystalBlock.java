@@ -18,7 +18,7 @@ import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
@@ -123,13 +123,8 @@ public abstract class CrystalBlock extends Block {
 			}
 			break;
 		case BROWN:
-			if (e instanceof EntityPlayer) {
-				EntityPlayer ep = (EntityPlayer)e;
-				float sat = ep.getFoodStats().getSaturationLevel();
-				sat += 0.5F;
-				ep.getFoodStats().setFoodSaturationLevel(sat);
-				break;
-			}
+			if (!e.isPotionActive(Potion.confusion.id))
+				e.addPotionEffect(new PotionEffect(Potion.confusion.id, 120, 0));
 		case PURPLE:
 			if (!e.worldObj.isRemote && new Random().nextInt(5) == 0)
 				e.worldObj.spawnEntityInWorld(new EntityXPOrb(e.worldObj, e.posX, e.posY, e.posZ, 1));

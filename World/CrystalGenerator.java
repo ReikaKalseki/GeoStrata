@@ -14,6 +14,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFluid;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import Reika.DragonAPI.Libraries.World.ReikaBlockHelper;
@@ -92,6 +93,8 @@ public class CrystalGenerator implements IWorldGenerator {
 	}
 
 	public float getDensityFactor(World world, int x, int z) {
+		if (world.provider.terrainType == WorldType.FLAT) //do not generate in superflat
+			return 0;
 		BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
 		if (world.provider.dimensionId == ReikaTwilightHelper.TWILIGHT_ID)
 			return 2F;
