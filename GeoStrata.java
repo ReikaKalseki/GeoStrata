@@ -9,6 +9,7 @@
  ******************************************************************************/
 package Reika.GeoStrata;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import net.minecraft.block.Block;
@@ -18,6 +19,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.oredict.OreDictionary;
 import Reika.DragonAPI.Base.DragonAPIMod;
+import Reika.DragonAPI.Exception.RegistrationException;
 import Reika.DragonAPI.Instantiable.ControlledConfig;
 import Reika.DragonAPI.Instantiable.ModLogger;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
@@ -44,7 +46,7 @@ import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 
-@Mod( modid = GeoStrata.MOD_NAME, name=GeoStrata.MOD_NAME, version="beta", certificateFingerprint = "@GET_FINGERPRINT@", dependencies="after:DragonAPI")
+@Mod( modid = GeoStrata.MOD_NAME, name=GeoStrata.MOD_NAME, version="Gamma", certificateFingerprint = "@GET_FINGERPRINT@", dependencies="after:DragonAPI")
 @NetworkMod(clientSideRequired = true, serverSideRequired = true,
 clientPacketHandlerSpec = @SidedPacketHandler(channels = { GeoStrata.MOD_NAME+"Data" }, packetHandler = ClientPackets.class),
 serverPacketHandlerSpec = @SidedPacketHandler(channels = { GeoStrata.MOD_NAME+"Data" }, packetHandler = ServerPackets.class))
@@ -152,7 +154,12 @@ public class GeoStrata extends DragonAPIMod {
 
 	@Override
 	public URL getDocumentationSite() {
-		return null;
+		try {
+			return new URL("http://www.minecraftforum.net/topic/1969694-");
+		}
+		catch (MalformedURLException e) {
+			throw new RegistrationException(instance, "The mod provided a malformed URL for its documentation site!");
+		}
 	}
 
 	@Override
@@ -172,6 +179,6 @@ public class GeoStrata extends DragonAPIMod {
 
 	@Override
 	public String getVersionName() {
-		return "Beta V0.02";
+		return "Gamma";
 	}
 }
