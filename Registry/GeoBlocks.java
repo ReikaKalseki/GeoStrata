@@ -30,8 +30,6 @@ import Reika.GeoStrata.Items.ItemBlockCrystal;
 import Reika.GeoStrata.Items.ItemBlockRock;
 import Reika.GeoStrata.Items.ItemBlockRockDeco;
 
-import Reika.GeoStrata.Items.ItemBlockRockDeco;
-
 public enum GeoBlocks implements RegistrationList, IDRegistry {
 
 	SMOOTH(BlockSmooth.class, ItemBlockRock.class, "Smooth Rock"),
@@ -179,5 +177,14 @@ public enum GeoBlocks implements RegistrationList, IDRegistry {
 
 	public Block getBlockInstance() {
 		return GeoStrata.blocks[this.ordinal()];
+	}
+
+	public int getID() {
+		return this.getBlockID();
+	}
+
+	@Override
+	public boolean overwritingItem() {
+		return false;
 	}
 }

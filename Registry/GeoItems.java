@@ -149,4 +149,13 @@ public enum GeoItems implements RegistrationList, IDRegistry {
 		return itemClass == null;
 	}
 
+	public int getID() {
+		return this.getItemID();
+	}
+
+	@Override
+	public boolean overwritingItem() {
+		return false;
+	}
+
 }
