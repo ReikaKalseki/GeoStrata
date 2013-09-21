@@ -19,9 +19,8 @@ public enum GeoOptions implements ConfigList {
 	COBBLERECIPES("Alternate Cobble Recipes", true),
 	LOGLOADING("Console Loading Info", true),
 	DEBUGMODE("Debug Mode", false),
-	//OUTLINE("Crystal Outlines", true),
-	ROCKGEN("Generate Rock", true);
-	//CRYSTALVARIANT("Variable Crystals", true);
+	ROCKGEN("Generate Rock", true),
+	RETROGEN("Retrogen Crystals", false);
 
 	private String label;
 	private boolean defaultState;

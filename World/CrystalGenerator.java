@@ -53,7 +53,7 @@ public class CrystalGenerator implements IWorldGenerator {
 		}
 	}
 
-	public boolean canGenerateAt(World world, int x, int y, int z) {
+	public static boolean canGenerateAt(World world, int x, int y, int z) {
 		int id = world.getBlockId(x, y, z);
 		int idb = world.getBlockId(x, y-1, z);
 		int metab = world.getBlockMetadata(x, y-1, z);
@@ -61,12 +61,12 @@ public class CrystalGenerator implements IWorldGenerator {
 			return false;
 		if (Block.blocksList[id] instanceof BlockFluid)
 			return false;
-		if (!this.canGenerateOn(idb, metab))
+		if (!canGenerateOn(idb, metab))
 			return false;
 		return ReikaWorldHelper.checkForAdjBlock(world, x, y, z, 0) != -1;
 	}
 
-	public boolean canGenerateOn(int id, int meta) {
+	public static boolean canGenerateOn(int id, int meta) {
 		if (id == Block.stone.blockID)
 			return true;
 		if (id == Block.dirt.blockID)
@@ -92,7 +92,7 @@ public class CrystalGenerator implements IWorldGenerator {
 		return false;
 	}
 
-	public float getDensityFactor(World world, int x, int z) {
+	public static float getDensityFactor(World world, int x, int z) {
 		if (world.provider.terrainType == WorldType.FLAT) //do not generate in superflat
 			return 0;
 		BiomeGenBase biome = world.getBiomeGenForCoords(x, z);

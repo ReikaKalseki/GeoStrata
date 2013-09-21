@@ -18,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.oredict.OreDictionary;
+import Reika.DragonAPI.RetroGenController;
 import Reika.DragonAPI.Base.DragonAPIMod;
 import Reika.DragonAPI.Exception.RegistrationException;
 import Reika.DragonAPI.Instantiable.ControlledConfig;
@@ -31,6 +32,7 @@ import Reika.GeoStrata.Registry.GeoItems;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockTypes;
 import Reika.GeoStrata.World.CrystalGenerator;
+import Reika.GeoStrata.World.RetroCrystalGenerator;
 import Reika.GeoStrata.World.RockGenerator;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -91,6 +93,10 @@ public class GeoStrata extends DragonAPIMod {
 		proxy.registerRenderers();
 		GameRegistry.registerTileEntity(TileEntityCrystalBrewer.class, "GeoBrewer");
 		NetworkRegistry.instance().registerGuiHandler(instance, new GeoGuiHandler());
+		if (GeoOptions.RETROGEN.getState()) {
+			RetroGenController.getInstance().addRetroGenerator(new RetroCrystalGenerator());
+			//Set state back
+		}
 	}
 
 	@Override
