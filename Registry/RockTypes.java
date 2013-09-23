@@ -83,17 +83,17 @@ public enum RockTypes {
 	public boolean isHarvestable(ItemStack held) {
 		if (held == null)
 			return harvestTool == null;
-		if (TinkerToolHandler.getInstance().isPick(held)) {
+		if (TinkerToolHandler.getInstance().isPick(held) || TinkerToolHandler.getInstance().isHammer(held)) {
 			switch(harvestTool) {
 			case WOOD:
 				return true;
 			case STONE:
 			case GOLD:
-				return TinkerToolHandler.getInstance().isStoneOrBetterPick(held);
+				return TinkerToolHandler.getInstance().isStoneOrBetter(held);
 			case IRON:
-				return TinkerToolHandler.getInstance().isIronOrBetterPick(held);
+				return TinkerToolHandler.getInstance().isIronOrBetter(held);
 			case EMERALD:
-				return TinkerToolHandler.getInstance().isDiamondOrBetterPick(held);
+				return TinkerToolHandler.getInstance().isDiamondOrBetter(held);
 			default:
 				return false;
 			}

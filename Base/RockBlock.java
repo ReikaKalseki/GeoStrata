@@ -18,6 +18,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.RockTypes;
 
@@ -28,10 +29,12 @@ public abstract class RockBlock extends Block {
 	public RockBlock(int ID, Material mat) {
 		super(ID, mat);
 		this.setCreativeTab(GeoStrata.tabGeo);
+		blockHardness = 1F;
 	}
 
 	@Override
 	public final float getPlayerRelativeBlockHardness(EntityPlayer ep, World world, int x, int y, int z) {
+		ReikaJavaLibrary.pConsole(blockHardness);
 		ItemStack is = ep.getCurrentEquippedItem();
 		int meta = world.getBlockMetadata(x, y, z);
 		if (!this.canHarvestBlock(ep, meta))

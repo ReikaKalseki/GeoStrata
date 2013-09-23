@@ -15,6 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
+import Reika.DragonAPI.ModInteract.MekanismHandler;
 import Reika.DragonAPI.ModInteract.TinkerToolHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -75,17 +76,19 @@ public enum DecoBlocks {
 	public boolean isHarvestable(ItemStack held) {
 		if (held == null)
 			return mat == null;
-		if (TinkerToolHandler.getInstance().isPick(held)) {
+		if (MekanismHandler.getInstance().isPaxel(held))
+			return true;
+		if (TinkerToolHandler.getInstance().isPick(held) || TinkerToolHandler.getInstance().isHammer(held)) {
 			switch(mat) {
 			case WOOD:
 				return true;
 			case STONE:
 			case GOLD:
-				return TinkerToolHandler.getInstance().isStoneOrBetterPick(held);
+				return TinkerToolHandler.getInstance().isStoneOrBetter(held);
 			case IRON:
-				return TinkerToolHandler.getInstance().isIronOrBetterPick(held);
+				return TinkerToolHandler.getInstance().isIronOrBetter(held);
 			case EMERALD:
-				return TinkerToolHandler.getInstance().isDiamondOrBetterPick(held);
+				return TinkerToolHandler.getInstance().isDiamondOrBetter(held);
 			default:
 				return false;
 			}
