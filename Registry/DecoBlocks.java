@@ -15,7 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
-import Reika.DragonAPI.ModInteract.MekanismHandler;
+import Reika.DragonAPI.ModInteract.MekToolHandler;
 import Reika.DragonAPI.ModInteract.TinkerToolHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -76,7 +76,7 @@ public enum DecoBlocks {
 	public boolean isHarvestable(ItemStack held) {
 		if (held == null)
 			return mat == null;
-		if (MekanismHandler.getInstance().isPaxel(held))
+		if (MekToolHandler.getInstance().isPickTypeTool(held))
 			return true;
 		if (TinkerToolHandler.getInstance().isPick(held) || TinkerToolHandler.getInstance().isHammer(held)) {
 			switch(mat) {

@@ -18,7 +18,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
-import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
+import Reika.DragonAPI.ModInteract.TinkerToolHandler;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.RockTypes;
 
@@ -34,13 +34,15 @@ public abstract class RockBlock extends Block {
 
 	@Override
 	public final float getPlayerRelativeBlockHardness(EntityPlayer ep, World world, int x, int y, int z) {
-		ReikaJavaLibrary.pConsole(blockHardness);
 		ItemStack is = ep.getCurrentEquippedItem();
 		int meta = world.getBlockMetadata(x, y, z);
 		if (!this.canHarvestBlock(ep, meta))
 			return 0.1F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness;
 		if (is == null)
 			return 0.4F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness;
+		if (TinkerToolHandler.getInstance().isPick(is) || TinkerToolHandler.getInstance().isHammer(is)) {
+			return 0.1875F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness*6;
+		}
 		return 0.1875F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness*is.getItem().getStrVsBlock(is, this);
 	}
 
