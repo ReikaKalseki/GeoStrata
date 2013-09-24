@@ -122,9 +122,13 @@ public abstract class CrystalBlock extends Block {
 				m.getNavigator().clearPathEntity();
 			}
 			break;
+		case WHITE:
+			e.clearActivePotions();
+			break;
 		case BROWN:
 			if (!e.isPotionActive(Potion.confusion.id))
 				e.addPotionEffect(new PotionEffect(Potion.confusion.id, 120, 0));
+			break;
 		case PURPLE:
 			if (!e.worldObj.isRemote && new Random().nextInt(5) == 0)
 				e.worldObj.spawnEntityInWorld(new EntityXPOrb(e.worldObj, e.posX, e.posY, e.posZ, 1));

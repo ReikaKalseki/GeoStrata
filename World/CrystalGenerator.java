@@ -95,6 +95,8 @@ public class CrystalGenerator implements IWorldGenerator {
 	public static float getDensityFactor(World world, int x, int z) {
 		if (world.provider.terrainType == WorldType.FLAT) //do not generate in superflat
 			return 0;
+		if (world.provider.dimensionId == 1 || world.provider.dimensionId == -1)
+			return 0;
 		BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
 		if (world.provider.dimensionId == ReikaTwilightHelper.TWILIGHT_ID)
 			return 2F;
