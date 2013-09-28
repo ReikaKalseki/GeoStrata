@@ -27,6 +27,7 @@ import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.IO.ReikaPacketHelper;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
+import Reika.DragonAPI.Libraries.Registry.ReikaParticleHelper;
 import Reika.GeoStrata.CrystalPotionController;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Blocks.BlockCaveCrystal;
@@ -75,9 +76,7 @@ public abstract class CrystalBlock extends Block {
 	public void randomDisplayTick(World world, int x, int y, int z, Random rand) {
 		int color = world.getBlockMetadata(x, y, z);
 		double[] v = ReikaDyeHelper.getColorFromDamage(color).getRedstoneParticleVelocityForColor();
-		world.spawnParticle("reddust", x+rand.nextDouble(), y+rand.nextDouble(), z+rand.nextDouble(), v[0], v[1], v[2]);/*
-		//ReikaJavaLibrary.pConsole(FMLCommonHandler.instance().getEffectiveSide());
-		world.playSoundEffect(x+0.5, y+0.5, z+0.5, "random.orb", 1F, 1);*/
+		ReikaParticleHelper.spawnColoredParticles(world, x, y, z, v[0], v[1], v[2], 1);
 		if (rand.nextInt(3) == 0)
 			ReikaPacketHelper.sendUpdatePacket(GeoStrata.packetChannel, 0, world, x, y, z);
 	}
@@ -92,8 +91,7 @@ public abstract class CrystalBlock extends Block {
 		int z = target.blockZ;
 		int color = world.getBlockMetadata(x, y, z);
 		double[] v = ReikaDyeHelper.getColorFromDamage(color).getRedstoneParticleVelocityForColor();
-		for (int i = 0; i < 4; i++)
-			world.spawnParticle("reddust", x+rand.nextDouble(), y+rand.nextDouble(), z+rand.nextDouble(), v[0], v[1], v[2]);
+		ReikaParticleHelper.spawnColoredParticles(world, x, y, z, v[0], v[1], v[2], 4);
 		ReikaPacketHelper.sendUpdatePacket(GeoStrata.packetChannel, 0, world, x, y, z);
 		return false;
 	}
