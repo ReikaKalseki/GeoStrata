@@ -21,6 +21,7 @@ import Reika.DragonAPI.Libraries.World.ReikaBlockHelper;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.DragonAPI.ModInteract.ReikaTwilightHelper;
 import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Registry.GeoOptions;
 import cpw.mods.fml.common.IWorldGenerator;
 
 public class CrystalGenerator implements IWorldGenerator {
@@ -31,11 +32,13 @@ public class CrystalGenerator implements IWorldGenerator {
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
 		chunkX *= 16;
 		chunkZ *= 16;
-		//ReikaJavaLibrary.pConsole("Calling chunk "+chunkX+", "+chunkZ);
 		for (int i = 0; i < PER_CHUNK*this.getDensityFactor(world, chunkX, chunkZ); i++) {
 			int posX = chunkX + random.nextInt(16);
 			int posZ = chunkZ + random.nextInt(16);
-			int posY = 4+random.nextInt(64-4);
+			int maxy = 64;
+			if (world.provider.isHellWorld)
+				maxy = 128;
+			int posY = 4+random.nextInt(maxy-4);
 			int id = GeoBlocks.CRYSTAL.getBlockID();
 			int meta = random.nextInt(16);
 			if (this.canGenerateAt(world, posX, posY, posZ)) {
@@ -71,6 +74,8 @@ public class CrystalGenerator implements IWorldGenerator {
 			return true;
 		if (id == Block.dirt.blockID)
 			return true;
+		if (id == Block.gravel.blockID)
+			return true;
 		if (id == Block.planks.blockID) //mineshafts
 			return true;
 		if (id == Block.bedrock.blockID)
@@ -85,6 +90,8 @@ public class CrystalGenerator implements IWorldGenerator {
 			return true;
 		if (id == Block.cobblestoneMossy.blockID)
 			return true;
+		if (id == Block.netherrack.blockID)
+			return true;
 		if (id == GeoBlocks.SMOOTH.getBlockID())
 			return true;
 		if (ReikaBlockHelper.isOre(id, meta))
@@ -95,8 +102,10 @@ public class CrystalGenerator implements IWorldGenerator {
 	public static float getDensityFactor(World world, int x, int z) {
 		if (world.provider.terrainType == WorldType.FLAT) //do not generate in superflat
 			return 0;
-		if (world.provider.dimensionId == 1 || world.provider.dimensionId == -1)
+		if (world.provider.dimensionId == 1)
 			return 0;
+		if (world.provider.isHellWorld)
+			return GeoOptions.NETHER.getState() ? 1 : 0;
 		BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
 		if (world.provider.dimensionId == ReikaTwilightHelper.TWILIGHT_ID)
 			return 2F;

@@ -18,19 +18,23 @@ import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntityMob;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.IO.ReikaPacketHelper;
+import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaParticleHelper;
 import Reika.GeoStrata.CrystalPotionController;
 import Reika.GeoStrata.GeoStrata;
-import Reika.GeoStrata.Blocks.BlockCaveCrystal;
+import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Registry.GeoOptions;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -98,8 +102,9 @@ public abstract class CrystalBlock extends Block {
 
 	public void updateEffects(World world, int x, int y, int z) {
 		Random rand = new Random();
-		world.playSoundEffect(x+0.5, y+0.5, z+0.5, "random.orb", 0.1F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.8F));
-		if (this instanceof BlockCaveCrystal) {
+		if (blockID == GeoBlocks.CRYSTAL.getBlockID() || GeoOptions.NOISE.getState())
+			world.playSoundEffect(x+0.5, y+0.5, z+0.5, "random.orb", 0.05F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.8F));
+		if (blockID == GeoBlocks.CRYSTAL.getBlockID() || GeoOptions.EFFECTS.getState()) {
 			AxisAlignedBB box = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x+1, y+1, z+1).expand(3, 3, 3);
 			List inbox = world.getEntitiesWithinAABB(EntityLiving.class, box);
 			for (int i = 0; i < inbox.size(); i++) {
@@ -111,30 +116,62 @@ public abstract class CrystalBlock extends Block {
 	}
 
 	private void getEffectFromColor(EntityLiving e, ReikaDyeHelper color) {
+		World world = e.worldObj;
 		int dura = 200;
-		switch(color) {
-		case BLACK:
-			if (e instanceof EntityMob) {  //clear AI
-				EntityMob m = (EntityMob)e;
-				m.setAttackTarget(null);
-				m.getNavigator().clearPathEntity();
+		if (world.provider.isHellWorld) {
+			switch(color) {
+			case ORANGE:
+				e.setFire(2);
+				break;
+			case RED:
+				e.attackEntityFrom(DamageSource.magic, 1);
+				break;
+			case PURPLE:
+				if (!e.worldObj.isRemote && new Random().nextInt(5) == 0 && e instanceof EntityPlayer) {
+					if (((EntityPlayer)e).experienceTotal > 0) {
+						ReikaJavaLibrary.pConsole(((EntityPlayer)e).experienceTotal);
+						((EntityPlayer)e).experienceTotal -= 5;
+					}
+				}
+				break;
+			case BROWN:
+				if (!e.isPotionActive(Potion.confusion.id))
+					e.addPotionEffect(new PotionEffect(Potion.confusion.id, 360, 0));
+				break;
+			case LIME:
+				e.addPotionEffect(new PotionEffect(Potion.jump.id, dura, -5));
+				break;
+			default:
+				PotionEffect eff = CrystalPotionController.getNetherEffectFromColor(color, dura, 0);
+				if (eff != null)
+					e.addPotionEffect(eff);
 			}
-			break;
-		case WHITE:
-			e.clearActivePotions();
-			break;
-		case BROWN:
-			if (!e.isPotionActive(Potion.confusion.id))
-				e.addPotionEffect(new PotionEffect(Potion.confusion.id, 120, 0));
-			break;
-		case PURPLE:
-			if (!e.worldObj.isRemote && new Random().nextInt(5) == 0)
-				e.worldObj.spawnEntityInWorld(new EntityXPOrb(e.worldObj, e.posX, e.posY, e.posZ, 1));
-			break;
-		default:
-			PotionEffect eff = CrystalPotionController.getEffectFromColor(color, dura, 0);
-			if (eff != null)
-				e.addPotionEffect(eff);
+		}
+		else {
+			switch(color) {
+			case BLACK:
+				if (e instanceof EntityMob) {  //clear AI
+					EntityMob m = (EntityMob)e;
+					m.setAttackTarget(null);
+					m.getNavigator().clearPathEntity();
+				}
+				break;
+			case WHITE:
+				e.clearActivePotions();
+				break;
+			case BROWN:
+				if (!e.isPotionActive(Potion.confusion.id))
+					e.addPotionEffect(new PotionEffect(Potion.confusion.id, 120, 0));
+				break;
+			case PURPLE:
+				if (!e.worldObj.isRemote && new Random().nextInt(2) == 0)
+					e.worldObj.spawnEntityInWorld(new EntityXPOrb(e.worldObj, e.posX, e.posY, e.posZ, 1));
+				break;
+			default:
+				PotionEffect eff = CrystalPotionController.getEffectFromColor(color, dura, 0);
+				if (eff != null && !(e instanceof EntityPlayer && Potion.potionTypes[eff.getPotionID()].isBadEffect()))
+					e.addPotionEffect(eff);
+			}
 		}
 	}
 }

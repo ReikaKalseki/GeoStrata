@@ -20,7 +20,10 @@ public enum GeoOptions implements ConfigList {
 	LOGLOADING("Console Loading Info", true),
 	DEBUGMODE("Debug Mode", false),
 	ROCKGEN("Generate Rock", true),
-	RETROGEN("Retrogen Crystals", false);
+	RETROGEN("Retrogen Crystals", false),
+	NOISE("Lamp Noises", true),
+	EFFECTS("Lamp Effects", false),
+	NETHER("Nether Crystals", true);
 
 	private String label;
 	private boolean defaultState;

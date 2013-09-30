@@ -19,6 +19,7 @@ import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 public class CrystalPotionController {
 
 	private static HashMap<ReikaDyeHelper, Potion> map = new HashMap<ReikaDyeHelper, Potion>();
+	private static HashMap<ReikaDyeHelper, Potion> nethermap = new HashMap<ReikaDyeHelper, Potion>();
 
 	static {
 		addColorPotion(ReikaDyeHelper.BLUE, Potion.nightVision);
@@ -34,14 +35,34 @@ public class CrystalPotionController {
 		addColorPotion(ReikaDyeHelper.PINK, Potion.damageBoost);
 		addColorPotion(ReikaDyeHelper.YELLOW, Potion.digSpeed);
 		addColorPotion(ReikaDyeHelper.WHITE, Potion.invisibility);
+
+		addNetherPotion(ReikaDyeHelper.BLACK, Potion.wither);
+		addNetherPotion(ReikaDyeHelper.CYAN, Potion.hunger);
+		addNetherPotion(ReikaDyeHelper.GRAY, Potion.blindness);
+		addNetherPotion(ReikaDyeHelper.GREEN, Potion.poison);
+		addNetherPotion(ReikaDyeHelper.LIGHTBLUE, Potion.moveSlowdown);
+		addNetherPotion(ReikaDyeHelper.LIGHTGRAY, Potion.weakness);
+		addNetherPotion(ReikaDyeHelper.YELLOW, Potion.digSlowdown);
+		addNetherPotion(ReikaDyeHelper.WHITE, Potion.invisibility);
 	}
 
 	private static void addColorPotion(ReikaDyeHelper color, Potion pot) {
 		map.put(color, pot);
 	}
 
+	private static void addNetherPotion(ReikaDyeHelper color, Potion pot) {
+		nethermap.put(color, pot);
+	}
+
 	public static PotionEffect getEffectFromColor(ReikaDyeHelper color, int dura, int level) {
 		Potion pot = map.get(color);
+		if (pot == null)
+			return null;
+		return new PotionEffect(pot.id, dura, level);
+	}
+
+	public static PotionEffect getNetherEffectFromColor(ReikaDyeHelper color, int dura, int level) {
+		Potion pot = nethermap.get(color);
 		if (pot == null)
 			return null;
 		return new PotionEffect(pot.id, dura, level);
