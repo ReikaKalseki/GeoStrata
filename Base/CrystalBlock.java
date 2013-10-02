@@ -174,4 +174,9 @@ public abstract class CrystalBlock extends Block {
 			}
 		}
 	}
+
+	@Override
+	public boolean canDragonDestroy(World world, int x, int y, int z) {
+		return false;
+	}
 }
