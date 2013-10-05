@@ -11,12 +11,14 @@ package Reika.GeoStrata;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.opengl.GL11;
 
 public class GuiCrystalBrewer extends GuiContainer {
 
+	private static final ResourceLocation textures = new ResourceLocation("textures/gui/container/brewing_stand.png");
 	private TileEntityCrystalBrewer tile;
 
 	public GuiCrystalBrewer(EntityPlayer ep, TileEntityCrystalBrewer te) {
@@ -39,7 +41,7 @@ public class GuiCrystalBrewer extends GuiContainer {
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
 	{
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		mc.renderEngine.bindTexture("/gui/alchemy.png");
+		mc.renderEngine.bindTexture(textures);
 		int k = (width - xSize) / 2;
 		int l = (height - ySize) / 2;
 		this.drawTexturedModalRect(k, l, 0, 0, xSize, ySize);

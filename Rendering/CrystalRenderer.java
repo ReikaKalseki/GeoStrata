@@ -38,7 +38,7 @@ public class CrystalRenderer implements ISimpleBlockRenderingHandler {
 		double v = ico.getMinV();
 		double xu = ico.getMaxU();
 		double xv = ico.getMaxV();
-		int w = ReikaTextureHelper.getIconWidth(ico);
+		int w = ReikaTextureHelper.getTexturePackSize();
 
 		v5.startDrawingQuads();
 		v5.setColorRGBA_F(red/255F, green/255F, blue/255F, alpha/255F);
@@ -112,7 +112,7 @@ public class CrystalRenderer implements ISimpleBlockRenderingHandler {
 		v5.addTranslation(x, y, z);
 		v5.setColorRGBA_F(red/255F, green/255F, blue/255F, alpha/255F);
 
-		int w = ReikaTextureHelper.getIconWidth(ico);
+		int w = ReikaTextureHelper.getTexturePackSize();
 
 		this.renderSpike(v5, u, v, xu, xv, w);
 		int val = Math.abs(x)%9+Math.abs(z)%9; //16 combos -> binary selector
@@ -139,7 +139,7 @@ public class CrystalRenderer implements ISimpleBlockRenderingHandler {
 
 	private void renderBase(Tessellator v5) {
 		Icon ico = Block.stoneDoubleSlab.getIcon(0, 0);
-		int w = ReikaTextureHelper.getIconHeight(ico);
+		int w = ReikaTextureHelper.getTexturePackSize();
 
 		v5.setColorOpaque(255, 255, 255);
 

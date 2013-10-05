@@ -15,7 +15,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.EffectRenderer;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,6 +28,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.IO.ReikaPacketHelper;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
+import Reika.DragonAPI.Libraries.Java.ReikaReflectionHelper;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaParticleHelper;
@@ -106,16 +107,16 @@ public abstract class CrystalBlock extends Block {
 			world.playSoundEffect(x+0.5, y+0.5, z+0.5, "random.orb", 0.05F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.8F));
 		if (blockID == GeoBlocks.CRYSTAL.getBlockID() || GeoOptions.EFFECTS.getState()) {
 			AxisAlignedBB box = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x+1, y+1, z+1).expand(3, 3, 3);
-			List inbox = world.getEntitiesWithinAABB(EntityLiving.class, box);
+			List inbox = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 			for (int i = 0; i < inbox.size(); i++) {
-				EntityLiving e = (EntityLiving)inbox.get(i);
+				EntityLivingBase e = (EntityLivingBase)inbox.get(i);
 				if (ReikaMathLibrary.py3d(e.posX-x-0.5, e.posY+e.getEyeHeight()/2F-y-0.5, e.posZ-z-0.5) <= 4)
 					this.getEffectFromColor(e, ReikaDyeHelper.getColorFromDamage(world.getBlockMetadata(x, y, z)));
 			}
 		}
 	}
 
-	private void getEffectFromColor(EntityLiving e, ReikaDyeHelper color) {
+	private void getEffectFromColor(EntityLivingBase e, ReikaDyeHelper color) {
 		World world = e.worldObj;
 		int dura = 200;
 		if (world.provider.isHellWorld) {
@@ -169,7 +170,7 @@ public abstract class CrystalBlock extends Block {
 				break;
 			default:
 				PotionEffect eff = CrystalPotionController.getEffectFromColor(color, dura, 0);
-				if (eff != null && !(e instanceof EntityPlayer && Potion.potionTypes[eff.getPotionID()].isBadEffect()))
+				if (eff != null && !(e instanceof EntityPlayer && ReikaReflectionHelper.getPrivateBoolean(Potion.potionTypes[eff.getPotionID()], "isBadEffect")))
 					e.addPotionEffect(eff);
 			}
 		}

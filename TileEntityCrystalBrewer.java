@@ -173,7 +173,7 @@ public class TileEntityCrystalBrewer extends TileEntityBase implements ISidedInv
 	public void closeChest() {}
 
 	@Override
-	public boolean isStackValidForSlot(int i, ItemStack is) {
+	public boolean isItemValidForSlot(int i, ItemStack is) {
 		if (is.itemID == GeoItems.POTION.getShiftedItemID())
 			return i != 0;
 		if (is.itemID == GeoItems.SHARD.getShiftedItemID())
@@ -192,7 +192,7 @@ public class TileEntityCrystalBrewer extends TileEntityBase implements ISidedInv
 
 	@Override
 	public boolean canInsertItem(int i, ItemStack itemstack, int j) {
-		return this.isStackValidForSlot(i, itemstack);
+		return this.isItemValidForSlot(i, itemstack);
 	}
 
 	@Override

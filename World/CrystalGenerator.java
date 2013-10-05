@@ -107,7 +107,7 @@ public class CrystalGenerator implements IWorldGenerator {
 		if (world.provider.isHellWorld)
 			return GeoOptions.NETHER.getState() ? 1 : 0;
 		BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
-		if (world.provider.dimensionId == ReikaTwilightHelper.TWILIGHT_ID)
+		if (world.provider.dimensionId == ReikaTwilightHelper.getDimensionID())
 			return 2F;
 		if (biome == BiomeGenBase.mushroomIsland || biome == BiomeGenBase.mushroomIslandShore)
 			return 1.5F;
