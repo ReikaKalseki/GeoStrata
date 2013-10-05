@@ -177,7 +177,6 @@ public abstract class CrystalBlock extends Block {
 			}
 		}
 	}
-
 	private static boolean isPotionAllowed(PotionEffect eff, EntityLivingBase e) {
 		if (eff == null)
 			return false;
