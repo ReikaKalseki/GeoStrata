@@ -103,4 +103,10 @@ public class ItemCrystalPotion extends ItemPotion {
 		return ReikaDyeHelper.getColorFromDamage(dmg&15).getJavaColor().getRGB();
 	}
 
+	@Override
+	protected String getIconString()
+	{
+		return "potion";
+	}
+
 }
