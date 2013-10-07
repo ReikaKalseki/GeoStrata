@@ -79,9 +79,11 @@ public abstract class GeoPackets implements IPacketHandler {
 		}
 		switch (control) {
 		case 0:
-			CrystalBlock b = (CrystalBlock)Block.blocksList[world.getBlockId(x, y, z)];
-			if (b != null)
-				b.updateEffects(world, x, y, z);
+			Block b = Block.blocksList[world.getBlockId(x, y, z)];
+			if (b instanceof CrystalBlock) {
+				CrystalBlock cb = (CrystalBlock)b;
+				cb.updateEffects(world, x, y, z);
+			}
 			break;
 		}
 	}
