@@ -186,6 +186,8 @@ public abstract class CrystalBlock extends Block {
 			return true;
 		if (e.worldObj.provider.dimensionId == 1)
 			return true;
+		if (e.worldObj.provider.isSurfaceWorld())
+			return false;
 		Potion pot = Potion.potionTypes[eff.getPotionID()];
 		return ReikaPotionHelper.isBadEffect(pot);
 	}
