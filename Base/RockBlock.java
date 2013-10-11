@@ -13,11 +13,13 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import Reika.DragonAPI.Libraries.ReikaEnchantmentHelper;
 import Reika.DragonAPI.ModInteract.TinkerToolHandler;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.RockTypes;
@@ -36,14 +38,19 @@ public abstract class RockBlock extends Block {
 	public final float getPlayerRelativeBlockHardness(EntityPlayer ep, World world, int x, int y, int z) {
 		ItemStack is = ep.getCurrentEquippedItem();
 		int meta = world.getBlockMetadata(x, y, z);
+		float eff = 1;
+		if (is != null) {
+			int level = ReikaEnchantmentHelper.getEnchantmentLevel(Enchantment.efficiency, is);
+			eff = ReikaEnchantmentHelper.getEfficiencyMultiplier(level);
+		}
 		if (!this.canHarvestBlock(ep, meta))
 			return 0.1F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness;
 		if (is == null)
 			return 0.4F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness;
 		if (TinkerToolHandler.getInstance().isPick(is) || TinkerToolHandler.getInstance().isHammer(is)) {
-			return 0.1875F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness*6;
+			return 0.1875F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness*6*eff;
 		}
-		return 0.1875F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness*is.getItem().getStrVsBlock(is, this);
+		return 0.1875F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness*is.getItem().getStrVsBlock(is, this)*eff;
 	}
 
 	@Override

@@ -181,4 +181,9 @@ public class GeoStrata extends DragonAPIMod {
 	public String getVersionName() {
 		return "Gamma";
 	}
+
+	@Override
+	public ModLogger getModLogger() {
+		return logger;
+	}
 }
