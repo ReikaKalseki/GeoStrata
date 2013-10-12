@@ -15,6 +15,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.EffectRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntityMob;
@@ -193,7 +194,7 @@ public abstract class CrystalBlock extends Block {
 	}
 
 	@Override
-	public boolean canDragonDestroy(World world, int x, int y, int z) {
+	public boolean canEntityDestroy(World world, int x, int y, int z, Entity e) {
 		return false;
 	}
 }

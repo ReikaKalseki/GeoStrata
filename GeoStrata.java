@@ -34,10 +34,8 @@ import Reika.GeoStrata.World.CrystalGenerator;
 import Reika.GeoStrata.World.RetroCrystalGenerator;
 import Reika.GeoStrata.World.RockGenerator;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Init;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PostInit;
-import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -74,7 +72,7 @@ public class GeoStrata extends DragonAPIMod {
 	public static GeoCommon proxy;
 
 	@Override
-	@PreInit
+	@EventHandler
 	public void preload(FMLPreInitializationEvent evt) {
 		config.loadSubfolderedConfigFile(evt);
 		config.initProps(evt);
@@ -83,7 +81,7 @@ public class GeoStrata extends DragonAPIMod {
 	}
 
 	@Override
-	@Init
+	@EventHandler
 	public void load(FMLInitializationEvent event) {
 		this.loadClasses();
 		this.loadDictionary();
@@ -99,7 +97,7 @@ public class GeoStrata extends DragonAPIMod {
 	}
 
 	@Override
-	@PostInit // Like the modsLoaded thing from ModLoader
+	@EventHandler // Like the modsLoaded thing from ModLoader
 	public void postload(FMLPostInitializationEvent evt) {
 
 	}
