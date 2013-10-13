@@ -180,7 +180,7 @@ public class TileEntityCrystalBrewer extends TileEntityBase implements ISidedInv
 			return i == 0;
 		if (is.itemID == Item.potion.itemID)
 			return i != 0;
-		if (is.getItem().hasEffect(is))
+		if (is.getItem().getPotionEffect(is) != null)
 			return i == 0;
 		return false;
 	}
