@@ -30,7 +30,6 @@ import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.ReikaPotionHelper;
 import Reika.DragonAPI.Libraries.IO.ReikaPacketHelper;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
-import Reika.DragonAPI.Libraries.Java.ReikaReflectionHelper;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaParticleHelper;
@@ -172,12 +171,13 @@ public abstract class CrystalBlock extends Block {
 				break;
 			default:
 				PotionEffect eff = CrystalPotionController.getEffectFromColor(color, dura, 0);
-				if (eff != null && !(e instanceof EntityPlayer && ReikaReflectionHelper.getPrivateBoolean(Potion.potionTypes[eff.getPotionID()], "isBadEffect")))
+				if (eff != null)
 					if (this.isPotionAllowed(eff, e))
 						e.addPotionEffect(eff);
 			}
 		}
 	}
+
 	private static boolean isPotionAllowed(PotionEffect eff, EntityLivingBase e) {
 		if (eff == null)
 			return false;
@@ -187,10 +187,8 @@ public abstract class CrystalBlock extends Block {
 			return true;
 		if (e.worldObj.provider.dimensionId == 1)
 			return true;
-		if (e.worldObj.provider.isSurfaceWorld())
-			return false;
 		Potion pot = Potion.potionTypes[eff.getPotionID()];
-		return ReikaPotionHelper.isBadEffect(pot);
+		return !ReikaPotionHelper.isBadEffect(pot);
 	}
 
 	@Override
