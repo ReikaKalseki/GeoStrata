@@ -103,8 +103,8 @@ public class GeoStrata extends DragonAPIMod {
 	}
 
 	public static void loadClasses() {
-		ReikaRegistryHelper.instantiateAndRegisterBlocks(instance, GeoBlocks.blockList, blocks, logger.shouldLog());
-		ReikaRegistryHelper.instantiateAndRegisterItems(instance, GeoItems.itemList, items, logger.shouldLog());
+		ReikaRegistryHelper.instantiateAndRegisterBlocks(instance, GeoBlocks.blockList, blocks);
+		ReikaRegistryHelper.instantiateAndRegisterItems(instance, GeoItems.itemList, items);
 	}
 
 	public static void loadDictionary() {
