@@ -39,7 +39,8 @@ public enum RockTypes {
 	QUARTZ(		40, 4, 		0, 	64, 	0.5F, 	EnumToolMaterial.IRON), //??
 	GRANULITE(	30, 5, 		16, 32, 	0.7F, 	EnumToolMaterial.STONE), //?
 	HORNFEL(	60, 10, 	0, 	64, 	0.8F, 	EnumToolMaterial.STONE), //snow biomes?
-	MIGMATITE(	30, 5, 		0, 	16, 	0.6F, 	EnumToolMaterial.STONE); //near lava?
+	MIGMATITE(	30, 5, 		0, 	16, 	0.6F, 	EnumToolMaterial.STONE), //near lava?
+	SCHIST(		30, 7.5F,	16, 48,		0.8F,	EnumToolMaterial.STONE);
 
 	public final float blockHardness; //stone has 30
 	public final float blastResistance; //stone has 5
