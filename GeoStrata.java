@@ -109,7 +109,6 @@ public class GeoStrata extends DragonAPIMod {
 				GrinderAPI.addRecipe(cobble, new ItemStack(Block.gravel));
 			}
 		}
-		GrinderAPI.addGrindableSeed(new ItemStack(Item.seeds));
 	}
 
 	public static void loadClasses() {
