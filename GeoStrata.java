@@ -19,6 +19,7 @@ import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.oredict.OreDictionary;
 import Reika.DragonAPI.DragonAPICore;
 import Reika.DragonAPI.RetroGenController;
+import Reika.DragonAPI.Auxiliary.ModList;
 import Reika.DragonAPI.Base.DragonAPIMod;
 import Reika.DragonAPI.Instantiable.ControlledConfig;
 import Reika.DragonAPI.Instantiable.ModLogger;
@@ -33,6 +34,7 @@ import Reika.GeoStrata.Registry.RockTypes;
 import Reika.GeoStrata.World.CrystalGenerator;
 import Reika.GeoStrata.World.RetroCrystalGenerator;
 import Reika.GeoStrata.World.RockGenerator;
+import Reika.RotaryCraft.API.GrinderAPI;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -99,7 +101,15 @@ public class GeoStrata extends DragonAPIMod {
 	@Override
 	@EventHandler // Like the modsLoaded thing from ModLoader
 	public void postload(FMLPostInitializationEvent evt) {
-
+		if (ModList.ROTARYCRAFT.isLoaded()) {
+			for (int i = 0; i < RockTypes.rockList.length; i++) {
+				ItemStack smooth = new ItemStack(GeoBlocks.SMOOTH.getBlockID(), 1, i);
+				ItemStack cobble = new ItemStack(GeoBlocks.COBBLE.getBlockID(), 1, i);
+				GrinderAPI.addRecipe(smooth, cobble);
+				GrinderAPI.addRecipe(cobble, new ItemStack(Block.gravel));
+			}
+		}
+		GrinderAPI.addGrindableSeed(new ItemStack(Item.seeds));
 	}
 
 	public static void loadClasses() {
