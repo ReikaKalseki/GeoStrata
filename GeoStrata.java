@@ -80,6 +80,9 @@ public class GeoStrata extends DragonAPIMod {
 		config.initProps(evt);
 		logger = new ModLogger(instance, GeoOptions.LOGLOADING.getState(), GeoOptions.DEBUGMODE.getState(), false);
 		proxy.registerSounds();
+
+		ReikaRegistryHelper.setupModData(instance, evt);
+		ReikaRegistryHelper.setupVersionChecking(evt);
 	}
 
 	@Override
