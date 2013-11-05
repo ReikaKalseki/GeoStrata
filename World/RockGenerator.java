@@ -17,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.feature.WorldGenMinable;
+import Reika.DragonAPI.ModInteract.ReikaTwilightHelper;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockTypes;
@@ -30,12 +31,22 @@ public class RockGenerator implements IWorldGenerator {
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkgen, IChunkProvider provider) {
-		if (GeoOptions.ROCKGEN.getState() && world.provider.dimensionId == 0) {
-			this.generateOverworld(world, random, chunkX, chunkZ);
+		if (GeoOptions.ROCKGEN.getState() && this.canGenInDimension(world.provider.dimensionId)) {
+			this.generateRock(world, random, chunkX, chunkZ);
 		}
 	}
 
-	private void generateOverworld(World world, Random random, int chunkX, int chunkZ) {
+	private boolean canGenInDimension(int id) {
+		if (id == 0)
+			return true;
+		if (id == 1 || id == -1)
+			return false;
+		if (id == ReikaTwilightHelper.getDimensionID())
+			return true;
+		return false;
+	}
+
+	private void generateRock(World world, Random random, int chunkX, int chunkZ) {
 		chunkX *= 16;
 		chunkZ *= 16;
 		//ReikaJavaLibrary.pConsole("Calling chunk at "+chunkX+", "+chunkZ);
