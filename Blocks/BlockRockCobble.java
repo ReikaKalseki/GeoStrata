@@ -42,7 +42,7 @@ public class BlockRockCobble extends RockBlock {
 	public void registerIcons(IconRegister ico) {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
 			icons[i] = ico.registerIcon("GeoStrata:"+RockTypes.rockList[i].getName().toLowerCase()+"_c");
-			GeoStrata.logger.log("Adding "+RockTypes.rockList[i].getName()+" cobble icon "+icons[i].getIconName());
+			GeoStrata.logger.debug("Adding "+RockTypes.rockList[i].getName()+" cobble icon "+icons[i].getIconName());
 		}
 	}
 }

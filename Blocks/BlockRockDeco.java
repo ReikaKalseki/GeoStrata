@@ -34,7 +34,7 @@ public class BlockRockDeco extends Block {
 	public void registerIcons(IconRegister ico) {
 		for (int i = 0; i < DecoBlocks.list.length; i++) {
 			icons[i] = ico.registerIcon("GeoStrata:"+DecoBlocks.list[i].getTex());
-			GeoStrata.logger.log("Adding "+DecoBlocks.list[i].getName()+" decorative block icon "+icons[i].getIconName());
+			GeoStrata.logger.debug("Adding "+DecoBlocks.list[i].getName()+" decorative block icon "+icons[i].getIconName());
 		}
 	}
 

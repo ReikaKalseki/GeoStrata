@@ -45,7 +45,7 @@ public class BlockSmooth extends RockBlock {
 	public void registerIcons(IconRegister ico) {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
 			icons[i] = ico.registerIcon("GeoStrata:"+RockTypes.rockList[i].getName().toLowerCase());
-			GeoStrata.logger.log("Adding "+RockTypes.rockList[i].getName()+" rock icon "+icons[i].getIconName());
+			GeoStrata.logger.debug("Adding "+RockTypes.rockList[i].getName()+" rock icon "+icons[i].getIconName());
 		}
 	}
 
