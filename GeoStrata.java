@@ -139,6 +139,7 @@ public class GeoStrata extends DragonAPIMod {
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(brick, 4), new Object[]{
 				"SS", "SS", 'S', smooth});
 			FurnaceRecipes.smelting().addSmelting(cobble.itemID, cobble.getItemDamage(), smooth, 0.2F);
+			GameRegistry.addShapelessRecipe(new ItemStack(Block.cobblestone), cobble);
 		}
 
 		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
