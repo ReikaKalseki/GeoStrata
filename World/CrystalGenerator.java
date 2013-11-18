@@ -66,7 +66,7 @@ public class CrystalGenerator implements IWorldGenerator {
 			return false;
 		if (!canGenerateOn(idb, metab))
 			return false;
-		return ReikaWorldHelper.checkForAdjBlock(world, x, y, z, 0) != -1;
+		return ReikaWorldHelper.checkForAdjBlock(world, x, y, z, 0) != null;
 	}
 
 	public static boolean canGenerateOn(int id, int meta) {
