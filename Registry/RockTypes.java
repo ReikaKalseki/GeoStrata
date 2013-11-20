@@ -14,12 +14,16 @@ import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeDictionary.Type;
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
+import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.DragonAPI.ModInteract.TinkerToolHandler;
 
 public enum RockTypes {
@@ -40,7 +44,8 @@ public enum RockTypes {
 	GRANULITE(	30, 5, 		16, 32, 	0.7F, 	EnumToolMaterial.STONE), //?
 	HORNFEL(	60, 10, 	0, 	64, 	0.8F, 	EnumToolMaterial.STONE), //snow biomes?
 	MIGMATITE(	30, 5, 		0, 	16, 	0.6F, 	EnumToolMaterial.STONE), //near lava?
-	SCHIST(		30, 7.5F,	16, 48,		0.8F,	EnumToolMaterial.STONE);
+	SCHIST(		30, 7.5F,	16, 48,		0.8F,	EnumToolMaterial.STONE),
+	ONYX(		40, 6F,		0,	24,		1F,		EnumToolMaterial.IRON);
 
 	public final float blockHardness; //stone has 30
 	public final float blastResistance; //stone has 5
@@ -147,11 +152,13 @@ public enum RockTypes {
 		case SANDSTONE:
 			return true;
 		case SHALE:
-			return true;
+			return !BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), Type.DESERT);
 		case SLATE:
 			return SHALE.canGenerateAt(world, x, y, z, r);
-		default:
-			return true;
+		case ONYX:
+			return ReikaWorldHelper.checkForAdjMaterial(world, x, y, z, Material.lava) != null;
+		case SCHIST:
+			break;
 		}
 		return true;
 	}

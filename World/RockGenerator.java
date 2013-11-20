@@ -70,6 +70,8 @@ public class RockGenerator implements IWorldGenerator {
 	private double getDensityFactor(RockTypes rock) {
 		List<RockTypes> types = rock.getCoincidentTypes();
 		int h = rock.maxY-rock.minY;
+		if (rock == RockTypes.ONYX)
+			h *= 2;
 		return 1F*h/64D*(3D/types.size());
 	}
 
