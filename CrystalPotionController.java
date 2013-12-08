@@ -35,6 +35,7 @@ public class CrystalPotionController {
 		addColorPotion(ReikaDyeHelper.PINK, Potion.damageBoost);
 		addColorPotion(ReikaDyeHelper.YELLOW, Potion.digSpeed);
 		addColorPotion(ReikaDyeHelper.WHITE, Potion.invisibility);
+		addColorPotion(ReikaDyeHelper.BROWN, Potion.field_76443_y);
 
 		addNetherPotion(ReikaDyeHelper.BLACK, Potion.wither);
 		addNetherPotion(ReikaDyeHelper.CYAN, Potion.hunger);
