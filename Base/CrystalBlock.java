@@ -96,9 +96,11 @@ public abstract class CrystalBlock extends Block {
 		int y = target.blockY;
 		int z = target.blockZ;
 		int color = world.getBlockMetadata(x, y, z);
-		double[] v = ReikaDyeHelper.getColorFromDamage(color).getRedstoneParticleVelocityForColor();
+		ReikaDyeHelper dye = ReikaDyeHelper.getColorFromDamage(color);
+		double[] v = dye.getRedstoneParticleVelocityForColor();
 		ReikaParticleHelper.spawnColoredParticles(world, x, y, z, v[0], v[1], v[2], 4);
-		ReikaPacketHelper.sendUpdatePacket(GeoStrata.packetChannel, 0, world, x, y, z);
+		if (dye != ReikaDyeHelper.PURPLE) //prevent an XP exploit
+			ReikaPacketHelper.sendUpdatePacket(GeoStrata.packetChannel, 0, world, x, y, z);
 		return false;
 	}
 
