@@ -12,8 +12,7 @@ package Reika.GeoStrata.Registry;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
-import Reika.DragonAPI.Interfaces.IDRegistry;
-import Reika.DragonAPI.Interfaces.RegistrationList;
+import Reika.DragonAPI.Interfaces.RegistryEnum;
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.GeoStrata.GeoStrata;
@@ -30,7 +29,7 @@ import Reika.GeoStrata.Items.ItemBlockCrystal;
 import Reika.GeoStrata.Items.ItemBlockRock;
 import Reika.GeoStrata.Items.ItemBlockRockDeco;
 
-public enum GeoBlocks implements RegistrationList, IDRegistry {
+public enum GeoBlocks implements RegistryEnum {
 
 	SMOOTH(BlockSmooth.class, ItemBlockRock.class, "Smooth Rock"),
 	COBBLE(BlockRockCobble.class, ItemBlockRock.class, "Rock Cobble"),

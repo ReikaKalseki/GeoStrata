@@ -88,6 +88,7 @@ public class CrystalRenderer implements ISimpleBlockRenderingHandler {
 		int alpha = 220;
 
 		Icon ico = GeoBlocks.CRYSTAL.getBlockInstance().getIcon(0, meta);
+		//ico = Block.blockNetherQuartz.getIcon(0, 0);
 		double u = ico.getMinU();
 		double v = ico.getMinV();
 		double xu = ico.getMaxU();
@@ -126,7 +127,7 @@ public class CrystalRenderer implements ISimpleBlockRenderingHandler {
 		if ((val & 1) == 1)
 			this.renderZAngledSpike(v5, u, v, xu, xv, -0.1875, w); //1,3,5,7,9,11,13,15
 
-		v5.setColorOpaque(0, 0, 0);
+		//v5.setColorOpaque(0, 0, 0);
 		//this.renderOutline(v5);
 
 		if (b.blockID == GeoBlocks.LAMP.getBlockID())

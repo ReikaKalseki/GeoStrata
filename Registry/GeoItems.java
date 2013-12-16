@@ -12,15 +12,14 @@ package Reika.GeoStrata.Registry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import Reika.DragonAPI.Interfaces.IDRegistry;
-import Reika.DragonAPI.Interfaces.RegistrationList;
+import Reika.DragonAPI.Interfaces.RegistryEnum;
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Items.ItemCrystalPotion;
 import Reika.GeoStrata.Items.ItemCrystalShard;
 
-public enum GeoItems implements RegistrationList, IDRegistry {
+public enum GeoItems implements RegistryEnum {
 
 	SHARD("Crystal Shard", ItemCrystalShard.class),
 	POTION("Crystal Potion", ItemCrystalPotion.class);
