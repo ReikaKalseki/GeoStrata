@@ -72,7 +72,7 @@ public enum GeoItems implements RegistryEnum {
 		switch(this) {
 		case SHARD:
 		case POTION:
-			return ReikaDyeHelper.dyes[meta].getName()+" "+this.getBasicName();
+			return ReikaDyeHelper.dyes[meta].colorName+" "+this.getBasicName();
 		default:
 			return "";
 		}

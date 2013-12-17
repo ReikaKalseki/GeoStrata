@@ -104,9 +104,9 @@ public enum GeoBlocks implements RegistryEnum {
 		case BRICK:
 			return RockTypes.rockList[meta].getName()+" Bricks";
 		case CRYSTAL:
-			return ReikaDyeHelper.dyes[meta].getName()+" "+GeoBlocks.CRYSTAL.getBasicName();
+			return ReikaDyeHelper.dyes[meta].colorName+" "+GeoBlocks.CRYSTAL.getBasicName();
 		case LAMP:
-			return ReikaDyeHelper.dyes[meta].getName()+" "+GeoBlocks.LAMP.getBasicName();
+			return ReikaDyeHelper.dyes[meta].colorName+" "+GeoBlocks.LAMP.getBasicName();
 		case DECO:
 			return DecoBlocks.list[meta].getName();
 		default:

@@ -122,7 +122,7 @@ public class GeoStrata extends DragonAPIMod {
 	public static void loadDictionary() {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
 			ItemStack cobble = new ItemStack(GeoBlocks.COBBLE.getBlockID(), 1, i);
-			OreDictionary.registerOre("blockCobble", cobble);
+			OreDictionary.registerOre("cobblestone", cobble);
 		}
 	}
 
@@ -139,7 +139,7 @@ public class GeoStrata extends DragonAPIMod {
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(brick, 4), new Object[]{
 				"SS", "SS", 'S', smooth});
 			FurnaceRecipes.smelting().addSmelting(cobble.itemID, cobble.getItemDamage(), smooth, 0.2F);
-			GameRegistry.addShapelessRecipe(new ItemStack(Block.cobblestone), cobble);
+			//GameRegistry.addShapelessRecipe(new ItemStack(Block.cobblestone), cobble);
 		}
 
 		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {

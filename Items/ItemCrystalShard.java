@@ -33,7 +33,7 @@ public class ItemCrystalShard extends GeoItem {
 	public void registerIcons(IconRegister ico) {
 		for (int i = 0; i < 16; i++) {
 			icons[i] = ico.registerIcon("GeoStrata:shard_"+ReikaDyeHelper.dyes[i].name().toLowerCase());
-			GeoStrata.logger.log("Adding "+ReikaDyeHelper.dyes[i].getName()+" shard icon "+icons[i].getIconName());
+			GeoStrata.logger.debug("Adding "+ReikaDyeHelper.dyes[i].colorName+" shard icon "+icons[i].getIconName());
 		}
 	}
 
