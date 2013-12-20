@@ -23,7 +23,8 @@ public enum GeoOptions implements ConfigList {
 	RETROGEN("Retrogen Crystals", false),
 	NOISE("Lamp Noises", true),
 	EFFECTS("Lamp Effects", false),
-	NETHER("Nether Crystals", true);
+	NETHER("Nether Crystals", true),
+	PURPLE("Instant-XP on Purple Crystals Break", false);
 
 	private String label;
 	private boolean defaultState;
