@@ -148,6 +148,14 @@ public class GeoStrata extends DragonAPIMod {
 			GameRegistry.addRecipe(lamp, " s ", "sss", "SSS", 's', shard, 'S', ReikaItemHelper.stoneSlab);
 		}
 
+		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
+			ItemStack shard = GeoItems.SHARD.getStackOfMetadata(i);
+			ItemStack lamp = new ItemStack(GeoBlocks.LAMP.getBlockID(), 1, i);
+			ItemStack potion = new ItemStack(GeoBlocks.SUPER.getBlockID(), 1, i);
+			GameRegistry.addRecipe(potion, "RsG", "sss", "SDS", 's', shard, 'S', Block.obsidian, 'D', Block.blockGold, 'R', Block.blockRedstone, 'G', Block.glowStone);
+			GameRegistry.addRecipe(potion, "RlG", "SDS", 'l', lamp, 'S', Block.obsidian, 'D', Block.blockGold, 'R', Block.blockRedstone, 'G', Block.glowStone);
+		}
+
 		DecoBlocks.EMERALDBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.blockEmerald);
 		DecoBlocks.REDBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.blockRedstone);
 		DecoBlocks.QUARTZBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.blockNetherQuartz);

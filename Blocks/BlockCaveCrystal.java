@@ -52,7 +52,7 @@ public class BlockCaveCrystal extends CrystalBlock {
 	@Override
 	public boolean canSilkHarvest(World world, EntityPlayer ep, int x, int y, int z, int meta)
 	{
-		if (ModList.ROTARYCRAFT.isLoaded()) {
+		if (ModList.ROTARYCRAFT.isLoaded() && ep != null) {
 			if (ItemFetcher.isPlayerHoldingBedrockPick(ep)) {
 				return true;
 			}

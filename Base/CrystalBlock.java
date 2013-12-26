@@ -27,6 +27,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import Reika.DragonAPI.Libraries.ReikaPotionHelper;
 import Reika.DragonAPI.Libraries.IO.ReikaPacketHelper;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
@@ -106,10 +107,11 @@ public abstract class CrystalBlock extends Block {
 
 	public void updateEffects(World world, int x, int y, int z) {
 		Random rand = new Random();
-		if (blockID == GeoBlocks.CRYSTAL.getBlockID() || GeoOptions.NOISE.getState())
+		if (this.shouldMakeNoise())
 			world.playSoundEffect(x+0.5, y+0.5, z+0.5, "random.orb", 0.05F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.8F));
-		if (blockID == GeoBlocks.CRYSTAL.getBlockID() || GeoOptions.EFFECTS.getState()) {
-			AxisAlignedBB box = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x+1, y+1, z+1).expand(3, 3, 3);
+		if (this.shouldGiveEffects()) {
+			int r = this.getRange();
+			AxisAlignedBB box = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x+1, y+1, z+1).expand(r, r, r);
 			List inbox = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 			for (int i = 0; i < inbox.size(); i++) {
 				EntityLivingBase e = (EntityLivingBase)inbox.get(i);
@@ -119,9 +121,46 @@ public abstract class CrystalBlock extends Block {
 		}
 	}
 
+	public boolean shouldMakeNoise() {
+		if (GeoOptions.NOISE.getState())
+			return true;
+		return blockID == GeoBlocks.CRYSTAL.getBlockID();
+	}
+
+	public boolean shouldGiveEffects() {
+		if (GeoOptions.EFFECTS.getState())
+			return true;
+		return blockID != GeoBlocks.LAMP.getBlockID();
+	}
+
+	public int getRange() {
+		return blockID == GeoBlocks.SUPER.getBlockID() ? 12 : 3;
+	}
+
+	public int getDuration() {
+		return blockID == GeoBlocks.SUPER.getBlockID() ? 6000 : 200;
+	}
+
+	public boolean renderAllArms() {
+		return this.renderBase();
+	}
+
+	public boolean renderBase() {
+		return blockID != GeoBlocks.CRYSTAL.getBlockID();
+	}
+
+	public Block getBaseBlock(ForgeDirection side) {
+		return blockID == GeoBlocks.SUPER.getBlockID() ? Block.obsidian : side.offsetY == 0 ? Block.stone : Block.stoneDoubleSlab;
+	}
+
+	public int getPotionLevel() {
+		return blockID == GeoBlocks.SUPER.getBlockID() ? 2 : 0;
+	}
+
 	private void getEffectFromColor(EntityLivingBase e, ReikaDyeHelper color) {
 		World world = e.worldObj;
-		int dura = 200;
+		int dura = this.getDuration();
+		int level = this.getPotionLevel();
 		if (world.provider.isHellWorld) {
 			switch(color) {
 			case ORANGE:
@@ -140,13 +179,13 @@ public abstract class CrystalBlock extends Block {
 				break;
 			case BROWN:
 				if (!e.isPotionActive(Potion.confusion.id))
-					e.addPotionEffect(new PotionEffect(Potion.confusion.id, 360, 0));
+					e.addPotionEffect(new PotionEffect(Potion.confusion.id, (int)(dura*1.8), level));
 				break;
 			case LIME:
 				e.addPotionEffect(new PotionEffect(Potion.jump.id, dura, -5));
 				break;
 			default:
-				PotionEffect eff = CrystalPotionController.getNetherEffectFromColor(color, dura, 0);
+				PotionEffect eff = CrystalPotionController.getNetherEffectFromColor(color, dura, level);
 				if (this.isPotionAllowed(eff, e))
 					e.addPotionEffect(eff);
 			}
@@ -168,10 +207,12 @@ public abstract class CrystalBlock extends Block {
 					e.worldObj.spawnEntityInWorld(new EntityXPOrb(e.worldObj, e.posX, e.posY, e.posZ, 1));
 				break;
 			default:
-				PotionEffect eff = CrystalPotionController.getEffectFromColor(color, dura, 0);
-				if (eff != null)
-					if (this.isPotionAllowed(eff, e))
+				PotionEffect eff = CrystalPotionController.getEffectFromColor(color, dura, level);
+				if (eff != null) {
+					if (this.isPotionAllowed(eff, e)) {
 						e.addPotionEffect(eff);
+					}
+				}
 			}
 		}
 	}

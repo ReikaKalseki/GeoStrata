@@ -16,8 +16,10 @@ import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.ForgeDirection;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.Base.CrystalBlock;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
@@ -56,7 +58,7 @@ public class CrystalRenderer implements ISimpleBlockRenderingHandler {
 		this.renderZAngledSpike(v5, u, v, xu, xv, 0.1875, w);
 		v5.draw();
 
-		if (b.blockID == GeoBlocks.LAMP.getBlockID()) {
+		if (((CrystalBlock)b).renderBase()) {
 
 			v5.startDrawingQuads();
 			//v5.setBrightness(240);
@@ -73,7 +75,7 @@ public class CrystalRenderer implements ISimpleBlockRenderingHandler {
 			v5.startDrawingQuads();
 			//v5.setBrightness(240);
 			v5.setColorRGBA_F(red/255F, green/255F, blue/255F, alpha/255F);
-			this.renderBase(v5);
+			this.renderBase(v5, (CrystalBlock)b);
 			v5.draw();
 		}
 	}
@@ -116,7 +118,7 @@ public class CrystalRenderer implements ISimpleBlockRenderingHandler {
 
 		this.renderSpike(v5, u, v, xu, xv, w);
 		int val = Math.abs(x)%9+Math.abs(z)%9; //16 combos -> binary selector
-		if (val > 15 || b.blockID == GeoBlocks.LAMP.getBlockID())
+		if (val > 15 || ((CrystalBlock)b).renderAllArms())
 			val = 15;
 		if ((val & 8) == 8)
 			this.renderXAngledSpike(v5, u, v, xu, xv, 0.1875, w); //8,9,10,11,12,13,14,15
@@ -130,15 +132,16 @@ public class CrystalRenderer implements ISimpleBlockRenderingHandler {
 		//v5.setColorOpaque(0, 0, 0);
 		//this.renderOutline(v5);
 
-		if (b.blockID == GeoBlocks.LAMP.getBlockID())
-			this.renderBase(v5);
+		if (((CrystalBlock)b).renderBase()) {
+			this.renderBase(v5, (CrystalBlock)b);
+		}
 
 		v5.addTranslation(-x, -y, -z);
 		return true;
 	}
 
-	private void renderBase(Tessellator v5) {
-		Icon ico = Block.stoneDoubleSlab.getIcon(0, 0);
+	private void renderBase(Tessellator v5, CrystalBlock b) {
+		Icon ico = b.getBaseBlock(ForgeDirection.UP).getIcon(0, 0);
 		int w = ico.getIconWidth();
 
 		v5.setColorOpaque(255, 255, 255);
@@ -155,12 +158,13 @@ public class CrystalRenderer implements ISimpleBlockRenderingHandler {
 		v5.addVertexWithUV(1, top, 0, xu, v);
 		v5.addVertexWithUV(0, top, 0, u, v);
 
+		v5.setColorOpaque(110, 110, 110);
 		v5.addVertexWithUV(0, 0, 1, u, xv);
 		v5.addVertexWithUV(1, 0, 1, xu, xv);
 		v5.addVertexWithUV(1, 0, 0, xu, v);
 		v5.addVertexWithUV(0, 0, 0, u, v);
 
-		ico = Block.stone.getIcon(0, 0);
+		ico = b.getBaseBlock(ForgeDirection.EAST).getIcon(0, 0);
 		u = ico.getMinU();
 		v = ico.getMinV();
 		xu = ico.getMaxU();
@@ -168,21 +172,25 @@ public class CrystalRenderer implements ISimpleBlockRenderingHandler {
 
 		double vv = v+(xv-v)/(w)*2;
 
+		v5.setColorOpaque(200, 200, 200);
 		v5.addVertexWithUV(0, 0, 0, u, v);
 		v5.addVertexWithUV(1, 0, 0, xu, v);
 		v5.addVertexWithUV(1, top, 0, xu, vv);
 		v5.addVertexWithUV(0, top, 0, u, vv);
 
+		v5.setColorOpaque(170, 170, 170);
 		v5.addVertexWithUV(0, 0, 1, u, v);
 		v5.addVertexWithUV(1, 0, 1, xu, v);
 		v5.addVertexWithUV(1, top, 1, xu, vv);
 		v5.addVertexWithUV(0, top, 1, u, vv);
 
+		v5.setColorOpaque(200, 200, 200);
 		v5.addVertexWithUV(0, top, 0, u, vv);
 		v5.addVertexWithUV(0, top, 1, xu, vv);
 		v5.addVertexWithUV(0, 0, 1, xu, v);
 		v5.addVertexWithUV(0, 0, 0, u, v);
 
+		v5.setColorOpaque(170, 170, 170);
 		v5.addVertexWithUV(1, top, 0, u, vv);
 		v5.addVertexWithUV(1, top, 1, xu, vv);
 		v5.addVertexWithUV(1, 0, 1, xu, v);

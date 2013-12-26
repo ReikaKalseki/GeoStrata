@@ -25,9 +25,11 @@ import Reika.GeoStrata.Blocks.BlockRockBrick;
 import Reika.GeoStrata.Blocks.BlockRockCobble;
 import Reika.GeoStrata.Blocks.BlockRockDeco;
 import Reika.GeoStrata.Blocks.BlockSmooth;
+import Reika.GeoStrata.Blocks.BlockSuperCrystal;
 import Reika.GeoStrata.Items.ItemBlockCrystal;
 import Reika.GeoStrata.Items.ItemBlockRock;
 import Reika.GeoStrata.Items.ItemBlockRockDeco;
+import Reika.GeoStrata.Items.ItemBlockSuper;
 
 public enum GeoBlocks implements RegistryEnum {
 
@@ -37,7 +39,8 @@ public enum GeoBlocks implements RegistryEnum {
 	CRYSTAL(BlockCaveCrystal.class, ItemBlockCrystal.class, "Cave Crystal"), //Comes in all dye colors
 	LAMP(BlockCrystalLamp.class, ItemBlockCrystal.class, "Crystal Lamp"),
 	DECO(BlockRockDeco.class, ItemBlockRockDeco.class, "Deco Blocks"),
-	BREWER(BlockCrystalBrewer.class, null, "Crystal Brewery");
+	BREWER(BlockCrystalBrewer.class, null, "Crystal Brewery"),
+	SUPER(BlockSuperCrystal.class, ItemBlockSuper.class, "Potion Crystal");
 
 	private Class blockClass;
 	private String blockName;
@@ -105,6 +108,8 @@ public enum GeoBlocks implements RegistryEnum {
 			return RockTypes.rockList[meta].getName()+" Bricks";
 		case CRYSTAL:
 			return ReikaDyeHelper.dyes[meta].colorName+" "+GeoBlocks.CRYSTAL.getBasicName();
+		case SUPER:
+			return ReikaDyeHelper.dyes[meta].colorName+" "+GeoBlocks.SUPER.getBasicName();
 		case LAMP:
 			return ReikaDyeHelper.dyes[meta].colorName+" "+GeoBlocks.LAMP.getBasicName();
 		case DECO:
