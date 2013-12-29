@@ -11,10 +11,13 @@ package Reika.GeoStrata.Blocks;
 
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraftforge.common.ForgeDirection;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.GeoStrata.Base.CrystalBlock;
+import Reika.GeoStrata.Registry.GeoOptions;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -46,5 +49,40 @@ public class BlockCrystalLamp extends CrystalBlock {
 		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
 			icons[i] = ico.registerIcon("GeoStrata:"+"lamp_"+ReikaDyeHelper.dyes[i].name().toLowerCase());
 		}
+	}
+
+	@Override
+	public boolean shouldMakeNoise() {
+		return GeoOptions.NOISE.getState();
+	}
+
+	@Override
+	public boolean shouldGiveEffects() {
+		return GeoOptions.EFFECTS.getState();
+	}
+
+	@Override
+	public int getRange() {
+		return 3;
+	}
+
+	@Override
+	public int getDuration() {
+		return 200;
+	}
+
+	@Override
+	public boolean renderBase() {
+		return true;
+	}
+
+	@Override
+	public Block getBaseBlock(ForgeDirection side) {
+		return side.offsetY == 0 ? Block.stone : Block.stoneDoubleSlab;
+	}
+
+	@Override
+	public int getPotionLevel() {
+		return 0;
 	}
 }

@@ -30,22 +30,22 @@ public enum RockTypes {
 	//Generic makeup: Igneous 0-24; Metamorphic 16-40; Sedimentary 40+;
 
 	//NAME------BST-HARD----LO--HI------RARE----HARVESTABILITY
-	GRANITE(	60, 10, 	16, 48, 	1, 		EnumToolMaterial.IRON), //Near lava?
-	BASALT(		30, 5, 		48, 128, 	1, 		EnumToolMaterial.STONE), //Near lava
-	MARBLE(		45, 2.5F, 	16, 32, 	1, 		EnumToolMaterial.STONE), //??
-	LIMESTONE(	15, 1, 		48, 128, 	1, 		EnumToolMaterial.WOOD), //Near water bodies
-	SHALE(		5, 	1, 		48, 64, 	1, 		EnumToolMaterial.WOOD), //Near water
-	SANDSTONE(	10, 2, 		48, 128, 	1, 		EnumToolMaterial.WOOD), //Near sand
-	PUMICE(		20, 5, 		0, 	16, 	0.6F, 	EnumToolMaterial.WOOD), //Near water & lava
-	SLATE(		30, 5, 		32, 48, 	1, 		EnumToolMaterial.STONE), //Can shale gen
-	GNEISS(		30, 7.5F, 	16, 32, 	0.8F, 	EnumToolMaterial.IRON), //Can granite gen
-	PERIDOTITE(	30, 5, 		0, 	24, 	0.6F, 	EnumToolMaterial.STONE), //Near lava?
-	QUARTZ(		40, 4, 		0, 	64, 	0.5F, 	EnumToolMaterial.IRON), //??
-	GRANULITE(	30, 5, 		16, 32, 	0.7F, 	EnumToolMaterial.STONE), //?
-	HORNFEL(	60, 10, 	0, 	64, 	0.8F, 	EnumToolMaterial.STONE), //snow biomes?
-	MIGMATITE(	30, 5, 		0, 	16, 	0.6F, 	EnumToolMaterial.STONE), //near lava?
-	SCHIST(		30, 7.5F,	16, 48,		0.8F,	EnumToolMaterial.STONE),
-	ONYX(		40, 6F,		0,	24,		1F,		EnumToolMaterial.IRON);
+	GRANITE(	60, 10, 	16, 48, 	1, 		EnumToolMaterial.IRON,	0xC4825E), //Near lava?
+	BASALT(		30, 5, 		48, 128, 	1, 		EnumToolMaterial.STONE,	0x252525), //Near lava
+	MARBLE(		45, 2.5F, 	16, 32, 	1, 		EnumToolMaterial.STONE,	0xB4B4BC), //??
+	LIMESTONE(	15, 1, 		48, 128, 	1, 		EnumToolMaterial.WOOD,	0xD0C4B3), //Near water bodies
+	SHALE(		5, 	1, 		48, 64, 	1, 		EnumToolMaterial.WOOD,	0x676970), //Near water
+	SANDSTONE(	10, 2, 		48, 128, 	1, 		EnumToolMaterial.WOOD,	0xD0AE90), //Near sand
+	PUMICE(		20, 5, 		0, 	16, 	0.6F, 	EnumToolMaterial.WOOD,	0xD6D4CB), //Near water & lava
+	SLATE(		30, 5, 		32, 48, 	1, 		EnumToolMaterial.STONE,	0x484B53), //Can shale gen
+	GNEISS(		30, 7.5F, 	16, 32, 	0.8F, 	EnumToolMaterial.IRON,	0x7A7B79), //Can granite gen
+	PERIDOTITE(	30, 5, 		0, 	24, 	0.6F, 	EnumToolMaterial.STONE,	0x485A4E), //Near lava?
+	QUARTZ(		40, 4, 		0, 	64, 	0.5F, 	EnumToolMaterial.IRON,	0xCCD5DC), //??
+	GRANULITE(	30, 5, 		16, 32, 	0.7F, 	EnumToolMaterial.STONE,	0xC1BF9E), //?
+	HORNFEL(	60, 10, 	0, 	64, 	0.8F, 	EnumToolMaterial.STONE,	0x7B7E87), //snow biomes?
+	MIGMATITE(	30, 5, 		0, 	16, 	0.6F, 	EnumToolMaterial.STONE,	0xA09F94), //near lava?
+	SCHIST(		30, 7.5F,	16, 48,		0.8F,	EnumToolMaterial.STONE,	0x3C3C44),
+	ONYX(		40, 6F,		0,	24,		1F,		EnumToolMaterial.IRON,	0x111111);
 
 	public final float blockHardness; //stone has 30
 	public final float blastResistance; //stone has 5
@@ -54,16 +54,18 @@ public enum RockTypes {
 	public final int maxY;
 	public final float rarity;
 	private boolean allBiomes = false;
+	public final int rockColor;
 
 	public static final RockTypes[] rockList = RockTypes.values();
 
-	private RockTypes(float hard, float blast, int ylo, int yhi, float rare, EnumToolMaterial tool) {
+	private RockTypes(float hard, float blast, int ylo, int yhi, float rare, EnumToolMaterial tool, int color) {
 		blastResistance = blast;
 		blockHardness = hard;
 		harvestTool = tool;
 		minY = ylo;
 		maxY = yhi;
 		rarity = rare;
+		rockColor = color;
 	}
 
 	public String getName() {

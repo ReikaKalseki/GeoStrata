@@ -12,11 +12,13 @@ package Reika.GeoStrata.Blocks;
 import java.util.ArrayList;
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
@@ -80,5 +82,40 @@ public class BlockCaveCrystal extends CrystalBlock {
 			//else
 			//icons[i] = ico.registerIcon("GeoStrata:crystal");
 		}
+	}
+
+	@Override
+	public boolean shouldMakeNoise() {
+		return true;
+	}
+
+	@Override
+	public boolean shouldGiveEffects() {
+		return true;
+	}
+
+	@Override
+	public int getRange() {
+		return 3;
+	}
+
+	@Override
+	public int getDuration() {
+		return 200;
+	}
+
+	@Override
+	public boolean renderBase() {
+		return false;
+	}
+
+	@Override
+	public Block getBaseBlock(ForgeDirection side) {
+		return Block.cobblestone;
+	}
+
+	@Override
+	public int getPotionLevel() {
+		return 0;
 	}
 }

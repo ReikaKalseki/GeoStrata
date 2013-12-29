@@ -36,14 +36,14 @@ import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaParticleHelper;
 import Reika.GeoStrata.CrystalPotionController;
 import Reika.GeoStrata.GeoStrata;
-import Reika.GeoStrata.Registry.GeoBlocks;
-import Reika.GeoStrata.Registry.GeoOptions;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class CrystalBlock extends Block {
 
 	protected final Icon[] icons = new Icon[ReikaDyeHelper.dyes.length];
+
+	private static final Random rand = new Random();
 
 	public CrystalBlock(int ID, Material mat) {
 		super(ID, mat);
@@ -106,56 +106,39 @@ public abstract class CrystalBlock extends Block {
 	}
 
 	public void updateEffects(World world, int x, int y, int z) {
-		Random rand = new Random();
-		if (this.shouldMakeNoise())
-			world.playSoundEffect(x+0.5, y+0.5, z+0.5, "random.orb", 0.05F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.8F));
-		if (this.shouldGiveEffects()) {
-			int r = this.getRange();
-			AxisAlignedBB box = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x+1, y+1, z+1).expand(r, r, r);
-			List inbox = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
-			for (int i = 0; i < inbox.size(); i++) {
-				EntityLivingBase e = (EntityLivingBase)inbox.get(i);
-				if (ReikaMathLibrary.py3d(e.posX-x-0.5, e.posY+e.getEyeHeight()/2F-y-0.5, e.posZ-z-0.5) <= 4)
-					this.getEffectFromColor(e, ReikaDyeHelper.getColorFromDamage(world.getBlockMetadata(x, y, z)));
+		if (!world.isRemote) {
+			if (this.shouldMakeNoise())
+				world.playSoundEffect(x+0.5, y+0.5, z+0.5, "random.orb", 0.05F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.8F));
+			if (this.shouldGiveEffects()) {
+				int r = this.getRange();
+				AxisAlignedBB box = AxisAlignedBB.getAABBPool().getAABB(x, y, z, x+1, y+1, z+1).expand(r, r, r);
+				List inbox = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
+				for (int i = 0; i < inbox.size(); i++) {
+					EntityLivingBase e = (EntityLivingBase)inbox.get(i);
+					if (ReikaMathLibrary.py3d(e.posX-x-0.5, e.posY+e.getEyeHeight()/2F-y-0.5, e.posZ-z-0.5) <= 4)
+						this.getEffectFromColor(e, ReikaDyeHelper.getColorFromDamage(world.getBlockMetadata(x, y, z)));
+				}
 			}
 		}
 	}
 
-	public boolean shouldMakeNoise() {
-		if (GeoOptions.NOISE.getState())
-			return true;
-		return blockID == GeoBlocks.CRYSTAL.getBlockID();
-	}
+	public abstract boolean shouldMakeNoise();
 
-	public boolean shouldGiveEffects() {
-		if (GeoOptions.EFFECTS.getState())
-			return true;
-		return blockID != GeoBlocks.LAMP.getBlockID();
-	}
+	public abstract boolean shouldGiveEffects();
 
-	public int getRange() {
-		return blockID == GeoBlocks.SUPER.getBlockID() ? 12 : 3;
-	}
+	public abstract int getRange();
 
-	public int getDuration() {
-		return blockID == GeoBlocks.SUPER.getBlockID() ? 6000 : 200;
-	}
+	public abstract int getDuration();
 
 	public boolean renderAllArms() {
 		return this.renderBase();
 	}
 
-	public boolean renderBase() {
-		return blockID != GeoBlocks.CRYSTAL.getBlockID();
-	}
+	public abstract boolean renderBase();
 
-	public Block getBaseBlock(ForgeDirection side) {
-		return blockID == GeoBlocks.SUPER.getBlockID() ? Block.obsidian : side.offsetY == 0 ? Block.stone : Block.stoneDoubleSlab;
-	}
+	public abstract Block getBaseBlock(ForgeDirection side);
 
-	public int getPotionLevel() {
-		return blockID == GeoBlocks.SUPER.getBlockID() ? 2 : 0;
-	}
+	public abstract int getPotionLevel();
 
 	private void getEffectFromColor(EntityLivingBase e, ReikaDyeHelper color) {
 		World world = e.worldObj;
@@ -220,13 +203,20 @@ public abstract class CrystalBlock extends Block {
 	private static boolean isPotionAllowed(PotionEffect eff, EntityLivingBase e) {
 		if (eff == null)
 			return false;
+		Potion pot = Potion.potionTypes[eff.getPotionID()];
+		PotionEffect has = e.getActivePotionEffect(pot);
+		if (has != null) {
+			if (has.getAmplifier() > eff.getAmplifier())
+				return false;
+			if (has.getDuration() > eff.getDuration())
+				return false;
+		}
 		if (!(e instanceof EntityPlayer))
 			return true;
 		if (e.worldObj.provider.isHellWorld)
 			return true;
 		if (e.worldObj.provider.dimensionId == 1)
 			return true;
-		Potion pot = Potion.potionTypes[eff.getPotionID()];
 		return !ReikaPotionHelper.isBadEffect(pot);
 	}
 

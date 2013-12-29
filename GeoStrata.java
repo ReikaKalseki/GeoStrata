@@ -34,6 +34,7 @@ import Reika.GeoStrata.Registry.RockTypes;
 import Reika.GeoStrata.World.CrystalGenerator;
 import Reika.GeoStrata.World.RetroCrystalGenerator;
 import Reika.GeoStrata.World.RockGenerator;
+import Reika.RotaryCraft.API.BlockColorInterface;
 import Reika.RotaryCraft.API.GrinderAPI;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -110,6 +111,23 @@ public class GeoStrata extends DragonAPIMod {
 				ItemStack cobble = new ItemStack(GeoBlocks.COBBLE.getBlockID(), 1, i);
 				GrinderAPI.addRecipe(smooth, cobble);
 				GrinderAPI.addRecipe(cobble, new ItemStack(Block.gravel));
+
+				BlockColorInterface.addGPRBlockColor(GeoBlocks.SMOOTH.getBlockID(), i, RockTypes.rockList[i].rockColor);
+				BlockColorInterface.addGPRBlockColor(GeoBlocks.COBBLE.getBlockID(), i, RockTypes.rockList[i].rockColor);
+				BlockColorInterface.addGPRBlockColor(GeoBlocks.BRICK.getBlockID(), i, RockTypes.rockList[i].rockColor);
+			}
+
+			for (int i = 0; i < DecoBlocks.list.length; i++) {
+				DecoBlocks block = DecoBlocks.list[i];
+				int color = BlockColorInterface.getColor(block.material.blockID, 0);
+				BlockColorInterface.addGPRBlockColor(GeoBlocks.DECO.getBlockID(), i, color);
+			}
+
+			for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
+				ReikaDyeHelper dye = ReikaDyeHelper.dyes[i];
+				BlockColorInterface.addGPRBlockColor(GeoBlocks.CRYSTAL.getBlockID(), i, dye.color);
+				BlockColorInterface.addGPRBlockColor(GeoBlocks.LAMP.getBlockID(), i, dye.color);
+				BlockColorInterface.addGPRBlockColor(GeoBlocks.SUPER.getBlockID(), i, dye.color);
 			}
 		}
 	}
@@ -156,12 +174,10 @@ public class GeoStrata extends DragonAPIMod {
 			GameRegistry.addRecipe(potion, "RlG", "SDS", 'l', lamp, 'S', Block.obsidian, 'D', Block.blockGold, 'R', Block.blockRedstone, 'G', Block.glowStone);
 		}
 
-		DecoBlocks.EMERALDBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.blockEmerald);
-		DecoBlocks.REDBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.blockRedstone);
-		DecoBlocks.QUARTZBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.blockNetherQuartz);
-		DecoBlocks.OBSIDIBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.obsidian);
-		DecoBlocks.GLOWBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.glowStone);
-		DecoBlocks.LAPISBRICKS.addSizedCrafting(4, "BB", "BB", 'B', Block.blockLapis);
+		for (int i = 0; i < DecoBlocks.list.length; i++) {
+			DecoBlocks block = DecoBlocks.list[i];
+			block.addSizedCrafting(4, "BB", "BB", 'B', block.material);
+		}
 
 		GameRegistry.addRecipe(new ItemStack(GeoBlocks.BREWER.getBlockID(), 1, 0), "NNN", "NBN", "SSS", 'N', Item.netherQuartz, 'S', Block.stone, 'B', Item.brewingStand);
 	}

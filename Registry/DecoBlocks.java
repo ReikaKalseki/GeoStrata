@@ -20,25 +20,27 @@ import Reika.DragonAPI.ModInteract.TinkerToolHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public enum DecoBlocks {
-	OBSIDIBRICKS("Obsidian Bricks", 30F, 2000F, EnumToolMaterial.EMERALD),
-	QUARTZBRICKS("Nether Quartz Bricks", 1.2F, 5F, EnumToolMaterial.IRON),
-	GLOWBRICKS("Glowstone Bricks", 0.75F, 3F, EnumToolMaterial.WOOD),
-	REDBRICKS("Redstone Bricks", 1F, 4F, EnumToolMaterial.IRON),
-	LAPISBRICKS("Lapis Lazuli Bricks", 1F, 4F, EnumToolMaterial.STONE),
-	EMERALDBRICKS("Emerald Bricks", 1F, 4F, EnumToolMaterial.IRON);
+	OBSIDIBRICKS("Obsidian Bricks", 30F, 2000F, EnumToolMaterial.EMERALD, Block.obsidian),
+	QUARTZBRICKS("Nether Quartz Bricks", 1.2F, 5F, EnumToolMaterial.IRON, Block.blockNetherQuartz),
+	GLOWBRICKS("Glowstone Bricks", 0.75F, 3F, EnumToolMaterial.WOOD, Block.glowStone),
+	REDBRICKS("Redstone Bricks", 1F, 4F, EnumToolMaterial.IRON, Block.blockRedstone),
+	LAPISBRICKS("Lapis Lazuli Bricks", 1F, 4F, EnumToolMaterial.STONE, Block.blockLapis),
+	EMERALDBRICKS("Emerald Bricks", 1F, 4F, EnumToolMaterial.IRON, Block.blockEmerald);
 
 	private String name;
 	private float blockHardness;
 	private float blastResistance;
 	private EnumToolMaterial mat;
+	public final Block material;
 
 	public static final DecoBlocks[] list = values();
 
-	private DecoBlocks(String n, float hard, float blast, EnumToolMaterial tool) {
+	private DecoBlocks(String n, float hard, float blast, EnumToolMaterial tool, Block b) {
 		name = n;
 		mat = tool;
 		blastResistance = blast;
 		blockHardness = hard;
+		material = b;
 	}
 
 	public void addCrafting(Object... data) {
