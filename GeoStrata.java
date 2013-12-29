@@ -116,12 +116,12 @@ public class GeoStrata extends DragonAPIMod {
 				BlockColorInterface.addGPRBlockColor(GeoBlocks.COBBLE.getBlockID(), i, RockTypes.rockList[i].rockColor);
 				BlockColorInterface.addGPRBlockColor(GeoBlocks.BRICK.getBlockID(), i, RockTypes.rockList[i].rockColor);
 			}
-
+			/*
 			for (int i = 0; i < DecoBlocks.list.length; i++) {
 				DecoBlocks block = DecoBlocks.list[i];
 				int color = BlockColorInterface.getColor(block.material.blockID, 0);
 				BlockColorInterface.addGPRBlockColor(GeoBlocks.DECO.getBlockID(), i, color);
-			}
+			}*/
 
 			for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
 				ReikaDyeHelper dye = ReikaDyeHelper.dyes[i];
