@@ -19,7 +19,6 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import Reika.DragonAPI.ModInteract.ReikaTwilightHelper;
 import Reika.GeoStrata.Registry.GeoBlocks;
-import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockTypes;
 import cpw.mods.fml.common.IWorldGenerator;
 
@@ -31,7 +30,8 @@ public class RockGenerator implements IWorldGenerator {
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkgen, IChunkProvider provider) {
-		if (GeoOptions.ROCKGEN.getState() && this.canGenInDimension(world.provider.dimensionId)) {
+		//if (GeoOptions.ROCKGEN.getState() && this.canGenInDimension(world.provider.dimensionId)) {
+		if (this.canGenInDimension(world.provider.dimensionId)) {
 			this.generateRock(world, random, chunkX, chunkZ);
 		}
 	}
