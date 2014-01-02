@@ -19,6 +19,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.Libraries.ReikaEnchantmentHelper;
 import Reika.DragonAPI.ModInteract.TinkerToolHandler;
 import Reika.GeoStrata.GeoStrata;
@@ -39,7 +40,7 @@ public abstract class RockBlock extends Block {
 	public final float getPlayerRelativeBlockHardness(EntityPlayer ep, World world, int x, int y, int z) {
 		ItemStack is = ep.getCurrentEquippedItem();
 		int meta = world.getBlockMetadata(x, y, z);
-		float mult = ItemFetcher.isPlayerHoldingBedrockPick(ep) ? 1.5F : 1;
+		float buff = ModList.ROTARYCRAFT.isLoaded() && ItemFetcher.isPlayerHoldingBedrockPick(ep) ? 1.5F : 1;
 		float eff = 1;
 		if (is != null) {
 			int level = ReikaEnchantmentHelper.getEnchantmentLevel(Enchantment.efficiency, is);
@@ -52,7 +53,7 @@ public abstract class RockBlock extends Block {
 		if (TinkerToolHandler.getInstance().isPick(is) || TinkerToolHandler.getInstance().isHammer(is)) {
 			return 0.1875F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness*6*eff;
 		}
-		return 0.1875F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness*is.getItem().getStrVsBlock(is, this)*eff*mult;
+		return 0.1875F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness*is.getItem().getStrVsBlock(is, this)*eff*buff;
 	}
 
 	@Override
