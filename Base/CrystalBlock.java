@@ -30,7 +30,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import Reika.DragonAPI.Libraries.ReikaPotionHelper;
 import Reika.DragonAPI.Libraries.IO.ReikaPacketHelper;
-import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaParticleHelper;
@@ -153,10 +152,14 @@ public abstract class CrystalBlock extends Block {
 				e.attackEntityFrom(DamageSource.magic, 1);
 				break;
 			case PURPLE:
-				if (!e.worldObj.isRemote && new Random().nextInt(5) == 0 && e instanceof EntityPlayer) {
-					if (((EntityPlayer)e).experienceTotal > 0) {
-						ReikaJavaLibrary.pConsole(((EntityPlayer)e).experienceTotal);
-						((EntityPlayer)e).experienceTotal -= 5;
+				if (!e.worldObj.isRemote && rand.nextInt(5) == 0 && e instanceof EntityPlayer) {
+					EntityPlayer ep = (EntityPlayer)e;
+					if (ep.experienceLevel > 0) {
+						ep.addExperienceLevel(-1);
+					}
+					else {
+						ep.experienceTotal = 0;
+						ep.experience = 0;
 					}
 				}
 				break;
@@ -211,10 +214,11 @@ public abstract class CrystalBlock extends Block {
 			if (has.getDuration() > eff.getDuration())
 				return false;
 		}
-		if (!(e instanceof EntityPlayer))
-			return true;
+		if (!(e instanceof EntityPlayer)) {
+			return e.worldObj.provider.isHellWorld ? !ReikaPotionHelper.isBadEffect(pot) : true;
+		}
 		if (e.worldObj.provider.isHellWorld)
-			return true;
+			return ReikaPotionHelper.isBadEffect(pot);
 		if (e.worldObj.provider.dimensionId == 1)
 			return true;
 		return !ReikaPotionHelper.isBadEffect(pot);

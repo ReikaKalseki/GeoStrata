@@ -68,6 +68,10 @@ public abstract class GeoPackets implements IPacketHandler {
 				break;
 			case FLOAT:
 				break;
+			case SYNC:
+				break;
+			case TANK:
+				break;
 			}
 			x = inputStream.readInt();
 			y = inputStream.readInt();

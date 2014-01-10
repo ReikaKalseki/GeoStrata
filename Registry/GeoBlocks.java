@@ -29,7 +29,6 @@ import Reika.GeoStrata.Blocks.BlockSuperCrystal;
 import Reika.GeoStrata.Items.ItemBlockCrystal;
 import Reika.GeoStrata.Items.ItemBlockRock;
 import Reika.GeoStrata.Items.ItemBlockRockDeco;
-import Reika.GeoStrata.Items.ItemBlockSuper;
 
 public enum GeoBlocks implements RegistryEnum {
 
@@ -40,7 +39,7 @@ public enum GeoBlocks implements RegistryEnum {
 	LAMP(BlockCrystalLamp.class, ItemBlockCrystal.class, "Crystal Lamp"),
 	DECO(BlockRockDeco.class, ItemBlockRockDeco.class, "Deco Blocks"),
 	BREWER(BlockCrystalBrewer.class, null, "Crystal Brewery"),
-	SUPER(BlockSuperCrystal.class, ItemBlockSuper.class, "Potion Crystal");
+	SUPER(BlockSuperCrystal.class, ItemBlockCrystal.class, "Potion Crystal");
 
 	private Class blockClass;
 	private String blockName;

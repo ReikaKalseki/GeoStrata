@@ -70,7 +70,7 @@ public class TileEntityCrystalBrewer extends TileEntityBase implements ISidedInv
 			if (zd == ReikaDyeHelper.BLACK.ordinal() || zd == ReikaDyeHelper.BROWN.ordinal() || zd == ReikaDyeHelper.PURPLE.ordinal())
 				return ReikaPotionHelper.isActualPotion(is.getItemDamage());
 			else
-				return is.getItemDamage() == ReikaPotionHelper.AWKWARD_META;
+				return true;
 		}
 		else if (is.itemID == GeoItems.POTION.getShiftedItemID()) {
 			return zd == ReikaDyeHelper.BLACK.ordinal() || zd == ReikaDyeHelper.BROWN.ordinal() || zd == ReikaDyeHelper.PURPLE.ordinal();
@@ -79,31 +79,38 @@ public class TileEntityCrystalBrewer extends TileEntityBase implements ISidedInv
 	}
 
 	private void brew() {
-		String eff = inv[0].getItem().getPotionEffect(inv[0]);
 		ReikaDyeHelper color = ReikaDyeHelper.getColorFromDamage(inv[0].getItemDamage());
 		boolean custom = CrystalPotionController.requiresCustomPotion(color);
 		inv[0] = null;
 
 		for (int i = 1; i < 4; i++) {
 			if (inv[i] != null) {
-				if (custom) {
-					inv[i] = new ItemStack(GeoItems.POTION.getShiftedItemID(), 1, color.ordinal());
-				}
-				else {
-					if (CrystalPotionController.isCorruptedPotion(color)) {
-						int newmeta = PotionHelper.applyIngredient(inv[i].getItemDamage(), eff);
-						inv[i] = new ItemStack(inv[i].itemID, 1, newmeta);
-						int cmeta = PotionHelper.applyIngredient(inv[i].getItemDamage(), PotionHelper.fermentedSpiderEyeEffect);
-						inv[i] = new ItemStack(inv[i].itemID, 1, cmeta);
-					}
-					else {
-						int newmeta = PotionHelper.applyIngredient(inv[i].getItemDamage(), eff);
-						inv[i] = new ItemStack(inv[i].itemID, 1, newmeta);
-					}
-
-				}
+				inv[i] = this.getPotionStackFromColor(color);
 			}
 		}
+	}
+
+	public static ItemStack getPotionStackFromColor(ReikaDyeHelper color) {
+		ItemStack shard = GeoItems.SHARD.getStackOfMetadata(color.ordinal());
+		String eff = shard.getItem().getPotionEffect(shard);
+		boolean custom = CrystalPotionController.requiresCustomPotion(color);
+		ItemStack is = new ItemStack(Item.potion, 1, ReikaPotionHelper.AWKWARD_META);
+		if (custom) {
+			is = new ItemStack(GeoItems.POTION.getShiftedItemID(), 1, color.ordinal());
+		}
+		else {
+			if (CrystalPotionController.isCorruptedPotion(color)) {
+				int newmeta = PotionHelper.applyIngredient(is.getItemDamage(), eff);
+				is = new ItemStack(is.itemID, 1, newmeta);
+				int cmeta = PotionHelper.applyIngredient(is.getItemDamage(), PotionHelper.fermentedSpiderEyeEffect);
+				is = new ItemStack(is.itemID, 1, cmeta);
+			}
+			else {
+				int newmeta = PotionHelper.applyIngredient(is.getItemDamage(), eff);
+				is = new ItemStack(is.itemID, 1, newmeta);
+			}
+		}
+		return is;
 	}
 
 	@Override

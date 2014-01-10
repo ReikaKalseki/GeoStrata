@@ -45,6 +45,10 @@ public class CrystalPotionController {
 		addNetherPotion(ReikaDyeHelper.LIGHTGRAY, Potion.weakness);
 		addNetherPotion(ReikaDyeHelper.YELLOW, Potion.digSlowdown);
 		addNetherPotion(ReikaDyeHelper.WHITE, Potion.invisibility);
+		addNetherPotion(ReikaDyeHelper.BROWN, Potion.confusion);
+		addNetherPotion(ReikaDyeHelper.BLUE, Potion.nightVision);
+		addNetherPotion(ReikaDyeHelper.PINK, Potion.damageBoost);
+		addNetherPotion(ReikaDyeHelper.MAGENTA, Potion.regeneration);
 	}
 
 	private static void addColorPotion(ReikaDyeHelper color, Potion pot) {
@@ -102,5 +106,39 @@ public class CrystalPotionController {
 		if (color == ReikaDyeHelper.WHITE)
 			return true;
 		return false;
+	}
+
+	public static boolean isPotionModifier(ReikaDyeHelper color) {
+		if (color == ReikaDyeHelper.BLACK)
+			return true;
+		if (color == ReikaDyeHelper.BROWN)
+			return true;
+		if (color == ReikaDyeHelper.PURPLE)
+			return true;
+		return false;
+	}
+
+	public static String getEffectName(ReikaDyeHelper color) {
+		if (color == ReikaDyeHelper.BLACK)
+			return "Confuses Mobs";
+		if (color == ReikaDyeHelper.PURPLE)
+			return "Gives XP";
+		if (color == ReikaDyeHelper.WHITE)
+			return "Clears Effects";
+		return StatCollector.translateToLocal(map.get(color).getName());
+	}
+
+	public static String getNetherEffectName(ReikaDyeHelper color) {
+		if (color == ReikaDyeHelper.BROWN)
+			return "Nausea";
+		if (color == ReikaDyeHelper.PURPLE)
+			return "Takes XP";
+		if (color == ReikaDyeHelper.ORANGE)
+			return "Fire Damage";
+		if (color == ReikaDyeHelper.LIME)
+			return "Jump Disability";
+		if (color == ReikaDyeHelper.RED)
+			return "Direct Damage";
+		return StatCollector.translateToLocal(nethermap.get(color).getName());
 	}
 }
