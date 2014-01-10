@@ -9,17 +9,20 @@
  ******************************************************************************/
 package Reika.GeoStrata;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.StatCollector;
+import thaumcraft.api.aspects.Aspect;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 
 public class CrystalPotionController {
 
-	private static HashMap<ReikaDyeHelper, Potion> map = new HashMap<ReikaDyeHelper, Potion>();
-	private static HashMap<ReikaDyeHelper, Potion> nethermap = new HashMap<ReikaDyeHelper, Potion>();
+	private static HashMap<ReikaDyeHelper, Potion> map = new HashMap();
+	private static HashMap<ReikaDyeHelper, Potion> nethermap = new HashMap();
+	private static HashMap<ReikaDyeHelper, ArrayList<Aspect>> aspects = new HashMap();
 
 	static {
 		addColorPotion(ReikaDyeHelper.BLUE, Potion.nightVision);
@@ -49,6 +52,38 @@ public class CrystalPotionController {
 		addNetherPotion(ReikaDyeHelper.BLUE, Potion.nightVision);
 		addNetherPotion(ReikaDyeHelper.PINK, Potion.damageBoost);
 		addNetherPotion(ReikaDyeHelper.MAGENTA, Potion.regeneration);
+
+		addAspect(ReikaDyeHelper.BLACK, Aspect.BEAST, Aspect.DARKNESS, Aspect.MIND, Aspect.SENSES);
+		addAspect(ReikaDyeHelper.BLUE, Aspect.SENSES, Aspect.LIGHT);
+		addAspect(ReikaDyeHelper.BROWN, Aspect.HUNGER);
+		addAspect(ReikaDyeHelper.CYAN, Aspect.WATER);
+		addAspect(ReikaDyeHelper.GRAY, Aspect.WEAPON);
+		addAspect(ReikaDyeHelper.GREEN, Aspect.POISON, Aspect.BEAST);
+		addAspect(ReikaDyeHelper.LIGHTBLUE, Aspect.MOTION, Aspect.TRAVEL);
+		addAspect(ReikaDyeHelper.LIGHTGRAY, Aspect.MOTION);
+		addAspect(ReikaDyeHelper.LIME, Aspect.FLIGHT);
+		addAspect(ReikaDyeHelper.MAGENTA, Aspect.HEAL, Aspect.LIFE);
+		addAspect(ReikaDyeHelper.ORANGE, Aspect.FIRE);
+		addAspect(ReikaDyeHelper.PINK, Aspect.WEAPON);
+		addAspect(ReikaDyeHelper.PURPLE, Aspect.MAGIC, Aspect.CRAFT, Aspect.TOOL, Aspect.EXCHANGE);
+		addAspect(ReikaDyeHelper.RED, Aspect.ARMOR, Aspect.WEAPON);
+		addAspect(ReikaDyeHelper.WHITE, Aspect.VOID, Aspect.AIR);
+		addAspect(ReikaDyeHelper.YELLOW, Aspect.MINE, Aspect.TOOL);
+	}
+
+	private static void addAspect(ReikaDyeHelper color, Aspect... asps) {
+		ArrayList li = new ArrayList();
+		for (int i = 0; i < asps.length; i++)
+			li.add(asps[i]);
+		aspects.put(color, li);
+	}
+
+	public static ArrayList<Aspect> getAspects(ReikaDyeHelper color) {
+		ArrayList li = new ArrayList();
+		ArrayList l2 = aspects.get(color);
+		if (l2 != null)
+			li.addAll(l2);
+		return li;
 	}
 
 	private static void addColorPotion(ReikaDyeHelper color, Potion pot) {

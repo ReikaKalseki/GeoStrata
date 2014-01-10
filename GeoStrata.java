@@ -10,6 +10,7 @@
 package Reika.GeoStrata;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
@@ -17,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraftforge.oredict.OreDictionary;
+import thaumcraft.api.aspects.Aspect;
 import Reika.DragonAPI.DragonAPICore;
 import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.Auxiliary.RetroGenController;
@@ -26,6 +28,7 @@ import Reika.DragonAPI.Instantiable.IO.ModLogger;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
+import Reika.DragonAPI.ModInteract.ReikaThaumHelper;
 import Reika.GeoStrata.Registry.DecoBlocks;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoItems;
@@ -128,6 +131,35 @@ public class GeoStrata extends DragonAPIMod {
 				BlockColorInterface.addGPRBlockColor(GeoBlocks.CRYSTAL.getBlockID(), i, dye.color);
 				BlockColorInterface.addGPRBlockColor(GeoBlocks.LAMP.getBlockID(), i, dye.color);
 				BlockColorInterface.addGPRBlockColor(GeoBlocks.SUPER.getBlockID(), i, dye.color);
+			}
+		}
+
+		if (ModList.THAUMCRAFT.isLoaded()) {
+			for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
+				ReikaDyeHelper dye = ReikaDyeHelper.dyes[i];
+				ItemStack crystal = new ItemStack(GeoBlocks.CRYSTAL.getBlockID(), 1, i);
+				ItemStack lamp = new ItemStack(GeoBlocks.LAMP.getBlockID(), 1, i);
+				ItemStack shard = GeoItems.SHARD.getStackOfMetadata(i);
+				ArrayList<Aspect> li = CrystalPotionController.getAspects(dye);
+
+				ReikaThaumHelper.addAspects(shard, Aspect.CRYSTAL, 1);
+				ReikaThaumHelper.addAspects(crystal, Aspect.CRYSTAL, 20);
+				ReikaThaumHelper.addAspects(crystal, Aspect.AURA, 4);
+				ReikaThaumHelper.addAspects(crystal, Aspect.LIGHT, 3);
+				ReikaThaumHelper.addAspects(crystal, Aspect.MAGIC, 6);
+				ReikaThaumHelper.addAspects(lamp, Aspect.LIGHT, 8);
+
+				for (int k = 0; k < li.size(); k++) {
+					Aspect as = li.get(k);
+					ReikaThaumHelper.addAspects(shard, as, 2);
+					ReikaThaumHelper.addAspects(crystal, as, 16);
+				}
+			}
+
+			for (int i = 0; i < RockTypes.rockList.length; i++) {
+				RockTypes rock = RockTypes.rockList[i];
+				ItemStack rockblock = new ItemStack(GeoBlocks.SMOOTH.getBlockID(), 1, i);
+				ReikaThaumHelper.addAspects(rockblock, Aspect.STONE, (int)(rock.blockHardness/5));
 			}
 		}
 	}
