@@ -43,7 +43,7 @@ public class RockGenerator implements IWorldGenerator {
 			return false;
 		if (id == ReikaTwilightHelper.getDimensionID())
 			return true;
-		return false;
+		return true;
 	}
 
 	private void generateRock(World world, Random random, int chunkX, int chunkZ) {

@@ -17,7 +17,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
@@ -189,8 +188,11 @@ public abstract class CrystalBlock extends Block {
 				e.clearActivePotions();
 				break;
 			case PURPLE:
-				if (!e.worldObj.isRemote && new Random().nextInt(2) == 0)
-					e.worldObj.spawnEntityInWorld(new EntityXPOrb(e.worldObj, e.posX, e.posY, e.posZ, 1));
+				if (e instanceof EntityPlayer && !e.worldObj.isRemote && new Random().nextInt(2) == 0) {
+					EntityPlayer ep = (EntityPlayer)e;
+					e.playSound("random.orb", 1, 1);
+					ep.addExperience(1);
+				}
 				break;
 			default:
 				PotionEffect eff = CrystalPotionController.getEffectFromColor(color, dura, level);
