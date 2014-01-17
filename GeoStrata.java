@@ -17,6 +17,14 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.Icon;
+import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import thaumcraft.api.aspects.Aspect;
 import Reika.DragonAPI.DragonAPICore;
@@ -44,12 +52,15 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod( modid = GeoStrata.MOD_NAME, name=GeoStrata.MOD_NAME, version="Gamma", certificateFingerprint = "@GET_FINGERPRINT@", dependencies="required-after:DragonAPI")
 @NetworkMod(clientSideRequired = true, serverSideRequired = true,
@@ -74,12 +85,15 @@ public class GeoStrata extends DragonAPIMod {
 	public static Item[] items = new Item[GeoItems.itemList.length];
 	public static Block[] blocks = new Block[GeoBlocks.blockList.length];
 
+	public static Fluid crystal = new Fluid("potion crystal").setLuminosity(15);
+
 	@SidedProxy(clientSide="Reika.GeoStrata.GeoClient", serverSide="Reika.GeoStrata.GeoCommon")
 	public static GeoCommon proxy;
 
 	@Override
 	@EventHandler
 	public void preload(FMLPreInitializationEvent evt) {
+		MinecraftForge.EVENT_BUS.register(this);
 		config.loadSubfolderedConfigFile(evt);
 		config.initProps(evt);
 		logger = new ModLogger(instance, GeoOptions.LOGLOADING.getState(), GeoOptions.DEBUGMODE.getState(), false);
@@ -95,6 +109,9 @@ public class GeoStrata extends DragonAPIMod {
 		this.loadClasses();
 		this.loadDictionary();
 		this.genRocks();
+
+		FluidRegistry.registerFluid(crystal);
+
 		this.addRecipes();
 		proxy.registerRenderers();
 		GameRegistry.registerTileEntity(TileEntityCrystalBrewer.class, "GeoBrewer");
@@ -103,6 +120,14 @@ public class GeoStrata extends DragonAPIMod {
 			RetroGenController.getInstance().addRetroGenerator(new RetroCrystalGenerator());
 			//Set state back
 		}
+	}
+
+	@ForgeSubscribe
+	@SideOnly(Side.CLIENT)
+	public void textureHook(TextureStitchEvent.Pre event) {
+		logger.log("Loading Liquid Icons");
+		Icon cry = event.map.registerIcon("GeoStrata:liqcrystal");
+		crystal.setIcons(cry);
 	}
 
 	@Override
@@ -171,9 +196,15 @@ public class GeoStrata extends DragonAPIMod {
 
 	public static void loadDictionary() {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
+			RockTypes type = RockTypes.rockList[i];
 			ItemStack cobble = new ItemStack(GeoBlocks.COBBLE.getBlockID(), 1, i);
+			ItemStack rock = new ItemStack(GeoBlocks.SMOOTH.getBlockID(), 1, i);
 			OreDictionary.registerOre("cobblestone", cobble);
+			OreDictionary.registerOre("stone", rock);
+			OreDictionary.registerOre("rock"+type.getName(), rock);
 		}
+		OreDictionary.registerOre("sandstone", new ItemStack(GeoBlocks.SMOOTH.getBlockID(), 1, RockTypes.SANDSTONE.ordinal()));
+		OreDictionary.registerOre("sandstone", Block.sandStone);
 	}
 
 	public static void genRocks() {
@@ -212,6 +243,19 @@ public class GeoStrata extends DragonAPIMod {
 		}
 
 		GameRegistry.addRecipe(new ItemStack(GeoBlocks.BREWER.getBlockID(), 1, 0), "NNN", "NBN", "SSS", 'N', Item.netherQuartz, 'S', Block.stone, 'B', Item.brewingStand);
+
+
+		if (ModList.THERMALEXPANSION.isLoaded()) {
+			FluidStack crystal = FluidRegistry.getFluidStack("potion crystal", 8000);
+			int energy = 40000;
+			NBTTagCompound toSend = new NBTTagCompound();
+			toSend.setInteger("energy", energy);
+			toSend.setCompoundTag("input", new NBTTagCompound());
+			toSend.setCompoundTag("output", new NBTTagCompound());
+			GeoItems.SHARD.getStackOfMetadata(ReikaDyeHelper.BLUE.ordinal()).writeToNBT(toSend.getCompoundTag("input"));
+			crystal.writeToNBT(toSend.getCompoundTag("output"));
+			FMLInterModComms.sendMessage(ModList.THERMALEXPANSION.modLabel, "CrucibleRecipe", toSend);
+		}
 	}
 
 	@Override
