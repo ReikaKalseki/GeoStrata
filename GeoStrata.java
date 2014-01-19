@@ -22,7 +22,6 @@ import net.minecraft.util.Icon;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
@@ -31,6 +30,7 @@ import Reika.DragonAPI.DragonAPICore;
 import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.Auxiliary.RetroGenController;
 import Reika.DragonAPI.Base.DragonAPIMod;
+import Reika.DragonAPI.Instantiable.ExpandedFluid;
 import Reika.DragonAPI.Instantiable.IO.ControlledConfig;
 import Reika.DragonAPI.Instantiable.IO.ModLogger;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
@@ -85,7 +85,7 @@ public class GeoStrata extends DragonAPIMod {
 	public static Item[] items = new Item[GeoItems.itemList.length];
 	public static Block[] blocks = new Block[GeoBlocks.blockList.length];
 
-	public static Fluid crystal = new Fluid("potion crystal").setLuminosity(15);
+	public static ExpandedFluid crystal = (ExpandedFluid)new ExpandedFluid("potion crystal").setColor(0x66aaff).setGameName("Crystal").setLuminosity(15);
 
 	@SidedProxy(clientSide="Reika.GeoStrata.GeoClient", serverSide="Reika.GeoStrata.GeoCommon")
 	public static GeoCommon proxy;
@@ -126,7 +126,7 @@ public class GeoStrata extends DragonAPIMod {
 	@SideOnly(Side.CLIENT)
 	public void textureHook(TextureStitchEvent.Pre event) {
 		logger.log("Loading Liquid Icons");
-		Icon cry = event.map.registerIcon("GeoStrata:liqcrystal");
+		Icon cry = event.map.registerIcon("GeoStrata:liqcrystal3");
 		crystal.setIcons(cry);
 	}
 
@@ -202,6 +202,7 @@ public class GeoStrata extends DragonAPIMod {
 			OreDictionary.registerOre("cobblestone", cobble);
 			OreDictionary.registerOre("stone", rock);
 			OreDictionary.registerOre("rock"+type.getName(), rock);
+			OreDictionary.registerOre(type.getName().toLowerCase(), rock);
 		}
 		OreDictionary.registerOre("sandstone", new ItemStack(GeoBlocks.SMOOTH.getBlockID(), 1, RockTypes.SANDSTONE.ordinal()));
 		OreDictionary.registerOre("sandstone", Block.sandStone);
@@ -248,13 +249,15 @@ public class GeoStrata extends DragonAPIMod {
 		if (ModList.THERMALEXPANSION.isLoaded()) {
 			FluidStack crystal = FluidRegistry.getFluidStack("potion crystal", 8000);
 			int energy = 40000;
-			NBTTagCompound toSend = new NBTTagCompound();
-			toSend.setInteger("energy", energy);
-			toSend.setCompoundTag("input", new NBTTagCompound());
-			toSend.setCompoundTag("output", new NBTTagCompound());
-			GeoItems.SHARD.getStackOfMetadata(ReikaDyeHelper.BLUE.ordinal()).writeToNBT(toSend.getCompoundTag("input"));
-			crystal.writeToNBT(toSend.getCompoundTag("output"));
-			FMLInterModComms.sendMessage(ModList.THERMALEXPANSION.modLabel, "CrucibleRecipe", toSend);
+			for (int i = 0; i < 16; i++) {
+				NBTTagCompound toSend = new NBTTagCompound();
+				toSend.setInteger("energy", energy);
+				toSend.setCompoundTag("input", new NBTTagCompound());
+				toSend.setCompoundTag("output", new NBTTagCompound());
+				GeoItems.SHARD.getStackOfMetadata(i).writeToNBT(toSend.getCompoundTag("input"));
+				crystal.writeToNBT(toSend.getCompoundTag("output"));
+				FMLInterModComms.sendMessage(ModList.THERMALEXPANSION.modLabel, "CrucibleRecipe", toSend);
+			}
 		}
 	}
 

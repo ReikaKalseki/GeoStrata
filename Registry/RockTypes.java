@@ -40,9 +40,9 @@ public enum RockTypes {
 	SLATE(		30, 5, 		32, 48, 	1, 		EnumToolMaterial.STONE,	0x484B53), //Can shale gen
 	GNEISS(		30, 7.5F, 	16, 32, 	0.8F, 	EnumToolMaterial.IRON,	0x7A7B79), //Can granite gen
 	PERIDOTITE(	30, 5, 		0, 	24, 	0.6F, 	EnumToolMaterial.STONE,	0x485A4E), //Near lava?
-	QUARTZ(		40, 4, 		0, 	64, 	0.5F, 	EnumToolMaterial.IRON,	0xCCD5DC), //??
+	QUARTZ(		40, 4, 		0, 	64, 	0.5F, 	EnumToolMaterial.STONE,	0xCCD5DC), //??
 	GRANULITE(	30, 5, 		16, 32, 	0.7F, 	EnumToolMaterial.STONE,	0xC1BF9E), //?
-	HORNFEL(	60, 10, 	0, 	64, 	0.8F, 	EnumToolMaterial.STONE,	0x7B7E87), //snow biomes?
+	HORNFEL(	60, 10, 	0, 	64, 	0.8F, 	EnumToolMaterial.IRON,	0x7B7E87), //snow biomes?
 	MIGMATITE(	30, 5, 		0, 	16, 	0.6F, 	EnumToolMaterial.STONE,	0xA09F94), //near lava?
 	SCHIST(		30, 7.5F,	16, 48,		0.8F,	EnumToolMaterial.STONE,	0x3C3C44),
 	ONYX(		40, 6F,		0,	24,		1F,		EnumToolMaterial.IRON,	0x111111);

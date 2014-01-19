@@ -24,7 +24,9 @@ public enum GeoOptions implements ConfigList {
 	NOISE("Lamp Noises", true),
 	EFFECTS("Lamp Effects", false),
 	NETHER("Nether Crystals", true),
-	PURPLE("Instant-XP on Purple Crystals Break", false);
+	PURPLE("Instant-XP on Purple Crystals Break", false),
+	TFGEN("Generate Rock in the Twilight Forest", true),
+	DIMGEN("Generate Rock in Other Dimensions", true);
 
 	private String label;
 	private boolean defaultState;
