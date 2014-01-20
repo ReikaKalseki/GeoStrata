@@ -206,6 +206,14 @@ public class GeoStrata extends DragonAPIMod {
 		}
 		OreDictionary.registerOre("sandstone", new ItemStack(GeoBlocks.SMOOTH.getBlockID(), 1, RockTypes.SANDSTONE.ordinal()));
 		OreDictionary.registerOre("sandstone", Block.sandStone);
+
+		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
+			ReikaDyeHelper color = ReikaDyeHelper.dyes[i];
+			ItemStack crystal = new ItemStack(GeoBlocks.CRYSTAL.getBlockID(), 1, i);
+			ItemStack shard = new ItemStack(GeoItems.SHARD.getShiftedItemID(), 1, i);
+			OreDictionary.registerOre(color.getOreDictName()+"Crystal", crystal);
+			OreDictionary.registerOre(color.getOreDictName()+"CrystalShard", shard);
+		}
 	}
 
 	public static void genRocks() {
