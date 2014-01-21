@@ -40,9 +40,9 @@ public class BlockRockBrick extends RockBlock {
 
 	@Override
 	public void registerIcons(IconRegister ico) {
-		for (int i = 0; i < RockTypes.rockList.length; i++) {
-			icons[i] = ico.registerIcon("GeoStrata:"+RockTypes.rockList[i].getName().toLowerCase()+"_b");
-			GeoStrata.logger.debug("Adding "+RockTypes.rockList[i].getName()+" brick icon "+icons[i].getIconName());
+		for (int i = 0; i < RockTypes.getTypesForID(blockID); i++) {
+			icons[i] = ico.registerIcon("GeoStrata:"+RockTypes.getTypeFromIDandMeta(blockID, i).getName().toLowerCase()+"_b");
+			GeoStrata.logger.debug("Adding "+RockTypes.getTypeFromIDandMeta(blockID, i).getName()+" brick icon "+icons[i].getIconName());
 		}
 	}
 }

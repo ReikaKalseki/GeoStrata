@@ -9,10 +9,13 @@
  ******************************************************************************/
 package Reika.GeoStrata.Registry;
 
+import java.util.HashMap;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemBlock;
 import Reika.DragonAPI.Interfaces.RegistryEnum;
+import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.GeoStrata.GeoStrata;
@@ -39,13 +42,18 @@ public enum GeoBlocks implements RegistryEnum {
 	LAMP(BlockCrystalLamp.class, ItemBlockCrystal.class, "Crystal Lamp"),
 	DECO(BlockRockDeco.class, ItemBlockRockDeco.class, "Deco Blocks"),
 	BREWER(BlockCrystalBrewer.class, null, "Crystal Brewery"),
-	SUPER(BlockSuperCrystal.class, ItemBlockCrystal.class, "Potion Crystal");
+	SUPER(BlockSuperCrystal.class, ItemBlockCrystal.class, "Potion Crystal"),
+	SMOOTH2(BlockSmooth.class, ItemBlockRock.class, "Smooth Rock 2"),
+	COBBLE2(BlockRockCobble.class, ItemBlockRock.class, "Rock Cobble 2"),
+	BRICK2(BlockRockBrick.class, ItemBlockRock.class, "Rock Brick 2");
 
 	private Class blockClass;
 	private String blockName;
 	private Class itemBlock;
 
-	public static final GeoBlocks[] blockList = GeoBlocks.values();
+	public static final GeoBlocks[] blockList = values();
+
+	private static final HashMap<Integer, GeoBlocks> IDMap = new HashMap();
 
 	private GeoBlocks(Class <? extends Block> cl, Class<? extends ItemBlock> ib, String n) {
 		blockClass = cl;
@@ -55,6 +63,39 @@ public enum GeoBlocks implements RegistryEnum {
 
 	public int getBlockID() {
 		return GeoStrata.config.getBlockID(this.ordinal());
+	}
+
+	public GeoBlocks getFromOffset(int offset) {
+		if (offset == 0)
+			return this;
+		String look = this.name();
+		for (int i = 0; i < blockList.length; i++) {
+			GeoBlocks b = blockList[i];
+			String name = b.name();
+			String lastChar = name.substring(name.length()-1);
+			int off = ReikaJavaLibrary.safeIntParse(lastChar)-1;
+			if (off == offset && name.substring(0, name.length()-1).equals(look))
+				return b;
+		}
+		return null;
+	}
+
+	public static GeoBlocks getFromID(int id) {
+		GeoBlocks block = IDMap.get(id);
+		if (block == null) {
+			for (int i = 0; i < blockList.length; i++) {
+				GeoBlocks g = blockList[i];
+				int blockID = g.getBlockID();
+				if (id == blockID) {
+					IDMap.put(id, g);
+					return g;
+				}
+			}
+		}
+		else {
+			return block;
+		}
+		return null;
 	}
 
 	public Material getBlockMaterial() {
@@ -100,11 +141,14 @@ public enum GeoBlocks implements RegistryEnum {
 	public String getMultiValuedName(int meta) {
 		switch(this) {
 		case SMOOTH:
-			return RockTypes.rockList[meta].getName();
+		case SMOOTH2:
+			return RockTypes.getTypeFromIDandMeta(this.getBlockID(), meta).getName();
 		case COBBLE:
-			return RockTypes.rockList[meta].getName()+" Cobblestone";
+		case COBBLE2:
+			return RockTypes.getTypeFromIDandMeta(this.getBlockID(), meta).getName()+" Cobblestone";
 		case BRICK:
-			return RockTypes.rockList[meta].getName()+" Bricks";
+		case BRICK2:
+			return RockTypes.getTypeFromIDandMeta(this.getBlockID(), meta).getName()+" Bricks";
 		case CRYSTAL:
 			return ReikaDyeHelper.dyes[meta].colorName+" "+GeoBlocks.CRYSTAL.getBasicName();
 		case SUPER:
@@ -133,7 +177,7 @@ public enum GeoBlocks implements RegistryEnum {
 		if (this.isCrystal())
 			return ReikaDyeHelper.dyes.length;
 		if (this.isRock())
-			return RockTypes.rockList.length;
+			return RockTypes.getTypesForID(this.getBlockID());
 		if (this == DECO)
 			return DecoBlocks.list.length;
 		return 1;

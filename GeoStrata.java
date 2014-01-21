@@ -135,14 +135,15 @@ public class GeoStrata extends DragonAPIMod {
 	public void postload(FMLPostInitializationEvent evt) {
 		if (ModList.ROTARYCRAFT.isLoaded()) {
 			for (int i = 0; i < RockTypes.rockList.length; i++) {
-				ItemStack smooth = new ItemStack(GeoBlocks.SMOOTH.getBlockID(), 1, i);
-				ItemStack cobble = new ItemStack(GeoBlocks.COBBLE.getBlockID(), 1, i);
+				RockTypes rock = RockTypes.rockList[i];
+				ItemStack smooth = rock.getSmoothItem();
+				ItemStack cobble = rock.getCobbleItem();
 				GrinderAPI.addRecipe(smooth, cobble);
 				GrinderAPI.addRecipe(cobble, new ItemStack(Block.gravel));
 
-				BlockColorInterface.addGPRBlockColor(GeoBlocks.SMOOTH.getBlockID(), i, RockTypes.rockList[i].rockColor);
-				BlockColorInterface.addGPRBlockColor(GeoBlocks.COBBLE.getBlockID(), i, RockTypes.rockList[i].rockColor);
-				BlockColorInterface.addGPRBlockColor(GeoBlocks.BRICK.getBlockID(), i, RockTypes.rockList[i].rockColor);
+				BlockColorInterface.addGPRBlockColor(rock.getSmoothID(), i, rock.rockColor);
+				BlockColorInterface.addGPRBlockColor(rock.getCobbleID(), i, rock.rockColor);
+				BlockColorInterface.addGPRBlockColor(rock.getBrickID(), i, rock.rockColor);
 			}
 			/*
 			for (int i = 0; i < DecoBlocks.list.length; i++) {
@@ -183,7 +184,7 @@ public class GeoStrata extends DragonAPIMod {
 
 			for (int i = 0; i < RockTypes.rockList.length; i++) {
 				RockTypes rock = RockTypes.rockList[i];
-				ItemStack rockblock = new ItemStack(GeoBlocks.SMOOTH.getBlockID(), 1, i);
+				ItemStack rockblock = rock.getSmoothItem();
 				ReikaThaumHelper.addAspects(rockblock, Aspect.STONE, (int)(rock.blockHardness/5));
 			}
 		}
@@ -197,14 +198,14 @@ public class GeoStrata extends DragonAPIMod {
 	public static void loadDictionary() {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
 			RockTypes type = RockTypes.rockList[i];
-			ItemStack cobble = new ItemStack(GeoBlocks.COBBLE.getBlockID(), 1, i);
-			ItemStack rock = new ItemStack(GeoBlocks.SMOOTH.getBlockID(), 1, i);
+			ItemStack cobble = type.getCobbleItem();
+			ItemStack rock = type.getSmoothItem();
 			OreDictionary.registerOre("cobblestone", cobble);
 			OreDictionary.registerOre("stone", rock);
 			OreDictionary.registerOre("rock"+type.getName(), rock);
 			OreDictionary.registerOre(type.getName().toLowerCase(), rock);
 		}
-		OreDictionary.registerOre("sandstone", new ItemStack(GeoBlocks.SMOOTH.getBlockID(), 1, RockTypes.SANDSTONE.ordinal()));
+		OreDictionary.registerOre("sandstone", RockTypes.SANDSTONE.getSmoothItem());
 		OreDictionary.registerOre("sandstone", Block.sandStone);
 
 		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
@@ -223,9 +224,10 @@ public class GeoStrata extends DragonAPIMod {
 
 	public static void addRecipes() {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
-			ItemStack smooth = new ItemStack(GeoBlocks.SMOOTH.getBlockID(), 1, i);
-			ItemStack cobble = new ItemStack(GeoBlocks.COBBLE.getBlockID(), 1, i);
-			ItemStack brick = new ItemStack(GeoBlocks.BRICK.getBlockID(), 1, i);
+			RockTypes type = RockTypes.rockList[i];
+			ItemStack smooth = type.getSmoothItem();
+			ItemStack cobble = type.getCobbleItem();
+			ItemStack brick = type.getBrickItem();
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(brick, 4), new Object[]{
 				"SS", "SS", 'S', smooth});
 			FurnaceRecipes.smelting().addSmelting(cobble.itemID, cobble.getItemDamage(), smooth, 0.2F);

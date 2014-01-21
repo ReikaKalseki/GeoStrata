@@ -11,7 +11,9 @@ package Reika.GeoStrata.Items;
 
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import Reika.GeoStrata.Registry.RockTypes;
@@ -29,7 +31,7 @@ public class ItemBlockRock extends ItemBlock {
 	@SideOnly(Side.CLIENT)
 	public final void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List) //Adds the metadata blocks to the creative inventory
 	{
-		for (int i = 0; i < RockTypes.rockList.length; i++) {
+		for (int i = 0; i < RockTypes.getTypesForID(par1); i++) {
 			ItemStack item = new ItemStack(par1, 1, i);
 			par3List.add(item);
 		}
@@ -44,6 +46,14 @@ public class ItemBlockRock extends ItemBlock {
 	@Override
 	public int getMetadata(int meta) {
 		return meta;
+	}
+
+	@Override
+	public void addInformation(ItemStack is, EntityPlayer ep, List li, boolean par4) {
+		RockTypes rock = RockTypes.getTypeFromIDandMeta(is.itemID, is.getItemDamage());
+		float blast = rock.blastResistance;
+		float more = blast/Block.stone.blockResistance;
+		li.add(String.format("Blast Resistance: %.1f (%.1fx stone)", blast, more));
 	}
 
 }

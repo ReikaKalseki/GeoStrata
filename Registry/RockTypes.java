@@ -10,6 +10,7 @@
 package Reika.GeoStrata.Registry;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -18,6 +19,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
@@ -30,35 +32,39 @@ public enum RockTypes {
 	//Generic makeup: Igneous 0-24; Metamorphic 16-40; Sedimentary 40+;
 
 	//NAME------BST-HARD----LO--HI------RARE----HARVESTABILITY
-	GRANITE(	60, 10, 	16, 48, 	1, 		EnumToolMaterial.IRON,	0xC4825E), //Near lava?
-	BASALT(		30, 5, 		48, 128, 	1, 		EnumToolMaterial.STONE,	0x252525), //Near lava
-	MARBLE(		45, 2.5F, 	16, 32, 	1, 		EnumToolMaterial.STONE,	0xB4B4BC), //??
-	LIMESTONE(	15, 1, 		48, 128, 	1, 		EnumToolMaterial.WOOD,	0xD0C4B3), //Near water bodies
-	SHALE(		5, 	1, 		48, 64, 	1, 		EnumToolMaterial.WOOD,	0x676970), //Near water
-	SANDSTONE(	10, 2, 		48, 128, 	1, 		EnumToolMaterial.WOOD,	0xD0AE90), //Near sand
-	PUMICE(		20, 5, 		0, 	16, 	0.6F, 	EnumToolMaterial.WOOD,	0xD6D4CB), //Near water & lava
-	SLATE(		30, 5, 		32, 48, 	1, 		EnumToolMaterial.STONE,	0x484B53), //Can shale gen
-	GNEISS(		30, 7.5F, 	16, 32, 	0.8F, 	EnumToolMaterial.IRON,	0x7A7B79), //Can granite gen
-	PERIDOTITE(	30, 5, 		0, 	24, 	0.6F, 	EnumToolMaterial.STONE,	0x485A4E), //Near lava?
-	QUARTZ(		40, 4, 		0, 	64, 	0.5F, 	EnumToolMaterial.STONE,	0xCCD5DC), //??
-	GRANULITE(	30, 5, 		16, 32, 	0.7F, 	EnumToolMaterial.STONE,	0xC1BF9E), //?
-	HORNFEL(	60, 10, 	0, 	64, 	0.8F, 	EnumToolMaterial.IRON,	0x7B7E87), //snow biomes?
-	MIGMATITE(	30, 5, 		0, 	16, 	0.6F, 	EnumToolMaterial.STONE,	0xA09F94), //near lava?
-	SCHIST(		30, 7.5F,	16, 48,		0.8F,	EnumToolMaterial.STONE,	0x3C3C44),
-	ONYX(		40, 6F,		0,	24,		1F,		EnumToolMaterial.IRON,	0x111111);
+	GRANITE(	75, 10, 	16, 48, 	1, 		EnumToolMaterial.IRON,	0xC4825E), //Near lava?
+	BASALT(		40, 5, 		48, 128, 	1, 		EnumToolMaterial.STONE,	0x252525), //Near lava
+	MARBLE(		55, 2.5F, 	16, 32, 	1, 		EnumToolMaterial.STONE,	0xB4B4BC), //??
+	LIMESTONE(	18, 1, 		48, 128, 	1, 		EnumToolMaterial.WOOD,	0xD0C4B3), //Near water bodies
+	SHALE(		6, 	1, 		48, 64, 	1, 		EnumToolMaterial.WOOD,	0x676970), //Near water
+	SANDSTONE(	12, 2, 		48, 128, 	1, 		EnumToolMaterial.WOOD,	0xD0AE90), //Near sand
+	PUMICE(		25, 5, 		0, 	16, 	0.6F, 	EnumToolMaterial.WOOD,	0xD6D4CB), //Near water & lava
+	SLATE(		40, 5, 		32, 48, 	1, 		EnumToolMaterial.STONE,	0x484B53), //Can shale gen
+	GNEISS(		40, 7.5F, 	16, 32, 	0.8F, 	EnumToolMaterial.IRON,	0x7A7B79), //Can granite gen
+	PERIDOTITE(	40, 5, 		0, 	24, 	0.6F, 	EnumToolMaterial.STONE,	0x485A4E), //Near lava?
+	QUARTZ(		50, 4, 		0, 	64, 	0.5F, 	EnumToolMaterial.STONE,	0xCCD5DC), //??
+	GRANULITE(	40, 5, 		16, 32, 	0.7F, 	EnumToolMaterial.STONE,	0xC1BF9E), //?
+	HORNFEL(	75, 10, 	0, 	64, 	0.8F, 	EnumToolMaterial.IRON,	0x7B7E87), //snow biomes?
+	MIGMATITE(	40, 5, 		0, 	16, 	0.6F, 	EnumToolMaterial.STONE,	0xA09F94), //near lava?
+	SCHIST(		40, 7.5F,	16, 48,		0.8F,	EnumToolMaterial.STONE,	0x3C3C44),
+	ONYX(		50, 6F,		0,	24,		1F,		EnumToolMaterial.IRON,	0x111111), //Near lava
+	OPAL(		30, 3F,		32, 60,		0.5F,	EnumToolMaterial.STONE,	0xffddff);
 
-	public final float blockHardness; //stone has 30
-	public final float blastResistance; //stone has 5
-	private EnumToolMaterial harvestTool; //null for hand break
+	public final float blockHardness;
+	public final float blastResistance;
+	private EnumToolMaterial harvestTool;
 	public final int minY;
 	public final int maxY;
 	public final float rarity;
 	private boolean allBiomes = false;
 	public final int rockColor;
 
+	private static HashMap<RockTypes, ArrayList<GeoBlocks>> rockMappings = new HashMap();
+	private static HashMap<GeoBlocks, ArrayList<RockTypes>> IDMappings = new HashMap();
+
 	public static final RockTypes[] rockList = RockTypes.values();
 
-	private RockTypes(float hard, float blast, int ylo, int yhi, float rare, EnumToolMaterial tool, int color) {
+	private RockTypes(float blast, float hard, int ylo, int yhi, float rare, EnumToolMaterial tool, int color) {
 		blastResistance = blast;
 		blockHardness = hard;
 		harvestTool = tool;
@@ -72,20 +78,71 @@ public enum RockTypes {
 		return ReikaStringParser.capFirstChar(this.name());
 	}
 
-	public Block instantiate() {
-		return null;
+	public static RockTypes getTypeAtCoords(IBlockAccess world, int x, int y, int z) {
+		int id = world.getBlockId(x, y, z);
+		int meta = world.getBlockMetadata(x, y, z);
+		return getTypeFromIDandMeta(id, meta);
 	}
 
-	public static RockTypes getTypeFromMetadata(int meta) {
-		return rockList[meta];
-	}
-
-	public static RockTypes getTypeAtCoords(World world, int x, int y, int z) {
-		return rockList[world.getBlockMetadata(x, y, z)];
+	public static RockTypes getTypeFromIDandMeta(int ID, int meta) {
+		GeoBlocks g = GeoBlocks.getFromID(ID);
+		if (g == null)
+			return null;
+		ArrayList<RockTypes> li = IDMappings.get(g);
+		return li.get(meta);
 	}
 
 	public EnumToolMaterial getHarvestMin() {
 		return harvestTool;
+	}
+
+	public int getBlockOffset() {
+		return this.ordinal()/16;
+	}
+
+	public int getBlockMetadata() {
+		return this.ordinal()%16;
+	}
+
+	public static int getTypesForID(int id) {
+		GeoBlocks g = GeoBlocks.getFromID(id);
+		return g != null && IDMappings.get(g) != null ? IDMappings.get(g).size() : 0;
+	}
+
+	public GeoBlocks getSmoothBlock() {
+		return rockMappings.get(this).get(0);
+	}
+
+	public GeoBlocks getCobbleBlock() {
+		return rockMappings.get(this).get(1);
+	}
+
+	public GeoBlocks getBrickBlock() {
+		return rockMappings.get(this).get(2);
+	}
+
+	public int getSmoothID() {
+		return this.getSmoothBlock().getBlockID();
+	}
+
+	public int getCobbleID() {
+		return this.getCobbleBlock().getBlockID();
+	}
+
+	public int getBrickID() {
+		return this.getBrickBlock().getBlockID();
+	}
+
+	public ItemStack getSmoothItem() {
+		return new ItemStack(this.getSmoothID(), 1, this.ordinal()%16);
+	}
+
+	public ItemStack getBrickItem() {
+		return new ItemStack(this.getBrickID(), 1, this.ordinal()%16);
+	}
+
+	public ItemStack getCobbleItem() {
+		return new ItemStack(this.getCobbleID(), 1, this.ordinal()%16);
 	}
 
 	public boolean isHarvestable(ItemStack held) {
@@ -161,6 +218,8 @@ public enum RockTypes {
 			return ReikaWorldHelper.checkForAdjMaterial(world, x, y, z, Material.lava) != null;
 		case SCHIST:
 			break;
+		case OPAL:
+			break;
 		}
 		return true;
 	}
@@ -196,6 +255,32 @@ public enum RockTypes {
 				types.add(rock);
 		}
 		return types;
+	}
+
+	static {
+		for (int i = 0; i < rockList.length; i++) {
+			RockTypes rock = rockList[i];
+			int offset = rock.getBlockOffset();
+			GeoBlocks smooth = GeoBlocks.SMOOTH.getFromOffset(offset);
+			GeoBlocks cobble = GeoBlocks.COBBLE.getFromOffset(offset);
+			GeoBlocks brick = GeoBlocks.BRICK.getFromOffset(offset);
+			ArrayList<GeoBlocks> li = new ArrayList();
+			li.add(smooth);
+			li.add(cobble);
+			li.add(brick);
+			rockMappings.put(rock, li);
+			//ReikaJavaLibrary.pConsole(rock+":"+li);
+
+			ArrayList<RockTypes> li2 = IDMappings.get(smooth);
+			if (li2 == null) {
+				li2 = new ArrayList();
+				IDMappings.put(smooth, li2);
+				IDMappings.put(cobble, li2);
+				IDMappings.put(brick, li2);
+			}
+			li2.add(rock);
+			//ReikaJavaLibrary.pConsole("Offset "+offset+":"+li2);
+		}
 	}
 
 }
