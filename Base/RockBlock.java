@@ -99,8 +99,9 @@ public abstract class RockBlock extends Block {
 		RockTypes rock = RockTypes.getTypeAtCoords(iba, x, y, z);
 		if (rock == RockTypes.OPAL) {
 			int sc = 48;
-			float hue = (float)(ReikaMathLibrary.py3d(x, y*4, z+x)%sc)/sc;
-			return Color.HSBtoRGB(hue, 0.4F, 1F);
+			float hue1 = (float)(ReikaMathLibrary.py3d(x, y*4, z+x)%sc)/sc;
+			//float hue2 = (float)(Math.cos(x/24D)+Math.sin(z/24D))+(y%360)*0.05F;
+			return Color.HSBtoRGB(hue1, 0.4F, 1F);
 		}
 		else {
 			return super.colorMultiplier(iba, x, y, z);
