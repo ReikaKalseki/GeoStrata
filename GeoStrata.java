@@ -29,6 +29,7 @@ import thaumcraft.api.aspects.Aspect;
 import Reika.DragonAPI.DragonAPICore;
 import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.Auxiliary.RetroGenController;
+import Reika.DragonAPI.Auxiliary.VanillaIntegrityTracker;
 import Reika.DragonAPI.Base.DragonAPIMod;
 import Reika.DragonAPI.Instantiable.ExpandedFluid;
 import Reika.DragonAPI.Instantiable.IO.ControlledConfig;
@@ -120,6 +121,10 @@ public class GeoStrata extends DragonAPIMod {
 			RetroGenController.getInstance().addRetroGenerator(new RetroCrystalGenerator());
 			//Set state back
 		}
+
+		VanillaIntegrityTracker.instance.addWatchedBlock(instance, Block.obsidian);
+		VanillaIntegrityTracker.instance.addWatchedBlock(instance, Block.stone);
+		VanillaIntegrityTracker.instance.addWatchedBlock(instance, Block.blockNetherQuartz);
 	}
 
 	@ForgeSubscribe

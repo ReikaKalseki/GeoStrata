@@ -48,7 +48,7 @@ public enum RockTypes {
 	MIGMATITE(	40, 5, 		0, 	16, 	0.6F, 	EnumToolMaterial.STONE,	0xA09F94), //near lava?
 	SCHIST(		40, 7.5F,	16, 48,		0.8F,	EnumToolMaterial.STONE,	0x3C3C44),
 	ONYX(		50, 6F,		0,	24,		1F,		EnumToolMaterial.IRON,	0x111111), //Near lava
-	OPAL(		30, 3F,		32, 60,		0.5F,	EnumToolMaterial.STONE,	0xffddff);
+	OPAL(		30, 3F,		32, 60,		0.125F,	EnumToolMaterial.STONE,	0xffddff);
 
 	public final float blockHardness;
 	public final float blastResistance;
