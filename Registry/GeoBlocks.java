@@ -24,6 +24,7 @@ import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Blocks.BlockCaveCrystal;
 import Reika.GeoStrata.Blocks.BlockCrystalBrewer;
 import Reika.GeoStrata.Blocks.BlockCrystalLamp;
+import Reika.GeoStrata.Blocks.BlockGuardianStone;
 import Reika.GeoStrata.Blocks.BlockRockBrick;
 import Reika.GeoStrata.Blocks.BlockRockCobble;
 import Reika.GeoStrata.Blocks.BlockRockDeco;
@@ -45,7 +46,8 @@ public enum GeoBlocks implements RegistryEnum {
 	SUPER(BlockSuperCrystal.class, ItemBlockCrystal.class, "Potion Crystal"),
 	SMOOTH2(BlockSmooth.class, ItemBlockRock.class, "Smooth Rock 2"),
 	COBBLE2(BlockRockCobble.class, ItemBlockRock.class, "Rock Cobble 2"),
-	BRICK2(BlockRockBrick.class, ItemBlockRock.class, "Rock Brick 2");
+	BRICK2(BlockRockBrick.class, ItemBlockRock.class, "Rock Brick 2"),
+	GUARDIAN(BlockGuardianStone.class, null, "Guardian Stone");
 
 	private Class blockClass;
 	private String blockName;
