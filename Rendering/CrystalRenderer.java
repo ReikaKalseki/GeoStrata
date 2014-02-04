@@ -27,7 +27,9 @@ public class CrystalRenderer implements ISimpleBlockRenderingHandler {
 
 	@Override
 	public void renderInventoryBlock(Block b, int meta, int modelID, RenderBlocks rb) {
+		//GL11.glDisable(GL11.GL_LIGHTING);
 		Tessellator v5 = Tessellator.instance;
+		//v5.setBrightness(240);
 		ReikaDyeHelper color = ReikaDyeHelper.dyes[meta];
 		Color dye = color.getJavaColor();
 		int red = dye.getRed();
@@ -42,21 +44,25 @@ public class CrystalRenderer implements ISimpleBlockRenderingHandler {
 		int w = ico.getIconWidth();
 
 		v5.startDrawingQuads();
+		v5.setNormal(0, 0.8F, 0);
 		v5.setColorRGBA_F(red/255F, green/255F, blue/255F, alpha/255F);
 		this.renderSpike(v5, u, v, xu, xv, w);
 		v5.draw();
 
 		v5.startDrawingQuads();
 		//v5.setBrightness(240);
+		v5.setNormal(0, 0.5F, 0);
 		v5.setColorRGBA_F(red/255F, green/255F, blue/255F, alpha/255F);
 		this.renderXAngledSpike(v5, u, v, xu, xv, 0.1875, w);
 		v5.draw();
 
 		v5.startDrawingQuads();
 		//v5.setBrightness(240);
+		v5.setNormal(0, 0.5F, 0);
 		v5.setColorRGBA_F(red/255F, green/255F, blue/255F, alpha/255F);
 		this.renderZAngledSpike(v5, u, v, xu, xv, 0.1875, w);
 		v5.draw();
+		//GL11.glEnable(GL11.GL_LIGHTING);
 
 		if (((CrystalBlock)b).renderBase()) {
 

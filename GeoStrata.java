@@ -38,6 +38,9 @@ import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.DragonAPI.ModInteract.ReikaThaumHelper;
+import Reika.GeoStrata.Guardian.GuardianCommand;
+import Reika.GeoStrata.Guardian.GuardianStoneManager;
+import Reika.GeoStrata.Guardian.TileEntityGuardianStone;
 import Reika.GeoStrata.Registry.DecoBlocks;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoItems;
@@ -56,6 +59,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -95,6 +99,7 @@ public class GeoStrata extends DragonAPIMod {
 	@EventHandler
 	public void preload(FMLPreInitializationEvent evt) {
 		MinecraftForge.EVENT_BUS.register(this);
+		MinecraftForge.EVENT_BUS.register(GuardianStoneManager.instance);
 		config.loadSubfolderedConfigFile(evt);
 		config.initProps(evt);
 		logger = new ModLogger(instance, GeoOptions.LOGLOADING.getState(), GeoOptions.DEBUGMODE.getState(), false);
@@ -115,7 +120,10 @@ public class GeoStrata extends DragonAPIMod {
 
 		this.addRecipes();
 		proxy.registerRenderers();
+
 		GameRegistry.registerTileEntity(TileEntityCrystalBrewer.class, "GeoBrewer");
+		GameRegistry.registerTileEntity(TileEntityGuardianStone.class, "GeoGuardianStone");
+
 		NetworkRegistry.instance().registerGuiHandler(instance, new GeoGuiHandler());
 		if (GeoOptions.RETROGEN.getState()) {
 			RetroGenController.getInstance().addRetroGenerator(new RetroCrystalGenerator());
@@ -133,6 +141,11 @@ public class GeoStrata extends DragonAPIMod {
 		logger.log("Loading Liquid Icons");
 		Icon cry = event.map.registerIcon("GeoStrata:liqcrystal3");
 		crystal.setIcons(cry);
+	}
+
+	@EventHandler
+	public void registerCommands(FMLServerStartingEvent evt) {
+		evt.registerServerCommand(new GuardianCommand());
 	}
 
 	@Override

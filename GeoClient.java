@@ -10,8 +10,14 @@
 package Reika.GeoStrata;
 
 import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
+import Reika.GeoStrata.Guardian.TileEntityGuardianStone;
+import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Rendering.CrystalRenderer;
+import Reika.GeoStrata.Rendering.GuardianItemRenderer;
+import Reika.GeoStrata.Rendering.GuardianStoneRenderer;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class GeoClient extends GeoCommon {
@@ -29,6 +35,10 @@ public class GeoClient extends GeoCommon {
 		crystalRender = RenderingRegistry.getNextAvailableRenderId();
 		oreRender = RenderingRegistry.getNextAvailableRenderId();
 		RenderingRegistry.registerBlockHandler(crystalRender, crystal);
+
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGuardianStone.class, new GuardianStoneRenderer());
+
+		MinecraftForgeClient.registerItemRenderer(GeoBlocks.GUARDIAN.getBlockID(), new GuardianItemRenderer());
 	}
 
 	// Override any other methods that need to be handled differently client side.

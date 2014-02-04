@@ -19,7 +19,6 @@ public enum GeoOptions implements ConfigList {
 	COBBLERECIPES("Alternate Cobble Recipes", true),
 	LOGLOADING("Console Loading Info", true),
 	DEBUGMODE("Debug Mode", false),
-	//ROCKGEN("Generate Rock", true),
 	RETROGEN("Retrogen Crystals", false),
 	NOISE("Lamp Noises", true),
 	EFFECTS("Lamp Effects", false),
@@ -100,6 +99,26 @@ public enum GeoOptions implements ConfigList {
 
 	public boolean isDummiedOut() {
 		return type == null;
+	}
+
+	@Override
+	public boolean getDefaultState() {
+		return defaultState;
+	}
+
+	@Override
+	public int getDefaultValue() {
+		return defaultValue;
+	}
+
+	@Override
+	public float getDefaultFloat() {
+		return defaultFloat;
+	}
+
+	@Override
+	public boolean isEnforcingDefaults() {
+		return false;
 	}
 
 }
