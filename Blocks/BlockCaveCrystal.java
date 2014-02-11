@@ -31,6 +31,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockCaveCrystal extends CrystalBlock {
 
+	private static final Random rand = new Random();
+
 	public BlockCaveCrystal(int ID, Material mat) {
 		super(ID, mat);
 		this.setLightValue(0.65F);
@@ -67,20 +69,24 @@ public class BlockCaveCrystal extends CrystalBlock {
 
 	@Override
 	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int meta, int fortune) {
-		if (GeoOptions.PURPLE.getState())
+		if (GeoOptions.PURPLE.getState() && meta == ReikaDyeHelper.PURPLE.ordinal())
 			ReikaWorldHelper.splitAndSpawnXP(world, x+0.5, y+0.5, z+0.5, 400);
-		return super.getBlockDropped(world, x, y, z, meta, fortune);
+		ArrayList<ItemStack> li = new ArrayList();
+		int num = this.getNumberDrops(meta, fortune);
+		for (int i = 0; i < num; i++)
+			li.add(GeoItems.SHARD.getStackOfMetadata(meta));
+		return li;
+	}
+
+	private int getNumberDrops(int meta, int fortune) {
+		return 1+rand.nextInt(6+fortune)+(1+fortune)*rand.nextInt(3)+rand.nextInt(1+fortune);
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void registerIcons(IconRegister ico) {
 		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
-			//icons[i] = ico.registerIcon("GeoStrata:"+"crystal_"+ReikaDyeHelper.dyes[i].name().toLowerCase());
-			//if (GeoOptions.OUTLINE.getState())
 			icons[i] = ico.registerIcon("GeoStrata:crystal_outline");
-			//else
-			//icons[i] = ico.registerIcon("GeoStrata:crystal");
 		}
 	}
 

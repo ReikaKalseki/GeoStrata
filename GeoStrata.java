@@ -268,7 +268,10 @@ public class GeoStrata extends DragonAPIMod {
 
 		for (int i = 0; i < DecoBlocks.list.length; i++) {
 			DecoBlocks block = DecoBlocks.list[i];
-			block.addSizedCrafting(4, "BB", "BB", 'B', block.material);
+			if (GeoOptions.BOXRECIPES.getState())
+				block.addSizedCrafting(8, "BBB", "B B", "BBB", 'B', block.material);
+			else
+				block.addSizedCrafting(4, "BB", "BB", 'B', block.material);
 		}
 
 		GameRegistry.addRecipe(new ItemStack(GeoBlocks.BREWER.getBlockID(), 1, 0), "NNN", "NBN", "SSS", 'N', Item.netherQuartz, 'S', Block.stone, 'B', Item.brewingStand);

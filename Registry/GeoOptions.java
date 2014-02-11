@@ -25,7 +25,8 @@ public enum GeoOptions implements ConfigList {
 	NETHER("Nether Crystals", true),
 	PURPLE("Instant-XP on Purple Crystals Break", false),
 	TFGEN("Generate Rock in the Twilight Forest", true),
-	DIMGEN("Generate Rock in Other Dimensions", true);
+	DIMGEN("Generate Rock in Other Dimensions", true),
+	BOXRECIPES("Alternate Brick Recipes", false);
 
 	private String label;
 	private boolean defaultState;
