@@ -25,9 +25,8 @@ import Reika.GeoStrata.Blocks.BlockCaveCrystal;
 import Reika.GeoStrata.Blocks.BlockCrystalBrewer;
 import Reika.GeoStrata.Blocks.BlockCrystalLamp;
 import Reika.GeoStrata.Blocks.BlockGuardianStone;
-import Reika.GeoStrata.Blocks.BlockRockBrick;
-import Reika.GeoStrata.Blocks.BlockRockCobble;
 import Reika.GeoStrata.Blocks.BlockRockDeco;
+import Reika.GeoStrata.Blocks.BlockShapedRock;
 import Reika.GeoStrata.Blocks.BlockSmooth;
 import Reika.GeoStrata.Blocks.BlockSuperCrystal;
 import Reika.GeoStrata.Items.ItemBlockCrystal;
@@ -38,30 +37,46 @@ import Reika.GeoStrata.Items.ItemBlockRockDeco;
 public enum GeoBlocks implements RegistryEnum {
 
 	SMOOTH(BlockSmooth.class, ItemBlockRock.class, "Smooth Rock"),
-	COBBLE(BlockRockCobble.class, ItemBlockRock.class, "Rock Cobble"),
-	BRICK(BlockRockBrick.class, ItemBlockRock.class, "Rock Brick"),
+	COBBLE(BlockShapedRock.class, ItemBlockRock.class, "Rock Cobble", "cobblestone"),
+	BRICK(BlockShapedRock.class, ItemBlockRock.class, "Rock Brick", "bricks"),
 	CRYSTAL(BlockCaveCrystal.class, ItemBlockCrystal.class, "Cave Crystal"), //Comes in all dye colors
 	LAMP(BlockCrystalLamp.class, ItemBlockCrystal.class, "Crystal Lamp"),
 	DECO(BlockRockDeco.class, ItemBlockRockDeco.class, "Deco Blocks"),
 	BREWER(BlockCrystalBrewer.class, null, "Crystal Brewery"),
 	SUPER(BlockSuperCrystal.class, ItemBlockCrystal.class, "Potion Crystal"),
 	SMOOTH2(BlockSmooth.class, ItemBlockRock.class, "Smooth Rock 2"),
-	COBBLE2(BlockRockCobble.class, ItemBlockRock.class, "Rock Cobble 2"),
-	BRICK2(BlockRockBrick.class, ItemBlockRock.class, "Rock Brick 2"),
-	GUARDIAN(BlockGuardianStone.class, ItemBlockGuardianStone.class, "Guardian Stone");
+	COBBLE2(BlockShapedRock.class, ItemBlockRock.class, "Rock Cobble 2", "cobblestone"),
+	BRICK2(BlockShapedRock.class, ItemBlockRock.class, "Rock Brick 2", "bricks"),
+	GUARDIAN(BlockGuardianStone.class, ItemBlockGuardianStone.class, "Guardian Stone"),
+	ROUND(BlockShapedRock.class, ItemBlockRock.class, "Round Brick", "round"),
+	ROUND2(BlockShapedRock.class, ItemBlockRock.class, "Round Brick 2", "round"),
+	FITTED(BlockShapedRock.class, ItemBlockRock.class, "Fitted Rock", "fitted"),
+	FITTED2(BlockShapedRock.class, ItemBlockRock.class, "Fitted Rock 2", "fitted"),
+	TILE(BlockShapedRock.class, ItemBlockRock.class, "Rock Tile", "tile"),
+	TILE2(BlockShapedRock.class, ItemBlockRock.class, "Rock Tile 2", "tile"),
+	ENGRAVED(BlockShapedRock.class, ItemBlockRock.class, "Engraved Rock", "engraved"),
+	ENGRAVED2(BlockShapedRock.class, ItemBlockRock.class, "Engraved Rock 2", "engraved"),
+	INSCRIBED(BlockShapedRock.class, ItemBlockRock.class, "Inscribed Stone", "inscribed"),
+	INSCRIBED2(BlockShapedRock.class, ItemBlockRock.class, "Inscribed Stone 2", "inscribed");
 
-	private Class blockClass;
-	private String blockName;
-	private Class itemBlock;
+	private final Class blockClass;
+	private final String blockName;
+	private final Class itemBlock;
+	private final String typeName;
 
 	public static final GeoBlocks[] blockList = values();
 
 	private static final HashMap<Integer, GeoBlocks> IDMap = new HashMap();
 
 	private GeoBlocks(Class <? extends Block> cl, Class<? extends ItemBlock> ib, String n) {
+		this(cl, ib, n, null);
+	}
+
+	private GeoBlocks(Class <? extends Block> cl, Class<? extends ItemBlock> ib, String n, String s) {
 		blockClass = cl;
 		blockName = n;
 		itemBlock = ib;
+		typeName = s;
 	}
 
 	public int getBlockID() {
@@ -117,17 +132,25 @@ public enum GeoBlocks implements RegistryEnum {
 
 	@Override
 	public Class[] getConstructorParamTypes() {
+		if (typeName != null)
+			return new Class[]{int.class, Material.class, String.class};
 		return new Class[]{int.class, Material.class};
 	}
 
 	@Override
 	public Object[] getConstructorParams() {
+		if (typeName != null)
+			return new Object[]{this.getBlockID(), this.getBlockMaterial(), typeName};
 		return new Object[]{this.getBlockID(), this.getBlockMaterial()};
 	}
 
 	@Override
 	public String getUnlocalizedName() {
 		return ReikaStringParser.stripSpaces(blockName);
+	}
+
+	public boolean isSmoothBlock() {
+		return BlockSmooth.class.isAssignableFrom(blockClass);
 	}
 
 	@Override
@@ -142,16 +165,17 @@ public enum GeoBlocks implements RegistryEnum {
 
 	@Override
 	public String getMultiValuedName(int meta) {
+		if (this == COBBLE || this == COBBLE2)
+			return RockTypes.getTypeFromIDandMeta(this.getBlockID(), meta).getName()+" Cobblestone";
+		if (this == BRICK || this == BRICK2)
+			return RockTypes.getTypeFromIDandMeta(this.getBlockID(), meta).getName()+" Bricks";
+		if (this.isShapedRock()) {
+			return ((BlockShapedRock)this.getBlockInstance()).getDisplayName()+" "+RockTypes.getTypeFromIDandMeta(this.getBlockID(), meta).getName();
+		}
 		switch(this) {
 		case SMOOTH:
 		case SMOOTH2:
 			return RockTypes.getTypeFromIDandMeta(this.getBlockID(), meta).getName();
-		case COBBLE:
-		case COBBLE2:
-			return RockTypes.getTypeFromIDandMeta(this.getBlockID(), meta).getName()+" Cobblestone";
-		case BRICK:
-		case BRICK2:
-			return RockTypes.getTypeFromIDandMeta(this.getBlockID(), meta).getName()+" Bricks";
 		case CRYSTAL:
 			return ReikaDyeHelper.dyes[meta].colorName+" "+GeoBlocks.CRYSTAL.getBasicName();
 		case SUPER:
@@ -163,6 +187,10 @@ public enum GeoBlocks implements RegistryEnum {
 		default:
 			return "";
 		}
+	}
+
+	public boolean isShapedRock() {
+		return BlockShapedRock.class.isAssignableFrom(blockClass);
 	}
 
 	@Override

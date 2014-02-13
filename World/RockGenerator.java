@@ -19,6 +19,7 @@ import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import Reika.DragonAPI.ModInteract.ReikaTwilightHelper;
 import Reika.GeoStrata.Registry.GeoOptions;
+import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 import cpw.mods.fml.common.IWorldGenerator;
 
@@ -57,7 +58,7 @@ public class RockGenerator implements IWorldGenerator {
 				int posZ = chunkZ + random.nextInt(16);
 				int posY = geo.minY + random.nextInt(geo.maxY-geo.minY);
 				if (geo.canGenerateAt(world, posX, posY, posZ, random)) {
-					int id = geo.getSmoothID();
+					int id = geo.getID(RockShapes.SMOOTH);
 					int meta = geo.getBlockMetadata();
 					(new WorldGenMinable(id, meta, VEIN_SIZE, Block.stone.blockID)).generate(world, random, posX, posY, posZ);
 					//GeoStrata.logger.log("Generating "+geo+" at "+posX+", "+posY+", "+posZ);

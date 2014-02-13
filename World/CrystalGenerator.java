@@ -92,7 +92,7 @@ public class CrystalGenerator implements IWorldGenerator {
 			return true;
 		if (id == Block.netherrack.blockID)
 			return true;
-		if (id == GeoBlocks.SMOOTH.getBlockID())
+		if (id == GeoBlocks.SMOOTH.getBlockID() || id == GeoBlocks.SMOOTH2.getBlockID())
 			return true;
 		if (ReikaBlockHelper.isOre(id, meta))
 			return true;

@@ -89,6 +89,8 @@ public enum RockTypes {
 		if (g == null)
 			return null;
 		ArrayList<RockTypes> li = IDMappings.get(g);
+		if (meta >= li.size())
+			return null;
 		return li.get(meta);
 	}
 
@@ -109,40 +111,16 @@ public enum RockTypes {
 		return g != null && IDMappings.get(g) != null ? IDMappings.get(g).size() : 0;
 	}
 
-	public GeoBlocks getSmoothBlock() {
-		return rockMappings.get(this).get(0);
+	public GeoBlocks getBlock(RockShapes shape) {
+		return rockMappings.get(this).get(shape.ordinal());
 	}
 
-	public GeoBlocks getCobbleBlock() {
-		return rockMappings.get(this).get(1);
+	public int getID(RockShapes shape) {
+		return this.getBlock(shape).getBlockID();
 	}
 
-	public GeoBlocks getBrickBlock() {
-		return rockMappings.get(this).get(2);
-	}
-
-	public int getSmoothID() {
-		return this.getSmoothBlock().getBlockID();
-	}
-
-	public int getCobbleID() {
-		return this.getCobbleBlock().getBlockID();
-	}
-
-	public int getBrickID() {
-		return this.getBrickBlock().getBlockID();
-	}
-
-	public ItemStack getSmoothItem() {
-		return new ItemStack(this.getSmoothID(), 1, this.ordinal()%16);
-	}
-
-	public ItemStack getBrickItem() {
-		return new ItemStack(this.getBrickID(), 1, this.ordinal()%16);
-	}
-
-	public ItemStack getCobbleItem() {
-		return new ItemStack(this.getCobbleID(), 1, this.ordinal()%16);
+	public ItemStack getItem(RockShapes shape) {
+		return new ItemStack(this.getID(shape), 1, this.ordinal()%16);
 	}
 
 	public boolean isHarvestable(ItemStack held) {
@@ -261,25 +239,23 @@ public enum RockTypes {
 		for (int i = 0; i < rockList.length; i++) {
 			RockTypes rock = rockList[i];
 			int offset = rock.getBlockOffset();
-			GeoBlocks smooth = GeoBlocks.SMOOTH.getFromOffset(offset);
-			GeoBlocks cobble = GeoBlocks.COBBLE.getFromOffset(offset);
-			GeoBlocks brick = GeoBlocks.BRICK.getFromOffset(offset);
 			ArrayList<GeoBlocks> li = new ArrayList();
-			li.add(smooth);
-			li.add(cobble);
-			li.add(brick);
-			rockMappings.put(rock, li);
-			//ReikaJavaLibrary.pConsole(rock+":"+li);
-
+			GeoBlocks smooth = RockShapes.SMOOTH.getBlockType(rock);
 			ArrayList<RockTypes> li2 = IDMappings.get(smooth);
-			if (li2 == null) {
+			boolean fill = li2 == null;
+			if (fill) {
 				li2 = new ArrayList();
-				IDMappings.put(smooth, li2);
-				IDMappings.put(cobble, li2);
-				IDMappings.put(brick, li2);
 			}
+			for (int k = 0; k < RockShapes.shapeList.length; k++) {
+				RockShapes shape = RockShapes.shapeList[k];
+				GeoBlocks b = shape.getBlockType(rock);
+				li.add(b);
+				if (fill) {
+					IDMappings.put(b, li2);
+				}
+			}
+			rockMappings.put(rock, li);
 			li2.add(rock);
-			//ReikaJavaLibrary.pConsole("Offset "+offset+":"+li2);
 		}
 	}
 

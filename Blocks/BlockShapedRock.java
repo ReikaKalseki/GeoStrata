@@ -13,14 +13,20 @@ import java.util.Random;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Registry.RockTypes;
 
-public class BlockRockBrick extends RockBlock {
+public class BlockShapedRock extends RockBlock {
 
-	public BlockRockBrick(int ID, Material mat) {
+	public final String shapeType;
+	private final String iconLetter;
+
+	public BlockShapedRock(int ID, Material mat, String type) {
 		super(ID, mat);
+		shapeType = type.toLowerCase();
+		iconLetter = type.toLowerCase().substring(0, 1);
 	}
 
 	@Override
@@ -41,8 +47,13 @@ public class BlockRockBrick extends RockBlock {
 	@Override
 	public void registerIcons(IconRegister ico) {
 		for (int i = 0; i < RockTypes.getTypesForID(blockID); i++) {
-			icons[i] = ico.registerIcon("GeoStrata:"+RockTypes.getTypeFromIDandMeta(blockID, i).getName().toLowerCase()+"_b");
-			GeoStrata.logger.debug("Adding "+RockTypes.getTypeFromIDandMeta(blockID, i).getName()+" brick icon "+icons[i].getIconName());
+			RockTypes type = RockTypes.getTypeFromIDandMeta(blockID, i);
+			icons[i] = ico.registerIcon("GeoStrata:"+type.getName().toLowerCase()+"_"+iconLetter);
+			GeoStrata.logger.debug("Adding "+type.getName()+" "+shapeType+" icon "+icons[i].getIconName());
 		}
+	}
+
+	public String getDisplayName() {
+		return ReikaStringParser.capFirstChar(shapeType);
 	}
 }

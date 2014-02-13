@@ -16,6 +16,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.RockTypes;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -41,6 +42,12 @@ public class ItemBlockRock extends ItemBlock {
 	public final String getUnlocalizedName(ItemStack is) {
 		int d = is.getItemDamage();
 		return super.getUnlocalizedName() + "." + d;
+	}
+
+	@Override
+	public final String getItemDisplayName(ItemStack is) {
+		GeoBlocks b = GeoBlocks.getFromID(is.itemID);
+		return b.getMultiValuedName(is.getItemDamage());
 	}
 
 	@Override

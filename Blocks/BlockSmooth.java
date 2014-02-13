@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.world.World;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.RockBlock;
+import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 
 public class BlockSmooth extends RockBlock {
@@ -27,7 +28,7 @@ public class BlockSmooth extends RockBlock {
 
 	@Override
 	public final int idDropped(int id, Random r, int fortune) {
-		return RockTypes.getTypeFromIDandMeta(blockID, 0).getCobbleID();
+		return RockTypes.getTypeFromIDandMeta(blockID, 0).getID(RockShapes.COBBLESTONE);
 	}
 
 	@Override

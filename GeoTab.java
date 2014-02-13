@@ -11,7 +11,7 @@ package Reika.GeoStrata;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
-import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -25,7 +25,7 @@ public class GeoTab extends CreativeTabs {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ItemStack getIconItemStack() {
-		return new ItemStack(GeoBlocks.SMOOTH.getBlockID(), 1, RockTypes.GRANITE.ordinal());
+		return RockTypes.GRANITE.getItem(RockShapes.SMOOTH);
 	}
 
 	@Override
