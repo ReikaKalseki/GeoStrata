@@ -242,8 +242,26 @@ public class GeoStrata extends DragonAPIMod {
 			ItemStack smooth = type.getItem(RockShapes.SMOOTH);
 			ItemStack cobble = type.getItem(RockShapes.COBBLESTONE);
 			ItemStack brick = type.getItem(RockShapes.BRICK);
+			ItemStack fitted = type.getItem(RockShapes.FITTED);
+			ItemStack tile = type.getItem(RockShapes.TILE);
+			ItemStack round = type.getItem(RockShapes.ROUND);
+			ItemStack engraved = type.getItem(RockShapes.ENGRAVED);
+			ItemStack inscribed = type.getItem(RockShapes.INSCRIBED);
+
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(brick, 4), new Object[]{
 				"SS", "SS", 'S', smooth});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(round, 4), new Object[]{
+				"SS", "SS", 'S', brick});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(fitted, 2), new Object[]{
+				"SS", 'S', brick});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(tile, 4), new Object[]{
+				" S ", "S S", " S ", 'S', smooth});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(inscribed, 3), new Object[]{
+				"B", "S", "B", 'S', smooth, 'B', brick});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(engraved, 2), new Object[]{
+				"SB", "BS", 'S', smooth, 'B', brick});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(engraved, 2), new Object[]{
+				"BS", "SB", 'S', smooth, 'B', brick});
 			FurnaceRecipes.smelting().addSmelting(cobble.itemID, cobble.getItemDamage(), smooth, 0.2F);
 			//GameRegistry.addShapelessRecipe(new ItemStack(Block.cobblestone), cobble);
 		}
