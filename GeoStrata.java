@@ -304,6 +304,24 @@ public class GeoStrata extends DragonAPIMod {
 				FMLInterModComms.sendMessage(ModList.THERMALEXPANSION.modLabel, "CrucibleRecipe", toSend);
 			}
 		}
+
+		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(0), " R ", "B P", " M ", 'B', getShard(ReikaDyeHelper.BLUE), 'R', getShard(ReikaDyeHelper.RED), 'P', getShard(ReikaDyeHelper.PURPLE), 'M', getShard(ReikaDyeHelper.MAGENTA));
+		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(1), " Y ", "C L", " G ", 'G', getShard(ReikaDyeHelper.GREEN), 'Y', getShard(ReikaDyeHelper.YELLOW), 'C', getShard(ReikaDyeHelper.CYAN), 'L', getShard(ReikaDyeHelper.LIME));
+		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(2), " B ", "P O", " L ", 'B', getShard(ReikaDyeHelper.BROWN), 'P', getShard(ReikaDyeHelper.PINK), 'O', getShard(ReikaDyeHelper.ORANGE), 'L', getShard(ReikaDyeHelper.LIGHTBLUE));
+		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(3), " B ", "G L", " W ", 'B', getShard(ReikaDyeHelper.BLACK), 'G', getShard(ReikaDyeHelper.GRAY), 'L', getShard(ReikaDyeHelper.LIGHTGRAY), 'W', getShard(ReikaDyeHelper.WHITE));
+
+		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(4), " B ", "G G", " B ", 'B', GeoItems.CLUSTER.getStackOfMetadata(2), 'G', GeoItems.CLUSTER.getStackOfMetadata(3));
+		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(5), " B ", "G G", " B ", 'B', GeoItems.CLUSTER.getStackOfMetadata(0), 'G', GeoItems.CLUSTER.getStackOfMetadata(1));
+
+		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(6), " B ", "G G", " B ", 'B', GeoItems.CLUSTER.getStackOfMetadata(4), 'G', GeoItems.CLUSTER.getStackOfMetadata(5));
+
+		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(7), " B ", "BPB", " B ", 'B', GeoItems.CLUSTER.getStackOfMetadata(6), 'P', Item.eyeOfEnder);
+
+		GameRegistry.addRecipe(new ItemStack(GeoBlocks.GUARDIAN.getBlockInstance()), "BBB", "BPB", "BBB", 'B', getShard(ReikaDyeHelper.WHITE), 'P', GeoItems.CLUSTER.getStackOfMetadata(7));
+	}
+
+	private static ItemStack getShard(ReikaDyeHelper color) {
+		return GeoItems.SHARD.getStackOfMetadata(color.ordinal());
 	}
 
 	@Override

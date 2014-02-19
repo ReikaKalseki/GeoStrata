@@ -16,13 +16,15 @@ import Reika.DragonAPI.Interfaces.RegistryEnum;
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.Items.ItemCluster;
 import Reika.GeoStrata.Items.ItemCrystalPotion;
 import Reika.GeoStrata.Items.ItemCrystalShard;
 
 public enum GeoItems implements RegistryEnum {
 
 	SHARD("Crystal Shard", ItemCrystalShard.class),
-	POTION("Crystal Potion", ItemCrystalPotion.class);
+	POTION("Crystal Potion", ItemCrystalPotion.class),
+	CLUSTER("Crystal Cluster", ItemCluster.class);
 
 	private String name;
 	private Class itemClass;
@@ -83,6 +85,7 @@ public enum GeoItems implements RegistryEnum {
 		switch(this) {
 		case SHARD:
 		case POTION:
+		case CLUSTER:
 			return true;
 		default:
 			return false;
@@ -96,9 +99,15 @@ public enum GeoItems implements RegistryEnum {
 			return 16;
 		case POTION:
 			return 16;
+		case CLUSTER:
+			return ((ItemCluster)this.getItemInstance()).getNumberTypes();
 		default:
 			return 1;
 		}
+	}
+
+	public Item getItemInstance() {
+		return Item.itemsList[this.getShiftedItemID()];
 	}
 
 	public int getItemID() {
