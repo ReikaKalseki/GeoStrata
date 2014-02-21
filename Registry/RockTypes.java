@@ -26,6 +26,7 @@ import net.minecraftforge.common.BiomeDictionary.Type;
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
+import Reika.DragonAPI.ModInteract.RedstoneArsenalHandler;
 import Reika.DragonAPI.ModInteract.TinkerToolHandler;
 
 public enum RockTypes {
@@ -140,6 +141,9 @@ public enum RockTypes {
 			default:
 				return false;
 			}
+		}
+		if (held.itemID == RedstoneArsenalHandler.getInstance().pickID) {
+			return RedstoneArsenalHandler.getInstance().pickLevel >= harvestTool.getHarvestLevel();
 		}
 		Item i = held.getItem();
 		switch (harvestTool) {
