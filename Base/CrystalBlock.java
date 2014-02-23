@@ -32,6 +32,7 @@ import Reika.DragonAPI.Libraries.IO.ReikaPacketHelper;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaParticleHelper;
+import Reika.DragonAPI.ModInteract.ExtraUtilsHandler;
 import Reika.GeoStrata.CrystalPotionController;
 import Reika.GeoStrata.GeoStrata;
 import cpw.mods.fml.relauncher.Side;
@@ -139,10 +140,9 @@ public abstract class CrystalBlock extends Block {
 	public abstract int getPotionLevel();
 
 	private void getEffectFromColor(EntityLivingBase e, ReikaDyeHelper color) {
-		World world = e.worldObj;
 		int dura = this.getDuration();
 		int level = this.getPotionLevel();
-		if (world.provider.isHellWorld) {
+		if (this.shouldBeHostile(e.worldObj)) {
 			switch(color) {
 			case ORANGE:
 				e.setFire(2);
@@ -203,6 +203,12 @@ public abstract class CrystalBlock extends Block {
 				}
 			}
 		}
+	}
+
+	private boolean shouldBeHostile(World world) {
+		if (world.provider.dimensionId == ExtraUtilsHandler.getInstance().darkID)
+			return true;
+		return world.provider.isHellWorld;
 	}
 
 	private static boolean isPotionAllowed(PotionEffect eff, EntityLivingBase e) {

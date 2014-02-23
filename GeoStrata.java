@@ -28,6 +28,7 @@ import net.minecraftforge.oredict.OreDictionary;
 import thaumcraft.api.aspects.Aspect;
 import Reika.DragonAPI.DragonAPICore;
 import Reika.DragonAPI.ModList;
+import Reika.DragonAPI.Auxiliary.DonatorController;
 import Reika.DragonAPI.Auxiliary.RetroGenController;
 import Reika.DragonAPI.Auxiliary.VanillaIntegrityTracker;
 import Reika.DragonAPI.Base.DragonAPIMod;
@@ -134,6 +135,8 @@ public class GeoStrata extends DragonAPIMod {
 		VanillaIntegrityTracker.instance.addWatchedBlock(instance, Block.obsidian);
 		VanillaIntegrityTracker.instance.addWatchedBlock(instance, Block.stone);
 		VanillaIntegrityTracker.instance.addWatchedBlock(instance, Block.blockNetherQuartz);
+
+		DonatorController.instance.addDonation(instance, "sophieguerette", 10.00F);
 	}
 
 	@ForgeSubscribe
