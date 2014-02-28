@@ -14,11 +14,13 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import Reika.DragonAPI.ModList;
@@ -105,6 +107,24 @@ public abstract class RockBlock extends Block {
 		}
 		else {
 			return super.colorMultiplier(iba, x, y, z);
+		}
+	}
+
+	@Override
+	public final int getRenderColor(int dmg) {
+		RockTypes rock = RockTypes.getTypeFromIDandMeta(blockID, dmg);
+		EntityPlayer ep = Minecraft.getMinecraft().thePlayer;
+		int x = MathHelper.floor_double(ep.posX);
+		int y = MathHelper.floor_double(ep.posY);
+		int z = MathHelper.floor_double(ep.posZ);
+		if (rock == RockTypes.OPAL) {
+			int sc = 48;
+			float hue1 = (float)(ReikaMathLibrary.py3d(x, y*4, z+x)%sc)/sc;
+			//float hue2 = (float)(Math.cos(x/24D)+Math.sin(z/24D))+(y%360)*0.05F;
+			return Color.HSBtoRGB(hue1, 0.4F, 1F);
+		}
+		else {
+			return super.getRenderColor(dmg);
 		}
 	}
 

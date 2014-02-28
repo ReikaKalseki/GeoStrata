@@ -220,6 +220,7 @@ public class GeoStrata extends DragonAPIMod {
 			OreDictionary.registerOre("cobblestone", cobble);
 			OreDictionary.registerOre("stone", rock);
 			OreDictionary.registerOre("rock"+type.getName(), rock);
+			OreDictionary.registerOre("stone"+type.getName(), rock);
 			OreDictionary.registerOre(type.getName().toLowerCase(), rock);
 		}
 		OreDictionary.registerOre("sandstone", RockTypes.SANDSTONE.getItem(RockShapes.SMOOTH));

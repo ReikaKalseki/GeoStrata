@@ -63,4 +63,11 @@ public class ItemBlockRock extends ItemBlock {
 		li.add(String.format("Blast Resistance: %.1f (%.1fx stone)", blast, more));
 	}
 
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getColorFromItemStack(ItemStack is, int par2)
+	{
+		return 0xffffff;
+	}
+
 }
