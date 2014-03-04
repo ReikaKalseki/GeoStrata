@@ -219,9 +219,9 @@ public class TileEntityCrystalBrewer extends TileEntityBase implements ISidedInv
 	 * Reads a tile entity from NBT.
 	 */
 	@Override
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
+	protected void readSyncTag(NBTTagCompound par1NBTTagCompound)
 	{
-		super.readFromNBT(par1NBTTagCompound);
+		super.readSyncTag(par1NBTTagCompound);
 		NBTTagList nbttaglist = par1NBTTagCompound.getTagList("Items");
 		inv = new ItemStack[this.getSizeInventory()];
 
@@ -243,9 +243,9 @@ public class TileEntityCrystalBrewer extends TileEntityBase implements ISidedInv
 	 * Writes a tile entity to NBT.
 	 */
 	@Override
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
+	protected void writeSyncTag(NBTTagCompound par1NBTTagCompound)
 	{
-		super.writeToNBT(par1NBTTagCompound);
+		super.writeSyncTag(par1NBTTagCompound);
 		par1NBTTagCompound.setInteger("BrewTime", time);
 		NBTTagList nbttaglist = new NBTTagList();
 

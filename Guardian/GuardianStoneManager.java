@@ -111,7 +111,7 @@ public class GuardianStoneManager {
 
 	public final String getSaveFilePath() {
 		File save = DimensionManager.getCurrentSaveRootDirectory();
-		return save.getPath().substring(2)+"/GeoStrata/";
+		return save.getPath()+"/GeoStrata/";
 	}
 
 	public final String getFullSavePath() {
@@ -121,7 +121,7 @@ public class GuardianStoneManager {
 	@ForgeSubscribe
 	public void save(WorldEvent.Unload evt) {
 		if (!evt.world.isRemote) {
-			GeoStrata.logger.log("Saving protections map.");
+			GeoStrata.logger.log("Saving protections map for world "+evt.world.provider.dimensionId+".");
 
 			String name = this.getSaveFileName();
 			try {
@@ -151,7 +151,7 @@ public class GuardianStoneManager {
 	@ForgeSubscribe
 	public void read(WorldEvent.Load evt) {
 		if (!evt.world.isRemote) {
-			GeoStrata.logger.log("Loading protections map.");
+			GeoStrata.logger.log("Loading protections map for world "+evt.world.provider.dimensionId+".");
 
 			String name = this.getSaveFileName();
 			try {

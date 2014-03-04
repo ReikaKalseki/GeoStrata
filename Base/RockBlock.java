@@ -30,6 +30,8 @@ import Reika.DragonAPI.ModInteract.TinkerToolHandler;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.RockTypes;
 import Reika.RotaryCraft.API.ItemFetcher;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class RockBlock extends Block {
 
@@ -111,6 +113,7 @@ public abstract class RockBlock extends Block {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public final int getRenderColor(int dmg) {
 		RockTypes rock = RockTypes.getTypeFromIDandMeta(blockID, dmg);
 		EntityPlayer ep = Minecraft.getMinecraft().thePlayer;
