@@ -215,13 +215,10 @@ public class TileEntityCrystalBrewer extends TileEntityBase implements ISidedInv
 		time = par2;
 	}
 
-	/**
-	 * Reads a tile entity from NBT.
-	 */
 	@Override
-	protected void readSyncTag(NBTTagCompound par1NBTTagCompound)
+	public void readFromNBT(NBTTagCompound par1NBTTagCompound)
 	{
-		super.readSyncTag(par1NBTTagCompound);
+		super.readFromNBT(par1NBTTagCompound);
 		NBTTagList nbttaglist = par1NBTTagCompound.getTagList("Items");
 		inv = new ItemStack[this.getSizeInventory()];
 
@@ -235,18 +232,12 @@ public class TileEntityCrystalBrewer extends TileEntityBase implements ISidedInv
 				inv[b0] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 			}
 		}
-
-		time = par1NBTTagCompound.getInteger("BrewTime");
 	}
 
-	/**
-	 * Writes a tile entity to NBT.
-	 */
 	@Override
-	protected void writeSyncTag(NBTTagCompound par1NBTTagCompound)
+	public void writeToNBT(NBTTagCompound par1NBTTagCompound)
 	{
-		super.writeSyncTag(par1NBTTagCompound);
-		par1NBTTagCompound.setInteger("BrewTime", time);
+		super.writeToNBT(par1NBTTagCompound);
 		NBTTagList nbttaglist = new NBTTagList();
 
 		for (int i = 0; i < inv.length; ++i)
@@ -261,6 +252,21 @@ public class TileEntityCrystalBrewer extends TileEntityBase implements ISidedInv
 		}
 
 		par1NBTTagCompound.setTag("Items", nbttaglist);
+	}
+
+	@Override
+	protected void readSyncTag(NBTTagCompound par1NBTTagCompound)
+	{
+		super.readSyncTag(par1NBTTagCompound);
+
+		time = par1NBTTagCompound.getInteger("BrewTime");
+	}
+
+	@Override
+	protected void writeSyncTag(NBTTagCompound par1NBTTagCompound)
+	{
+		super.writeSyncTag(par1NBTTagCompound);
+		par1NBTTagCompound.setInteger("BrewTime", time);
 	}
 
 }
