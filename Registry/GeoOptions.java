@@ -122,4 +122,9 @@ public enum GeoOptions implements ConfigList {
 		return false;
 	}
 
+	@Override
+	public boolean shouldLoad() {
+		return true;
+	}
+
 }
