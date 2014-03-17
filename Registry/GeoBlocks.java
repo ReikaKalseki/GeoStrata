@@ -57,7 +57,8 @@ public enum GeoBlocks implements RegistryEnum {
 	ENGRAVED(BlockShapedRock.class, ItemBlockRock.class, "Engraved Rock", "engraved"),
 	ENGRAVED2(BlockShapedRock.class, ItemBlockRock.class, "Engraved Rock 2", "engraved"),
 	INSCRIBED(BlockShapedRock.class, ItemBlockRock.class, "Inscribed Stone", "inscribed"),
-	INSCRIBED2(BlockShapedRock.class, ItemBlockRock.class, "Inscribed Stone 2", "inscribed");
+	INSCRIBED2(BlockShapedRock.class, ItemBlockRock.class, "Inscribed Stone 2", "inscribed"),
+	PLANT(BlockCrystalPlant.class, null, "Crystal Bloom");
 
 	private final Class blockClass;
 	private final String blockName;

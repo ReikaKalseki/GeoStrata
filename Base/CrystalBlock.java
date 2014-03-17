@@ -114,8 +114,10 @@ public abstract class CrystalBlock extends Block {
 				List inbox = world.getEntitiesWithinAABB(EntityLivingBase.class, box);
 				for (int i = 0; i < inbox.size(); i++) {
 					EntityLivingBase e = (EntityLivingBase)inbox.get(i);
-					if (ReikaMathLibrary.py3d(e.posX-x-0.5, e.posY+e.getEyeHeight()/2F-y-0.5, e.posZ-z-0.5) <= 4)
-						this.getEffectFromColor(e, ReikaDyeHelper.getColorFromDamage(world.getBlockMetadata(x, y, z)));
+					if (ReikaMathLibrary.py3d(e.posX-x-0.5, e.posY+e.getEyeHeight()/2F-y-0.5, e.posZ-z-0.5) <= 4) {
+						ReikaDyeHelper dye = ReikaDyeHelper.getColorFromDamage(world.getBlockMetadata(x, y, z));
+						this.applyEffectFromColor(this.getDuration(), this.getPotionLevel(), e, dye);
+					}
 				}
 			}
 		}
@@ -139,10 +141,8 @@ public abstract class CrystalBlock extends Block {
 
 	public abstract int getPotionLevel();
 
-	private void getEffectFromColor(EntityLivingBase e, ReikaDyeHelper color) {
-		int dura = this.getDuration();
-		int level = this.getPotionLevel();
-		if (this.shouldBeHostile(e.worldObj)) {
+	public static void applyEffectFromColor(int dura, int level, EntityLivingBase e, ReikaDyeHelper color) {
+		if (shouldBeHostile(e.worldObj)) {
 			switch(color) {
 			case ORANGE:
 				e.setFire(2);
@@ -171,7 +171,7 @@ public abstract class CrystalBlock extends Block {
 				break;
 			default:
 				PotionEffect eff = CrystalPotionController.getNetherEffectFromColor(color, dura, level);
-				if (this.isPotionAllowed(eff, e))
+				if (isPotionAllowed(eff, e))
 					e.addPotionEffect(eff);
 			}
 		}
@@ -197,7 +197,7 @@ public abstract class CrystalBlock extends Block {
 			default:
 				PotionEffect eff = CrystalPotionController.getEffectFromColor(color, dura, level);
 				if (eff != null) {
-					if (this.isPotionAllowed(eff, e)) {
+					if (isPotionAllowed(eff, e)) {
 						e.addPotionEffect(eff);
 					}
 				}
@@ -205,7 +205,7 @@ public abstract class CrystalBlock extends Block {
 		}
 	}
 
-	private boolean shouldBeHostile(World world) {
+	private static boolean shouldBeHostile(World world) {
 		if (world.provider.dimensionId == ExtraUtilsHandler.getInstance().darkID)
 			return true;
 		return world.provider.isHellWorld;

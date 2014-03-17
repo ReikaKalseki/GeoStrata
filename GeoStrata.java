@@ -14,16 +14,21 @@ import java.util.ArrayList;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.boss.EntityDragon;
+import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.Icon;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.EventPriority;
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
 import thaumcraft.api.aspects.Aspect;
 import Reika.DragonAPI.DragonAPICore;
@@ -35,14 +40,13 @@ import Reika.DragonAPI.Base.DragonAPIMod;
 import Reika.DragonAPI.Instantiable.EnhancedFluid;
 import Reika.DragonAPI.Instantiable.IO.ControlledConfig;
 import Reika.DragonAPI.Instantiable.IO.ModLogger;
+import Reika.DragonAPI.Libraries.ReikaInventoryHelper;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
-import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.DragonAPI.ModInteract.ReikaThaumHelper;
 import Reika.GeoStrata.Guardian.GuardianCommand;
 import Reika.GeoStrata.Guardian.GuardianStoneManager;
 import Reika.GeoStrata.Guardian.TileEntityGuardianStone;
-import Reika.GeoStrata.Registry.DecoBlocks;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoItems;
 import Reika.GeoStrata.Registry.GeoOptions;
@@ -58,7 +62,6 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
@@ -120,7 +123,7 @@ public class GeoStrata extends DragonAPIMod {
 
 		FluidRegistry.registerFluid(crystal);
 
-		this.addRecipes();
+		GeoRecipes.addRecipes();
 		proxy.registerRenderers();
 
 		GameRegistry.registerTileEntity(TileEntityCrystalBrewer.class, "GeoBrewer");
@@ -207,6 +210,37 @@ public class GeoStrata extends DragonAPIMod {
 		}
 	}
 
+	@ForgeSubscribe(priority = EventPriority.HIGHEST, receiveCanceled = true)
+	public void extraXP(LivingDropsEvent ev) {
+		EntityLivingBase e = ev.entityLiving;
+		DamageSource src = ev.source;
+		if (src.getEntity() instanceof EntityPlayer) {
+			EntityPlayer ep = (EntityPlayer)src.getEntity();
+			int meta = ReikaDyeHelper.PURPLE.ordinal();
+			int val = e instanceof EntityPlayer ? 25 : e instanceof EntityLiving ? ((EntityLiving)e).experienceValue : 5;
+			if (val == 0)
+				val = 5;
+			if (e instanceof EntityDragon)
+				val = 10000;
+			if (ReikaInventoryHelper.checkForItemStack(GeoItems.PENDANT3.getStackOfMetadata(meta), ep.inventory, false)) {
+				for (int i = 0; i < 3; i++) {
+					double px = e.posX;
+					double pz = e.posZ;
+					EntityXPOrb xp = new EntityXPOrb(e.worldObj, px, e.posY, pz, val);
+					if (!e.worldObj.isRemote)
+						e.worldObj.spawnEntityInWorld(xp);
+				}
+			}
+			else if (ReikaInventoryHelper.checkForItemStack(GeoItems.PENDANT.getStackOfMetadata(meta), ep.inventory, false)) {
+				double px = e.posX;
+				double pz = e.posZ;
+				EntityXPOrb xp = new EntityXPOrb(e.worldObj, px, e.posY, pz, val);
+				if (!e.worldObj.isRemote)
+					e.worldObj.spawnEntityInWorld(xp);
+			}
+		}
+	}
+
 	public static void loadClasses() {
 		ReikaRegistryHelper.instantiateAndRegisterBlocks(instance, GeoBlocks.blockList, blocks);
 		ReikaRegistryHelper.instantiateAndRegisterItems(instance, GeoItems.itemList, items);
@@ -238,94 +272,6 @@ public class GeoStrata extends DragonAPIMod {
 	public static void genRocks() {
 		GameRegistry.registerWorldGenerator(new RockGenerator());
 		GameRegistry.registerWorldGenerator(new CrystalGenerator());
-	}
-
-	public static void addRecipes() {
-		for (int i = 0; i < RockTypes.rockList.length; i++) {
-			RockTypes type = RockTypes.rockList[i];
-			ItemStack smooth = type.getItem(RockShapes.SMOOTH);
-			ItemStack cobble = type.getItem(RockShapes.COBBLESTONE);
-			ItemStack brick = type.getItem(RockShapes.BRICK);
-			ItemStack fitted = type.getItem(RockShapes.FITTED);
-			ItemStack tile = type.getItem(RockShapes.TILE);
-			ItemStack round = type.getItem(RockShapes.ROUND);
-			ItemStack engraved = type.getItem(RockShapes.ENGRAVED);
-			ItemStack inscribed = type.getItem(RockShapes.INSCRIBED);
-
-			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(brick, 4), new Object[]{
-				"SS", "SS", 'S', smooth});
-			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(round, 4), new Object[]{
-				"SS", "SS", 'S', brick});
-			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(fitted, 2), new Object[]{
-				"SS", 'S', brick});
-			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(tile, 4), new Object[]{
-				" S ", "S S", " S ", 'S', smooth});
-			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(inscribed, 3), new Object[]{
-				"B", "S", "B", 'S', smooth, 'B', brick});
-			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(engraved, 2), new Object[]{
-				"SB", "BS", 'S', smooth, 'B', brick});
-			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(engraved, 2), new Object[]{
-				"BS", "SB", 'S', smooth, 'B', brick});
-			FurnaceRecipes.smelting().addSmelting(cobble.itemID, cobble.getItemDamage(), smooth, 0.2F);
-			//GameRegistry.addShapelessRecipe(new ItemStack(Block.cobblestone), cobble);
-		}
-
-		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
-			ItemStack shard = GeoItems.SHARD.getStackOfMetadata(i);
-			ItemStack lamp = new ItemStack(GeoBlocks.LAMP.getBlockID(), 1, i);
-			GameRegistry.addRecipe(lamp, " s ", "sss", "SSS", 's', shard, 'S', ReikaItemHelper.stoneSlab);
-		}
-
-		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
-			ItemStack shard = GeoItems.SHARD.getStackOfMetadata(i);
-			ItemStack lamp = new ItemStack(GeoBlocks.LAMP.getBlockID(), 1, i);
-			ItemStack potion = new ItemStack(GeoBlocks.SUPER.getBlockID(), 1, i);
-			GameRegistry.addRecipe(potion, "RsG", "sss", "SDS", 's', shard, 'S', Block.obsidian, 'D', Block.blockGold, 'R', Block.blockRedstone, 'G', Block.glowStone);
-			GameRegistry.addRecipe(potion, "RlG", "SDS", 'l', lamp, 'S', Block.obsidian, 'D', Block.blockGold, 'R', Block.blockRedstone, 'G', Block.glowStone);
-		}
-
-		for (int i = 0; i < DecoBlocks.list.length; i++) {
-			DecoBlocks block = DecoBlocks.list[i];
-			if (GeoOptions.BOXRECIPES.getState())
-				block.addSizedCrafting(8, "BBB", "B B", "BBB", 'B', block.material);
-			else
-				block.addSizedCrafting(4, "BB", "BB", 'B', block.material);
-		}
-
-		GameRegistry.addRecipe(new ItemStack(GeoBlocks.BREWER.getBlockID(), 1, 0), "NNN", "NBN", "SSS", 'N', Item.netherQuartz, 'S', Block.stone, 'B', Item.brewingStand);
-
-
-		if (ModList.THERMALEXPANSION.isLoaded()) {
-			FluidStack crystal = FluidRegistry.getFluidStack("potion crystal", 8000);
-			int energy = 40000;
-			for (int i = 0; i < 16; i++) {
-				NBTTagCompound toSend = new NBTTagCompound();
-				toSend.setInteger("energy", energy);
-				toSend.setCompoundTag("input", new NBTTagCompound());
-				toSend.setCompoundTag("output", new NBTTagCompound());
-				GeoItems.SHARD.getStackOfMetadata(i).writeToNBT(toSend.getCompoundTag("input"));
-				crystal.writeToNBT(toSend.getCompoundTag("output"));
-				FMLInterModComms.sendMessage(ModList.THERMALEXPANSION.modLabel, "CrucibleRecipe", toSend);
-			}
-		}
-
-		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(0), " R ", "B P", " M ", 'B', getShard(ReikaDyeHelper.BLUE), 'R', getShard(ReikaDyeHelper.RED), 'P', getShard(ReikaDyeHelper.PURPLE), 'M', getShard(ReikaDyeHelper.MAGENTA));
-		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(1), " Y ", "C L", " G ", 'G', getShard(ReikaDyeHelper.GREEN), 'Y', getShard(ReikaDyeHelper.YELLOW), 'C', getShard(ReikaDyeHelper.CYAN), 'L', getShard(ReikaDyeHelper.LIME));
-		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(2), " B ", "P O", " L ", 'B', getShard(ReikaDyeHelper.BROWN), 'P', getShard(ReikaDyeHelper.PINK), 'O', getShard(ReikaDyeHelper.ORANGE), 'L', getShard(ReikaDyeHelper.LIGHTBLUE));
-		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(3), " B ", "G L", " W ", 'B', getShard(ReikaDyeHelper.BLACK), 'G', getShard(ReikaDyeHelper.GRAY), 'L', getShard(ReikaDyeHelper.LIGHTGRAY), 'W', getShard(ReikaDyeHelper.WHITE));
-
-		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(4), " B ", "G G", " B ", 'B', GeoItems.CLUSTER.getStackOfMetadata(2), 'G', GeoItems.CLUSTER.getStackOfMetadata(3));
-		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(5), " B ", "G G", " B ", 'B', GeoItems.CLUSTER.getStackOfMetadata(0), 'G', GeoItems.CLUSTER.getStackOfMetadata(1));
-
-		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(6), " B ", "G G", " B ", 'B', GeoItems.CLUSTER.getStackOfMetadata(4), 'G', GeoItems.CLUSTER.getStackOfMetadata(5));
-
-		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(7), " B ", "BPB", " B ", 'B', GeoItems.CLUSTER.getStackOfMetadata(6), 'P', Item.eyeOfEnder);
-
-		GameRegistry.addRecipe(new ItemStack(GeoBlocks.GUARDIAN.getBlockInstance()), "BBB", "BPB", "BBB", 'B', getShard(ReikaDyeHelper.WHITE), 'P', GeoItems.CLUSTER.getStackOfMetadata(7));
-	}
-
-	private static ItemStack getShard(ReikaDyeHelper color) {
-		return GeoItems.SHARD.getStackOfMetadata(color.ordinal());
 	}
 
 	@Override

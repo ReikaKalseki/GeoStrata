@@ -19,12 +19,15 @@ import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Items.ItemCluster;
 import Reika.GeoStrata.Items.ItemCrystalPotion;
 import Reika.GeoStrata.Items.ItemCrystalShard;
+import Reika.GeoStrata.Items.ItemPendant;
 
 public enum GeoItems implements RegistryEnum {
 
 	SHARD("Crystal Shard", ItemCrystalShard.class),
 	POTION("Crystal Potion", ItemCrystalPotion.class),
-	CLUSTER("Crystal Cluster", ItemCluster.class);
+	CLUSTER("Crystal Cluster", ItemCluster.class),
+	PENDANT("Crystal Pendant", ItemPendant.class),
+	PENDANT3("Enhanced Crystal Pendant", ItemPendant.class);
 
 	private String name;
 	private Class itemClass;
