@@ -36,7 +36,6 @@ public class BlockGuardianStone extends Block {
 
 	@Override
 	public int getRenderType() {
-		stepSound = new StepSound("stone", 1.0F, 0.5F);
 		return 0;
 	}
 

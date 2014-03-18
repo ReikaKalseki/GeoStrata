@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
@@ -28,6 +29,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.EventPriority;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import thaumcraft.api.aspects.Aspect;
@@ -44,6 +46,7 @@ import Reika.DragonAPI.Libraries.ReikaInventoryHelper;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.DragonAPI.ModInteract.ReikaThaumHelper;
+import Reika.GeoStrata.Base.CrystalBlock;
 import Reika.GeoStrata.Guardian.GuardianCommand;
 import Reika.GeoStrata.Guardian.GuardianStoneManager;
 import Reika.GeoStrata.Guardian.TileEntityGuardianStone;
@@ -128,6 +131,7 @@ public class GeoStrata extends DragonAPIMod {
 
 		GameRegistry.registerTileEntity(TileEntityCrystalBrewer.class, "GeoBrewer");
 		GameRegistry.registerTileEntity(TileEntityGuardianStone.class, "GeoGuardianStone");
+		GameRegistry.registerTileEntity(TileEntityCrystalPlant.class, "GeoCrystalPlant");
 
 		NetworkRegistry.instance().registerGuiHandler(instance, new GeoGuiHandler());
 		if (GeoOptions.RETROGEN.getState()) {
@@ -206,6 +210,26 @@ public class GeoStrata extends DragonAPIMod {
 				RockTypes rock = RockTypes.rockList[i];
 				ItemStack rockblock = rock.getItem(RockShapes.SMOOTH);
 				ReikaThaumHelper.addAspects(rockblock, Aspect.STONE, (int)(rock.blockHardness/5));
+			}
+		}
+	}
+
+	@ForgeSubscribe(priority = EventPriority.HIGHEST)
+	public void extraXP(AttackEntityEvent ev) {
+		EntityPlayer ep = ev.entityPlayer;
+		Entity tg = ev.target;
+		if (tg instanceof EntityLivingBase) {
+			EntityLivingBase elb = (EntityLivingBase)tg;
+			for (int i = 0; i < ep.inventory.mainInventory.length; i++) {
+				ItemStack is = ep.inventory.mainInventory[i];
+				if (is != null) {
+					if (is.itemID == GeoItems.PENDANT3.getShiftedItemID()) {
+						CrystalBlock.applyEffectFromColor(100, 3, elb, ReikaDyeHelper.getColorFromItem(is));
+					}
+					else if (is.itemID == GeoItems.PENDANT.getShiftedItemID()) {
+						CrystalBlock.applyEffectFromColor(100, 1, elb, ReikaDyeHelper.getColorFromItem(is));
+					}
+				}
 			}
 		}
 	}

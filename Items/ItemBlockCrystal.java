@@ -39,7 +39,7 @@ public class ItemBlockCrystal extends ItemBlock {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public final void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List) //Adds the metadata blocks to the creative inventory
+	public final void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
 		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
 			ItemStack item = new ItemStack(par1, 1, i);

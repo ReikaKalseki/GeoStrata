@@ -65,12 +65,14 @@ public class GeoRecipes {
 			ItemStack lamp = new ItemStack(GeoBlocks.LAMP.getBlockID(), 1, i);
 			ItemStack cave = new ItemStack(GeoBlocks.CRYSTAL.getBlockID(), 1, i);
 			ItemStack supercry = new ItemStack(GeoBlocks.SUPER.getBlockID(), 1, i);
+			ItemStack seed = GeoItems.SEED.getStackOfMetadata(i);
 			ItemStack pendant = GeoItems.PENDANT.getStackOfMetadata(i);
 			ItemStack pendant3 = GeoItems.PENDANT3.getStackOfMetadata(i);
 
 			GameRegistry.addRecipe(lamp, " s ", "sss", "SSS", 's', shard, 'S', ReikaItemHelper.stoneSlab);
 			GameRegistry.addRecipe(pendant, "GSG", "QCQ", "EDE", 'E', Item.enderPearl, 'D', Item.diamond, 'G', Block.glowStone, 'Q', Item.netherQuartz, 'C', cave, 'S', Item.silk);
 			GameRegistry.addRecipe(pendant3, "GSG", "QCQ", "EDE", 'E', Item.enderPearl, 'D', Item.diamond, 'G', Block.glowStone, 'Q', Item.netherQuartz, 'C', supercry, 'S', Item.silk);
+			GameRegistry.addRecipe(seed, "GSG", "SsS", "GSG", 'G', Item.glowstone, 'S', shard, 's', Item.seeds);
 		}
 
 		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {

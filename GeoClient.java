@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import Reika.GeoStrata.Guardian.TileEntityGuardianStone;
 import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Rendering.CrystalPlantRenderer;
 import Reika.GeoStrata.Rendering.CrystalRenderer;
 import Reika.GeoStrata.Rendering.GuardianItemRenderer;
 import Reika.GeoStrata.Rendering.GuardianStoneRenderer;
@@ -37,6 +38,7 @@ public class GeoClient extends GeoCommon {
 		RenderingRegistry.registerBlockHandler(crystalRender, crystal);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGuardianStone.class, new GuardianStoneRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrystalPlant.class, new CrystalPlantRenderer());
 
 		MinecraftForgeClient.registerItemRenderer(GeoBlocks.GUARDIAN.getBlockID(), new GuardianItemRenderer());
 	}

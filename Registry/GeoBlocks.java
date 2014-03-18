@@ -24,12 +24,14 @@ import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Blocks.BlockCaveCrystal;
 import Reika.GeoStrata.Blocks.BlockCrystalBrewer;
 import Reika.GeoStrata.Blocks.BlockCrystalLamp;
+import Reika.GeoStrata.Blocks.BlockCrystalPlant;
 import Reika.GeoStrata.Blocks.BlockGuardianStone;
 import Reika.GeoStrata.Blocks.BlockRockDeco;
 import Reika.GeoStrata.Blocks.BlockShapedRock;
 import Reika.GeoStrata.Blocks.BlockSmooth;
 import Reika.GeoStrata.Blocks.BlockSuperCrystal;
 import Reika.GeoStrata.Items.ItemBlockCrystal;
+import Reika.GeoStrata.Items.ItemBlockCrystalPlant;
 import Reika.GeoStrata.Items.ItemBlockGuardianStone;
 import Reika.GeoStrata.Items.ItemBlockRock;
 import Reika.GeoStrata.Items.ItemBlockRockDeco;
@@ -58,7 +60,7 @@ public enum GeoBlocks implements RegistryEnum {
 	ENGRAVED2(BlockShapedRock.class, ItemBlockRock.class, "Engraved Rock 2", "engraved"),
 	INSCRIBED(BlockShapedRock.class, ItemBlockRock.class, "Inscribed Stone", "inscribed"),
 	INSCRIBED2(BlockShapedRock.class, ItemBlockRock.class, "Inscribed Stone 2", "inscribed"),
-	PLANT(BlockCrystalPlant.class, null, "Crystal Bloom");
+	PLANT(BlockCrystalPlant.class, ItemBlockCrystalPlant.class, "Crystal Bloom");
 
 	private final Class blockClass;
 	private final String blockName;
@@ -185,6 +187,8 @@ public enum GeoBlocks implements RegistryEnum {
 			return ReikaDyeHelper.dyes[meta].colorName+" "+GeoBlocks.LAMP.getBasicName();
 		case DECO:
 			return DecoBlocks.list[meta].getName();
+		case PLANT:
+			return ReikaDyeHelper.dyes[meta].colorName+" Crystal Bloom";
 		default:
 			return "";
 		}

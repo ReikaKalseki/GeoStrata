@@ -89,6 +89,10 @@ public abstract class GeoPackets implements IPacketHandler {
 				cb.updateEffects(world, x, y, z);
 			}
 			break;
+		case 1:
+			TileEntityCrystalPlant te = (TileEntityCrystalPlant)world.getBlockTileEntity(x, y, z);
+			te.updateLight();
+			break;
 		}
 	}
 
