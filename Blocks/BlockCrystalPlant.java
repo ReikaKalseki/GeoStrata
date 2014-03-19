@@ -24,6 +24,7 @@ import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaPlantHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.TileEntityCrystalPlant;
+import Reika.GeoStrata.Registry.GeoItems;
 
 public class BlockCrystalPlant extends Block {
 
@@ -128,6 +129,11 @@ public class BlockCrystalPlant extends Block {
 	@Override
 	public int getRenderColor(int meta) {
 		return super.getRenderColor(meta);
+	}
+
+	@Override
+	public int idDropped(int meta, Random rand, int fortune) {
+		return GeoItems.SEED.getShiftedItemID();
 	}
 
 	@Override

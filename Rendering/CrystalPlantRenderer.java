@@ -44,7 +44,19 @@ public class CrystalPlantRenderer extends TileEntitySpecialRenderer {
 		if (tile.renderPod()) {
 			//this.drawInner(tile);
 			GL11.glTranslated(0, 0.0625, 0);
+			double d = 0.625;
+			double a1 = 0.2;
+			double b1 = 0;
+			double c1 = 0.2;
+			if (!tile.emitsLight()) {
+				GL11.glTranslated(a1, b1, c1);
+				GL11.glScaled(d, d, d);
+			}
 			this.drawBulb(tile);
+			if (!tile.emitsLight()) {
+				GL11.glScaled(1/d, 1/d, 1/d);
+				GL11.glTranslated(-a1, -b1, -c1);
+			}
 			GL11.glTranslated(0, -0.0625, 0);
 
 			if (tile.emitsLight()) {
@@ -66,6 +78,7 @@ public class CrystalPlantRenderer extends TileEntitySpecialRenderer {
 			}
 		}
 
+		GL11.glEnable(GL11.GL_LIGHTING);
 		GL11.glDisable(GL11.GL_BLEND);
 		if (te.hasWorldObj())
 			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
