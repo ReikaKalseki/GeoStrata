@@ -30,6 +30,7 @@ public class TileEntityCrystalPlant extends TileEntity {
 		return growthTick == 0;
 	}
 
+	//When brought into ChromatiCraft, make adjacent plants grow if of matching color type
 	public void grow() {
 		if (growthTick > 0) {
 			growthTick--;

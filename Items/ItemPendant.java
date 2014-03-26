@@ -43,7 +43,7 @@ public class ItemPendant extends GeoItem {
 
 	@Override
 	public void onUpdate(ItemStack is, World world, Entity e, int par4, boolean par5) {
-		int level = this.isEnhanced() ? 3 : 1;
+		int level = this.isEnhanced() ? 2 : 0;
 		if (e instanceof EntityPlayer) {
 			EntityPlayer ep = (EntityPlayer) e;
 			ReikaDyeHelper dye = ReikaDyeHelper.getColorFromItem(is);

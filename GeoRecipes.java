@@ -71,7 +71,7 @@ public class GeoRecipes {
 
 			GameRegistry.addRecipe(lamp, " s ", "sss", "SSS", 's', shard, 'S', ReikaItemHelper.stoneSlab);
 			GameRegistry.addRecipe(pendant, "GSG", "QCQ", "EDE", 'E', Item.enderPearl, 'D', Item.diamond, 'G', Block.glowStone, 'Q', Item.netherQuartz, 'C', cave, 'S', Item.silk);
-			GameRegistry.addRecipe(pendant3, "GSG", "QCQ", "EDE", 'E', Item.enderPearl, 'D', Item.diamond, 'G', Block.glowStone, 'Q', Item.netherQuartz, 'C', supercry, 'S', Item.silk);
+			GameRegistry.addRecipe(pendant3, "DSD", "GCG", "ETE", 'E', Item.eyeOfEnder, 'D', Item.diamond, 'G', Item.ingotGold, 'T', Item.ghastTear, 'C', supercry, 'S', Item.silk);
 			GameRegistry.addRecipe(seed, "GSG", "SsS", "GSG", 'G', Item.glowstone, 'S', shard, 's', Item.seeds);
 		}
 
