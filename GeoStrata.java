@@ -43,8 +43,10 @@ import Reika.DragonAPI.Instantiable.EnhancedFluid;
 import Reika.DragonAPI.Instantiable.IO.ControlledConfig;
 import Reika.DragonAPI.Instantiable.IO.ModLogger;
 import Reika.DragonAPI.Libraries.ReikaInventoryHelper;
+import Reika.DragonAPI.Libraries.ReikaRecipeHelper;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
+import Reika.DragonAPI.ModInteract.ExtraUtilsHandler;
 import Reika.DragonAPI.ModInteract.ReikaThaumHelper;
 import Reika.GeoStrata.Base.CrystalBlock;
 import Reika.GeoStrata.Guardian.GuardianCommand;
@@ -211,6 +213,11 @@ public class GeoStrata extends DragonAPIMod {
 				ItemStack rockblock = rock.getItem(RockShapes.SMOOTH);
 				ReikaThaumHelper.addAspects(rockblock, Aspect.STONE, (int)(rock.blockHardness/5));
 			}
+		}
+
+		if (ModList.EXTRAUTILS.isLoaded()) {
+			ItemStack burned = new ItemStack(ExtraUtilsHandler.getInstance().decoID, 1, ExtraUtilsHandler.getInstance().burntQuartz);
+			ReikaRecipeHelper.addSmelting(RockTypes.QUARTZ.getItem(RockShapes.SMOOTH), burned, 0.05F);
 		}
 	}
 
