@@ -9,12 +9,14 @@
  ******************************************************************************/
 package Reika.GeoStrata.Blocks;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
@@ -25,8 +27,9 @@ import Reika.DragonAPI.Libraries.Registry.ReikaPlantHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.TileEntityCrystalPlant;
 import Reika.GeoStrata.Registry.GeoItems;
+import Reika.RotaryCraft.API.BlowableCrop;
 
-public class BlockCrystalPlant extends Block {
+public class BlockCrystalPlant extends Block implements BlowableCrop {
 
 	private Icon colorIcon;
 	private Icon fastIcon;
@@ -200,6 +203,30 @@ public class BlockCrystalPlant extends Block {
 
 	public Icon getGlowSprite() {
 		return glow;
+	}
+
+	@Override
+	public boolean isReadyToHarvest(World world, int x, int y, int z) {
+		if (world.getBlockId(x, y-1, z) == Block.grass.blockID)
+			return false;
+		TileEntityCrystalPlant te = (TileEntityCrystalPlant)world.getBlockTileEntity(x, y, z);
+		return te.canHarvest();
+	}
+
+	@Override
+	public void setPostHarvest(World world, int x, int y, int z) {
+		TileEntityCrystalPlant te = (TileEntityCrystalPlant)world.getBlockTileEntity(x, y, z);
+		te.harvest();
+	}
+
+	@Override
+	public ArrayList<ItemStack> getHarvestProducts(World world, int x, int y, int z) {
+		return null;
+	}
+
+	@Override
+	public float getHarvestingSpeed() {
+		return 10.33F;
 	}
 
 }

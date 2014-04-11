@@ -12,11 +12,13 @@ package Reika.GeoStrata.Blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.StepSound;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Guardian.GuardianStoneManager;
 import Reika.GeoStrata.Guardian.TileEntityGuardianStone;
@@ -31,6 +33,8 @@ public class BlockGuardianStone extends Block {
 		super(par1, par2Material);
 		this.setCreativeTab(GeoStrata.tabGeo);
 		this.setLightValue(1F);
+		this.setResistance(6000);
+		this.setHardness(6);
 		stepSound = new StepSound("stone", 1.0F, 0.5F);
 	}
 
@@ -90,7 +94,18 @@ public class BlockGuardianStone extends Block {
 
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int s) {
-		return true;
+		if (Minecraft.getMinecraft().gameSettings.fancyGraphics)
+			return true;
+		ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[s];
+		int dx = x+dir.offsetX;
+		int dy = y+dir.offsetY;
+		int dz = z+dir.offsetZ;
+		int id = world.getBlockId(dx, dy, dz);
+		if (id == 0)
+			return true;
+		if (id == blockID)
+			return false;
+		return !Block.blocksList[id].isOpaqueCube();
 	}
 
 	@Override

@@ -17,12 +17,15 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.EventPriority;
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import Reika.DragonAPI.Libraries.ReikaPlayerAPI;
@@ -43,8 +46,6 @@ public class GuardianStoneManager {
 
 	public boolean canPlayerOverrideProtections(EntityPlayer ep) {
 		if ("Reika_Kalseki".equals(ep.getEntityName()))
-			return true;
-		if ("FurryDJ".equals(ep.getEntityName()))
 			return true;
 		return ReikaPlayerAPI.isAdmin(ep);
 	}
@@ -139,6 +140,7 @@ public class GuardianStoneManager {
 					String line = zones.get(i).getSerialString();
 					p.append(line+"\n");
 				}
+				//zones.clear();
 				p.close();
 			}
 			catch (Exception e) {
@@ -161,12 +163,18 @@ public class GuardianStoneManager {
 					line = p.readLine();
 					if (line != null) {
 						ProtectionZone zone = ProtectionZone.getFromSerialString(line);
-						//ReikaJavaLibrary.pConsole(line+"   -->   "+zone);
-						if (zone != null && !zones.contains(zone))
-							zones.add(zone);
+						//ReikaJavaLibrary.pConsole(line+"   -->   "+zone+":"+zone.hasTile(evt.world), Side.SERVER);
+						if (zone.hasTile(evt.world)) {
+							if (zone != null && !zones.contains(zone))
+								zones.add(zone);
+						}
+						else {
+							GeoStrata.logger.log("Invalid zone "+zone+", as it has no block to control it!");
+						}
 					}
 				}
 				p.close();
+				//ReikaJavaLibrary.pConsole(zones, Side.SERVER);
 			}
 			catch (Exception e) {
 				GeoStrata.logger.log(e.getMessage()+", and it caused the read to fail!");
@@ -193,6 +201,18 @@ public class GuardianStoneManager {
 		}
 	}
 
+	@ForgeSubscribe(priority = EventPriority.LOWEST, receiveCanceled = true)
+	public void preventEndermen(EnderTeleportEvent event) {
+		if (event.entityLiving instanceof EntityEnderman) {
+			int x = MathHelper.floor_double(event.targetX);
+			int y = MathHelper.floor_double(event.targetY);
+			int z = MathHelper.floor_double(event.targetZ);
+			if (!this.getProtectionZonesForArea(event.entityLiving.worldObj, x, y, z).isEmpty()) {
+				event.setCanceled(true);
+			}
+		}
+	}
+
 	protected static final class ProtectionZone {
 
 		public final String creator;
@@ -209,6 +229,10 @@ public class GuardianStoneManager {
 			originY = y;
 			originZ = z;
 			range = r;
+		}
+
+		public boolean hasTile(World world) {
+			return world.getBlockId(originX, originY, originZ) == GeoBlocks.GUARDIAN.getBlockID();
 		}
 
 		public boolean canPlayerEditIn(EntityPlayer ep) {
