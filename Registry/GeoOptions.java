@@ -26,7 +26,8 @@ public enum GeoOptions implements ConfigList {
 	PURPLE("Instant-XP on Purple Crystals Break", false),
 	TFGEN("Generate Rock in the Twilight Forest", true),
 	DIMGEN("Generate Rock in Other Dimensions", true),
-	BOXRECIPES("Alternate Brick Recipes", false);
+	BOXRECIPES("Alternate Brick Recipes", false),
+	DENSITY("Rock Density", 1F);
 
 	private String label;
 	private boolean defaultState;
@@ -46,6 +47,12 @@ public enum GeoOptions implements ConfigList {
 		label = l;
 		defaultValue = d;
 		type = int.class;
+	}
+
+	private GeoOptions(String l, float d) {
+		label = l;
+		defaultFloat = d;
+		type = float.class;
 	}
 
 	public boolean isBoolean() {
@@ -125,6 +132,12 @@ public enum GeoOptions implements ConfigList {
 	@Override
 	public boolean shouldLoad() {
 		return true;
+	}
+
+	public static float getRockDensity() {
+		float f = DENSITY.getFloat();
+		f = Math.min(f, 2.5F);
+		return Math.max(f, 0.5F);
 	}
 
 }

@@ -69,11 +69,12 @@ public class RockGenerator implements IWorldGenerator {
 
 	/** if compressed in small y, or lots of coincident rocks, reduce density */
 	private double getDensityFactor(RockTypes rock) {
+		float f = GeoOptions.getRockDensity();
 		List<RockTypes> types = rock.getCoincidentTypes();
 		int h = rock.maxY-rock.minY;
 		if (rock == RockTypes.ONYX)
 			h *= 2;
-		return 1F*h/64D*(3D/types.size());
+		return f*1F*h/64D*(3D/types.size());
 	}
 
 }

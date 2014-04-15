@@ -41,6 +41,7 @@ public class GeoRecipes {
 			ItemStack round = type.getItem(RockShapes.ROUND);
 			ItemStack engraved = type.getItem(RockShapes.ENGRAVED);
 			ItemStack inscribed = type.getItem(RockShapes.INSCRIBED);
+			ItemStack connected = type.getItem(RockShapes.CONNECTED);
 
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(brick, 4), new Object[]{
 				"SS", "SS", 'S', smooth});
@@ -56,6 +57,8 @@ public class GeoRecipes {
 				"SB", "BS", 'S', smooth, 'B', brick});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(engraved, 2), new Object[]{
 				"BS", "SB", 'S', smooth, 'B', brick});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(connected, 8), new Object[]{
+				"SSS", "S S", "SSS", 'S', smooth});
 			FurnaceRecipes.smelting().addSmelting(cobble.itemID, cobble.getItemDamage(), smooth, 0.2F);
 			//GameRegistry.addShapelessRecipe(new ItemStack(Block.cobblestone), cobble);
 		}

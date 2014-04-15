@@ -20,7 +20,8 @@ public enum RockShapes {
 	FITTED(GeoBlocks.FITTED, "fitted"),
 	TILE(GeoBlocks.TILE, "tile"),
 	ENGRAVED(GeoBlocks.ENGRAVED, "engraved"),
-	INSCRIBED(GeoBlocks.INSCRIBED, "inscribed");
+	INSCRIBED(GeoBlocks.INSCRIBED, "inscribed"),
+	CONNECTED(GeoBlocks.CONNECTED, "connected");
 
 	public final String typeName;
 	private final GeoBlocks blockType;

@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import Reika.GeoStrata.Guardian.TileEntityGuardianStone;
 import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Rendering.ConnectedStoneRenderer;
 import Reika.GeoStrata.Rendering.CrystalPlantRenderer;
 import Reika.GeoStrata.Rendering.CrystalRenderer;
 import Reika.GeoStrata.Rendering.GuardianItemRenderer;
@@ -23,7 +24,8 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class GeoClient extends GeoCommon {
 
-	public static final CrystalRenderer crystal = new CrystalRenderer();
+	private static final CrystalRenderer crystal = new CrystalRenderer();
+	private static ConnectedStoneRenderer connected;
 
 	@Override
 	public void registerSounds() {
@@ -34,8 +36,10 @@ public class GeoClient extends GeoCommon {
 	@Override
 	public void registerRenderers() {
 		crystalRender = RenderingRegistry.getNextAvailableRenderId();
-		oreRender = RenderingRegistry.getNextAvailableRenderId();
+		connectedRender = RenderingRegistry.getNextAvailableRenderId();
+		connected = new ConnectedStoneRenderer(connectedRender);
 		RenderingRegistry.registerBlockHandler(crystalRender, crystal);
+		RenderingRegistry.registerBlockHandler(connectedRender, connected);
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGuardianStone.class, new GuardianStoneRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrystalPlant.class, new CrystalPlantRenderer());

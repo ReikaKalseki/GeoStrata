@@ -14,7 +14,7 @@ import net.minecraft.world.World;
 public class GeoCommon {
 
 	public static int crystalRender;
-	public static int oreRender;
+	public static int connectedRender;
 
 	/**
 	 * Client side only register stuff...

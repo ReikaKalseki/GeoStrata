@@ -22,6 +22,7 @@ import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.CrystalBlock;
 import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Blocks.BlockCaveCrystal;
+import Reika.GeoStrata.Blocks.BlockConnectedRock;
 import Reika.GeoStrata.Blocks.BlockCrystalBrewer;
 import Reika.GeoStrata.Blocks.BlockCrystalLamp;
 import Reika.GeoStrata.Blocks.BlockCrystalPlant;
@@ -60,7 +61,9 @@ public enum GeoBlocks implements RegistryEnum {
 	ENGRAVED2(BlockShapedRock.class, ItemBlockRock.class, "Engraved Rock 2", "engraved"),
 	INSCRIBED(BlockShapedRock.class, ItemBlockRock.class, "Inscribed Stone", "inscribed"),
 	INSCRIBED2(BlockShapedRock.class, ItemBlockRock.class, "Inscribed Stone 2", "inscribed"),
-	PLANT(BlockCrystalPlant.class, ItemBlockCrystalPlant.class, "Crystal Bloom");
+	PLANT(BlockCrystalPlant.class, ItemBlockCrystalPlant.class, "Crystal Bloom"),
+	CONNECTED(BlockConnectedRock.class, ItemBlockRock.class, "Connected Stone"),
+	CONNECTED2(BlockConnectedRock.class, ItemBlockRock.class, "Connected Stone 2");
 
 	private final Class blockClass;
 	private final String blockName;
@@ -189,6 +192,9 @@ public enum GeoBlocks implements RegistryEnum {
 			return DecoBlocks.list[meta].getName();
 		case PLANT:
 			return ReikaDyeHelper.dyes[meta].colorName+" Crystal Bloom";
+		case CONNECTED:
+		case CONNECTED2:
+			return "Connected "+RockTypes.getTypeFromIDandMeta(this.getBlockID(), meta).getName();
 		default:
 			return "";
 		}

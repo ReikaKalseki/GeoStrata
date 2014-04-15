@@ -101,6 +101,7 @@ public abstract class RockBlock extends Block {
 	@Override
 	public final int colorMultiplier(IBlockAccess iba, int x, int y, int z) {
 		RockTypes rock = RockTypes.getTypeAtCoords(iba, x, y, z);
+		//ReikaJavaLibrary.pConsole(rock);
 		if (rock == RockTypes.OPAL) {
 			int sc = 48;
 			float hue1 = (float)(ReikaMathLibrary.py3d(x, y*4, z+x)%sc)/sc;
