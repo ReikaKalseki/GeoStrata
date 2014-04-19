@@ -53,8 +53,9 @@ public abstract class RockBlock extends Block {
 			int level = ReikaEnchantmentHelper.getEnchantmentLevel(Enchantment.efficiency, is);
 			eff = ReikaEnchantmentHelper.getEfficiencyMultiplier(level);
 		}
-		if (!this.canHarvestBlock(ep, meta))
-			return 0.1F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness;
+		if (!this.canHarvestBlock(ep, meta)) {
+			return 0.01F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness;
+		}
 		if (is == null)
 			return 0.4F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness;
 		if (TinkerToolHandler.getInstance().isPick(is) || TinkerToolHandler.getInstance().isHammer(is)) {

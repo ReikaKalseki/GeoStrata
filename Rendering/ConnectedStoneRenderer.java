@@ -59,7 +59,10 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		float dz = -0.5F;
 		v5.addTranslation(dx, dy, dz);
 
-		this.faceBrightnessNoWorld(ForgeDirection.DOWN, v5, 1);
+		int color = b.getRenderColor(metadata);
+		Color c = new Color(color);
+
+		this.faceBrightnessNoWorld(ForgeDirection.DOWN, v5, c.getRed()/255F, c.getGreen()/255F, c.getBlue()/255F);
 		v5.setNormal(0, 1, 0);
 		v5.addVertexWithUV(1, 1, 0, u, v);
 		v5.addVertexWithUV(0, 1, 0, du, v);
@@ -71,7 +74,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		v5.addVertexWithUV(0, 1, 1, du2, dv2);
 		v5.addVertexWithUV(1, 1, 1, u2, dv2);
 
-		this.faceBrightnessNoWorld(ForgeDirection.UP, v5, 1);
+		this.faceBrightnessNoWorld(ForgeDirection.UP, v5, c.getRed()/512F, c.getGreen()/512F, c.getBlue()/512F);
 		v5.addVertexWithUV(0, 0, 0, du, v);
 		v5.addVertexWithUV(1, 0, 0, u, v);
 		v5.addVertexWithUV(1, 0, 1, u, dv);
@@ -82,7 +85,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		v5.addVertexWithUV(1, 0, 1, u2, dv2);
 		v5.addVertexWithUV(0, 0, 1, du2, dv2);
 
-		this.faceBrightnessNoWorld(ForgeDirection.EAST, v5, 0.6F);
+		this.faceBrightnessNoWorld(ForgeDirection.EAST, v5, c.getRed()/425F, c.getGreen()/425F, c.getBlue()/425F);
 		v5.addVertexWithUV(1, 0, 0, du, v);
 		v5.addVertexWithUV(1, 1, 0, u, v);
 		v5.addVertexWithUV(1, 1, 1, u, dv);
@@ -93,7 +96,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		v5.addVertexWithUV(1, 1, 1, u2, dv2);
 		v5.addVertexWithUV(1, 0, 1, du2, dv2);
 
-		this.faceBrightnessNoWorld(ForgeDirection.WEST, v5, 0.6F);
+		this.faceBrightnessNoWorld(ForgeDirection.WEST, v5, c.getRed()/425F, c.getGreen()/425F, c.getBlue()/425F);
 		v5.addVertexWithUV(0, 1, 0, u, v);
 		v5.addVertexWithUV(0, 0, 0, du, v);
 		v5.addVertexWithUV(0, 0, 1, du, dv);
@@ -104,7 +107,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		v5.addVertexWithUV(0, 0, 1, du2, dv2);
 		v5.addVertexWithUV(0, 1, 1, u2, dv2);
 
-		this.faceBrightnessNoWorld(ForgeDirection.SOUTH, v5, 0.7F);
+		this.faceBrightnessNoWorld(ForgeDirection.SOUTH, v5, c.getRed()/364F, c.getGreen()/364F, c.getBlue()/364F);
 		v5.addVertexWithUV(0, 1, 1, u, v);
 		v5.addVertexWithUV(0, 0, 1, du, v);
 		v5.addVertexWithUV(1, 0, 1, du, dv);
@@ -115,7 +118,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		v5.addVertexWithUV(1, 0, 1, du2, dv2);
 		v5.addVertexWithUV(1, 1, 1, u2, dv2);
 
-		this.faceBrightnessNoWorld(ForgeDirection.NORTH, v5, 0.7F);
+		this.faceBrightnessNoWorld(ForgeDirection.NORTH, v5, c.getRed()/364F, c.getGreen()/364F, c.getBlue()/364F);
 		v5.addVertexWithUV(0, 0, 0, du, v);
 		v5.addVertexWithUV(0, 1, 0, u, v);
 		v5.addVertexWithUV(1, 1, 0, u, dv);
