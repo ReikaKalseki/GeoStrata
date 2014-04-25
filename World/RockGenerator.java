@@ -18,6 +18,7 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.feature.WorldGenMinable;
 import Reika.DragonAPI.ModInteract.ReikaTwilightHelper;
+import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
@@ -53,10 +54,13 @@ public class RockGenerator implements IWorldGenerator {
 		BiomeGenBase biome = world.getBiomeGenForCoords(chunkX, chunkZ);
 		for (int k = 0; k < RockTypes.rockList.length; k++) {
 			RockTypes geo = RockTypes.rockList[k];
-			for (int i = 0; i < BASE_GEN*geo.rarity*this.getDensityFactor(geo); i++) {
+			double max = BASE_GEN*geo.rarity*this.getDensityFactor(geo);
+			//ReikaJavaLibrary.pConsole("Genning "+geo+" "+max+" times.");
+			for (int i = 0; i < max; i++) {
 				int posX = chunkX + random.nextInt(16);
 				int posZ = chunkZ + random.nextInt(16);
 				int posY = geo.minY + random.nextInt(geo.maxY-geo.minY);
+				GeoStrata.logger.debug(geo.name()+":"+geo.canGenerateAt(world, posX, posY, posZ, random));
 				if (geo.canGenerateAt(world, posX, posY, posZ, random)) {
 					int id = geo.getID(RockShapes.SMOOTH);
 					int meta = geo.getBlockMetadata();

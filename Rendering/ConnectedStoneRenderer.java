@@ -208,7 +208,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		GL11.glDisable(GL11.GL_BLEND);
 		v5.startDrawingQuads();
 
-		return false;
+		return true;
 	}
 
 	private void renderOverlay(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks rb) {

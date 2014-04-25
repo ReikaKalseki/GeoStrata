@@ -90,6 +90,8 @@ public enum RockTypes {
 		if (g == null)
 			return null;
 		ArrayList<RockTypes> li = IDMappings.get(g);
+		if (li == null)
+			return null;
 		if (meta >= li.size())
 			return null;
 		return li.get(meta);
@@ -171,9 +173,8 @@ public enum RockTypes {
 		case BASALT:
 			return true;
 		case GRANITE:
-			return true;
 		case GNEISS:
-			return GRANITE.canGenerateAt(world, x, y, z, r);
+			return true;
 		case GRANULITE:
 			break;
 		case HORNFEL:
@@ -193,9 +194,8 @@ public enum RockTypes {
 		case SANDSTONE:
 			return true;
 		case SHALE:
-			return !BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), Type.DESERT);
 		case SLATE:
-			return SHALE.canGenerateAt(world, x, y, z, r);
+			return !BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), Type.DESERT);
 		case ONYX:
 			return ReikaWorldHelper.checkForAdjMaterial(world, x, y, z, Material.lava) != null;
 		case SCHIST:
