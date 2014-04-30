@@ -269,4 +269,9 @@ public class TileEntityCrystalBrewer extends TileEntityBase implements ISidedInv
 		par1NBTTagCompound.setInteger("BrewTime", time);
 	}
 
+	@Override
+	public int getRedstoneOverride() {
+		return this.canBrew() ? 0 : 15;
+	}
+
 }

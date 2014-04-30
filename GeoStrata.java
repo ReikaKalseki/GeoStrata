@@ -100,7 +100,7 @@ public class GeoStrata extends DragonAPIMod {
 	public static Item[] items = new Item[GeoItems.itemList.length];
 	public static Block[] blocks = new Block[GeoBlocks.blockList.length];
 
-	public static EnhancedFluid crystal = (EnhancedFluid)new EnhancedFluid("potion crystal").setColor(0x66aaff).setGameName("Crystal").setLuminosity(15);
+	public static EnhancedFluid crystal = (EnhancedFluid)new EnhancedFluid("potion crystal").setColor(0x66aaff).setGameName("Crystal").setLuminosity(15).setTemperature(500);
 
 	@SidedProxy(clientSide="Reika.GeoStrata.GeoClient", serverSide="Reika.GeoStrata.GeoCommon")
 	public static GeoCommon proxy;
@@ -151,9 +151,11 @@ public class GeoStrata extends DragonAPIMod {
 	@ForgeSubscribe
 	@SideOnly(Side.CLIENT)
 	public void textureHook(TextureStitchEvent.Pre event) {
-		logger.log("Loading Liquid Icons");
-		Icon cry = event.map.registerIcon("GeoStrata:liqcrystal3");
-		crystal.setIcons(cry);
+		if (event.map.textureType == 0) {
+			logger.log("Loading Liquid Icons");
+			Icon cry = event.map.registerIcon("GeoStrata:liqcrystal3");
+			crystal.setIcons(cry);
+		}
 	}
 
 	@EventHandler
