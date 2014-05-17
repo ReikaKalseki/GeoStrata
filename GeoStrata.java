@@ -74,7 +74,6 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -142,8 +141,8 @@ public class GeoStrata extends DragonAPIMod {
 			//Set state back
 		}
 
-		TickRegistry.registerTickHandler(TileAccelerator.instance, Side.SERVER);
-		TickRegistry.registerTickHandler(TileAccelerator.instance, Side.CLIENT);
+		//TickRegistry.registerTickHandler(TileAccelerator.instance, Side.SERVER);
+		//TickRegistry.registerTickHandler(TileAccelerator.instance, Side.CLIENT);
 
 		VanillaIntegrityTracker.instance.addWatchedBlock(instance, Block.obsidian);
 		VanillaIntegrityTracker.instance.addWatchedBlock(instance, Block.stone);

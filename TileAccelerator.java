@@ -1,3 +1,12 @@
+/*******************************************************************************
+ * @author Reika Kalseki
+ * 
+ * Copyright 2014
+ * 
+ * All rights reserved.
+ * Distribution of the software in any form is only allowed with
+ * explicit, prior permission from the owner.
+ ******************************************************************************/
 package Reika.GeoStrata;
 
 import java.io.BufferedReader;
@@ -30,7 +39,6 @@ public class TileAccelerator implements ITickHandler {
 
 	private WeakReference<TileEntity> getReferenceFromString(World world, String s) {
 		String[] split = s.split("\\:|\\@|,|=|\\[|\\]");
-		//ReikaJavaLibrary.pConsole(Arrays.toString(split));
 		int dim = Integer.parseInt(split[1]);
 		if (dim != world.provider.dimensionId)
 			return null;

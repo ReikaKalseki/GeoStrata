@@ -59,7 +59,12 @@ public class GeoRecipes {
 				"BS", "SB", 'S', smooth, 'B', brick});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(connected, 8), new Object[]{
 				"SSS", "S S", "SSS", 'S', smooth});
-			FurnaceRecipes.smelting().addSmelting(cobble.itemID, cobble.getItemDamage(), smooth, 0.2F);
+
+			for (int k = 0; k < RockShapes.shapeList.length; k++) {
+				RockShapes shape = RockShapes.shapeList[k];
+				ItemStack item = type.getItem(shape);
+				FurnaceRecipes.smelting().addSmelting(item.itemID, item.getItemDamage(), smooth, 0.2F);
+			}
 			//GameRegistry.addShapelessRecipe(new ItemStack(Block.cobblestone), cobble);
 		}
 

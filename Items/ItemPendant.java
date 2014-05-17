@@ -15,10 +15,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import Reika.DragonAPI.Libraries.ReikaEntityHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.GeoStrata.Base.CrystalBlock;
 import Reika.GeoStrata.Base.GeoItem;
 import Reika.GeoStrata.Registry.GeoItems;
+import Reika.GeoStrata.Registry.GeoOptions;
 
 public class ItemPendant extends GeoItem {
 
@@ -50,6 +52,8 @@ public class ItemPendant extends GeoItem {
 			if (dye != ReikaDyeHelper.PURPLE) {
 				CrystalBlock.applyEffectFromColor(3, level, ep, dye);
 			}
+			if (GeoOptions.NOPARTICLES.getState())
+				ReikaEntityHelper.setNoPotionParticles(ep);
 		}
 	}
 
