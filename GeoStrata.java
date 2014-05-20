@@ -49,6 +49,7 @@ import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.DragonAPI.ModInteract.ExtraUtilsHandler;
 import Reika.DragonAPI.ModInteract.ReikaThaumHelper;
 import Reika.GeoStrata.Base.CrystalBlock;
+import Reika.GeoStrata.Bees.CrystalBees;
 import Reika.GeoStrata.Guardian.GuardianCommand;
 import Reika.GeoStrata.Guardian.GuardianStoneManager;
 import Reika.GeoStrata.Guardian.TileEntityGuardianStone;
@@ -134,6 +135,7 @@ public class GeoStrata extends DragonAPIMod {
 		GameRegistry.registerTileEntity(TileEntityCrystalBrewer.class, "GeoBrewer");
 		GameRegistry.registerTileEntity(TileEntityGuardianStone.class, "GeoGuardianStone");
 		GameRegistry.registerTileEntity(TileEntityCrystalPlant.class, "GeoCrystalPlant");
+		GameRegistry.registerTileEntity(TileEntityAccelerator.class, "GeoAccelerator");
 
 		NetworkRegistry.instance().registerGuiHandler(instance, new GeoGuiHandler());
 		if (GeoOptions.RETROGEN.getState()) {
@@ -223,6 +225,10 @@ public class GeoStrata extends DragonAPIMod {
 		if (ModList.EXTRAUTILS.isLoaded()) {
 			ItemStack burned = new ItemStack(ExtraUtilsHandler.getInstance().decoID, 1, ExtraUtilsHandler.getInstance().burntQuartz);
 			ReikaRecipeHelper.addSmelting(RockTypes.QUARTZ.getItem(RockShapes.SMOOTH), burned, 0.05F);
+		}
+
+		if (ModList.FORESTRY.isLoaded() && DragonAPICore.isReikasComputer()) { //not finished, rushed update, so not trusting release
+			CrystalBees.register();
 		}
 	}
 

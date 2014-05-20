@@ -21,7 +21,6 @@ import Reika.GeoStrata.Items.ItemCrystalPotion;
 import Reika.GeoStrata.Items.ItemCrystalSeeds;
 import Reika.GeoStrata.Items.ItemCrystalShard;
 import Reika.GeoStrata.Items.ItemPendant;
-import Reika.GeoStrata.Items.ItemTimeAccelerator;
 
 public enum GeoItems implements RegistryEnum {
 
@@ -30,8 +29,7 @@ public enum GeoItems implements RegistryEnum {
 	CLUSTER("Crystal Cluster", ItemCluster.class),
 	PENDANT("Crystal Pendant", ItemPendant.class),
 	PENDANT3("Enhanced Crystal Pendant", ItemPendant.class),
-	SEED("Crystal Bloom Seeds", ItemCrystalSeeds.class),
-	ACCELERATOR("Time Accelerator", ItemTimeAccelerator.class);
+	SEED("Crystal Bloom Seeds", ItemCrystalSeeds.class);
 
 	private String name;
 	private Class itemClass;
@@ -79,8 +77,6 @@ public enum GeoItems implements RegistryEnum {
 	@Override
 	public String getMultiValuedName(int meta) {
 		switch(this) {
-		case ACCELERATOR:
-			return this.getBasicName()+" Tier "+(meta+1);
 		case SHARD:
 		case POTION:
 			return ReikaDyeHelper.dyes[meta].colorName+" "+this.getBasicName();
@@ -95,7 +91,6 @@ public enum GeoItems implements RegistryEnum {
 		case SHARD:
 		case POTION:
 		case CLUSTER:
-		case ACCELERATOR:
 			return true;
 		default:
 			return false;
@@ -111,8 +106,6 @@ public enum GeoItems implements RegistryEnum {
 			return 16;
 		case CLUSTER:
 			return ((ItemCluster)this.getItemInstance()).getNumberTypes();
-		case ACCELERATOR:
-			return ((ItemTimeAccelerator)this.getItemInstance()).getNumberTypes();
 		default:
 			return 1;
 		}

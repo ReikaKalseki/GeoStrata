@@ -21,6 +21,9 @@ import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.CrystalBlock;
 import Reika.GeoStrata.Base.RockBlock;
+import Reika.GeoStrata.Bees.BlockCrystalHive;
+import Reika.GeoStrata.Bees.ItemBlockCrystalHive;
+import Reika.GeoStrata.Blocks.BlockAccelerator;
 import Reika.GeoStrata.Blocks.BlockCaveCrystal;
 import Reika.GeoStrata.Blocks.BlockConnectedRock;
 import Reika.GeoStrata.Blocks.BlockCrystalBrewer;
@@ -31,6 +34,7 @@ import Reika.GeoStrata.Blocks.BlockRockDeco;
 import Reika.GeoStrata.Blocks.BlockShapedRock;
 import Reika.GeoStrata.Blocks.BlockSmooth;
 import Reika.GeoStrata.Blocks.BlockSuperCrystal;
+import Reika.GeoStrata.Items.ItemBlockAccelerator;
 import Reika.GeoStrata.Items.ItemBlockCrystal;
 import Reika.GeoStrata.Items.ItemBlockCrystalPlant;
 import Reika.GeoStrata.Items.ItemBlockGuardianStone;
@@ -63,7 +67,9 @@ public enum GeoBlocks implements RegistryEnum {
 	INSCRIBED2(BlockShapedRock.class, ItemBlockRock.class, "Inscribed Stone 2", "inscribed"),
 	PLANT(BlockCrystalPlant.class, ItemBlockCrystalPlant.class, "Crystal Bloom"),
 	CONNECTED(BlockConnectedRock.class, ItemBlockRock.class, "Connected Stone"),
-	CONNECTED2(BlockConnectedRock.class, ItemBlockRock.class, "Connected Stone 2");
+	CONNECTED2(BlockConnectedRock.class, ItemBlockRock.class, "Connected Stone 2"),
+	ACCELERATOR(BlockAccelerator.class, ItemBlockAccelerator.class, "Tile Accelerator"),
+	HIVE(BlockCrystalHive.class, ItemBlockCrystalHive.class, "Crystal Hive;");
 
 	private final Class blockClass;
 	private final String blockName;
@@ -207,8 +213,6 @@ public enum GeoBlocks implements RegistryEnum {
 	@Override
 	public boolean hasMultiValuedName() {
 		switch(this) {
-		case BREWER:
-			return false;
 		default:
 			return true;
 		}
