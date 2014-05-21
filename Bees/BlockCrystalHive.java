@@ -10,6 +10,7 @@
 package Reika.GeoStrata.Bees;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -17,15 +18,25 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
+import Reika.DragonAPI.Libraries.Registry.ReikaParticleHelper;
+import Reika.DragonAPI.ModInteract.Bees.BeeSpecies;
+import Reika.GeoStrata.GeoStrata;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import forestry.api.apiculture.EnumBeeType;
 
 public class BlockCrystalHive extends Block {
+
+	private static final Random rand = new Random();
 
 	private final Icon[][] icons = new Icon[16][6];
 
 	public BlockCrystalHive(int par1, Material par2Material) {
 		super(par1, par2Material);
+		this.setHardness(3);
+		this.setResistance(5);
+		this.setCreativeTab(GeoStrata.tabGeo);
 	}
 
 	@Override
@@ -34,10 +45,43 @@ public class BlockCrystalHive extends Block {
 		return false;
 	}
 
-	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z) {
-		ArrayList<ItemStack> li = new ArrayList();
+	@Override
+	public boolean canSilkHarvest() {
+		return false;
+	}
 
+	@Override
+	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int metadata, int fortune) {
+		ArrayList<ItemStack> li = new ArrayList();
+		BeeSpecies bee = this.getBeeForMeta(metadata);
+		if (bee != null) {
+			float chance = Math.min(0.95F, (1+fortune)*0.25F);
+			int drones = ReikaRandomHelper.doWithChance(chance) ? 2 : 1;
+			for (int i = 0; i < drones; i++) {
+				li.add(bee.getBeeItem(world, EnumBeeType.DRONE));
+			}
+			li.add(bee.getBeeItem(world, EnumBeeType.PRINCESS));
+		}
 		return li;
+	}
+
+	private BeeSpecies getBeeForMeta(int meta) {
+		switch(meta) {
+		case 0:
+			return CrystalBees.crystal;
+		case 1:
+			return CrystalBees.purity;
+		default:
+			return null;
+		}
+	}
+
+	@Override
+	public void randomDisplayTick(World world, int x, int y, int z, Random r) {
+		int meta = world.getBlockMetadata(x, y, z);
+		ReikaParticleHelper p = meta == 0 ? ReikaParticleHelper.AMBIENTMOBSPELL : ReikaParticleHelper.ENCHANTMENT;
+		int dy = meta == 0 ? y : y+1;
+		p.spawnAroundBlock(world, x, dy, z, 8);
 	}
 
 	@Override
@@ -45,7 +89,7 @@ public class BlockCrystalHive extends Block {
 	public void registerIcons(IconRegister ico)
 	{
 		for (int i = 0; i < 2; i++) {
-			icons[0][i] = ico.registerIcon("geostrata:hives/crystal_top");
+			icons[0][i] = ico.registerIcon("geostrata:hives/crystal_top"); //make crystal hive translucent?
 		}
 		for (int i = 2; i < 6; i++) {
 			icons[0][i] = ico.registerIcon("geostrata:hives/crystal_side");

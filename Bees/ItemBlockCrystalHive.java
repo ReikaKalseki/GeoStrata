@@ -16,7 +16,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
-import Reika.DragonAPI.DragonAPICore;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -31,11 +30,9 @@ public class ItemBlockCrystalHive extends ItemBlock {
 	@SideOnly(Side.CLIENT)
 	public final void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
 	{
-		if (DragonAPICore.isReikasComputer()) {
-			for (int i = 0; i < 2; i++) {
-				ItemStack item = new ItemStack(par1, 1, i);
-				par3List.add(item);
-			}
+		for (int i = 0; i < 2; i++) {
+			ItemStack item = new ItemStack(par1, 1, i);
+			par3List.add(item);
 		}
 	}
 

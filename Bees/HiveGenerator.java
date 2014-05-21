@@ -16,10 +16,14 @@ import net.minecraft.block.BlockFluid;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.fluids.BlockFluidBase;
+import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
-import Reika.DragonAPI.ModInteract.ReikaTwilightHelper;
+import Reika.GeoStrata.API.CrystalGenEvent;
 import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.World.CrystalGenerator;
 import cpw.mods.fml.common.IWorldGenerator;
 
 public class HiveGenerator implements IWorldGenerator {
@@ -28,12 +32,31 @@ public class HiveGenerator implements IWorldGenerator {
 
 	public static final int PER_CHUNK = 20;
 
+	private HiveGenerator() {
+		MinecraftForge.EVENT_BUS.register(this);
+	}
+
+	@ForgeSubscribe
+	public void onGenCrystal(CrystalGenEvent evt) {
+		int dim = evt.world.provider.dimensionId;
+		if (dim != -1 && dim != 1) {
+			if (evt.color == ReikaDyeHelper.WHITE) {
+				if (evt.rand.nextInt(4) == 0) {
+					int idb = evt.world.getBlockId(evt.x, evt.y-1, evt.z);
+					if (idb == Block.stone.blockID || idb == GeoBlocks.SMOOTH.getBlockID() || idb == GeoBlocks.SMOOTH2.getBlockID()) {
+						evt.world.setBlock(evt.x, evt.y-1, evt.z, GeoBlocks.HIVE.getBlockID(), 1, 3);
+					}
+				}
+			}
+		}
+	}
+
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
 		if (world.provider.terrainType == WorldType.FLAT) //do not generate in superflat
 			return;
-		int id = world.provider.dimensionId;
-		if (id == 0 || id == ReikaTwilightHelper.getDimensionID()) {
+		int dim = world.provider.dimensionId;
+		if (dim != -1 && dim != 1) {
 			for (int i = 0; i < PER_CHUNK; i++) {
 				int x = chunkX*16+random.nextInt(16);
 				int z = chunkZ*16+random.nextInt(16);
@@ -51,11 +74,20 @@ public class HiveGenerator implements IWorldGenerator {
 	}
 
 	private boolean canGenerateAt(World world, int x, int y, int z) {
-		if (world.getBlockId(x, y, z) != 0 && !ReikaWorldHelper.softBlocks(world, x, y, z))
+		int id = world.getBlockId(x, y, z);
+		if (id != 0 && !ReikaWorldHelper.softBlocks(world, x, y, z))
+			return false;
+		if (Block.blocksList[id] instanceof BlockFluid)
+			return false;
+		if (Block.blocksList[id] instanceof BlockFluidBase)
 			return false;
 		int idb = world.getBlockId(x, y-1, z);
 		int ida = world.getBlockId(x, y+1, z);
 		if (idb == 0 && ida == 0)
+			return false;
+		int metab = world.getBlockMetadata(x, y-1, z);
+		int metaa = world.getBlockMetadata(x, y+1, z);
+		if (!CrystalGenerator.canGenerateOn(ida, metaa) && !CrystalGenerator.canGenerateOn(idb, metab))
 			return false;
 		if (Block.blocksList[idb] instanceof BlockFluid)
 			return false;

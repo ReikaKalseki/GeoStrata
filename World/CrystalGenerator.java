@@ -17,9 +17,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.common.MinecraftForge;
 import Reika.DragonAPI.Libraries.World.ReikaBlockHelper;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.DragonAPI.ModInteract.ReikaTwilightHelper;
+import Reika.GeoStrata.API.CrystalGenEvent;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoOptions;
 import cpw.mods.fml.common.IWorldGenerator;
@@ -43,6 +45,7 @@ public class CrystalGenerator implements IWorldGenerator {
 			int meta = random.nextInt(16);
 			if (this.canGenerateAt(world, posX, posY, posZ)) {
 				world.setBlock(posX, posY, posZ, id, meta, 3);
+				MinecraftForge.EVENT_BUS.post(new CrystalGenEvent(world, posX, posY, posZ, meta, random));
 				//ReikaJavaLibrary.pConsole("Generating "+ReikaDyeHelper.dyes[meta].getName()+" Crystal at "+posX+", "+posY+", "+posZ);
 			}
 			int r = 3;

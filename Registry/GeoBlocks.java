@@ -34,7 +34,6 @@ import Reika.GeoStrata.Blocks.BlockRockDeco;
 import Reika.GeoStrata.Blocks.BlockShapedRock;
 import Reika.GeoStrata.Blocks.BlockSmooth;
 import Reika.GeoStrata.Blocks.BlockSuperCrystal;
-import Reika.GeoStrata.Items.ItemBlockAccelerator;
 import Reika.GeoStrata.Items.ItemBlockCrystal;
 import Reika.GeoStrata.Items.ItemBlockCrystalPlant;
 import Reika.GeoStrata.Items.ItemBlockGuardianStone;
@@ -68,7 +67,7 @@ public enum GeoBlocks implements RegistryEnum {
 	PLANT(BlockCrystalPlant.class, ItemBlockCrystalPlant.class, "Crystal Bloom"),
 	CONNECTED(BlockConnectedRock.class, ItemBlockRock.class, "Connected Stone"),
 	CONNECTED2(BlockConnectedRock.class, ItemBlockRock.class, "Connected Stone 2"),
-	ACCELERATOR(BlockAccelerator.class, ItemBlockAccelerator.class, "Tile Accelerator"),
+	ACCELERATOR(BlockAccelerator.class, null, "Tile Accelerator"),
 	HIVE(BlockCrystalHive.class, ItemBlockCrystalHive.class, "Crystal Hive;");
 
 	private final Class blockClass;
@@ -201,6 +200,8 @@ public enum GeoBlocks implements RegistryEnum {
 		case CONNECTED:
 		case CONNECTED2:
 			return "Connected "+RockTypes.getTypeFromIDandMeta(this.getBlockID(), meta).getName();
+		case HIVE:
+			return meta == 0 ? "Crystal Hive" : "Pure Hive";
 		default:
 			return "";
 		}
@@ -226,6 +227,8 @@ public enum GeoBlocks implements RegistryEnum {
 			return RockTypes.getTypesForID(this.getBlockID());
 		if (this == DECO)
 			return DecoBlocks.list.length;
+		if (this == HIVE)
+			return 2;
 		return 1;
 	}
 

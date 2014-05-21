@@ -30,7 +30,7 @@ public class TileEntityAccelerator extends TileEntityBase {
 		for (int i = 0; i < 6; i++) {
 			ForgeDirection dir = dirs[i];
 			TileEntity te = this.getAdjacentTileEntity(dir);
-			if (te != null && te.canUpdate() && !te.isInvalid()) {
+			if (te != null && te.canUpdate() && !te.isInvalid() && !(te instanceof TileEntityAccelerator)) {
 				long time = System.nanoTime();
 				for (int k = 0; k < tier && !te.isInvalid() && System.nanoTime()-time < MAX_LAG; k++) {
 					te.updateEntity();
@@ -57,11 +57,6 @@ public class TileEntityAccelerator extends TileEntityBase {
 	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 0;
-	}
-
-	@Override
-	protected void onTileCreationInWorld(World world, int x, int y, int z) {
-		tier = world.getBlockMetadata(x, y, z);
 	}
 
 }

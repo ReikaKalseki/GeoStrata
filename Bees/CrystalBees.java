@@ -44,14 +44,14 @@ import forestry.api.genetics.IPollinatable;
 
 public class CrystalBees {
 
-	private static final BasicBee protective = new BasicBee("Protective", "Vitreus Auxilium", Speeds.SLOWER, Life.SHORTENED, Flowering.SLOWER, Fertility.NORMAL, Territory.DEFAULT, 0xFF5993);
-	private static final BasicBee luminous = new BasicBee("Luminous", "Vitreus Lumens", Speeds.SLOW, Life.SHORTER, Flowering.SLOWER, Fertility.HIGH, Territory.DEFAULT, 0xBAEBFF);
-	private static final BasicBee hostile = new BasicBee("Hostile", "Vitreus Inimicus", Speeds.SLOWEST, Life.SHORT, Flowering.SLOW, Fertility.LOW, Territory.DEFAULT, 0xFF6A00);
+	protected static final BasicBee protective = new BasicBee("Protective", "Vitreus Auxilium", Speeds.SLOWER, Life.SHORTENED, Flowering.SLOWER, Fertility.NORMAL, Territory.DEFAULT, 0xFF5993);
+	protected static final BasicBee luminous = new BasicBee("Luminous", "Vitreus Lumens", Speeds.SLOW, Life.SHORTER, Flowering.SLOWER, Fertility.HIGH, Territory.DEFAULT, 0xBAEBFF);
+	protected static final BasicBee hostile = new BasicBee("Hostile", "Vitreus Inimicus", Speeds.SLOWEST, Life.SHORT, Flowering.SLOW, Fertility.LOW, Territory.DEFAULT, 0xFF6A00);
 
-	private static final BasicBee crystal = new BasicBee("Crystalline", "Vitreus Crystallum", Speeds.NORMAL, Life.SHORTEST, Flowering.SLOWEST, Fertility.NORMAL, Territory.DEFAULT, 0x46A7FF);
-	private static final BasicBee purity = new BasicBee("Pure", "Purus Mundi", Speeds.SLOWER, Life.NORMAL, Flowering.SLOWEST, Fertility.LOW, Territory.DEFAULT, 0xffffff);
+	protected static final BasicBee crystal = new BasicBee("Crystalline", "Vitreus Crystallum", Speeds.NORMAL, Life.SHORTEST, Flowering.SLOWEST, Fertility.NORMAL, Territory.DEFAULT, 0x46A7FF);
+	protected static final BasicBee purity = new BasicBee("Pure", "Purus Mundi", Speeds.SLOWER, Life.NORMAL, Flowering.SLOWEST, Fertility.LOW, Territory.DEFAULT, 0xffffff);
 
-	private static final HashMap<ReikaDyeHelper, CrystalBee> beeMap = new HashMap();
+	protected static final HashMap<ReikaDyeHelper, CrystalBee> beeMap = new HashMap();
 
 	public static void register() {
 		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
@@ -92,6 +92,10 @@ public class CrystalBees {
 		luminous.addBreeding("Ended", purity, 5);
 
 		GameRegistry.registerWorldGenerator(HiveGenerator.instance);
+	}
+
+	protected static final CrystalBee getBeeFor(ReikaDyeHelper dye) {
+		return beeMap.get(dye);
 	}
 
 	private static final void addBreeding(String in1, BeeSpecies in2, ReikaDyeHelper out) {
