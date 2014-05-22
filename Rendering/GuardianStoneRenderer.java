@@ -45,7 +45,7 @@ public class GuardianStoneRenderer extends TileEntitySpecialRenderer {
 		if (!tile.hasWorldObj()) {
 			GL11.glTranslated(0, 0, 1);
 			GL11.glRotated(90, 0, 1, 0);
-			this.drawInner(te);
+			//this.drawInner(te);
 			GL11.glRotated(-90, 0, 1, 0);
 			GL11.glTranslated(0, 0, -1);
 			this.drawOuter(te);
@@ -84,6 +84,7 @@ public class GuardianStoneRenderer extends TileEntitySpecialRenderer {
 		Tessellator v5 = Tessellator.instance;
 		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_COLOR);
 
+		GL11.glDisable(GL11.GL_CULL_FACE);
 		double s = 0.33;
 		if (te.hasWorldObj()) {
 			GL11.glScaled(s, s, s);
@@ -92,9 +93,11 @@ public class GuardianStoneRenderer extends TileEntitySpecialRenderer {
 			GL11.glRotatef(rm.playerViewX, 1.0F, 0.0F, 0.0F);
 		}
 		else {
+			s = 0.5;
 			GL11.glTranslated(0.5, 0.5, 0.5);
+			GL11.glRotated(-45, 0, 1, 0);
+			GL11.glRotated(-30, 1, 0, 0);
 			GL11.glScaled(s, s, s);
-			GL11.glRotated(-90, 0, 1, 0);
 		}
 		//double ang = (System.currentTimeMillis()/20D)%360;
 		//GL11.glRotated(ang, 0, 0, 1);
@@ -104,11 +107,13 @@ public class GuardianStoneRenderer extends TileEntitySpecialRenderer {
 		v5.addVertexWithUV(1, 1, 0, du, dv);
 		v5.addVertexWithUV(-1, 1, 0, u, dv);
 		v5.draw();
+		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		if (!te.hasWorldObj()) {
-			GL11.glRotated(90, 0, 1, 0);
 			GL11.glScaled(1/s, 1/s, 1/s);
+			GL11.glRotated(30, 1, 0, 0);
+			GL11.glRotated(45, 0, 1, 0);
 			GL11.glTranslated(-0.5, -0.5, -0.5);
 		}
 	}

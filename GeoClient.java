@@ -13,11 +13,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import Reika.GeoStrata.Guardian.TileEntityGuardianStone;
 import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Rendering.AcceleratorRenderer;
 import Reika.GeoStrata.Rendering.ConnectedStoneRenderer;
 import Reika.GeoStrata.Rendering.CrystalPlantRenderer;
 import Reika.GeoStrata.Rendering.CrystalRenderer;
-import Reika.GeoStrata.Rendering.GuardianItemRenderer;
 import Reika.GeoStrata.Rendering.GuardianStoneRenderer;
+import Reika.GeoStrata.Rendering.ItemTileEntityBlockRenderer;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -26,6 +27,8 @@ public class GeoClient extends GeoCommon {
 
 	private static final CrystalRenderer crystal = new CrystalRenderer();
 	private static ConnectedStoneRenderer connected;
+
+	private static final ItemTileEntityBlockRenderer teibr = new ItemTileEntityBlockRenderer();
 
 	@Override
 	public void registerSounds() {
@@ -43,8 +46,10 @@ public class GeoClient extends GeoCommon {
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGuardianStone.class, new GuardianStoneRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrystalPlant.class, new CrystalPlantRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityAccelerator.class, new AcceleratorRenderer());
 
-		MinecraftForgeClient.registerItemRenderer(GeoBlocks.GUARDIAN.getBlockID(), new GuardianItemRenderer());
+		MinecraftForgeClient.registerItemRenderer(GeoBlocks.GUARDIAN.getBlockID(), teibr);
+		MinecraftForgeClient.registerItemRenderer(GeoBlocks.ACCELERATOR.getBlockID(), teibr);
 	}
 
 	// Override any other methods that need to be handled differently client side.

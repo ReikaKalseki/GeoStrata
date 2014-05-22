@@ -100,7 +100,13 @@ public class GeoRecipes {
 		}
 
 		GameRegistry.addRecipe(new ItemStack(GeoBlocks.BREWER.getBlockID(), 1, 0), "NNN", "NBN", "SSS", 'N', Item.netherQuartz, 'S', Block.stone, 'B', Item.brewingStand);
+		GameRegistry.addRecipe(new ItemStack(GeoBlocks.GUARDIAN.getBlockID(), 1, 0), "BBB", "BPB", "BBB", 'B', getShard(ReikaDyeHelper.WHITE), 'P', GeoItems.CLUSTER.getStackOfMetadata(7));
+		GameRegistry.addRecipe(new ItemStack(GeoBlocks.ACCELERATOR.getBlockID(), 1, 0), "DCD", "CSC", "DCD", 'D', Item.diamond, 'S', GeoItems.CLUSTER.getStackOfMetadata(7), 'C', getShard(ReikaDyeHelper.BLUE));
 
+		Item[] upgrade = {Item.ingotIron, Item.ingotGold, Item.diamond, Item.emerald, Item.netherStar};
+		int[] index = {0, 0, 1, 1, 2, 3, 4};
+		for (int i = 0; i < TileEntityAccelerator.MAX_TIER; i++)
+			GameRegistry.addRecipe(new ItemStack(GeoBlocks.ACCELERATOR.getBlockID(), 1, i+1), "D1D", "2A3", "D4D", 'D', upgrade[index[i]], 'A', new ItemStack(GeoBlocks.ACCELERATOR.getBlockID(), 1, i), '1', getShard(ReikaDyeHelper.getRandomColor()), '2', getShard(ReikaDyeHelper.getRandomColor()), '3', getShard(ReikaDyeHelper.getRandomColor()), '4', getShard(ReikaDyeHelper.getRandomColor()));
 
 		if (ModList.THERMALEXPANSION.isLoaded()) {
 			FluidStack crystal = FluidRegistry.getFluidStack("potion crystal", 8000);
@@ -126,9 +132,7 @@ public class GeoRecipes {
 
 		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(6), " B ", "G G", " B ", 'B', GeoItems.CLUSTER.getStackOfMetadata(4), 'G', GeoItems.CLUSTER.getStackOfMetadata(5));
 
-		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(7), " B ", "BPB", " B ", 'B', GeoItems.CLUSTER.getStackOfMetadata(6), 'P', Item.eyeOfEnder);
-
-		GameRegistry.addRecipe(new ItemStack(GeoBlocks.GUARDIAN.getBlockInstance()), "BBB", "BPB", "BBB", 'B', getShard(ReikaDyeHelper.WHITE), 'P', GeoItems.CLUSTER.getStackOfMetadata(7));
+		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(7), " B ", "BPB", " B ", 'B', GeoItems.CLUSTER.getStackOfMetadata(6), 'P', Item.netherStar);
 	}
 
 	private static ItemStack getShard(ReikaDyeHelper color) {

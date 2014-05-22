@@ -34,6 +34,7 @@ import Reika.GeoStrata.Blocks.BlockRockDeco;
 import Reika.GeoStrata.Blocks.BlockShapedRock;
 import Reika.GeoStrata.Blocks.BlockSmooth;
 import Reika.GeoStrata.Blocks.BlockSuperCrystal;
+import Reika.GeoStrata.Items.ItemBlockAccelerator;
 import Reika.GeoStrata.Items.ItemBlockCrystal;
 import Reika.GeoStrata.Items.ItemBlockCrystalPlant;
 import Reika.GeoStrata.Items.ItemBlockGuardianStone;
@@ -67,7 +68,7 @@ public enum GeoBlocks implements RegistryEnum {
 	PLANT(BlockCrystalPlant.class, ItemBlockCrystalPlant.class, "Crystal Bloom"),
 	CONNECTED(BlockConnectedRock.class, ItemBlockRock.class, "Connected Stone"),
 	CONNECTED2(BlockConnectedRock.class, ItemBlockRock.class, "Connected Stone 2"),
-	ACCELERATOR(BlockAccelerator.class, null, "Tile Accelerator"),
+	ACCELERATOR(BlockAccelerator.class, ItemBlockAccelerator.class, "Tile Accelerator"),
 	HIVE(BlockCrystalHive.class, ItemBlockCrystalHive.class, "Crystal Hive;");
 
 	private final Class blockClass;

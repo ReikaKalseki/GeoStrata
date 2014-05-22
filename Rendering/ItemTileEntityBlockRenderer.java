@@ -9,15 +9,19 @@
  ******************************************************************************/
 package Reika.GeoStrata.Rendering;
 
-import net.minecraft.client.renderer.RenderBlocks;
+import java.util.HashMap;
+
+import net.minecraft.block.Block;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.IItemRenderer;
-import Reika.GeoStrata.Guardian.TileEntityGuardianStone;
+import Reika.DragonAPI.Base.TileEntityBase;
 
-public class GuardianItemRenderer implements IItemRenderer {
+public class ItemTileEntityBlockRenderer implements IItemRenderer {
 
-	private static final TileEntityGuardianStone tile = new TileEntityGuardianStone();
+	private final HashMap<Integer, TileEntity> tileMap = new HashMap();
 
 	@Override
 	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
@@ -31,9 +35,20 @@ public class GuardianItemRenderer implements IItemRenderer {
 
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-		RenderBlocks rb = (RenderBlocks)data[0];
-		//rb.renderBlockAsItem(GeoBlocks.GUARDIAN.getBlockInstance(), 0, 1);
+		TileEntity tile = this.getTile(item);
+		if (tile instanceof TileEntityBase)
+			((TileEntityBase)tile).setBlockMetadata(item.getItemDamage());
 		TileEntityRenderer.instance.renderTileEntityAt(tile, 0.1F, 0, 0.1F, 0);
+	}
+
+	private TileEntity getTile(ItemStack item) {
+		TileEntity tile = tileMap.get(item.itemID);
+		if (tile == null) {
+			Block b = Block.blocksList[((ItemBlock)item.getItem()).getBlockID()];
+			tile = b.createTileEntity(null, item.getItemDamage());
+			tileMap.put(item.itemID, tile);
+		}
+		return tile;
 	}
 
 }
