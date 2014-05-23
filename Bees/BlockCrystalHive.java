@@ -17,11 +17,13 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaParticleHelper;
 import Reika.DragonAPI.ModInteract.Bees.BeeSpecies;
 import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.Registry.GeoBlocks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import forestry.api.apiculture.EnumBeeType;
@@ -63,6 +65,13 @@ public class BlockCrystalHive extends Block {
 			li.add(bee.getBeeItem(world, EnumBeeType.PRINCESS));
 		}
 		return li;
+	}
+
+	@Override
+	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+	{
+		int meta = world.getBlockMetadata(x, y, z);
+		return new ItemStack(GeoBlocks.HIVE.getBlockID(), 1, meta);
 	}
 
 	private BeeSpecies getBeeForMeta(int meta) {

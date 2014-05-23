@@ -48,6 +48,7 @@ import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.DragonAPI.ModInteract.ExtraUtilsHandler;
 import Reika.DragonAPI.ModInteract.ReikaThaumHelper;
+import Reika.DragonAPI.ModInteract.ThermalRecipeHelper;
 import Reika.GeoStrata.Base.CrystalBlock;
 import Reika.GeoStrata.Bees.CrystalBees;
 import Reika.GeoStrata.Guardian.GuardianCommand;
@@ -151,6 +152,17 @@ public class GeoStrata extends DragonAPIMod {
 		VanillaIntegrityTracker.instance.addWatchedBlock(instance, Block.blockNetherQuartz);
 
 		DonatorController.instance.addDonation(instance, "sophieguerette", 10.00F);
+
+		if (ModList.THERMALEXPANSION.isLoaded()) {
+			for (int i = 0; i < RockTypes.rockList.length; i++) {
+				RockTypes r = RockTypes.rockList[i];
+				ItemStack smooth = r.getItem(RockShapes.SMOOTH);
+				ItemStack cobble = r.getItem(RockShapes.COBBLESTONE);
+				int energy = (int)(200+800*(r.blockHardness-1));
+				ThermalRecipeHelper.addPulverizerRecipe(smooth, cobble, energy); //make proportional to hardness
+				ThermalRecipeHelper.addPulverizerRecipe(cobble, new ItemStack(Block.sand), new ItemStack(Block.gravel), 20, energy);
+			}
+		}
 	}
 
 	@ForgeSubscribe

@@ -44,12 +44,12 @@ import forestry.api.genetics.IPollinatable;
 
 public class CrystalBees {
 
-	protected static final BasicBee protective = new BasicBee("Protective", "Vitreus Auxilium", Speeds.SLOWER, Life.SHORTENED, Flowering.SLOWER, Fertility.NORMAL, Territory.DEFAULT, 0xFF5993);
-	protected static final BasicBee luminous = new BasicBee("Luminous", "Vitreus Lumens", Speeds.SLOW, Life.SHORTER, Flowering.SLOWER, Fertility.HIGH, Territory.DEFAULT, 0xBAEBFF);
-	protected static final BasicBee hostile = new BasicBee("Hostile", "Vitreus Inimicus", Speeds.SLOWEST, Life.SHORT, Flowering.SLOW, Fertility.LOW, Territory.DEFAULT, 0xFF6A00);
+	protected static BasicBee protective;
+	protected static BasicBee luminous;
+	protected static BasicBee hostile;
 
-	protected static final BasicBee crystal = new BasicBee("Crystalline", "Vitreus Crystallum", Speeds.NORMAL, Life.SHORTEST, Flowering.SLOWEST, Fertility.NORMAL, Territory.DEFAULT, 0x46A7FF);
-	protected static final BasicBee purity = new BasicBee("Pure", "Purus Mundi", Speeds.SLOWER, Life.NORMAL, Flowering.SLOWEST, Fertility.LOW, Territory.DEFAULT, 0xffffff);
+	protected static BasicBee crystal;
+	protected static BasicBee purity;
 
 	protected static final HashMap<ReikaDyeHelper, CrystalBee> beeMap = new HashMap();
 
@@ -61,6 +61,15 @@ public class CrystalBees {
 			bee.register();
 			beeMap.put(dye, bee);
 		}
+
+		protective = new BasicBee("Protective", "Vitreus Auxilium", Speeds.SLOWER, Life.SHORTENED, Flowering.SLOWER, Fertility.NORMAL, Territory.DEFAULT, 0xFF5993);
+		luminous = new BasicBee("Luminous", "Vitreus Lumens", Speeds.SLOW, Life.SHORTER, Flowering.SLOWER, Fertility.HIGH, Territory.DEFAULT, 0xBAEBFF);
+		hostile = new BasicBee("Hostile", "Vitreus Inimicus", Speeds.SLOWEST, Life.SHORT, Flowering.SLOW, Fertility.LOW, Territory.DEFAULT, 0xFF6A00);
+
+		crystal = new BasicBee("Crystalline", "Vitreus Crystallum", Speeds.NORMAL, Life.SHORTEST, Flowering.SLOWEST, Fertility.NORMAL, Territory.DEFAULT, 0x46A7FF);
+		purity = new BasicBee("Pure", "Purus Mundi", Speeds.SLOWER, Life.NORMAL, Flowering.SLOWEST, Fertility.LOW, Territory.DEFAULT, 0xffffff);
+		crystal.setCave();
+		purity.setCave();
 
 		protective.register();
 		luminous.register();
@@ -138,6 +147,12 @@ public class CrystalBees {
 			traits.humidity = EnumHumidity.NORMAL;
 			traits.temperature = t;
 			outline = color;
+		}
+
+		private BasicBee setCave() {
+			traits.isCaveDwelling = true;
+			traits.isNocturnal = true;
+			return this;
 		}
 
 		@Override
@@ -360,7 +375,8 @@ public class CrystalBees {
 
 		@Override
 		public String getDescription() {
-			return "These bees seem to enjoy the magic aura of the cave crystals. So much so, in fact, that they will only thrive around their corresponding color.";
+			return "These bees seem to enjoy the magic aura of the cave crystals." +
+					"So much so, in fact, that they will only thrivearound their corresponding color.";
 		}
 
 		@Override

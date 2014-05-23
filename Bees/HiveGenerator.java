@@ -30,7 +30,7 @@ public class HiveGenerator implements IWorldGenerator {
 
 	public static final HiveGenerator instance = new HiveGenerator();
 
-	public static final int PER_CHUNK = 20;
+	public static final int PER_CHUNK = 5;
 
 	private HiveGenerator() {
 		MinecraftForge.EVENT_BUS.register(this);
@@ -82,12 +82,11 @@ public class HiveGenerator implements IWorldGenerator {
 		if (Block.blocksList[id] instanceof BlockFluidBase)
 			return false;
 		int idb = world.getBlockId(x, y-1, z);
-		int ida = world.getBlockId(x, y+1, z);
-		if (idb == 0 && ida == 0)
+		if (idb == 0)
 			return false;
 		int metab = world.getBlockMetadata(x, y-1, z);
 		int metaa = world.getBlockMetadata(x, y+1, z);
-		if (!CrystalGenerator.canGenerateOn(ida, metaa) && !CrystalGenerator.canGenerateOn(idb, metab))
+		if (!CrystalGenerator.canGenerateOn(idb, metab))
 			return false;
 		if (Block.blocksList[idb] instanceof BlockFluid)
 			return false;

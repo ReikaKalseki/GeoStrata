@@ -57,7 +57,6 @@ public enum RockTypes {
 	public final int minY;
 	public final int maxY;
 	public final float rarity;
-	private boolean allBiomes = false;
 	public final int rockColor;
 
 	private static HashMap<RockTypes, ArrayList<GeoBlocks>> rockMappings = new HashMap();
