@@ -52,22 +52,28 @@ public class CrystalBees {
 	protected static BasicBee purity;
 
 	protected static final HashMap<ReikaDyeHelper, CrystalBee> beeMap = new HashMap();
+	protected static final HashMap<ReikaDyeHelper, CrystalEffect> effectMap = new HashMap();
+	protected static final HashMap<ReikaDyeHelper, CrystalAllele> flowerMap = new HashMap();
 
 	public static void register() {
 		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
 			ReikaDyeHelper dye = ReikaDyeHelper.dyes[i];
 			BeeTraits traits = CrystalBeeTypes.list[dye.ordinal()].getTraits();
 			CrystalBee bee = new CrystalBee(dye, traits);
+			CrystalEffect eff = new CrystalEffect(dye);
+			CrystalAllele flw = new CrystalAllele(dye);
 			bee.register();
 			beeMap.put(dye, bee);
+			effectMap.put(dye, eff);
+			flowerMap.put(dye, flw);
 		}
 
 		protective = new BasicBee("Protective", "Vitreus Auxilium", Speeds.SLOWER, Life.SHORTENED, Flowering.SLOWER, Fertility.NORMAL, Territory.DEFAULT, 0xFF5993);
 		luminous = new BasicBee("Luminous", "Vitreus Lumens", Speeds.SLOW, Life.SHORTER, Flowering.SLOWER, Fertility.HIGH, Territory.DEFAULT, 0xBAEBFF);
 		hostile = new BasicBee("Hostile", "Vitreus Inimicus", Speeds.SLOWEST, Life.SHORT, Flowering.SLOW, Fertility.LOW, Territory.DEFAULT, 0xFF6A00);
 
-		crystal = new BasicBee("Crystalline", "Vitreus Crystallum", Speeds.NORMAL, Life.SHORTEST, Flowering.SLOWEST, Fertility.NORMAL, Territory.DEFAULT, 0x46A7FF);
-		purity = new BasicBee("Pure", "Purus Mundi", Speeds.SLOWER, Life.NORMAL, Flowering.SLOWEST, Fertility.LOW, Territory.DEFAULT, 0xffffff);
+		crystal = new BasicBee("Crystalline", "Vitreus Crystallum", Speeds.NORMAL, Life.SHORTEST, Flowering.SLOWEST, Fertility.LOW, Territory.DEFAULT, 0x46A7FF);
+		purity = new BasicBee("Pure", "Purus Mundi", Speeds.SLOWER, Life.NORMAL, Flowering.SLOWEST, Fertility.NORMAL, Territory.DEFAULT, 0xffffff);
 		crystal.setCave();
 		purity.setCave();
 
@@ -263,9 +269,11 @@ public class CrystalBees {
 	private static final class CrystalAllele implements IAlleleFlowers {
 
 		public final ReikaDyeHelper dye;
+		private final FlowerProviderCrystal provider;;
 
 		public CrystalAllele(ReikaDyeHelper dye) {
 			this.dye = dye;
+			provider = new FlowerProviderCrystal(dye);
 			AlleleManager.alleleRegistry.registerAllele(this);
 		}
 
@@ -286,7 +294,7 @@ public class CrystalBees {
 
 		@Override
 		public IFlowerProvider getProvider() {
-			return new FlowerProviderCrystal(dye);
+			return provider;
 		}
 	}
 
@@ -376,7 +384,7 @@ public class CrystalBees {
 		@Override
 		public String getDescription() {
 			return "These bees seem to enjoy the magic aura of the cave crystals." +
-					"So much so, in fact, that they will only thrivearound their corresponding color.";
+					"So much so, in fact, that they will only thrive around their corresponding color.";
 		}
 
 		@Override
@@ -411,7 +419,7 @@ public class CrystalBees {
 
 		@Override
 		public IAllele getFlowerAllele() {
-			return new CrystalAllele(dye);
+			return flowerMap.get(dye);
 		}
 
 		@Override
@@ -471,7 +479,7 @@ public class CrystalBees {
 
 		@Override
 		public IAllele getEffectAllele() {
-			return new CrystalEffect(dye);
+			return effectMap.get(dye);
 		}
 
 	}

@@ -40,16 +40,32 @@ public class AcceleratorRenderer extends TileEntitySpecialRenderer {
 		GL11.glTranslated(par2, par4, par6);
 		GL11.glScaled(1, -1, -1);
 
-		//if (tile.hasWorldObj())
+		if (!tile.hasWorldObj()) {
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_COLOR);
+			GL11.glDisable(GL11.GL_CULL_FACE);
+			double a = 0.5;
+			double b = -0.4;
+			double c = -0.5;
+			GL11.glTranslated(a, b, c);
+			this.drawInner(te);
+			GL11.glRotated(90, 0, 1, 0);
+			this.drawInner(te);
+			GL11.glRotated(-90, 0, 1, 0);
+			GL11.glTranslated(-a, -b, -c);
+			GL11.glDisable(GL11.GL_BLEND);
+			GL11.glEnable(GL11.GL_CULL_FACE);
+		}
+
 		this.drawMiddle(te);
 
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_COLOR);
 		GL11.glDisable(GL11.GL_CULL_FACE);
 
-		this.drawInner(te);
-		if (te.hasWorldObj()) {
 
+		if (te.hasWorldObj()) {
+			this.drawInner(te);
 		}
 		else {
 			GL11.glEnable(GL11.GL_LIGHTING);

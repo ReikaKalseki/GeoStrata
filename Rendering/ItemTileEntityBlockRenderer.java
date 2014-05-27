@@ -17,6 +17,9 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.IItemRenderer;
+
+import org.lwjgl.opengl.GL11;
+
 import Reika.DragonAPI.Base.TileEntityBase;
 
 public class ItemTileEntityBlockRenderer implements IItemRenderer {
@@ -38,6 +41,14 @@ public class ItemTileEntityBlockRenderer implements IItemRenderer {
 		TileEntity tile = this.getTile(item);
 		if (tile instanceof TileEntityBase)
 			((TileEntityBase)tile).setBlockMetadata(item.getItemDamage());
+
+		if (type == ItemRenderType.ENTITY) {
+			double a = -0.67;
+			double b = -0.4;
+			double c = -0.67;
+			GL11.glTranslated(a, b, c);
+		}
+
 		TileEntityRenderer.instance.renderTileEntityAt(tile, 0.1F, 0, 0.1F, 0);
 	}
 

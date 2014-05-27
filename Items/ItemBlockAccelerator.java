@@ -12,6 +12,7 @@ package Reika.GeoStrata.Items;
 import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -58,6 +59,14 @@ public class ItemBlockAccelerator extends ItemBlock {
 			long max = TileEntityAccelerator.MAX_LAG/1000000;
 			li.add(EnumChatFormatting.GOLD+"Admin Note:"+EnumChatFormatting.WHITE+" Will not cause more than "+max+"ms lag.");
 		}
+	}
+
+	@Override
+	public boolean onEntityItemUpdate(EntityItem ei)
+	{
+		ei.rotationYaw = 0;
+		ei.age = 0;
+		return false;
 	}
 
 }
