@@ -239,7 +239,7 @@ public class GeoStrata extends DragonAPIMod {
 			ReikaRecipeHelper.addSmelting(RockTypes.QUARTZ.getItem(RockShapes.SMOOTH), burned, 0.05F);
 		}
 
-		if (ModList.FORESTRY.isLoaded() && DragonAPICore.isReikasComputer()) { //not finished, rushed update, so not trusting release
+		if (ModList.FORESTRY.isLoaded()) {
 			CrystalBees.register();
 		}
 	}

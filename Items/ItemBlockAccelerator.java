@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import Reika.DragonAPI.DragonAPICore;
 import Reika.DragonAPI.Libraries.ReikaPlayerAPI;
 import Reika.GeoStrata.TileEntityAccelerator;
+import Reika.GeoStrata.Registry.GeoBlocks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -50,6 +51,11 @@ public class ItemBlockAccelerator extends ItemBlock {
 			te.setBlockMetadata(stack.getItemDamage());
 		}
 		return flag;
+	}
+
+	@Override
+	public final String getItemDisplayName(ItemStack is) {
+		return "TileEntity Accelerator Tier "+is.getItemDamage();
 	}
 
 	@Override

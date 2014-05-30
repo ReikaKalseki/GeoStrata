@@ -105,8 +105,15 @@ public class GeoRecipes {
 
 		Item[] upgrade = {Item.ingotIron, Item.ingotGold, Item.diamond, Item.emerald, Item.netherStar};
 		int[] index = {0, 0, 1, 1, 2, 3, 4};
-		for (int i = 0; i < TileEntityAccelerator.MAX_TIER; i++)
-			GameRegistry.addRecipe(new ItemStack(GeoBlocks.ACCELERATOR.getBlockID(), 1, i+1), "D1D", "2A3", "D4D", 'D', upgrade[index[i]], 'A', new ItemStack(GeoBlocks.ACCELERATOR.getBlockID(), 1, i), '1', getShard(ReikaDyeHelper.getRandomColor()), '2', getShard(ReikaDyeHelper.getRandomColor()), '3', getShard(ReikaDyeHelper.getRandomColor()), '4', getShard(ReikaDyeHelper.getRandomColor()));
+
+		for (int i = 0; i < TileEntityAccelerator.MAX_TIER; i++) {
+			ItemStack s1 = getShard(ReikaDyeHelper.getColorFromDamage(i*4));
+			ItemStack s2 = getShard(ReikaDyeHelper.getColorFromDamage(1+i*4));
+			ItemStack s3 = getShard(ReikaDyeHelper.getColorFromDamage(2+i*4));
+			ItemStack s4 = getShard(ReikaDyeHelper.getColorFromDamage(3+i*4));
+			ItemStack prev = new ItemStack(GeoBlocks.ACCELERATOR.getBlockID(), 1, i);
+			GameRegistry.addRecipe(new ItemStack(GeoBlocks.ACCELERATOR.getBlockID(), 1, i+1), "D1D", "2A3", "D4D", 'D', upgrade[index[i]], 'A', prev, '1', s1, '2', s2, '3', s3, '4', s4);
+		}
 
 		if (ModList.THERMALEXPANSION.isLoaded()) {
 			FluidStack crystal = FluidRegistry.getFluidStack("potion crystal", 8000);

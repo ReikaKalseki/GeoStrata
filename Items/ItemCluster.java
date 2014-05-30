@@ -20,6 +20,7 @@ public class ItemCluster extends GeoItem {
 
 	public ItemCluster(int ID) {
 		super(ID);
+		hasSubtypes = true;
 	}
 
 	@Override
