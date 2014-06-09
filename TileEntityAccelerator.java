@@ -19,7 +19,6 @@ import net.minecraftforge.common.ForgeDirection;
 import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.Base.TileEntityBase;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
-import Reika.GeoStrata.API.AcceleratorBlacklist;
 import Reika.GeoStrata.API.AcceleratorBlacklist.BlacklistReason;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Rendering.EntitySparkleFX;
@@ -35,7 +34,6 @@ public class TileEntityAccelerator extends TileEntityBase {
 	private static List<Class<? extends TileEntity>> blacklist = new ArrayList<Class<? extends TileEntity>>();
 
 	static {
-		addEntry("Reika.RotaryCraft.TileEntities.Transmission.TileEntityAdvancedGear", ModList.ROTARYCRAFT, BlacklistReason.EXPLOIT);
 		addEntry("appeng.me.tile.TileController", ModList.APPENG, BlacklistReason.BUGS); //very likely to break
 		addEntry("icbm.sentry.turret.block.TileTurret", ModList.ICBM, BlacklistReason.BUGS); //by request
 	}
@@ -50,7 +48,8 @@ public class TileEntityAccelerator extends TileEntityBase {
 			return;
 		try {
 			cl = Class.forName(name);
-			AcceleratorBlacklist.addBlacklist(cl, r);
+			GeoStrata.logger.log("TileEntity \""+name+"\" has been blacklisted from the TileEntity Accelerator, because "+r.message);
+			blacklist.add(cl);
 		}
 		catch (ClassNotFoundException e) {
 			GeoStrata.logger.logError("Could not add "+name+" to the Accelerator blacklist: Class not found!");

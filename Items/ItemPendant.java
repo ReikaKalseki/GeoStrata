@@ -13,10 +13,12 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.ReikaEntityHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
+import Reika.GeoStrata.CrystalPotionController;
 import Reika.GeoStrata.Base.CrystalBlock;
 import Reika.GeoStrata.Base.GeoItem;
 import Reika.GeoStrata.Registry.GeoItems;
@@ -50,7 +52,10 @@ public class ItemPendant extends GeoItem {
 			EntityPlayer ep = (EntityPlayer) e;
 			ReikaDyeHelper dye = ReikaDyeHelper.getColorFromItem(is);
 			if (dye != ReikaDyeHelper.PURPLE) {
-				CrystalBlock.applyEffectFromColor(3, level, ep, dye);
+				int dura = dye == ReikaDyeHelper.BLUE ? 3 : 100;
+				PotionEffect pot = CrystalPotionController.getEffectFromColor(dye, dura, level);
+				if (pot == null || dye == ReikaDyeHelper.BLUE || !ep.isPotionActive(pot.getPotionID()))
+					CrystalBlock.applyEffectFromColor(dura, level, ep, dye);
 			}
 			if (GeoOptions.NOPARTICLES.getState())
 				ReikaEntityHelper.setNoPotionParticles(ep);

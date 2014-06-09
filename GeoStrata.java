@@ -235,8 +235,11 @@ public class GeoStrata extends DragonAPIMod {
 		}
 
 		if (ModList.EXTRAUTILS.isLoaded()) {
-			ItemStack burned = new ItemStack(ExtraUtilsHandler.getInstance().decoID, 1, ExtraUtilsHandler.getInstance().burntQuartz);
-			ReikaRecipeHelper.addSmelting(RockTypes.QUARTZ.getItem(RockShapes.SMOOTH), burned, 0.05F);
+			int id = ExtraUtilsHandler.getInstance().decoID;
+			if (id > 0) {
+				ItemStack burned = new ItemStack(id, 1, ExtraUtilsHandler.getInstance().burntQuartz);
+				ReikaRecipeHelper.addSmelting(RockTypes.QUARTZ.getItem(RockShapes.SMOOTH), burned, 0.05F);
+			}
 		}
 
 		if (ModList.FORESTRY.isLoaded()) {

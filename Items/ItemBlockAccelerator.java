@@ -18,10 +18,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
-import Reika.DragonAPI.DragonAPICore;
-import Reika.DragonAPI.Libraries.ReikaPlayerAPI;
 import Reika.GeoStrata.TileEntityAccelerator;
-import Reika.GeoStrata.Registry.GeoBlocks;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -61,10 +58,8 @@ public class ItemBlockAccelerator extends ItemBlock {
 	@Override
 	public void addInformation(ItemStack is, EntityPlayer ep, List li, boolean par4) {
 		li.add("Accelerates time by "+(TileEntityAccelerator.getAccelFromTier(is.getItemDamage())+1)+"x for TileEntities adjacent to it.");
-		if (DragonAPICore.isSinglePlayer() || ReikaPlayerAPI.isAdmin(ep)) {
-			long max = TileEntityAccelerator.MAX_LAG/1000000;
-			li.add(EnumChatFormatting.GOLD+"Admin Note:"+EnumChatFormatting.WHITE+" Will not cause more than "+max+"ms lag.");
-		}
+		long max = TileEntityAccelerator.MAX_LAG/1000000;
+		li.add(EnumChatFormatting.GOLD+"Admin Note:"+EnumChatFormatting.WHITE+" Will not cause more than "+max+"ms lag.");
 	}
 
 	@Override

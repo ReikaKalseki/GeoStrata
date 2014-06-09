@@ -9,11 +9,40 @@
  ******************************************************************************/
 package Reika.GeoStrata.API;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import net.minecraft.tileentity.TileEntity;
+import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.GeoStrata.GeoStrata;
-import Reika.GeoStrata.TileEntityAccelerator;
 
 public class AcceleratorBlacklist {
+
+	private static Class tile;
+	private static Method add;
+
+	static {
+		try {
+			tile = Class.forName("Reika.GeoStrata.TileEntityAccelerator");
+			add = tile.getMethod("addEntry", Class.class);
+		}
+		catch (ClassNotFoundException e) {
+			ReikaJavaLibrary.pConsole("Could not load GeoStrata class!");
+			e.printStackTrace();
+		}
+		catch (NoSuchMethodException e) {
+			ReikaJavaLibrary.pConsole("Could not read GeoStrata class!");
+			e.printStackTrace();
+		}
+		catch (SecurityException e) {
+			ReikaJavaLibrary.pConsole("Could not read GeoStrata class!");
+			e.printStackTrace();
+		}
+		catch (IllegalArgumentException e) {
+			ReikaJavaLibrary.pConsole("Could not read GeoStrata class!");
+			e.printStackTrace();
+		}
+	}
 
 	/** Use this to blacklist your TileEntity class from being accelerated with the TileEntity acclerator.
 	 * You must specify a reason (from the {@link BlacklistReason} enum) which will be put into the loading log.
@@ -24,7 +53,21 @@ public class AcceleratorBlacklist {
 	 * </i>*/
 	public static void addBlacklist(Class<? extends TileEntity> cl, String name, BlacklistReason r) {
 		GeoStrata.logger.log("TileEntity \""+name+"\" has been blacklisted from the TileEntity Accelerator, because "+r.message);
-		TileEntityAccelerator.addEntry(cl);
+		try {
+			add.invoke(null, cl);
+		}
+		catch (IllegalAccessException e) {
+			ReikaJavaLibrary.pConsole("Error adding Accelerator Blacklist:");
+			e.printStackTrace();
+		}
+		catch (IllegalArgumentException e) {
+			ReikaJavaLibrary.pConsole("Error adding Accelerator Blacklist:");
+			e.printStackTrace();
+		}
+		catch (InvocationTargetException e) {
+			ReikaJavaLibrary.pConsole("Error adding Accelerator Blacklist:");
+			e.printStackTrace();
+		}
 	}
 
 	public static void addBlacklist(Class<? extends TileEntity> cl, BlacklistReason r) {
