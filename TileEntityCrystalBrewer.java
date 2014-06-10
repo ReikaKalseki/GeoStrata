@@ -274,4 +274,9 @@ public class TileEntityCrystalBrewer extends TileEntityBase implements ISidedInv
 		return this.canBrew() ? 0 : 15;
 	}
 
+	@Override
+	public final boolean hasModel() {
+		return false;
+	}
+
 }

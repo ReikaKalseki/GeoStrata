@@ -120,6 +120,9 @@ public class TileEntityAccelerator extends TileEntityBase {
 			return false;
 		if (!te.canUpdate() || te.isInvalid())
 			return false;
+		String s = te.getClass().getSimpleName();
+		if (s.contains("conduit") || s.contains("wire") || s.contains("cable")) //almost always part of a network object
+			return false;
 		if (blacklist.contains(te.getClass()))
 			return false;
 		return true;
@@ -143,6 +146,11 @@ public class TileEntityAccelerator extends TileEntityBase {
 	@Override
 	public boolean shouldRenderInPass(int pass) {
 		return pass == 0;
+	}
+
+	@Override
+	public final boolean hasModel() {
+		return true;
 	}
 
 }
