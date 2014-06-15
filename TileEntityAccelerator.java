@@ -36,6 +36,7 @@ public class TileEntityAccelerator extends TileEntityBase {
 	static {
 		addEntry("appeng.me.tile.TileController", ModList.APPENG, BlacklistReason.BUGS); //very likely to break
 		addEntry("icbm.sentry.turret.block.TileTurret", ModList.ICBM, BlacklistReason.BUGS); //by request
+		addEntry("bluedart.tile.decor.TileForceTorch", ModList.DARTCRAFT, BlacklistReason.CRASH); //StackOverflow
 	}
 
 	public static void addEntry(Class<? extends TileEntity> cl) {

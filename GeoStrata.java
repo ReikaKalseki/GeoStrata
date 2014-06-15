@@ -37,6 +37,7 @@ import Reika.DragonAPI.DragonAPICore;
 import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.Auxiliary.DonatorController;
 import Reika.DragonAPI.Auxiliary.RetroGenController;
+import Reika.DragonAPI.Auxiliary.SuggestedModsTracker;
 import Reika.DragonAPI.Auxiliary.VanillaIntegrityTracker;
 import Reika.DragonAPI.Base.DragonAPIMod;
 import Reika.DragonAPI.Instantiable.EnhancedFluid;
@@ -163,6 +164,10 @@ public class GeoStrata extends DragonAPIMod {
 				ThermalRecipeHelper.addPulverizerRecipe(cobble, new ItemStack(Block.sand), new ItemStack(Block.gravel), 20, energy);
 			}
 		}
+
+		SuggestedModsTracker.instance.addSuggestedMod(instance, ModList.FORESTRY, "Access to crystal bees which have valuable genetics");
+		SuggestedModsTracker.instance.addSuggestedMod(instance, ModList.TWILIGHT, "Dense crystal generation");
+		SuggestedModsTracker.instance.addSuggestedMod(instance, ModList.THAUMCRAFT, "High crystal aspect values");
 	}
 
 	@ForgeSubscribe
