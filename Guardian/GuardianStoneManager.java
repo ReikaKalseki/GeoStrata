@@ -11,8 +11,6 @@ package Reika.GeoStrata.Guardian;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,6 +26,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.WorldEvent;
+import Reika.DragonAPI.IO.ReikaFileReader;
 import Reika.DragonAPI.Libraries.ReikaPlayerAPI;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.GeoStrata.GeoStrata;
@@ -123,8 +122,6 @@ public class GuardianStoneManager {
 	public void save(WorldEvent.Unload evt) {
 		if (!evt.world.isRemote) {
 			GeoStrata.logger.log("Saving protections map for world "+evt.world.provider.dimensionId+".");
-
-			String name = this.getSaveFileName();
 			try {
 				File dir = new File(this.getSaveFilePath());
 				//ReikaJavaLibrary.pConsole(this.getSaveFilePath(), Side.SERVER);
@@ -157,7 +154,7 @@ public class GuardianStoneManager {
 
 			String name = this.getSaveFileName();
 			try {
-				BufferedReader p = new BufferedReader(new InputStreamReader(new FileInputStream(this.getFullSavePath())));
+				BufferedReader p = ReikaFileReader.getReader(this.getFullSavePath());
 				String line = "";
 				while (line != null) {
 					line = p.readLine();
