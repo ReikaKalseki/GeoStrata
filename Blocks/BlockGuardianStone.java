@@ -9,19 +9,28 @@
  ******************************************************************************/
 package Reika.GeoStrata.Blocks;
 
+import java.util.ArrayList;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.StepSound;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
+import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Guardian.GuardianStoneManager;
 import Reika.GeoStrata.Guardian.TileEntityGuardianStone;
+import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Registry.GeoItems;
+import Reika.GeoStrata.Registry.RockTypes;
 
 public class BlockGuardianStone extends Block {
 
@@ -115,6 +124,54 @@ public class BlockGuardianStone extends Block {
 			GuardianStoneManager.instance.removeAreasForStone(te);
 		}
 		super.breakBlock(world, x, y, z, oldid, oldmeta);
+	}
+
+	@Override
+	public boolean canSilkHarvest() {
+		return true;
+	}
+
+	@Override
+	public boolean removeBlockByPlayer(World world, EntityPlayer player, int x, int y, int z)
+	{
+		if (this.canHarvest(world, player, x, y, z) && !world.isRemote)
+			this.harvestBlock(world, player, x, y, z, 0);
+		return world.setBlock(x, y, z, 0);
+	}
+
+	public boolean canHarvest(World world, EntityPlayer player, int x, int y, int z)
+	{
+		if (player.capabilities.isCreativeMode)
+			return false;
+		if (world.getBlockId(x, y, z) != blockID)
+			return false;
+		ItemStack is = player.getCurrentEquippedItem();
+		return RockTypes.GRANITE.isHarvestable(is);
+	}
+
+	@Override
+	public void harvestBlock(World world, EntityPlayer ep, int x, int y, int z, int meta) {
+		boolean silk = EnchantmentHelper.getSilkTouchModifier(ep);
+		if (world.getBlockTileEntity(x, y, z) instanceof TileEntityGuardianStone) {
+			if (silk) {
+				ReikaItemHelper.dropItem(world, x+0.5, y+0.5, z+0.5, new ItemStack(GeoBlocks.GUARDIAN.getBlockInstance()));
+			}
+			else {
+				ReikaItemHelper.dropItems(world, x+0.5, y+0.5, z+0.5, this.getPieces(world, x, y, z));
+			}
+		}
+	}
+
+	@Override
+	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int meta, int fortune) {
+		return this.getPieces(world, x, y, z);
+	}
+
+	public ArrayList<ItemStack> getPieces(World world, int x, int y, int z) {
+		ArrayList<ItemStack> li = new ArrayList();
+		ItemStack is = GeoItems.CLUSTER.getStackOfMetadata(7);
+		li.add(is);
+		return li;
 	}
 
 }

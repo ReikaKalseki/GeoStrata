@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -22,9 +23,12 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.ReikaAABBHelper;
+import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.TileEntityAccelerator;
 import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Registry.GeoItems;
+import Reika.GeoStrata.Registry.RockTypes;
 
 public class BlockAccelerator extends Block {
 
@@ -39,6 +43,8 @@ public class BlockAccelerator extends Block {
 	public BlockAccelerator(int par1, Material mat) {
 		super(par1, mat);
 		this.setCreativeTab(GeoStrata.tabGeo);
+		this.setHardness(6);
+		this.setResistance(6000);
 		//this.setBlockBounds(0.5F-w/2, 0, 0.5F-w/2, 0.5F+w/2, 0.875F, 0.5F+w/2);
 	}
 
@@ -70,11 +76,64 @@ public class BlockAccelerator extends Block {
 	}
 
 	@Override
+	public boolean canSilkHarvest() {
+		return true;
+	}
+
+	@Override
+	public int damageDropped(int meta) {
+		return meta;
+	}
+
+	@Override
+	public boolean removeBlockByPlayer(World world, EntityPlayer player, int x, int y, int z)
+	{
+		if (this.canHarvest(world, player, x, y, z) && !world.isRemote) {
+			this.harvestBlock(world, player, x, y, z, 0);
+		}
+		return world.setBlock(x, y, z, 0);
+	}
+
+	@Override
+	public void harvestBlock(World world, EntityPlayer ep, int x, int y, int z, int meta) {
+		boolean silk = EnchantmentHelper.getSilkTouchModifier(ep);
+		TileEntity tile = world.getBlockTileEntity(x, y, z);
+		if (tile instanceof TileEntityAccelerator) {
+			int tier = tile.getBlockMetadata();
+			if (silk) {
+				ReikaItemHelper.dropItem(world, x+0.5, y+0.5, z+0.5, new ItemStack(GeoBlocks.ACCELERATOR.getBlockID(), 1, tier));
+			}
+			else {
+				ReikaItemHelper.dropItems(world, x+0.5, y+0.5, z+0.5, this.getPieces(world, x, y, z));
+			}
+		}
+	}
+
+	public boolean canHarvest(World world, EntityPlayer player, int x, int y, int z)
+	{
+		if (player.capabilities.isCreativeMode)
+			return false;
+		if (world.getBlockId(x, y, z) != blockID)
+			return false;
+		ItemStack is = player.getCurrentEquippedItem();
+		return RockTypes.GRANITE.isHarvestable(is);
+	}
+
+	@Override
 	public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int meta, int fortune) {
-		ArrayList<ItemStack> li = new ArrayList();
+		return this.getPieces(world, x, y, z);
+	}
+
+	public ItemStack getItem(World world, int x, int y, int z) {
 		TileEntity te = world.getBlockTileEntity(x, y, z);
-		if (te != null)
-			li.add(new ItemStack(GeoBlocks.ACCELERATOR.getBlockID(), 1, te.getBlockMetadata()));
+		return te != null ? new ItemStack(GeoBlocks.ACCELERATOR.getBlockID(), 1, te.getBlockMetadata()) : null;
+	}
+
+	public ArrayList<ItemStack> getPieces(World world, int x, int y, int z) {
+		ArrayList<ItemStack> li = new ArrayList();
+		ItemStack is = GeoItems.CLUSTER.getStackOfMetadata(7);
+		for (int i = 0; i < 4; i++)
+			li.add(is);
 		return li;
 	}
 
@@ -88,14 +147,6 @@ public class BlockAccelerator extends Block {
 	{
 		double r = 0.3125;
 		return ReikaAABBHelper.getBlockAABB(x, y, z).contract(r, r, r);
-	}
-
-	@Override
-	public boolean removeBlockByPlayer(World world, EntityPlayer player, int x, int y, int z)
-	{
-		if (!player.capabilities.isCreativeMode)
-			this.harvestBlock(world, player, x, y, z, world.getBlockMetadata(x, y, z));
-		return world.setBlock(x, y, z, 0);
 	}
 
 	@Override

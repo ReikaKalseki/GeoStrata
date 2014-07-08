@@ -51,6 +51,11 @@ public class ItemBlockAccelerator extends ItemBlock {
 	}
 
 	@Override
+	public int getMetadata(int dmg) {
+		return dmg;
+	}
+
+	@Override
 	public final String getItemDisplayName(ItemStack is) {
 		return "TileEntity Accelerator Tier "+is.getItemDamage();
 	}

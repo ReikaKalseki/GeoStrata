@@ -326,6 +326,8 @@ public class GeoStrata extends DragonAPIMod {
 			ItemStack shard = new ItemStack(GeoItems.SHARD.getShiftedItemID(), 1, i);
 			OreDictionary.registerOre(color.getOreDictName()+"Crystal", crystal);
 			OreDictionary.registerOre(color.getOreDictName()+"CrystalShard", shard);
+			OreDictionary.registerOre("dyeCrystal", crystal);
+			OreDictionary.registerOre("caveCrystal", crystal);
 			OreDictionary.registerOre("shardCrystal", shard);
 		}
 	}

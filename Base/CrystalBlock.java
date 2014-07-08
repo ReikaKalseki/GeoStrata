@@ -226,7 +226,7 @@ public abstract class CrystalBlock extends Block {
 			return e.worldObj.provider.isHellWorld ? !ReikaPotionHelper.isBadEffect(pot) : true;
 		}
 		if (e.worldObj.provider.isHellWorld)
-			return ReikaPotionHelper.isBadEffect(pot);
+			return eff.getPotionID() == Potion.nightVision.id || ReikaPotionHelper.isBadEffect(pot);
 		if (e.worldObj.provider.dimensionId == 1)
 			return true;
 		return !ReikaPotionHelper.isBadEffect(pot);

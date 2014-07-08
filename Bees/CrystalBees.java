@@ -62,10 +62,10 @@ public class CrystalBees {
 			CrystalBee bee = new CrystalBee(dye, traits);
 			CrystalEffect eff = new CrystalEffect(dye);
 			CrystalAllele flw = new CrystalAllele(dye);
-			bee.register();
-			beeMap.put(dye, bee);
 			effectMap.put(dye, eff);
 			flowerMap.put(dye, flw);
+			bee.register();
+			beeMap.put(dye, bee);
 		}
 
 		protective = new BasicBee("Protective", "Vitreus Auxilium", Speeds.SLOWER, Life.SHORTENED, Flowering.SLOWER, Fertility.NORMAL, Territory.DEFAULT, 0xFF5993);
