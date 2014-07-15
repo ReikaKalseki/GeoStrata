@@ -48,6 +48,7 @@ import Reika.DragonAPI.Libraries.ReikaInventoryHelper;
 import Reika.DragonAPI.Libraries.ReikaRecipeHelper;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
+import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.DragonAPI.ModInteract.ExtraUtilsHandler;
 import Reika.DragonAPI.ModInteract.ReikaThaumHelper;
 import Reika.DragonAPI.ModInteract.ThermalRecipeHelper;
@@ -115,7 +116,7 @@ public class GeoStrata extends DragonAPIMod {
 		MinecraftForge.EVENT_BUS.register(GuardianStoneManager.instance);
 		config.loadSubfolderedConfigFile(evt);
 		config.initProps(evt);
-		logger = new ModLogger(instance, GeoOptions.LOGLOADING.getState(), GeoOptions.DEBUGMODE.getState(), false);
+		logger = new ModLogger(instance, false);
 		proxy.registerSounds();
 		this.basicSetup(evt);
 	}
@@ -205,6 +206,9 @@ public class GeoStrata extends DragonAPIMod {
 				BlockColorInterface.addGPRBlockColor(GeoBlocks.CRYSTAL.getBlockID(), i, dye.color);
 				BlockColorInterface.addGPRBlockColor(GeoBlocks.LAMP.getBlockID(), i, dye.color);
 				BlockColorInterface.addGPRBlockColor(GeoBlocks.SUPER.getBlockID(), i, dye.color);
+				ItemStack shard = GeoItems.SHARD.getStackOfMetadata(i);
+				GrinderAPI.addRecipe(new ItemStack(GeoBlocks.CRYSTAL.getBlockID(), 1, i), ReikaItemHelper.getSizedItemStack(shard, 12));
+				GrinderAPI.addRecipe(new ItemStack(GeoBlocks.LAMP.getBlockID(), 1, i), ReikaItemHelper.getSizedItemStack(shard, 4));
 			}
 		}
 

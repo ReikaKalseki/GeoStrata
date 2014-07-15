@@ -124,6 +124,12 @@ public class TileEntityAccelerator extends TileEntityBase {
 		String s = te.getClass().getSimpleName();
 		if (s.contains("conduit") || s.contains("wire") || s.contains("cable")) //almost always part of a network object
 			return false;
+		if (s.contains("solar") || s.contains("windmill") || s.contains("watermill")) //power exploit
+			return false;
+		if (s.contains("windturbine") || s.contains("wind turbine") || s.contains("wind mill") || s.contains("water mill")) //power exploit
+			return false;
+		if (te.getClass().getCanonicalName().contains("appeng")) //AE will crash
+			return false;
 		if (blacklist.contains(te.getClass()))
 			return false;
 		return true;

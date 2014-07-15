@@ -62,8 +62,10 @@ public class GeoRecipes {
 
 			for (int k = 0; k < RockShapes.shapeList.length; k++) {
 				RockShapes shape = RockShapes.shapeList[k];
-				ItemStack item = type.getItem(shape);
-				FurnaceRecipes.smelting().addSmelting(item.itemID, item.getItemDamage(), smooth, 0.2F);
+				if (shape != RockShapes.SMOOTH) {
+					ItemStack item = type.getItem(shape);
+					FurnaceRecipes.smelting().addSmelting(item.itemID, item.getItemDamage(), smooth, 0.2F);
+				}
 			}
 			//GameRegistry.addShapelessRecipe(new ItemStack(Block.cobblestone), cobble);
 		}

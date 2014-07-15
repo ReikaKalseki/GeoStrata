@@ -188,7 +188,7 @@ public abstract class CrystalBlock extends Block {
 				e.clearActivePotions();
 				break;
 			case PURPLE:
-				if (e instanceof EntityPlayer && !e.worldObj.isRemote && new Random().nextInt(2) == 0) {
+				if (e instanceof EntityPlayer && !e.worldObj.isRemote && (level > 0 || rand.nextInt(2) == 0)) {
 					EntityPlayer ep = (EntityPlayer)e;
 					e.playSound("random.orb", 1, 1);
 					ep.addExperience(1);

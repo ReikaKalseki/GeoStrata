@@ -16,9 +16,6 @@ import Reika.GeoStrata.GeoStrata;
 
 public enum GeoOptions implements ConfigList {
 
-	COBBLERECIPES("Alternate Cobble Recipes", true),
-	LOGLOADING("Console Loading Info", true),
-	DEBUGMODE("Debug Mode", false),
 	RETROGEN("Retrogen Crystals", false),
 	NOISE("Lamp Noises", true),
 	EFFECTS("Lamp Effects", false),
