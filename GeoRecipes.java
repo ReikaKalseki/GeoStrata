@@ -34,7 +34,7 @@ public class GeoRecipes {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
 			RockTypes type = RockTypes.rockList[i];
 			ItemStack smooth = type.getItem(RockShapes.SMOOTH);
-			ItemStack cobble = type.getItem(RockShapes.COBBLESTONE);
+			ItemStack cobble = type.getItem(RockShapes.COBBLE);
 			ItemStack brick = type.getItem(RockShapes.BRICK);
 			ItemStack fitted = type.getItem(RockShapes.FITTED);
 			ItemStack tile = type.getItem(RockShapes.TILE);
@@ -42,6 +42,12 @@ public class GeoRecipes {
 			ItemStack engraved = type.getItem(RockShapes.ENGRAVED);
 			ItemStack inscribed = type.getItem(RockShapes.INSCRIBED);
 			ItemStack connected = type.getItem(RockShapes.CONNECTED);
+			ItemStack etched = type.getItem(RockShapes.ETCHED);
+			ItemStack centered = type.getItem(RockShapes.CENTERED);
+			ItemStack cubed = type.getItem(RockShapes.CUBED);
+			ItemStack lined = type.getItem(RockShapes.LINED);
+			ItemStack embossed = type.getItem(RockShapes.EMBOSSED);
+			ItemStack raised = type.getItem(RockShapes.RAISED);
 
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(brick, 4), new Object[]{
 				"SS", "SS", 'S', smooth});
@@ -59,12 +65,24 @@ public class GeoRecipes {
 				"BS", "SB", 'S', smooth, 'B', brick});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(connected, 8), new Object[]{
 				"SSS", "S S", "SSS", 'S', smooth});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(etched, 3), new Object[]{
+				"SSS", 'S', inscribed});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(cubed, 9), new Object[]{
+				"SSS", "SSS", "SSS", 'S', smooth});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(centered, 5), new Object[]{
+				" S ", "SRS", " S ", 'S', smooth, 'R', round});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(lined, 5), new Object[]{
+				" S ", "SES", " S ", 'S', smooth, 'E', engraved});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(embossed, 3), new Object[]{
+				"S", "T", "S", 'S', smooth, 'T', tile});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(raised, 4), new Object[]{
+				"SS", "SS", 'S', tile});
 
 			for (int k = 0; k < RockShapes.shapeList.length; k++) {
 				RockShapes shape = RockShapes.shapeList[k];
 				if (shape != RockShapes.SMOOTH) {
 					ItemStack item = type.getItem(shape);
-					FurnaceRecipes.smelting().addSmelting(item.itemID, item.getItemDamage(), smooth, 0.2F);
+					FurnaceRecipes.smelting().addSmelting(item.itemID, item.getItemDamage(), smooth, 0F);
 				}
 			}
 			//GameRegistry.addShapelessRecipe(new ItemStack(Block.cobblestone), cobble);
@@ -104,6 +122,7 @@ public class GeoRecipes {
 		GameRegistry.addRecipe(new ItemStack(GeoBlocks.BREWER.getBlockID(), 1, 0), "NNN", "NBN", "SSS", 'N', Item.netherQuartz, 'S', Block.stone, 'B', Item.brewingStand);
 		GameRegistry.addRecipe(new ItemStack(GeoBlocks.GUARDIAN.getBlockID(), 1, 0), "BBB", "BPB", "BBB", 'B', getShard(ReikaDyeHelper.WHITE), 'P', GeoItems.CLUSTER.getStackOfMetadata(7));
 		GameRegistry.addRecipe(new ItemStack(GeoBlocks.ACCELERATOR.getBlockID(), 1, 0), "DCD", "CSC", "DCD", 'D', Item.diamond, 'S', GeoItems.CLUSTER.getStackOfMetadata(7), 'C', getShard(ReikaDyeHelper.BLUE));
+		GameRegistry.addRecipe(new ItemStack(GeoItems.ENDERCRYSTAL.getShiftedItemID(), 1, 0), "ISI", "SCS", "ISI", 'I', Item.ingotIron, 'S', getShard(ReikaDyeHelper.WHITE), 'C', GeoItems.CLUSTER.getStackOfMetadata(7));
 
 		Item[] upgrade = {Item.ingotIron, Item.ingotGold, Item.diamond, Item.emerald, Item.netherStar};
 		int[] index = {0, 0, 1, 1, 2, 3, 4};

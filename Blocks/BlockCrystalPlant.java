@@ -27,6 +27,7 @@ import Reika.DragonAPI.Libraries.Registry.ReikaPlantHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.TileEntityCrystalPlant;
 import Reika.GeoStrata.Registry.GeoItems;
+import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.RotaryCraft.API.BlowableCrop;
 
 public class BlockCrystalPlant extends Block implements BlowableCrop {
@@ -208,7 +209,7 @@ public class BlockCrystalPlant extends Block implements BlowableCrop {
 	@Override
 	public boolean isReadyToHarvest(World world, int x, int y, int z) {
 		if (world.getBlockId(x, y-1, z) == Block.grass.blockID)
-			return false;
+			;//return false;
 		TileEntityCrystalPlant te = (TileEntityCrystalPlant)world.getBlockTileEntity(x, y, z);
 		return te.canHarvest();
 	}
@@ -221,12 +222,18 @@ public class BlockCrystalPlant extends Block implements BlowableCrop {
 
 	@Override
 	public ArrayList<ItemStack> getHarvestProducts(World world, int x, int y, int z) {
+		if (GeoOptions.CRYSTALFARM.getState()) {
+			ArrayList li = new ArrayList();
+			ItemStack shard = GeoItems.SHARD.getStackOfMetadata(world.getBlockMetadata(x, y, z));
+			li.add(shard);
+			return li;
+		}
 		return null;
 	}
 
 	@Override
 	public float getHarvestingSpeed() {
-		return 10.33F;
+		return 0.33F;
 	}
 
 }

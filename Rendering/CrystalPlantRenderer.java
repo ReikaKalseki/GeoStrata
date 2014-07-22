@@ -21,6 +21,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import Reika.DragonAPI.Libraries.IO.ReikaTextureHelper;
+import Reika.DragonAPI.Libraries.Java.ReikaGLHelper.BlendMode;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.GeoStrata.TileEntityCrystalPlant;
 import Reika.GeoStrata.Blocks.BlockCrystalPlant;
@@ -70,11 +71,11 @@ public class CrystalPlantRenderer extends TileEntitySpecialRenderer {
 				RenderManager rm = RenderManager.instance;
 				GL11.glRotatef(rm.playerViewY, 0.0F, 1.0F, 0.0F);
 				GL11.glRotatef(rm.playerViewX, 1.0F, 0.0F, 0.0F);
-				GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_COLOR);
+				BlendMode.ADDITIVEDARK.apply();
 				this.drawGlow(tile);
 				this.drawSparkle(tile);
 				GL11.glScaled(1/s, 1/s, 1/s);
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				BlendMode.DEFAULT.apply();
 			}
 		}
 
@@ -135,7 +136,7 @@ public class CrystalPlantRenderer extends TileEntitySpecialRenderer {
 		ReikaDyeHelper dye = tile.getColor();
 		Color c = dye.getJavaColor().brighter();
 		GL11.glColor4f(c.getRed()/255F, c.getGreen()/255F, c.getBlue()/255F, 1);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		BlendMode.DEFAULT.apply();
 		v5.startDrawingQuads();
 		//Bottom
 		v5.addVertexWithUV(0.5-s, 0, 0.5+s, u, dv);
@@ -206,7 +207,7 @@ public class CrystalPlantRenderer extends TileEntitySpecialRenderer {
 		v5.addVertexWithUV(0.5-s, 0, 0.5-s, u, v);
 		v5.draw();
 
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		BlendMode.DEFAULT.apply();
 	}
 
 
@@ -228,7 +229,7 @@ public class CrystalPlantRenderer extends TileEntitySpecialRenderer {
 		dv -= vv/r;
 
 		Tessellator v5 = Tessellator.instance;
-		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_COLOR);
+		BlendMode.ADDITIVEDARK.apply();
 
 		double s = 0.5;
 		if (te.hasWorldObj()) {
@@ -251,7 +252,7 @@ public class CrystalPlantRenderer extends TileEntitySpecialRenderer {
 		v5.addVertexWithUV(1, 1, 0, du, dv);
 		v5.addVertexWithUV(-1, 1, 0, u, dv);
 		v5.draw();
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		BlendMode.DEFAULT.apply();
 
 		if (te.hasWorldObj()) {
 			RenderManager rm = RenderManager.instance;

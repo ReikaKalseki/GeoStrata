@@ -21,6 +21,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import Reika.DragonAPI.Libraries.IO.ReikaTextureHelper;
+import Reika.DragonAPI.Libraries.Java.ReikaGLHelper.BlendMode;
 import Reika.GeoStrata.Blocks.BlockGuardianStone;
 import Reika.GeoStrata.Guardian.TileEntityGuardianStone;
 import Reika.GeoStrata.Registry.GeoBlocks;
@@ -82,7 +83,7 @@ public class GuardianStoneRenderer extends TileEntitySpecialRenderer {
 		dv -= vv/r;
 
 		Tessellator v5 = Tessellator.instance;
-		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_COLOR);
+		BlendMode.ADDITIVEDARK.apply();
 
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		double s = 0.33;
@@ -108,7 +109,7 @@ public class GuardianStoneRenderer extends TileEntitySpecialRenderer {
 		v5.addVertexWithUV(-1, 1, 0, u, dv);
 		v5.draw();
 		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		BlendMode.DEFAULT.apply();
 
 		if (!te.hasWorldObj()) {
 			GL11.glScaled(1/s, 1/s, 1/s);

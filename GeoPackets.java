@@ -41,7 +41,9 @@ public abstract class GeoPackets implements IPacketHandler {
 		int control = Integer.MIN_VALUE;
 		int len;
 		int[] data = new int[0];
-		int x,y,z;
+		int x = 0;
+		int y = 0;
+		int z = 0;
 		String stringdata = null;
 		//System.out.print(packet.length);
 		try {
@@ -72,10 +74,20 @@ public abstract class GeoPackets implements IPacketHandler {
 				break;
 			case TANK:
 				break;
+			case RAW:
+				control = inputStream.readInt();
+				pack = control;
+				len = 1;
+				data = new int[len];
+				for (int i = 0; i < len; i++)
+					data[i] = inputStream.readInt();
+				break;
 			}
-			x = inputStream.readInt();
-			y = inputStream.readInt();
-			z = inputStream.readInt();
+			if (packetType != PacketTypes.RAW) {
+				x = inputStream.readInt();
+				y = inputStream.readInt();
+				z = inputStream.readInt();
+			}
 		}
 		catch (IOException e) {
 			e.printStackTrace();

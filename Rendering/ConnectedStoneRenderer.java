@@ -22,6 +22,7 @@ import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import Reika.DragonAPI.Base.BaseBlockRenderer;
+import Reika.DragonAPI.Libraries.Java.ReikaGLHelper.BlendMode;
 import Reika.GeoStrata.Blocks.BlockConnectedRock;
 import Reika.GeoStrata.Registry.RockTypes;
 
@@ -36,7 +37,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		Tessellator v5 = Tessellator.instance;
 
 		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		BlendMode.DEFAULT.apply();
 		GL11.glColor3f(1, 1, 1);
 		v5.startDrawingQuads();
 
@@ -199,7 +200,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		v5.addTranslation(-x, -y, -z);
 		v5.draw();
 		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		BlendMode.DEFAULT.apply();
 		v5.startDrawingQuads();
 		v5.addTranslation(x, y, z);
 		this.renderOverlay(world, x, y, z, block, modelId, rb);

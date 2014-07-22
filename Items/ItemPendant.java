@@ -50,7 +50,7 @@ public class ItemPendant extends GeoItem {
 		int level = this.isEnhanced() ? 2 : 0;
 		if (e instanceof EntityPlayer) {
 			EntityPlayer ep = (EntityPlayer) e;
-			ReikaDyeHelper dye = ReikaDyeHelper.getColorFromItem(is);
+			ReikaDyeHelper dye = ReikaDyeHelper.getColorFromDamage(is.getItemDamage());
 			if (dye != ReikaDyeHelper.PURPLE) {
 				int dura = dye == ReikaDyeHelper.BLUE ? 3 : 100;
 				PotionEffect pot = CrystalPotionController.getEffectFromColor(dye, dura, level);
@@ -74,7 +74,7 @@ public class ItemPendant extends GeoItem {
 	@Override
 	public String getItemDisplayName(ItemStack is) {
 		String s = this.isEnhanced() ? "Enhanced " : "";
-		return s+ReikaDyeHelper.getColorFromItem(is).colorName+" "+"Crystal Pendant";
+		return s+ReikaDyeHelper.getColorFromDamage(is.getItemDamage()).colorName+" "+"Crystal Pendant";
 	}
 
 }

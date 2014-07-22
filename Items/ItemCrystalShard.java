@@ -101,7 +101,7 @@ public class ItemCrystalShard extends GeoItem {
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("Good for ");
-		ReikaDyeHelper color = ReikaDyeHelper.getColorFromItem(is);
+		ReikaDyeHelper color = ReikaDyeHelper.getColorFromDamage(is.getItemDamage());
 		sb.append(CrystalPotionController.getPotionName(color));
 		sb.append(" Potions");
 		li.add(sb.toString());

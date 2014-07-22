@@ -20,6 +20,7 @@ import Reika.GeoStrata.Items.ItemCluster;
 import Reika.GeoStrata.Items.ItemCrystalPotion;
 import Reika.GeoStrata.Items.ItemCrystalSeeds;
 import Reika.GeoStrata.Items.ItemCrystalShard;
+import Reika.GeoStrata.Items.ItemEnderCrystal;
 import Reika.GeoStrata.Items.ItemPendant;
 
 public enum GeoItems implements RegistryEnum {
@@ -29,7 +30,8 @@ public enum GeoItems implements RegistryEnum {
 	CLUSTER("Crystal Cluster", ItemCluster.class),
 	PENDANT("Crystal Pendant", ItemPendant.class),
 	PENDANT3("Enhanced Crystal Pendant", ItemPendant.class),
-	SEED("Crystal Bloom Seeds", ItemCrystalSeeds.class);
+	SEED("Crystal Bloom Seeds", ItemCrystalSeeds.class),
+	ENDERCRYSTAL("Ender Crystal", ItemEnderCrystal.class);
 
 	private String name;
 	private Class itemClass;

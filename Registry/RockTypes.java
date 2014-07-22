@@ -19,6 +19,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.BiomeDictionary;
@@ -123,6 +124,10 @@ public enum RockTypes {
 
 	public ItemStack getItem(RockShapes shape) {
 		return new ItemStack(this.getID(shape), 1, this.ordinal()%16);
+	}
+
+	public Icon getIcon() {
+		return this.getBlock(RockShapes.SMOOTH).getBlockInstance().getIcon(0, this.getBlockMetadata());
 	}
 
 	public boolean isHarvestable(ItemStack held) {

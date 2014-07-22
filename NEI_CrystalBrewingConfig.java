@@ -124,7 +124,7 @@ public class NEI_CrystalBrewingConfig implements IConfigureNEI {
 		@Override
 		public void loadUsageRecipes(ItemStack ingredient) {
 			if (ingredient.itemID == GeoItems.SHARD.getShiftedItemID()) {
-				ReikaDyeHelper color = ReikaDyeHelper.getColorFromItem(ingredient);
+				ReikaDyeHelper color = ReikaDyeHelper.getColorFromDamage(ingredient.getItemDamage());
 				if (!CrystalPotionController.isPotionModifier(color))
 					arecipes.add(new CrystalRecipe(color));
 			}

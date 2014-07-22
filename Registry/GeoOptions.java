@@ -25,7 +25,8 @@ public enum GeoOptions implements ConfigList {
 	DIMGEN("Generate Rock in Other Dimensions", true),
 	BOXRECIPES("Alternate Brick Recipes", false),
 	DENSITY("Rock Density", 1F),
-	NOPARTICLES("Disable Pendant Particles", true);
+	NOPARTICLES("Disable Pendant Particles", true),
+	CRYSTALFARM("Crystal Plants May Drop Shards", true);
 
 	private String label;
 	private boolean defaultState;

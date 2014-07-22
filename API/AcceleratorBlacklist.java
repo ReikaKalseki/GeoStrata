@@ -14,7 +14,6 @@ import java.lang.reflect.Method;
 
 import net.minecraft.tileentity.TileEntity;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
-import Reika.GeoStrata.GeoStrata;
 
 public class AcceleratorBlacklist {
 
@@ -52,7 +51,7 @@ public class AcceleratorBlacklist {
 	 * "TileEntity "Miner" has been blacklisted from the TileEntity Accelerator, because the creator finds it unbalanced or overpowered."
 	 * </i>*/
 	public static void addBlacklist(Class<? extends TileEntity> cl, String name, BlacklistReason r) {
-		GeoStrata.logger.log("TileEntity \""+name+"\" has been blacklisted from the TileEntity Accelerator, because "+r.message);
+		ReikaJavaLibrary.pConsole("GEOSTRATA: TileEntity \""+name+"\" has been blacklisted from the TileEntity Accelerator, because "+r.message);
 		try {
 			add.invoke(null, cl);
 		}

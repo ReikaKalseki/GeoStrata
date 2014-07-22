@@ -15,6 +15,7 @@ public class GeoCommon {
 
 	public static int crystalRender;
 	public static int connectedRender;
+	//public static int shapedRender;
 
 	/**
 	 * Client side only register stuff...

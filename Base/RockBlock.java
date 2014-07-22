@@ -25,15 +25,17 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.Libraries.ReikaEnchantmentHelper;
+import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.ModInteract.TinkerToolHandler;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.RockTypes;
 import Reika.RotaryCraft.API.ItemFetcher;
+import Reika.RotaryCraft.API.Laserable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class RockBlock extends Block {
+public abstract class RockBlock extends Block implements Laserable {
 
 	protected Icon[] icons = new Icon[16];
 
@@ -131,6 +133,31 @@ public abstract class RockBlock extends Block {
 		else {
 			return super.getRenderColor(dmg);
 		}
+	}
+
+	@Override
+	public void whenInBeam(World world, int x, int y, int z, long power, int range) {
+		RockTypes rock = RockTypes.getTypeAtCoords(world, x, y, z);
+		float chance = 50;
+		if (rock.blockHardness >= 10)
+			chance = 10;
+		else if (rock.blockHardness >= 6)
+			chance = 20;
+		else if (rock.blockHardness >= 4)
+			chance = 40;
+		else if (rock.blockHardness >= 2)
+			chance = 60;
+		else
+			chance = 80;
+
+		if (ReikaRandomHelper.doWithChance(chance)) {
+			world.setBlock(x, y, z, Block.lavaMoving.blockID);
+		}
+	}
+
+	@Override
+	public boolean blockBeam(World world, int x, int y, int z, long power) {
+		return true;
 	}
 
 }

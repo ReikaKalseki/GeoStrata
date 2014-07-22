@@ -72,6 +72,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
@@ -157,10 +158,17 @@ public class GeoStrata extends DragonAPIMod {
 			for (int i = 0; i < RockTypes.rockList.length; i++) {
 				RockTypes r = RockTypes.rockList[i];
 				ItemStack smooth = r.getItem(RockShapes.SMOOTH);
-				ItemStack cobble = r.getItem(RockShapes.COBBLESTONE);
+				ItemStack cobble = r.getItem(RockShapes.COBBLE);
 				int energy = (int)(200+800*(r.blockHardness-1));
 				ThermalRecipeHelper.addPulverizerRecipe(smooth, cobble, energy); //make proportional to hardness
 				ThermalRecipeHelper.addPulverizerRecipe(cobble, new ItemStack(Block.sand), new ItemStack(Block.gravel), 20, energy);
+			}
+		}
+
+		for (int i = 0; i < RockTypes.rockList.length; i++) {
+			for (int k = 0; k < RockShapes.shapeList.length; k++) {
+				ItemStack is = RockTypes.rockList[i].getItem(RockShapes.shapeList[k]);
+				FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", is);
 			}
 		}
 
@@ -191,7 +199,7 @@ public class GeoStrata extends DragonAPIMod {
 			for (int i = 0; i < RockTypes.rockList.length; i++) {
 				RockTypes rock = RockTypes.rockList[i];
 				ItemStack smooth = rock.getItem(RockShapes.SMOOTH);
-				ItemStack cobble = rock.getItem(RockShapes.COBBLESTONE);
+				ItemStack cobble = rock.getItem(RockShapes.COBBLE);
 				GrinderAPI.addRecipe(smooth, cobble);
 				GrinderAPI.addRecipe(cobble, new ItemStack(Block.gravel));
 
@@ -264,7 +272,7 @@ public class GeoStrata extends DragonAPIMod {
 				ItemStack is = ep.inventory.mainInventory[i];
 				if (is != null) {
 					if (is.itemID == GeoItems.PENDANT3.getShiftedItemID()) {
-						CrystalBlock.applyEffectFromColor(100, 3, elb, ReikaDyeHelper.getColorFromItem(is));
+						CrystalBlock.applyEffectFromColor(100, 3, elb, ReikaDyeHelper.getColorFromDamage(is.getItemDamage()));
 					}
 					else if (is.itemID == GeoItems.PENDANT.getShiftedItemID()) {
 						CrystalBlock.applyEffectFromColor(100, 1, elb, ReikaDyeHelper.getColorFromItem(is));
@@ -313,7 +321,7 @@ public class GeoStrata extends DragonAPIMod {
 	public static void loadDictionary() {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
 			RockTypes type = RockTypes.rockList[i];
-			ItemStack cobble = type.getItem(RockShapes.COBBLESTONE);
+			ItemStack cobble = type.getItem(RockShapes.COBBLE);
 			ItemStack rock = type.getItem(RockShapes.SMOOTH);
 			OreDictionary.registerOre("cobblestone", cobble);
 			OreDictionary.registerOre("stone", rock);

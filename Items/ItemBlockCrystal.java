@@ -66,7 +66,7 @@ public class ItemBlockCrystal extends ItemBlock {
 	@Override
 	public void addInformation(ItemStack is, EntityPlayer ep, List li, boolean par4) {
 		CrystalBlock block = (CrystalBlock)Block.blocksList[is.itemID];
-		ReikaDyeHelper dye = ReikaDyeHelper.getColorFromItem(is);
+		ReikaDyeHelper dye = ReikaDyeHelper.getColorFromDamage(is.getItemDamage());
 		PotionEffect eff = CrystalPotionController.getEffectFromColor(dye, 200, 0);
 		PotionEffect neff = CrystalPotionController.getNetherEffectFromColor(dye, 200, 0);
 		boolean negative = eff != null ? ReikaPotionHelper.isBadEffect(Potion.potionTypes[eff.getPotionID()]) : false;

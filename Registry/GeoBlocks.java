@@ -44,16 +44,16 @@ import Reika.GeoStrata.Items.ItemBlockRockDeco;
 public enum GeoBlocks implements RegistryEnum {
 
 	SMOOTH(BlockSmooth.class, ItemBlockRock.class, "Smooth Rock"),
-	COBBLE(BlockShapedRock.class, ItemBlockRock.class, "Rock Cobble", "cobblestone"),
-	BRICK(BlockShapedRock.class, ItemBlockRock.class, "Rock Brick", "bricks"),
+	COBBLE(BlockShapedRock.class, ItemBlockRock.class, "Rock Cobble", "cobble"),
+	BRICK(BlockShapedRock.class, ItemBlockRock.class, "Rock Brick", "brick"),
 	CRYSTAL(BlockCaveCrystal.class, ItemBlockCrystal.class, "Cave Crystal"), //Comes in all dye colors
 	LAMP(BlockCrystalLamp.class, ItemBlockCrystal.class, "Crystal Lamp"),
 	DECO(BlockRockDeco.class, ItemBlockRockDeco.class, "Deco Blocks"),
 	BREWER(BlockCrystalBrewer.class, null, "Crystal Brewery"),
 	SUPER(BlockSuperCrystal.class, ItemBlockCrystal.class, "Potion Crystal"),
 	SMOOTH2(BlockSmooth.class, ItemBlockRock.class, "Smooth Rock 2"),
-	COBBLE2(BlockShapedRock.class, ItemBlockRock.class, "Rock Cobble 2", "cobblestone"),
-	BRICK2(BlockShapedRock.class, ItemBlockRock.class, "Rock Brick 2", "bricks"),
+	COBBLE2(BlockShapedRock.class, ItemBlockRock.class, "Rock Cobble 2", "cobble"),
+	BRICK2(BlockShapedRock.class, ItemBlockRock.class, "Rock Brick 2", "brick"),
 	GUARDIAN(BlockGuardianStone.class, ItemBlockGuardianStone.class, "Guardian Stone"),
 	ROUND(BlockShapedRock.class, ItemBlockRock.class, "Round Brick", "round"),
 	ROUND2(BlockShapedRock.class, ItemBlockRock.class, "Round Brick 2", "round"),
@@ -69,7 +69,19 @@ public enum GeoBlocks implements RegistryEnum {
 	CONNECTED(BlockConnectedRock.class, ItemBlockRock.class, "Connected Stone"),
 	CONNECTED2(BlockConnectedRock.class, ItemBlockRock.class, "Connected Stone 2"),
 	ACCELERATOR(BlockAccelerator.class, ItemBlockAccelerator.class, "Tile Accelerator"),
-	HIVE(BlockCrystalHive.class, ItemBlockCrystalHive.class, "Crystal Hive;");
+	HIVE(BlockCrystalHive.class, ItemBlockCrystalHive.class, "Crystal Hive"),
+	LINED(BlockShapedRock.class, ItemBlockRock.class, "Lined Stone", "lined"),
+	LINED2(BlockShapedRock.class, ItemBlockRock.class, "Lined Stone 2", "lined"),
+	EMBOSSED(BlockShapedRock.class, ItemBlockRock.class, "Embossed Stone", "embossed"),
+	EMBOSSED2(BlockShapedRock.class, ItemBlockRock.class, "Embossed Stone 2", "embossed"),
+	CENTERED(BlockShapedRock.class, ItemBlockRock.class, "Centered Stone", "centered"),
+	CENTERED2(BlockShapedRock.class, ItemBlockRock.class, "Centered Stone 2", "centered"),
+	RAISED(BlockShapedRock.class, ItemBlockRock.class, "Raised Stone", "raised"),
+	RAISED2(BlockShapedRock.class, ItemBlockRock.class, "Raised Stone 2", "raised"),
+	ETCHED(BlockShapedRock.class, ItemBlockRock.class, "Etched Stone", "etched"),
+	ETCHED2(BlockShapedRock.class, ItemBlockRock.class, "Etched Stone 2", "etched"),
+	CUBED(BlockShapedRock.class, ItemBlockRock.class, "Cubed Stone", "cubed"),
+	CUBED2(BlockShapedRock.class, ItemBlockRock.class, "Cubed Stone 2", "cubed");
 
 	private final Class blockClass;
 	private final String blockName;

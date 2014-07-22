@@ -28,7 +28,7 @@ public class BlockSmooth extends RockBlock {
 
 	@Override
 	public final int idDropped(int id, Random r, int fortune) {
-		return RockTypes.getTypeFromIDandMeta(blockID, 0).getID(RockShapes.COBBLESTONE);
+		return RockTypes.getTypeFromIDandMeta(blockID, 0).getID(RockShapes.COBBLE);
 	}
 
 	@Override

@@ -20,6 +20,7 @@ import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoItems;
+import Reika.GeoStrata.Registry.GeoOptions;
 
 public class TileEntityCrystalPlant extends TileEntity {
 
@@ -43,8 +44,8 @@ public class TileEntityCrystalPlant extends TileEntity {
 					int dx = xCoord+dir.offsetX;
 					int dy = yCoord+dir.offsetY;
 					int dz = zCoord+dir.offsetZ;
-					int id = worldObj.getBlockId(xCoord, yCoord, zCoord);
-					int meta = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+					int id = worldObj.getBlockId(dx, dy, dz);
+					int meta = worldObj.getBlockMetadata(dx, dy, dz);
 					if (id == GeoBlocks.PLANT.getBlockID() && meta == this.getColor().ordinal()) {
 						TileEntityCrystalPlant te = (TileEntityCrystalPlant)worldObj.getBlockTileEntity(dx, dy, dz);
 						te.grow();
@@ -65,7 +66,7 @@ public class TileEntityCrystalPlant extends TileEntity {
 		int meta = this.getColor().ordinal();
 		for (int i = 0; i < num; i++)
 			ReikaItemHelper.dropItem(worldObj, xCoord+0.5, yCoord+0.5, zCoord+0.5, GeoItems.SEED.getStackOfMetadata(meta));
-		if (ReikaRandomHelper.doWithChance(5))
+		if (GeoOptions.CRYSTALFARM.getState() && ReikaRandomHelper.doWithChance(5))
 			ReikaItemHelper.dropItem(worldObj, xCoord+0.5, yCoord+0.5, zCoord+0.5, GeoItems.SHARD.getStackOfMetadata(meta));
 		this.updateLight();
 	}

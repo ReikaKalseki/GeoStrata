@@ -22,6 +22,7 @@ import org.lwjgl.opengl.GL12;
 import Reika.DragonAPI.Libraries.IO.ReikaColorAPI;
 import Reika.DragonAPI.Libraries.IO.ReikaRenderHelper;
 import Reika.DragonAPI.Libraries.IO.ReikaTextureHelper;
+import Reika.DragonAPI.Libraries.Java.ReikaGLHelper.BlendMode;
 import Reika.GeoStrata.TileEntityAccelerator;
 import Reika.GeoStrata.Blocks.BlockAccelerator;
 import Reika.GeoStrata.Registry.GeoBlocks;
@@ -42,7 +43,7 @@ public class AcceleratorRenderer extends TileEntitySpecialRenderer {
 
 		if (!tile.hasWorldObj()) {
 			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_COLOR);
+			BlendMode.ADDITIVEDARK.apply();
 			GL11.glDisable(GL11.GL_CULL_FACE);
 			double a = 0.5;
 			double b = -0.4;
@@ -60,7 +61,7 @@ public class AcceleratorRenderer extends TileEntitySpecialRenderer {
 		this.drawMiddle(te);
 
 		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_COLOR);
+		BlendMode.ADDITIVEDARK.apply();
 		GL11.glDisable(GL11.GL_CULL_FACE);
 
 
@@ -75,7 +76,7 @@ public class AcceleratorRenderer extends TileEntitySpecialRenderer {
 		//this.drawSparkle(te);
 
 		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		BlendMode.DEFAULT.apply();
 		GL11.glDisable(GL11.GL_BLEND);
 		if (te.hasWorldObj())
 			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
