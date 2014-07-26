@@ -32,10 +32,14 @@ public abstract class GeoItem extends Item {
 	@SideOnly(Side.CLIENT)
 	public final void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List) //Adds the metadata blocks to the creative inventory
 	{
-		for (int i = 0; i < this.getNumberTypes(); i++) {
+		for (int i = this.getMinimumCreativeMeta(); i < this.getNumberTypes(); i++) {
 			ItemStack item = new ItemStack(par1, 1, i);
 			par3List.add(item);
 		}
+	}
+
+	protected int getMinimumCreativeMeta() {
+		return 0;
 	}
 
 	@Override

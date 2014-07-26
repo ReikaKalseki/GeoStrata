@@ -9,6 +9,8 @@
  ******************************************************************************/
 package Reika.GeoStrata;
 
+import java.util.Random;
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
@@ -23,6 +25,8 @@ import Reika.GeoStrata.Registry.GeoItems;
 import Reika.GeoStrata.Registry.GeoOptions;
 
 public class TileEntityCrystalPlant extends TileEntity {
+
+	private final Random random = new Random();
 
 	private int growthTick = 2;
 
@@ -62,11 +66,18 @@ public class TileEntityCrystalPlant extends TileEntity {
 
 	public void harvest() {
 		growthTick = 2;
-		int num = ReikaRandomHelper.doWithChance(5) ? 2 : 1;
+		int rand = random.nextInt(20);
+		int num = 0;
+		if (rand == 0) {
+			num = 2;
+		}
+		else if (rand < 5) {
+			num = 1;
+		}
 		int meta = this.getColor().ordinal();
 		for (int i = 0; i < num; i++)
-			ReikaItemHelper.dropItem(worldObj, xCoord+0.5, yCoord+0.5, zCoord+0.5, GeoItems.SEED.getStackOfMetadata(meta));
-		if (GeoOptions.CRYSTALFARM.getState() && ReikaRandomHelper.doWithChance(5))
+			ReikaItemHelper.dropItem(worldObj, xCoord+0.5, yCoord+0.5, zCoord+0.5, GeoItems.SEED.getStackOfMetadata(meta+16));
+		if (GeoOptions.CRYSTALFARM.getState() && ReikaRandomHelper.doWithChance(2))
 			ReikaItemHelper.dropItem(worldObj, xCoord+0.5, yCoord+0.5, zCoord+0.5, GeoItems.SHARD.getStackOfMetadata(meta));
 		this.updateLight();
 	}

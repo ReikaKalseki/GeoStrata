@@ -20,12 +20,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.Icon;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaPlantHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.TileEntityCrystalPlant;
+import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoItems;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.RotaryCraft.API.BlowableCrop;
@@ -142,7 +144,7 @@ public class BlockCrystalPlant extends Block implements BlowableCrop {
 
 	@Override
 	public int damageDropped(int meta) {
-		return meta;
+		return meta+16;
 	}
 
 	@Override
@@ -229,6 +231,13 @@ public class BlockCrystalPlant extends Block implements BlowableCrop {
 			return li;
 		}
 		return null;
+	}
+
+	@Override
+	public ItemStack getPickBlock(MovingObjectPosition target, World world, int x, int y, int z)
+	{
+		int meta = world.getBlockMetadata(x, y, z);
+		return new ItemStack(GeoBlocks.PLANT.getBlockInstance(), 1, meta);
 	}
 
 	@Override

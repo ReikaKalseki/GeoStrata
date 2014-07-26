@@ -82,6 +82,8 @@ public enum GeoItems implements RegistryEnum {
 		case SHARD:
 		case POTION:
 			return ReikaDyeHelper.dyes[meta].colorName+" "+this.getBasicName();
+		case SEED:
+			return ReikaDyeHelper.dyes[meta%16].colorName+" "+this.getBasicName();
 		default:
 			return "";
 		}
@@ -108,6 +110,8 @@ public enum GeoItems implements RegistryEnum {
 			return 16;
 		case CLUSTER:
 			return ((ItemCluster)this.getItemInstance()).getNumberTypes();
+		case SEED:
+			return 32;
 		default:
 			return 1;
 		}
