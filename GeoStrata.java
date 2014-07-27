@@ -275,7 +275,7 @@ public class GeoStrata extends DragonAPIMod {
 						CrystalBlock.applyEffectFromColor(100, 3, elb, ReikaDyeHelper.getColorFromDamage(is.getItemDamage()));
 					}
 					else if (is.itemID == GeoItems.PENDANT.getShiftedItemID()) {
-						CrystalBlock.applyEffectFromColor(100, 1, elb, ReikaDyeHelper.getColorFromItem(is));
+						CrystalBlock.applyEffectFromColor(100, 1, elb, ReikaDyeHelper.getColorFromDamage(is.getItemDamage()));
 					}
 				}
 			}
