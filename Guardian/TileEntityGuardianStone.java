@@ -16,21 +16,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
+import Reika.DragonAPI.Base.TileEntityBase;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
+import Reika.GeoStrata.Guardian.GuardianStoneManager.ProtectionZone;
+import Reika.GeoStrata.Registry.GeoBlocks;
 
-public class TileEntityGuardianStone extends TileEntity {
+public class TileEntityGuardianStone extends TileEntityBase {
 
 	private final ArrayList<String> extraPlayers = new ArrayList();
-
-	public TileEntityGuardianStone() {
-
-	}
-
-	@Override
-	public boolean canUpdate() {
-		return false;
-	}
+	private ProtectionZone zone;
 
 	@Override
 	public void writeToNBT(NBTTagCompound NBT) {
@@ -85,6 +80,44 @@ public class TileEntityGuardianStone extends TileEntity {
 
 	public List<String> getExtraPlayers() {
 		return ReikaJavaLibrary.copyList(extraPlayers);
+	}
+
+	@Override
+	public int getTileEntityBlockID() {
+		return GeoBlocks.GUARDIAN.getBlockID();
+	}
+
+	@Override
+	public void updateEntity(World world, int x, int y, int z, int meta) {
+		if (!world.isRemote && placer != null) {
+			if (this.getTicksExisted() == 0 || this.getZone() == null) {
+				zone = GuardianStoneManager.instance.addZone(world, x, y, z, this.getPlacer(), 16);
+			}
+		}
+	}
+
+	public ProtectionZone getZone() {
+		return zone;
+	}
+
+	@Override
+	protected void animateWithTick(World world, int x, int y, int z) {
+
+	}
+
+	@Override
+	public int getRedstoneOverride() {
+		return 0;
+	}
+
+	@Override
+	protected String getTEName() {
+		return GeoBlocks.GUARDIAN.getBasicName();
+	}
+
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return pass == 0;
 	}
 
 }

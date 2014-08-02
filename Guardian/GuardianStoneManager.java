@@ -9,9 +9,6 @@
  ******************************************************************************/
 package Reika.GeoStrata.Guardian;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -25,11 +22,8 @@ import net.minecraftforge.event.EventPriority;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.world.WorldEvent;
-import Reika.DragonAPI.IO.ReikaFileReader;
 import Reika.DragonAPI.Libraries.ReikaPlayerAPI;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
-import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.GeoBlocks;
 ;
 
@@ -49,9 +43,10 @@ public class GuardianStoneManager {
 		return ReikaPlayerAPI.isAdmin(ep);
 	}
 
-	public void addZone(World world, int x, int y, int z, EntityPlayer ep, int r) {
-		ProtectionZone zone = new ProtectionZone(world, ep, x, y, z, 20);
+	public ProtectionZone addZone(World world, int x, int y, int z, EntityPlayer ep, int r) {
+		ProtectionZone zone = new ProtectionZone(world, ep, x, y, z, r);
 		zones.add(zone);
+		return zone;
 	}
 
 	private ArrayList<ProtectionZone> getProtectionZonesForArea(World world, int x, int y, int z) {
@@ -103,81 +98,6 @@ public class GuardianStoneManager {
 			}
 		}
 		return true;
-	}
-
-	public final String getSaveFileName() {
-		return "protections.zonemap";
-	}
-
-	public final String getSaveFilePath() {
-		File save = DimensionManager.getCurrentSaveRootDirectory();
-		return save.getPath()+"/GeoStrata/";
-	}
-
-	public final String getFullSavePath() {
-		return this.getSaveFilePath()+this.getSaveFileName();
-	}
-
-	@ForgeSubscribe
-	public void save(WorldEvent.Unload evt) {
-		if (!evt.world.isRemote) {
-			GeoStrata.logger.log("Saving protections map for world "+evt.world.provider.dimensionId+".");
-			try {
-				File dir = new File(this.getSaveFilePath());
-				//ReikaJavaLibrary.pConsole(this.getSaveFilePath(), Side.SERVER);
-				if (!dir.exists()) {
-					dir.mkdirs();
-				}
-				File f = new File(this.getFullSavePath());
-				if (f.exists())
-					f.delete();
-				f.createNewFile();
-				PrintWriter p = new PrintWriter(f);
-				for (int i = 0; i < zones.size(); i++) {
-					String line = zones.get(i).getSerialString();
-					p.append(line+"\n");
-				}
-				//zones.clear();
-				p.close();
-			}
-			catch (Exception e) {
-				GeoStrata.logger.log(e.getMessage()+", and it caused the save to fail!");
-				e.printStackTrace();
-			}
-		}
-	}
-
-	@ForgeSubscribe
-	public void read(WorldEvent.Load evt) {
-		if (!evt.world.isRemote) {
-			GeoStrata.logger.log("Loading protections map for world "+evt.world.provider.dimensionId+".");
-
-			String name = this.getSaveFileName();
-			try {
-				BufferedReader p = ReikaFileReader.getReader(this.getFullSavePath());
-				String line = "";
-				while (line != null) {
-					line = p.readLine();
-					if (line != null) {
-						ProtectionZone zone = ProtectionZone.getFromSerialString(line);
-						//ReikaJavaLibrary.pConsole(line+"   -->   "+zone+":"+zone.hasTile(evt.world), Side.SERVER);
-						if (zone.hasTile(evt.world)) {
-							if (zone != null && !zones.contains(zone))
-								zones.add(zone);
-						}
-						else {
-							GeoStrata.logger.log("Invalid zone "+zone+", as it has no block to control it!");
-						}
-					}
-				}
-				p.close();
-				//ReikaJavaLibrary.pConsole(zones, Side.SERVER);
-			}
-			catch (Exception e) {
-				GeoStrata.logger.log(e.getMessage()+", and it caused the read to fail!");
-				e.printStackTrace();
-			}
-		}
 	}
 
 	@Override

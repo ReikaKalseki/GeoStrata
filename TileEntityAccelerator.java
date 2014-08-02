@@ -155,9 +155,4 @@ public class TileEntityAccelerator extends TileEntityBase {
 		return pass == 0;
 	}
 
-	@Override
-	public final boolean hasModel() {
-		return true;
-	}
-
 }

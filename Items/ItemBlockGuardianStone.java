@@ -15,7 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import Reika.GeoStrata.Guardian.GuardianStoneManager;
+import Reika.GeoStrata.Guardian.TileEntityGuardianStone;
 
 public class ItemBlockGuardianStone extends ItemBlock {
 
@@ -28,7 +28,7 @@ public class ItemBlockGuardianStone extends ItemBlock {
 	{
 		boolean flag = super.placeBlockAt(stack, player, world, x, y, z, side, hitX, hitY, hitZ, metadata);
 		if (flag && !world.isRemote) {
-			GuardianStoneManager.instance.addZone(world, x, y, z, player, 16);
+			((TileEntityGuardianStone)world.getBlockTileEntity(x, y, z)).placer = player.getEntityName();
 		}
 		return flag;
 	}
