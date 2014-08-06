@@ -24,6 +24,7 @@ import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import Reika.DragonAPI.Libraries.ReikaPlayerAPI;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
+import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.GeoBlocks;
 ;
 
@@ -44,6 +45,11 @@ public class GuardianStoneManager {
 	}
 
 	public ProtectionZone addZone(World world, int x, int y, int z, EntityPlayer ep, int r) {
+		if (ep == null) {
+			int dim = world.provider.dimensionId;
+			GeoStrata.logger.logError("Tried to generate a protection zone for a null player at "+x+", "+y+", "+z+" in "+dim);
+			return null;
+		}
 		ProtectionZone zone = new ProtectionZone(world, ep, x, y, z, r);
 		zones.add(zone);
 		return zone;

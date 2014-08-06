@@ -185,6 +185,7 @@ public abstract class CrystalBlock extends Block {
 				}
 				break;
 			case WHITE:
+				//ReikaPotionHelper.clearPotionsExceptPerma(e);
 				e.clearActivePotions();
 				break;
 			case PURPLE:
