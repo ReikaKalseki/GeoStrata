@@ -9,21 +9,22 @@
  ******************************************************************************/
 package Reika.GeoStrata.Rendering;
 
+import Reika.DragonAPI.Base.BaseBlockRenderer;
+import Reika.DragonAPI.Libraries.Java.ReikaGLHelper.BlendMode;
+import Reika.GeoStrata.Blocks.BlockShapedRock;
+import Reika.GeoStrata.Registry.RockTypes;
+
 import java.awt.Color;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.Icon;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
-
-import Reika.DragonAPI.Base.BaseBlockRenderer;
-import Reika.DragonAPI.Libraries.Java.ReikaGLHelper.BlendMode;
-import Reika.GeoStrata.Blocks.BlockShapedRock;
-import Reika.GeoStrata.Registry.RockTypes;
 
 public class ShapedStoneRenderer extends BaseBlockRenderer {
 
@@ -45,13 +46,13 @@ public class ShapedStoneRenderer extends BaseBlockRenderer {
 
 		BlockShapedRock b = (BlockShapedRock)block;
 
-		Icon ico = RockTypes.getTypeFromIDandMeta(block.blockID, metadata).getIcon();//b.getIcon(0, metadata);
+		IIcon ico = RockTypes.getTypeFromID(block).getIcon();//b.getIcon(0, metadata);
 		float u = ico.getMinU();
 		float du = ico.getMaxU();
 		float v = ico.getMinV();
 		float dv = ico.getMaxV();
 
-		Icon ico2 = Block.glass.getIcon(0, 0);//RockShapes.getShape(block).getIcon();//b.getIconForEdge(0, RockTypes.getTypeFromIDandMeta(block.blockID, metadata));
+		IIcon ico2 = Blocks.glass.getIcon(0, 0);//RockShapes.getShape(block).getIcon();//b.getIconForEdge(0, RockTypes.getTypeFromID(Blocks.blockID, metadata));
 		float u2 = ico2.getMinU();
 		float du2 = ico2.getMaxU();
 		float v2 = ico2.getMinV();
@@ -89,7 +90,7 @@ public class ShapedStoneRenderer extends BaseBlockRenderer {
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 
-	private void drawInventoryBlock(BlockShapedRock b, int metadata, RenderBlocks renderer, Icon ico) {
+	private void drawInventoryBlock(BlockShapedRock b, int metadata, RenderBlocks renderer, IIcon ico) {
 		Tessellator v5 = Tessellator.instance;
 		int color = b.getRenderColor(metadata);
 		Color c = new Color(color);
@@ -141,19 +142,18 @@ public class ShapedStoneRenderer extends BaseBlockRenderer {
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks rb) {
 		super.renderWorldBlock(world, x, y, z, block, modelId, rb);
 		BlockShapedRock b = (BlockShapedRock)block;
-		int id = block.blockID;
 		int meta = world.getBlockMetadata(x, y, z);
-		RockTypes type = RockTypes.getTypeFromIDandMeta(id, meta);
+		RockTypes type = RockTypes.getTypeFromID(block);
 		Tessellator v5 = Tessellator.instance;
 		v5.addTranslation(x, y, z);
-		Icon ico = type.getIcon();
+		IIcon ico = type.getIcon();
 		this.renderBlock(world, x, y, z, b, rb, ico);
 		v5.addTranslation(-x, -y, -z);
 		v5.draw();
 		this.blendMode();
 		v5.startDrawingQuads();
 		v5.addTranslation(x, y, z);
-		Icon ico2 = Block.glass.getIcon(0, 0);//RockShapes.getShape(block).getIcon();
+		IIcon ico2 = Blocks.glass.getIcon(0, 0);//RockShapes.getShape(block).getIcon();
 		this.renderBlock(world, x, y, z, b, rb, ico2);
 		v5.addTranslation(-x, -y, -z);
 		v5.draw();
@@ -163,7 +163,7 @@ public class ShapedStoneRenderer extends BaseBlockRenderer {
 		return true;
 	}
 
-	private void renderBlock(IBlockAccess world, int x, int y, int z, BlockShapedRock b, RenderBlocks rb, Icon ico) {
+	private void renderBlock(IBlockAccess world, int x, int y, int z, BlockShapedRock b, RenderBlocks rb, IIcon ico) {
 		Tessellator v5 = Tessellator.instance;
 		int color = b.colorMultiplier(world, x, y, z);
 		Color c = new Color(color);
@@ -216,7 +216,7 @@ public class ShapedStoneRenderer extends BaseBlockRenderer {
 	}
 
 	@Override
-	public boolean shouldRender3DInInventory() {
+	public boolean shouldRender3DInInventory(int model) {
 		return true;
 	}
 

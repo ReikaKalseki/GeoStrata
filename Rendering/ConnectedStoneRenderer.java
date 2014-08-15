@@ -9,22 +9,22 @@
  ******************************************************************************/
 package Reika.GeoStrata.Rendering;
 
+import Reika.DragonAPI.Base.BaseBlockRenderer;
+import Reika.DragonAPI.Libraries.Java.ReikaGLHelper.BlendMode;
+import Reika.GeoStrata.Blocks.BlockConnectedRock;
+import Reika.GeoStrata.Registry.RockTypes;
+
 import java.awt.Color;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.ForgeDirection;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
-
-import Reika.DragonAPI.Base.BaseBlockRenderer;
-import Reika.DragonAPI.Libraries.Java.ReikaGLHelper.BlendMode;
-import Reika.GeoStrata.Blocks.BlockConnectedRock;
-import Reika.GeoStrata.Registry.RockTypes;
 
 public class ConnectedStoneRenderer extends BaseBlockRenderer {
 
@@ -43,13 +43,13 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 
 		BlockConnectedRock b = (BlockConnectedRock)block;
 
-		Icon ico = b.getIcon(0, metadata);
+		IIcon ico = b.getIcon(0, metadata);
 		float u = ico.getMinU();
 		float du = ico.getMaxU();
 		float v = ico.getMinV();
 		float dv = ico.getMaxV();
 
-		Icon ico2 = b.getIconForEdge(0, RockTypes.getTypeFromIDandMeta(block.blockID, metadata));
+		IIcon ico2 = b.getIconForEdge(0, RockTypes.getTypeFromID(block));
 		float u2 = ico2.getMinU();
 		float du2 = ico2.getMaxU();
 		float v2 = ico2.getMinV();
@@ -140,16 +140,14 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks rb) {
 		super.renderWorldBlock(world, x, y, z, block, modelId, rb);
 		BlockConnectedRock b = (BlockConnectedRock)block;
-		int id = block.blockID;
-		int meta = world.getBlockMetadata(x, y, z);
-		RockTypes type = RockTypes.getTypeFromIDandMeta(id, meta);
+		RockTypes type = RockTypes.getTypeFromID(block);
 		Tessellator v5 = Tessellator.instance;
 		v5.addTranslation(x, y, z);
 		int color = b.colorMultiplier(world, x, y, z);
 		Color c = new Color(color);
 
 		for (int i = 0; i < 6; i++) {
-			Icon ico = b.getBlockTexture(world, x, y, z, i);
+			IIcon ico = b.getIcon(world, x, y, z, i);
 
 			float u = ico.getMinU();
 			float v = ico.getMinV();
@@ -214,9 +212,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 
 	private void renderOverlay(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks rb) {
 		BlockConnectedRock b = (BlockConnectedRock)block;
-		int id = block.blockID;
-		int meta = world.getBlockMetadata(x, y, z);
-		RockTypes type = RockTypes.getTypeFromIDandMeta(id, meta);
+		RockTypes type = RockTypes.getTypeFromID(block);
 		Tessellator v5 = Tessellator.instance;
 		v5.setColorOpaque(255, 255, 255);
 
@@ -226,7 +222,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.UP.ordinal()))
 			for (int i = 0; i < li.size(); i++) {
 				int edge = li.get(i);
-				Icon ico = b.getIconForEdge(edge, type);
+				IIcon ico = b.getIconForEdge(edge, type);
 				float u = ico.getMinU();
 				float du = ico.getMaxU();
 				float v = ico.getMinV();
@@ -248,7 +244,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.DOWN.ordinal()))
 			for (int i = 0; i < li.size(); i++) {
 				int edge = li.get(i);
-				Icon ico = b.getIconForEdge(edge, type);
+				IIcon ico = b.getIconForEdge(edge, type);
 				float u = ico.getMinU();
 				float du = ico.getMaxU();
 				float v = ico.getMinV();
@@ -270,7 +266,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.EAST.ordinal()))
 			for (int i = 0; i < li.size(); i++) {
 				int edge = li.get(i);
-				Icon ico = b.getIconForEdge(edge, type);
+				IIcon ico = b.getIconForEdge(edge, type);
 				float u = ico.getMinU();
 				float du = ico.getMaxU();
 				float v = ico.getMinV();
@@ -291,7 +287,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.WEST.ordinal()))
 			for (int i = 0; i < li.size(); i++) {
 				int edge = li.get(i);
-				Icon ico = b.getIconForEdge(edge, type);
+				IIcon ico = b.getIconForEdge(edge, type);
 				float u = ico.getMinU();
 				float du = ico.getMaxU();
 				float v = ico.getMinV();
@@ -312,7 +308,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.SOUTH.ordinal()))
 			for (int i = 0; i < li.size(); i++) {
 				int edge = li.get(i);
-				Icon ico = b.getIconForEdge(edge, type);
+				IIcon ico = b.getIconForEdge(edge, type);
 				float u = ico.getMinU();
 				float du = ico.getMaxU();
 				float v = ico.getMinV();
@@ -333,7 +329,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.NORTH.ordinal()))
 			for (int i = 0; i < li.size(); i++) {
 				int edge = li.get(i);
-				Icon ico = b.getIconForEdge(edge, type);
+				IIcon ico = b.getIconForEdge(edge, type);
 				float u = ico.getMinU();
 				float du = ico.getMaxU();
 				float v = ico.getMinV();
@@ -351,7 +347,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 	}
 
 	@Override
-	public boolean shouldRender3DInInventory() {
+	public boolean shouldRender3DInInventory(int model) {
 		return true;
 	}
 

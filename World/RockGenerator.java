@@ -9,19 +9,21 @@
  ******************************************************************************/
 package Reika.GeoStrata.World;
 
-import java.util.List;
-import java.util.Random;
-
-import net.minecraft.block.Block;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.feature.WorldGenMinable;
 import Reika.DragonAPI.ModInteract.ReikaTwilightHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
+
+import java.util.List;
+import java.util.Random;
+
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraft.world.gen.feature.WorldGenMinable;
 import cpw.mods.fml.common.IWorldGenerator;
 
 public class RockGenerator implements IWorldGenerator {
@@ -62,9 +64,8 @@ public class RockGenerator implements IWorldGenerator {
 				int posY = geo.minY + random.nextInt(geo.maxY-geo.minY);
 				GeoStrata.logger.debug(geo.name()+":"+geo.canGenerateAt(world, posX, posY, posZ, random));
 				if (geo.canGenerateAt(world, posX, posY, posZ, random)) {
-					int id = geo.getID(RockShapes.SMOOTH);
-					int meta = geo.getBlockMetadata();
-					(new WorldGenMinable(id, meta, VEIN_SIZE, Block.stone.blockID)).generate(world, random, posX, posY, posZ);
+					Block id = geo.getID(RockShapes.SMOOTH);
+					(new WorldGenMinable(id, VEIN_SIZE, Blocks.stone)).generate(world, random, posX, posY, posZ);
 					//GeoStrata.logger.log("Generating "+geo+" at "+posX+", "+posY+", "+posZ);
 				}
 			}
