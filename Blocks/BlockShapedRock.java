@@ -9,31 +9,32 @@
  ******************************************************************************/
 package Reika.GeoStrata.Blocks;
 
-import java.util.Random;
-
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.world.World;
-import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
-import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 
+import java.util.Random;
+
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.item.Item;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.World;
+
 public class BlockShapedRock extends RockBlock {
 
-	public final String shapeType;
+	//public final String shapeType;
 
-	//private static final Icon[][] textures = new Icon[RockTypes.rockList.length][RockShapes.shapeList.length];
+	private static final IIcon[][] textures = new IIcon[RockTypes.rockList.length][RockShapes.shapeList.length];
+	private static boolean texturesLoaded = false;
 
-	public BlockShapedRock(int ID, Material mat, String type) {
-		super(ID, mat);
-		shapeType = type.toLowerCase();
+	public BlockShapedRock() {
+		super();
+		//shapeType = type.toLowerCase();
 	}
 
 	@Override
-	public final int idDropped(int id, Random r, int fortune) {
-		return blockID;
+	public final Item getItemDropped(int id, Random r, int fortune) {
+		return Item.getItemFromBlock(this);
 	}
 
 	@Override
@@ -52,13 +53,24 @@ public class BlockShapedRock extends RockBlock {
 	}
 
 	@Override
-	public void registerIcons(IconRegister ico) {
-		for (int i = 0; i < RockTypes.getTypesForID(blockID); i++) {
-			RockTypes type = RockTypes.getTypeFromIDandMeta(blockID, i);
-			int a = RockShapes.getShape(this).ordinal();
-			int b = type.ordinal();
-			icons[i] = ico.registerIcon("GeoStrata:shaped/unstitched/tile"+a+"_"+b);
-			GeoStrata.logger.debug("Adding "+type.getName()+" "+shapeType+" icon "+icons[i].getIconName());
+	public final IIcon getIcon(int side, int meta) {
+		RockTypes r = RockTypes.getTypeFromID(this);
+		RockShapes s = RockShapes.getShape(this, meta);
+		return textures[r.ordinal()][s.ordinal()];
+	}
+
+	@Override
+	public void registerBlockIcons(IIconRegister ico) {
+		if (texturesLoaded)
+			return;
+		for (int i = 0; i < RockTypes.rockList.length; i++) {
+			for (int k = 0; k < RockShapes.shapeList.length; k++) {
+				//int a = RockShapes.getShape(this).ordinal();
+				//int b = type.ordinal();
+				textures[i][k] = ico.registerIcon("GeoStrata:shaped/unstitched/tile"+k+"_"+i);
+				//GeoStrata.logger.debug("Adding "+type.getName()+" "+shapeType+" icon "+icons[i].getIconName());
+				texturesLoaded = true;
+			}
 		}
 		/*
 		for (int i = 0; i < blends.length; i++) {
@@ -78,13 +90,14 @@ public class BlockShapedRock extends RockBlock {
 		return textures[rock.ordinal()][shape.ordinal()];
 	}*/
 
-	public String getDisplayName() {
-		return ReikaStringParser.capFirstChar(shapeType);
-	}
+	//public String getDisplayName() {
+	//	return ReikaStringParser.capFirstChar(shapeType);
+	//}
 
 	@Override
 	public void whenInBeam(World world, int x, int y, int z, long power, int range) {
-		if (shapeType.equals("cobblestone") || shapeType.equals("smooth"))
+		RockShapes shape = RockShapes.getShape(world, x, y, z);
+		if (shape == RockShapes.SMOOTH || shape == RockShapes.COBBLE)
 			super.whenInBeam(world, x, y, z, power, range);
 	}
 }

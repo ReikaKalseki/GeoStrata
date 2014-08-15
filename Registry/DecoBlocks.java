@@ -9,34 +9,36 @@
  ******************************************************************************/
 package Reika.GeoStrata.Registry;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.EnumToolMaterial;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.DragonAPI.ModInteract.MekToolHandler;
 import Reika.DragonAPI.ModInteract.TinkerToolHandler;
+
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.Item.ToolMaterial;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public enum DecoBlocks {
-	OBSIDIBRICKS("Obsidian Bricks", 30F, 2000F, 1, EnumToolMaterial.EMERALD, Block.obsidian),
-	QUARTZBRICKS("Nether Quartz Bricks", 1.2F, 5F, 2, EnumToolMaterial.IRON, Block.blockNetherQuartz),
-	GLOWBRICKS("Glowstone Bricks", 0.75F, 3F, 2, EnumToolMaterial.WOOD, Block.glowStone),
-	REDBRICKS("Redstone Bricks", 1F, 4F, 4, EnumToolMaterial.IRON, Block.blockRedstone),
-	LAPISBRICKS("Lapis Lazuli Bricks", 1F, 4F, 4, EnumToolMaterial.STONE, Block.blockLapis),
-	EMERALDBRICKS("Emerald Bricks", 1F, 4F, 8, EnumToolMaterial.IRON, Block.blockEmerald);
+	OBSIDIBRICKS("Obsidian Bricks", 30F, 2000F, 1, ToolMaterial.EMERALD, Blocks.obsidian),
+	QUARTZBRICKS("Nether Quartz Bricks", 1.2F, 5F, 2, ToolMaterial.IRON, Blocks.quartz_block),
+	GLOWBRICKS("Glowstone Bricks", 0.75F, 3F, 2, ToolMaterial.WOOD, Blocks.glowstone),
+	REDBRICKS("Redstone Bricks", 1F, 4F, 4, ToolMaterial.IRON, Blocks.redstone_block),
+	LAPISBRICKS("Lapis Lazuli Bricks", 1F, 4F, 4, ToolMaterial.STONE, Blocks.lapis_block),
+	EMERALDBRICKS("Emerald Bricks", 1F, 4F, 8, ToolMaterial.IRON, Blocks.emerald_block);
 
 	private String name;
 	private float blockHardness;
 	private float blastResistance;
-	private EnumToolMaterial mat;
+	private ToolMaterial mat;
 	public final Block material;
 	public final int recipeMultiplier;
 
 	public static final DecoBlocks[] list = values();
 
-	private DecoBlocks(String n, float hard, float blast, int recipe, EnumToolMaterial tool, Block b) {
+	private DecoBlocks(String n, float hard, float blast, int recipe, ToolMaterial tool, Block b) {
 		name = n;
 		mat = tool;
 		blastResistance = blast;
@@ -54,7 +56,7 @@ public enum DecoBlocks {
 	}
 
 	public ItemStack getItem() {
-		return new ItemStack(GeoBlocks.DECO.getBlockID(), 1, this.ordinal());
+		return new ItemStack(GeoBlocks.DECO.getBlockInstance(), 1, this.ordinal());
 	}
 
 	public String getName() {
@@ -73,7 +75,7 @@ public enum DecoBlocks {
 		return blastResistance;
 	}
 
-	public EnumToolMaterial getHarvestMin() {
+	public ToolMaterial getHarvestMin() {
 		return mat;
 	}
 
@@ -100,15 +102,15 @@ public enum DecoBlocks {
 		Item i = held.getItem();
 		switch (mat) {
 		case EMERALD: //Diamond
-			return held.canHarvestBlock(Block.obsidian);
+			return held.func_150998_b(Blocks.obsidian);
 		case GOLD:
-			return held.canHarvestBlock(Block.stone);
+			return held.func_150998_b(Blocks.stone);
 		case IRON:
-			return held.canHarvestBlock(Block.oreGold);
+			return held.func_150998_b(Blocks.gold_ore);
 		case STONE:
-			return held.canHarvestBlock(Block.oreIron);
+			return held.func_150998_b(Blocks.iron_ore);
 		case WOOD:
-			return held.canHarvestBlock(Block.stone);
+			return held.func_150998_b(Blocks.stone);
 		}
 		return false;
 	}

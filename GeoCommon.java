@@ -13,7 +13,6 @@ import net.minecraft.world.World;
 
 public class GeoCommon {
 
-	public static int crystalRender;
 	public static int connectedRender;
 	//public static int shapedRender;
 

@@ -9,79 +9,34 @@
  ******************************************************************************/
 package Reika.GeoStrata.Registry;
 
+import Reika.DragonAPI.Interfaces.BlockEnum;
+import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
+import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
+import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.Base.RockBlock;
+import Reika.GeoStrata.Blocks.BlockGeoSlab;
+import Reika.GeoStrata.Blocks.BlockGeoStairs;
+import Reika.GeoStrata.Blocks.BlockRockDeco;
+import Reika.GeoStrata.Blocks.BlockShapedRock;
+import Reika.GeoStrata.Blocks.BlockSmooth;
+import Reika.GeoStrata.Blocks.BlockVent;
+import Reika.GeoStrata.Items.ItemBlockAnyGeoVariant;
+import Reika.GeoStrata.Items.ItemBlockRockDeco;
+import Reika.GeoStrata.Items.ItemBlockVent;
+
 import java.util.HashMap;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import Reika.DragonAPI.Interfaces.RegistryEnum;
-import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
-import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
-import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
-import Reika.GeoStrata.GeoStrata;
-import Reika.GeoStrata.Base.CrystalBlock;
-import Reika.GeoStrata.Base.RockBlock;
-import Reika.GeoStrata.Bees.BlockCrystalHive;
-import Reika.GeoStrata.Bees.ItemBlockCrystalHive;
-import Reika.GeoStrata.Blocks.BlockAccelerator;
-import Reika.GeoStrata.Blocks.BlockCaveCrystal;
-import Reika.GeoStrata.Blocks.BlockConnectedRock;
-import Reika.GeoStrata.Blocks.BlockCrystalBrewer;
-import Reika.GeoStrata.Blocks.BlockCrystalLamp;
-import Reika.GeoStrata.Blocks.BlockCrystalPlant;
-import Reika.GeoStrata.Blocks.BlockGuardianStone;
-import Reika.GeoStrata.Blocks.BlockRockDeco;
-import Reika.GeoStrata.Blocks.BlockShapedRock;
-import Reika.GeoStrata.Blocks.BlockSmooth;
-import Reika.GeoStrata.Blocks.BlockSuperCrystal;
-import Reika.GeoStrata.Items.ItemBlockAccelerator;
-import Reika.GeoStrata.Items.ItemBlockCrystal;
-import Reika.GeoStrata.Items.ItemBlockCrystalPlant;
-import Reika.GeoStrata.Items.ItemBlockGuardianStone;
-import Reika.GeoStrata.Items.ItemBlockRock;
-import Reika.GeoStrata.Items.ItemBlockRockDeco;
 
-public enum GeoBlocks implements RegistryEnum {
+public enum GeoBlocks implements BlockEnum {
 
-	SMOOTH(BlockSmooth.class, ItemBlockRock.class, "Smooth Rock"),
-	COBBLE(BlockShapedRock.class, ItemBlockRock.class, "Rock Cobble", "cobble"),
-	BRICK(BlockShapedRock.class, ItemBlockRock.class, "Rock Brick", "brick"),
-	CRYSTAL(BlockCaveCrystal.class, ItemBlockCrystal.class, "Cave Crystal"), //Comes in all dye colors
-	LAMP(BlockCrystalLamp.class, ItemBlockCrystal.class, "Crystal Lamp"),
 	DECO(BlockRockDeco.class, ItemBlockRockDeco.class, "Deco Blocks"),
-	BREWER(BlockCrystalBrewer.class, null, "Crystal Brewery"),
-	SUPER(BlockSuperCrystal.class, ItemBlockCrystal.class, "Potion Crystal"),
-	SMOOTH2(BlockSmooth.class, ItemBlockRock.class, "Smooth Rock 2"),
-	COBBLE2(BlockShapedRock.class, ItemBlockRock.class, "Rock Cobble 2", "cobble"),
-	BRICK2(BlockShapedRock.class, ItemBlockRock.class, "Rock Brick 2", "brick"),
-	GUARDIAN(BlockGuardianStone.class, ItemBlockGuardianStone.class, "Guardian Stone"),
-	ROUND(BlockShapedRock.class, ItemBlockRock.class, "Round Brick", "round"),
-	ROUND2(BlockShapedRock.class, ItemBlockRock.class, "Round Brick 2", "round"),
-	FITTED(BlockShapedRock.class, ItemBlockRock.class, "Fitted Rock", "fitted"),
-	FITTED2(BlockShapedRock.class, ItemBlockRock.class, "Fitted Rock 2", "fitted"),
-	TILE(BlockShapedRock.class, ItemBlockRock.class, "Rock Tile", "tile"),
-	TILE2(BlockShapedRock.class, ItemBlockRock.class, "Rock Tile 2", "tile"),
-	ENGRAVED(BlockShapedRock.class, ItemBlockRock.class, "Engraved Rock", "engraved"),
-	ENGRAVED2(BlockShapedRock.class, ItemBlockRock.class, "Engraved Rock 2", "engraved"),
-	INSCRIBED(BlockShapedRock.class, ItemBlockRock.class, "Inscribed Stone", "inscribed"),
-	INSCRIBED2(BlockShapedRock.class, ItemBlockRock.class, "Inscribed Stone 2", "inscribed"),
-	PLANT(BlockCrystalPlant.class, ItemBlockCrystalPlant.class, "Crystal Bloom"),
-	CONNECTED(BlockConnectedRock.class, ItemBlockRock.class, "Connected Stone"),
-	CONNECTED2(BlockConnectedRock.class, ItemBlockRock.class, "Connected Stone 2"),
-	ACCELERATOR(BlockAccelerator.class, ItemBlockAccelerator.class, "Tile Accelerator"),
-	HIVE(BlockCrystalHive.class, ItemBlockCrystalHive.class, "Crystal Hive"),
-	LINED(BlockShapedRock.class, ItemBlockRock.class, "Lined Stone", "lined"),
-	LINED2(BlockShapedRock.class, ItemBlockRock.class, "Lined Stone 2", "lined"),
-	EMBOSSED(BlockShapedRock.class, ItemBlockRock.class, "Embossed Stone", "embossed"),
-	EMBOSSED2(BlockShapedRock.class, ItemBlockRock.class, "Embossed Stone 2", "embossed"),
-	CENTERED(BlockShapedRock.class, ItemBlockRock.class, "Centered Stone", "centered"),
-	CENTERED2(BlockShapedRock.class, ItemBlockRock.class, "Centered Stone 2", "centered"),
-	RAISED(BlockShapedRock.class, ItemBlockRock.class, "Raised Stone", "raised"),
-	RAISED2(BlockShapedRock.class, ItemBlockRock.class, "Raised Stone 2", "raised"),
-	ETCHED(BlockShapedRock.class, ItemBlockRock.class, "Etched Stone", "etched"),
-	ETCHED2(BlockShapedRock.class, ItemBlockRock.class, "Etched Stone 2", "etched"),
-	CUBED(BlockShapedRock.class, ItemBlockRock.class, "Cubed Stone", "cubed"),
-	CUBED2(BlockShapedRock.class, ItemBlockRock.class, "Cubed Stone 2", "cubed");
+	VENT(BlockVent.class, ItemBlockVent.class, "Vent"),
+	STAIR(BlockGeoStairs.class, ItemBlockAnyGeoVariant.class, "Stairs"),
+	SLAB(BlockGeoSlab.class, ItemBlockAnyGeoVariant.class, "Slab");
 
 	private final Class blockClass;
 	private final String blockName;
@@ -90,7 +45,7 @@ public enum GeoBlocks implements RegistryEnum {
 
 	public static final GeoBlocks[] blockList = values();
 
-	private static final HashMap<Integer, GeoBlocks> IDMap = new HashMap();
+	private static final HashMap<Block, GeoBlocks> IDMap = new HashMap();
 
 	private GeoBlocks(Class <? extends Block> cl, Class<? extends ItemBlock> ib, String n) {
 		this(cl, ib, n, null);
@@ -103,8 +58,8 @@ public enum GeoBlocks implements RegistryEnum {
 		typeName = s;
 	}
 
-	public int getBlockID() {
-		return GeoStrata.config.getBlockID(this.ordinal());
+	public Block getBlockInstance() {
+		return GeoStrata.blocks[this.ordinal()];
 	}
 
 	public GeoBlocks getFromOffset(int offset) {
@@ -122,12 +77,16 @@ public enum GeoBlocks implements RegistryEnum {
 		return null;
 	}
 
-	public static GeoBlocks getFromID(int id) {
+	public static GeoBlocks getFromID(Item id) {
+		return getFromID(Block.getBlockFromItem(id));
+	}
+
+	public static GeoBlocks getFromID(Block id) {
 		GeoBlocks block = IDMap.get(id);
 		if (block == null) {
 			for (int i = 0; i < blockList.length; i++) {
 				GeoBlocks g = blockList[i];
-				int blockID = g.getBlockID();
+				Block blockID = g.getBlockInstance();
 				if (id == blockID) {
 					IDMap.put(id, g);
 					return g;
@@ -141,8 +100,6 @@ public enum GeoBlocks implements RegistryEnum {
 	}
 
 	public Material getBlockMaterial() {
-		if (this.isCrystal())
-			return Material.glass;
 		return Material.rock;
 	}
 
@@ -150,22 +107,18 @@ public enum GeoBlocks implements RegistryEnum {
 		return RockBlock.class.isAssignableFrom(blockClass);
 	}
 
-	public boolean isCrystal() {
-		return CrystalBlock.class.isAssignableFrom(blockClass);
-	}
-
 	@Override
 	public Class[] getConstructorParamTypes() {
 		if (typeName != null)
-			return new Class[]{int.class, Material.class, String.class};
-		return new Class[]{int.class, Material.class};
+			return new Class[]{Material.class, String.class};
+		return new Class[]{Material.class};
 	}
 
 	@Override
 	public Object[] getConstructorParams() {
 		if (typeName != null)
-			return new Object[]{this.getBlockID(), this.getBlockMaterial(), typeName};
-		return new Object[]{this.getBlockID(), this.getBlockMaterial()};
+			return new Object[]{this.getBlockMaterial(), typeName};
+		return new Object[]{this.getBlockMaterial()};
 	}
 
 	@Override
@@ -188,33 +141,23 @@ public enum GeoBlocks implements RegistryEnum {
 	}
 
 	@Override
-	public String getMultiValuedName(int meta) {
+	public String getMultiValuedName(int meta) {/*
 		if (this == COBBLE || this == COBBLE2)
-			return RockTypes.getTypeFromIDandMeta(this.getBlockID(), meta).getName()+" Cobblestone";
+			return RockTypes.getTypeFromID(this.getBlockInstance(), meta).getName()+" Cobblestone";
 		if (this == BRICK || this == BRICK2)
-			return RockTypes.getTypeFromIDandMeta(this.getBlockID(), meta).getName()+" Bricks";
+			return RockTypes.getTypeFromID(this.getBlockInstance(), meta).getName()+" Bricks";
 		if (this.isShapedRock()) {
-			return ((BlockShapedRock)this.getBlockInstance()).getDisplayName()+" "+RockTypes.getTypeFromIDandMeta(this.getBlockID(), meta).getName();
-		}
+			return "";//((BlockShapedRock)this.getBlockInstance()).getDisplayName()+" "+RockTypes.getTypeFromID(this.getBlockInstance(), meta).getName();
+		}*/
 		switch(this) {
-		case SMOOTH:
-		case SMOOTH2:
-			return RockTypes.getTypeFromIDandMeta(this.getBlockID(), meta).getName();
-		case CRYSTAL:
-			return ReikaDyeHelper.dyes[meta].colorName+" "+GeoBlocks.CRYSTAL.getBasicName();
-		case SUPER:
-			return ReikaDyeHelper.dyes[meta].colorName+" "+GeoBlocks.SUPER.getBasicName();
-		case LAMP:
-			return ReikaDyeHelper.dyes[meta].colorName+" "+GeoBlocks.LAMP.getBasicName();
+		//case SMOOTH:
+		//case SMOOTH2:
+		//	return RockTypes.getTypeFromID(this.getBlockInstance(), meta).getName();
 		case DECO:
 			return DecoBlocks.list[meta].getName();
-		case PLANT:
-			return ReikaDyeHelper.dyes[meta].colorName+" Crystal Bloom";
-		case CONNECTED:
-		case CONNECTED2:
-			return "Connected "+RockTypes.getTypeFromIDandMeta(this.getBlockID(), meta).getName();
-		case HIVE:
-			return meta == 0 ? "Crystal Hive" : "Pure Hive";
+			//case CONNECTED:
+			//case CONNECTED2:
+			//	return "Connected "+RockTypes.getTypeFromID(this.getBlockInstance(), meta).getName();
 		default:
 			return "";
 		}
@@ -234,14 +177,10 @@ public enum GeoBlocks implements RegistryEnum {
 
 	@Override
 	public int getNumberMetadatas() {
-		if (this.isCrystal())
-			return ReikaDyeHelper.dyes.length;
-		if (this.isRock())
-			return RockTypes.getTypesForID(this.getBlockID());
+		//if (this.isRock())
+		//	return RockTypes.getTypesForID(this.getBlockInstance());
 		if (this == DECO)
 			return DecoBlocks.list.length;
-		if (this == HIVE)
-			return 2;
 		return 1;
 	}
 
@@ -255,45 +194,11 @@ public enum GeoBlocks implements RegistryEnum {
 		return itemBlock != null;
 	}
 
-	@Override
-	public String getConfigName() {
-		return this.getBasicName();
-	}
-
-	@Override
-	public int getDefaultID() {
-		return 800+this.ordinal();
-	}
-
-	@Override
-	public boolean isBlock() {
-		return true;
-	}
-
-	@Override
-	public boolean isItem() {
-		return false;
-	}
-
-	@Override
-	public String getCategory() {
-		return "Rock Blocks";
-	}
-
 	public boolean isDummiedOut() {
 		return blockClass == null;
 	}
 
-	public Block getBlockInstance() {
-		return GeoStrata.blocks[this.ordinal()];
-	}
-
-	public int getID() {
-		return this.getBlockID();
-	}
-
-	@Override
-	public boolean overwritingItem() {
-		return false;
+	public Item getItem() {
+		return Item.getItemFromBlock(this.getBlockInstance());
 	}
 }

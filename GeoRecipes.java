@@ -9,23 +9,14 @@
  ******************************************************************************/
 package Reika.GeoStrata;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fluids.FluidStack;
-import Reika.DragonAPI.ModList;
-import Reika.DragonAPI.Libraries.Registry.ReikaDyeHelper;
+import Reika.DragonAPI.Libraries.ReikaRecipeHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.GeoStrata.Registry.DecoBlocks;
-import Reika.GeoStrata.Registry.GeoBlocks;
-import Reika.GeoStrata.Registry.GeoItems;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
-import cpw.mods.fml.common.event.FMLInterModComms;
+
+import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class GeoRecipes {
@@ -80,35 +71,17 @@ public class GeoRecipes {
 
 			for (int k = 0; k < RockShapes.shapeList.length; k++) {
 				RockShapes shape = RockShapes.shapeList[k];
+				ItemStack item = type.getItem(shape);
 				if (shape != RockShapes.SMOOTH) {
-					ItemStack item = type.getItem(shape);
-					FurnaceRecipes.smelting().addSmelting(item.itemID, item.getItemDamage(), smooth, 0F);
+					ReikaRecipeHelper.addSmelting(item, smooth, 0F);
 				}
+				ItemStack stair = ReikaItemHelper.getSizedItemStack(type.getStair(shape), 4);
+				ItemStack slab = ReikaItemHelper.getSizedItemStack(type.getSlab(shape), 6);
+				GameRegistry.addRecipe(slab, "BBB", 'B', item);
+				GameRegistry.addRecipe(stair, "  B", " BB", "BBB", 'B', item);
+				GameRegistry.addRecipe(stair, "B  ", "BB ", "BBB", 'B', item);
 			}
-			//GameRegistry.addShapelessRecipe(new ItemStack(Block.cobblestone), cobble);
-		}
-
-		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
-			ItemStack shard = GeoItems.SHARD.getStackOfMetadata(i);
-			ItemStack lamp = new ItemStack(GeoBlocks.LAMP.getBlockID(), 1, i);
-			ItemStack cave = new ItemStack(GeoBlocks.CRYSTAL.getBlockID(), 1, i);
-			ItemStack supercry = new ItemStack(GeoBlocks.SUPER.getBlockID(), 1, i);
-			ItemStack seed = GeoItems.SEED.getStackOfMetadata(i);
-			ItemStack pendant = GeoItems.PENDANT.getStackOfMetadata(i);
-			ItemStack pendant3 = GeoItems.PENDANT3.getStackOfMetadata(i);
-
-			GameRegistry.addRecipe(lamp, " s ", "sss", "SSS", 's', shard, 'S', ReikaItemHelper.stoneSlab);
-			GameRegistry.addRecipe(pendant, "GSG", "QCQ", "EDE", 'E', Item.enderPearl, 'D', Item.diamond, 'G', Block.glowStone, 'Q', Item.netherQuartz, 'C', cave, 'S', Item.silk);
-			GameRegistry.addRecipe(pendant3, "DSD", "GCG", "ETE", 'E', Item.eyeOfEnder, 'D', Item.diamond, 'G', Item.ingotGold, 'T', Item.ghastTear, 'C', supercry, 'S', Item.silk);
-			GameRegistry.addRecipe(seed, "GSG", "SsS", "GSG", 'G', Item.glowstone, 'S', shard, 's', Item.seeds);
-		}
-
-		for (int i = 0; i < ReikaDyeHelper.dyes.length; i++) {
-			ItemStack shard = GeoItems.SHARD.getStackOfMetadata(i);
-			ItemStack lamp = new ItemStack(GeoBlocks.LAMP.getBlockID(), 1, i);
-			ItemStack potion = new ItemStack(GeoBlocks.SUPER.getBlockID(), 1, i);
-			GameRegistry.addRecipe(potion, "RsG", "sss", "SDS", 's', shard, 'S', Block.obsidian, 'D', Block.blockGold, 'R', Block.blockRedstone, 'G', Block.glowStone);
-			GameRegistry.addRecipe(potion, "RlG", "SDS", 'l', lamp, 'S', Block.obsidian, 'D', Block.blockGold, 'R', Block.blockRedstone, 'G', Block.glowStone);
+			//GameRegistry.addShapelessRecipe(new ItemStack(Blocks.cobblestone), cobble);
 		}
 
 		for (int i = 0; i < DecoBlocks.list.length; i++) {
@@ -119,51 +92,5 @@ public class GeoRecipes {
 				block.addSizedCrafting(4*block.recipeMultiplier, "BB", "BB", 'B', block.material);
 		}
 
-		GameRegistry.addRecipe(new ItemStack(GeoBlocks.BREWER.getBlockID(), 1, 0), "NNN", "NBN", "SSS", 'N', Item.netherQuartz, 'S', Block.stone, 'B', Item.brewingStand);
-		GameRegistry.addRecipe(new ItemStack(GeoBlocks.GUARDIAN.getBlockID(), 1, 0), "BBB", "BPB", "BBB", 'B', getShard(ReikaDyeHelper.WHITE), 'P', GeoItems.CLUSTER.getStackOfMetadata(7));
-		GameRegistry.addRecipe(new ItemStack(GeoBlocks.ACCELERATOR.getBlockID(), 1, 0), "DCD", "CSC", "DCD", 'D', Item.diamond, 'S', GeoItems.CLUSTER.getStackOfMetadata(7), 'C', getShard(ReikaDyeHelper.BLUE));
-		GameRegistry.addRecipe(new ItemStack(GeoItems.ENDERCRYSTAL.getShiftedItemID(), 1, 0), "ISI", "SCS", "ISI", 'I', Item.ingotIron, 'S', getShard(ReikaDyeHelper.WHITE), 'C', GeoItems.CLUSTER.getStackOfMetadata(7));
-
-		Item[] upgrade = {Item.ingotIron, Item.ingotGold, Item.diamond, Item.emerald, Item.netherStar};
-		int[] index = {0, 0, 1, 1, 2, 3, 4};
-
-		for (int i = 0; i < TileEntityAccelerator.MAX_TIER; i++) {
-			ItemStack s1 = getShard(ReikaDyeHelper.getColorFromDamage(i%4*4));
-			ItemStack s2 = getShard(ReikaDyeHelper.getColorFromDamage(1+i%4*4));
-			ItemStack s3 = getShard(ReikaDyeHelper.getColorFromDamage(2+i%4*4));
-			ItemStack s4 = getShard(ReikaDyeHelper.getColorFromDamage(3+i%4*4));
-			ItemStack prev = new ItemStack(GeoBlocks.ACCELERATOR.getBlockID(), 1, i);
-			GameRegistry.addRecipe(new ItemStack(GeoBlocks.ACCELERATOR.getBlockID(), 1, i+1), "D1D", "2A3", "D4D", 'D', upgrade[index[i]], 'A', prev, '1', s1, '2', s2, '3', s3, '4', s4);
-		}
-
-		if (ModList.THERMALEXPANSION.isLoaded()) {
-			FluidStack crystal = FluidRegistry.getFluidStack("potion crystal", 8000);
-			int energy = 40000;
-			for (int i = 0; i < 16; i++) {
-				NBTTagCompound toSend = new NBTTagCompound();
-				toSend.setInteger("energy", energy);
-				toSend.setCompoundTag("input", new NBTTagCompound());
-				toSend.setCompoundTag("output", new NBTTagCompound());
-				GeoItems.SHARD.getStackOfMetadata(i).writeToNBT(toSend.getCompoundTag("input"));
-				crystal.writeToNBT(toSend.getCompoundTag("output"));
-				FMLInterModComms.sendMessage(ModList.THERMALEXPANSION.modLabel, "CrucibleRecipe", toSend);
-			}
-		}
-
-		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(0), " R ", "B P", " M ", 'B', getShard(ReikaDyeHelper.BLUE), 'R', getShard(ReikaDyeHelper.RED), 'P', getShard(ReikaDyeHelper.PURPLE), 'M', getShard(ReikaDyeHelper.MAGENTA));
-		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(1), " Y ", "C L", " G ", 'G', getShard(ReikaDyeHelper.GREEN), 'Y', getShard(ReikaDyeHelper.YELLOW), 'C', getShard(ReikaDyeHelper.CYAN), 'L', getShard(ReikaDyeHelper.LIME));
-		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(2), " B ", "P O", " L ", 'B', getShard(ReikaDyeHelper.BROWN), 'P', getShard(ReikaDyeHelper.PINK), 'O', getShard(ReikaDyeHelper.ORANGE), 'L', getShard(ReikaDyeHelper.LIGHTBLUE));
-		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(3), " B ", "G L", " W ", 'B', getShard(ReikaDyeHelper.BLACK), 'G', getShard(ReikaDyeHelper.GRAY), 'L', getShard(ReikaDyeHelper.LIGHTGRAY), 'W', getShard(ReikaDyeHelper.WHITE));
-
-		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(4), " B ", "G G", " B ", 'B', GeoItems.CLUSTER.getStackOfMetadata(2), 'G', GeoItems.CLUSTER.getStackOfMetadata(3));
-		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(5), " B ", "G G", " B ", 'B', GeoItems.CLUSTER.getStackOfMetadata(0), 'G', GeoItems.CLUSTER.getStackOfMetadata(1));
-
-		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(6), " B ", "G G", " B ", 'B', GeoItems.CLUSTER.getStackOfMetadata(4), 'G', GeoItems.CLUSTER.getStackOfMetadata(5));
-
-		GameRegistry.addRecipe(GeoItems.CLUSTER.getStackOfMetadata(7), " B ", "BPB", " B ", 'B', GeoItems.CLUSTER.getStackOfMetadata(6), 'P', Item.netherStar);
-	}
-
-	private static ItemStack getShard(ReikaDyeHelper color) {
-		return GeoItems.SHARD.getStackOfMetadata(color.ordinal());
 	}
 }

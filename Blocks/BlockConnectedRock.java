@@ -9,26 +9,28 @@
  ******************************************************************************/
 package Reika.GeoStrata.Blocks;
 
-import java.util.ArrayList;
-import java.util.Random;
-
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.util.Icon;
-import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.ForgeDirection;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Registry.RockTypes;
+
+import java.util.ArrayList;
+import java.util.Random;
+
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.item.Item;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.util.ForgeDirection;
 
 public class BlockConnectedRock extends RockBlock {
 
 	private final ArrayList<Integer> allDirs = new ArrayList();
 
-	private Icon[][] edges = new Icon[10][16];
+	private IIcon[][] edges = new IIcon[10][RockTypes.rockList.length];
 
-	public BlockConnectedRock(int ID, Material mat) {
-		super(ID, mat);
+	public BlockConnectedRock() {
+		super();
 
 		for (int i = 1; i < 10; i++) {
 			allDirs.add(i);
@@ -36,8 +38,8 @@ public class BlockConnectedRock extends RockBlock {
 	}
 
 	@Override
-	public final int idDropped(int id, Random r, int fortune) {
-		return blockID;
+	public final Item getItemDropped(int id, Random r, int fortune) {
+		return Item.getItemFromBlock(this);
 	}
 
 	@Override
@@ -56,14 +58,15 @@ public class BlockConnectedRock extends RockBlock {
 	}
 
 	@Override
-	public void registerIcons(IconRegister ico) {
-		for (int i = 0; i < RockTypes.getTypesForID(blockID); i++) {
-			String name = RockTypes.getTypeFromIDandMeta(blockID, i).getName();
-			icons[i] = ico.registerIcon("GeoStrata:"+name.toLowerCase());
-			GeoStrata.logger.debug("Adding "+name+" rock icon "+icons[i].getIconName());
+	public void registerBlockIcons(IIconRegister ico) {
+		for (int i = 0; i < RockTypes.rockList.length; i++) {
+			RockTypes r = RockTypes.rockList[i];
+			String name = r.getName();
+			icons[r.ordinal()] = ico.registerIcon("GeoStrata:"+name.toLowerCase());
+			GeoStrata.logger.debug("Adding "+name+" rock icon "+icons[r.ordinal()].getIconName());
 
 			for (int k = 0; k < 10; k++) {
-				edges[k][i] = ico.registerIcon("GeoStrata:connected/"+k);
+				edges[k][r.ordinal()] = ico.registerIcon("GeoStrata:connected/"+k);
 			}
 		}
 	}
@@ -71,9 +74,9 @@ public class BlockConnectedRock extends RockBlock {
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess iba, int x, int y, int z, int side) {
 		ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[side];
-		int id = iba.getBlockId(x+dir.offsetX, y+dir.offsetY, z+dir.offsetZ);
+		Block id = iba.getBlock(x+dir.offsetX, y+dir.offsetY, z+dir.offsetZ);
 		int meta = iba.getBlockMetadata(x+dir.offsetX, y+dir.offsetY, z+dir.offsetZ);
-		return id != blockID || meta != iba.getBlockMetadata(x, y, z);
+		return id != this || meta != iba.getBlockMetadata(x, y, z);
 	}
 
 	/** Returns the unconnected sides. Each integer represents one of 8 adjacent corners to a face, with the same
@@ -148,8 +151,8 @@ public class BlockConnectedRock extends RockBlock {
 		return li;
 	}
 
-	public Icon getIconForEdge(int edge, RockTypes rock) {
-		return edges[edge][rock.getBlockMetadata()];
+	public IIcon getIconForEdge(int edge, RockTypes rock) {
+		return edges[edge][rock.ordinal()];
 	}
 
 }

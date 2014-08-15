@@ -9,6 +9,12 @@
  ******************************************************************************/
 package Reika.GeoStrata.Registry;
 
+import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
+import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
+import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
+import Reika.DragonAPI.ModInteract.RedstoneArsenalHandler;
+import Reika.DragonAPI.ModInteract.TinkerToolHandler;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,56 +22,51 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.item.EnumToolMaterial;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
-import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
-import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
-import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
-import Reika.DragonAPI.ModInteract.RedstoneArsenalHandler;
-import Reika.DragonAPI.ModInteract.TinkerToolHandler;
 
 public enum RockTypes {
 	//Generic makeup: Igneous 0-24; Metamorphic 16-40; Sedimentary 40+;
 
-	//NAME------BST-HARD----LO--HI------RARE----HARVESTABILITY
-	GRANITE(	75, 10, 	16, 48, 	1, 		EnumToolMaterial.IRON,	0xC4825E), //Near lava?
-	BASALT(		40, 5, 		48, 128, 	1, 		EnumToolMaterial.STONE,	0x252525), //Near lava
-	MARBLE(		55, 2.5F, 	16, 32, 	1, 		EnumToolMaterial.STONE,	0xB4B4BC), //??
-	LIMESTONE(	18, 1, 		48, 128, 	1, 		EnumToolMaterial.WOOD,	0xD0C4B3), //Near water bodies
-	SHALE(		6, 	1, 		48, 64, 	1, 		EnumToolMaterial.WOOD,	0x676970), //Near water
-	SANDSTONE(	12, 2, 		48, 128, 	1, 		EnumToolMaterial.WOOD,	0xD0AE90), //Near sand
-	PUMICE(		25, 5, 		0, 	16, 	0.6F, 	EnumToolMaterial.WOOD,	0xD6D4CB), //Near water & lava
-	SLATE(		40, 5, 		32, 48, 	1, 		EnumToolMaterial.STONE,	0x484B53), //Can shale gen
-	GNEISS(		40, 7.5F, 	16, 32, 	0.8F, 	EnumToolMaterial.IRON,	0x7A7B79), //Can granite gen
-	PERIDOTITE(	40, 5, 		0, 	24, 	0.6F, 	EnumToolMaterial.STONE,	0x485A4E), //Near lava?
-	QUARTZ(		50, 4, 		0, 	64, 	0.5F, 	EnumToolMaterial.STONE,	0xCCD5DC), //??
-	GRANULITE(	40, 5, 		16, 32, 	0.7F, 	EnumToolMaterial.STONE,	0xC1BF9E), //?
-	HORNFEL(	75, 10, 	0, 	64, 	0.8F, 	EnumToolMaterial.IRON,	0x7B7E87), //snow biomes?
-	MIGMATITE(	40, 5, 		0, 	16, 	0.6F, 	EnumToolMaterial.STONE,	0xA09F94), //near lava?
-	SCHIST(		40, 7.5F,	16, 48,		0.8F,	EnumToolMaterial.STONE,	0x3C3C44),
-	ONYX(		50, 6F,		0,	24,		1F,		EnumToolMaterial.IRON,	0x111111), //Near lava
-	OPAL(		30, 3F,		32, 60,		0.125F,	EnumToolMaterial.STONE,	0xffddff);
+	//NAME------BST-HARD----LO--HI------RARE----HARVESTABILITY------GPR COLOR
+	GRANITE(	75, 10, 	16, 48, 	1, 		ToolMaterial.IRON,	0xC4825E), //Near lava?
+	BASALT(		40, 5, 		48, 128, 	1, 		ToolMaterial.STONE,	0x252525), //Near lava
+	MARBLE(		55, 2.5F, 	16, 32, 	1, 		ToolMaterial.STONE,	0xB4B4BC), //??
+	LIMESTONE(	18, 1, 		48, 128, 	1, 		ToolMaterial.WOOD,	0xD0C4B3), //Near water bodies
+	SHALE(		6, 	1, 		48, 64, 	1, 		ToolMaterial.WOOD,	0x676970), //Near water
+	SANDSTONE(	12, 2, 		48, 128, 	1, 		ToolMaterial.WOOD,	0xD0AE90), //Near sand
+	PUMICE(		25, 5, 		0, 	16, 	0.6F, 	ToolMaterial.WOOD,	0xD6D4CB), //Near water & lava
+	SLATE(		40, 5, 		32, 48, 	1, 		ToolMaterial.STONE,	0x484B53), //Can shale gen
+	GNEISS(		40, 7.5F, 	16, 32, 	0.8F, 	ToolMaterial.IRON,	0x7A7B79), //Can granite gen
+	PERIDOTITE(	40, 5, 		0, 	24, 	0.6F, 	ToolMaterial.STONE,	0x485A4E), //Near lava?
+	QUARTZ(		50, 4, 		0, 	64, 	0.5F, 	ToolMaterial.STONE,	0xCCD5DC), //??
+	GRANULITE(	40, 5, 		16, 32, 	0.7F, 	ToolMaterial.STONE,	0xC1BF9E), //?
+	HORNFEL(	75, 10, 	0, 	64, 	0.8F, 	ToolMaterial.IRON,	0x7B7E87), //snow biomes?
+	MIGMATITE(	40, 5, 		0, 	16, 	0.6F, 	ToolMaterial.STONE,	0xA09F94), //near lava?
+	SCHIST(		40, 7.5F,	16, 48,		0.8F,	ToolMaterial.STONE,	0x3C3C44),
+	ONYX(		50, 6F,		0,	24,		1F,		ToolMaterial.IRON,	0x111111), //Near lava
+	OPAL(		30, 3F,		32, 60,		0.125F,	ToolMaterial.STONE,	0xffddff);
 
 	public final float blockHardness;
 	public final float blastResistance;
-	private EnumToolMaterial harvestTool;
+	private ToolMaterial harvestTool;
 	public final int minY;
 	public final int maxY;
 	public final float rarity;
 	public final int rockColor;
 
-	private static HashMap<RockTypes, ArrayList<GeoBlocks>> rockMappings = new HashMap();
-	private static HashMap<GeoBlocks, ArrayList<RockTypes>> IDMappings = new HashMap();
+	private static final HashMap<Block, RockTypes> mappings = new HashMap();
 
 	public static final RockTypes[] rockList = RockTypes.values();
 
-	private RockTypes(float blast, float hard, int ylo, int yhi, float rare, EnumToolMaterial tool, int color) {
+	private RockTypes(float blast, float hard, int ylo, int yhi, float rare, ToolMaterial tool, int color) {
 		blastResistance = blast;
 		blockHardness = hard;
 		harvestTool = tool;
@@ -80,54 +81,43 @@ public enum RockTypes {
 	}
 
 	public static RockTypes getTypeAtCoords(IBlockAccess world, int x, int y, int z) {
-		int id = world.getBlockId(x, y, z);
-		int meta = world.getBlockMetadata(x, y, z);
-		return getTypeFromIDandMeta(id, meta);
+		return getTypeFromID(world.getBlock(x, y, z));
 	}
 
-	public static RockTypes getTypeFromIDandMeta(int ID, int meta) {
-		GeoBlocks g = GeoBlocks.getFromID(ID);
-		if (g == null)
-			return null;
-		ArrayList<RockTypes> li = IDMappings.get(g);
-		if (li == null)
-			return null;
-		if (meta >= li.size())
-			return null;
-		return li.get(meta);
+	public static RockTypes getTypeFromID(Block id) {
+		return mappings.get(id);
 	}
 
-	public EnumToolMaterial getHarvestMin() {
+	public ToolMaterial getHarvestMin() {
 		return harvestTool;
 	}
 
-	public int getBlockOffset() {
-		return this.ordinal()/16;
-	}
-
-	public int getBlockMetadata() {
-		return this.ordinal()%16;
-	}
-
-	public static int getTypesForID(int id) {
-		GeoBlocks g = GeoBlocks.getFromID(id);
-		return g != null && IDMappings.get(g) != null ? IDMappings.get(g).size() : 0;
-	}
-
-	public GeoBlocks getBlock(RockShapes shape) {
-		return rockMappings.get(this).get(shape.ordinal());
-	}
-
-	public int getID(RockShapes shape) {
-		return this.getBlock(shape).getBlockID();
+	public Block getID(RockShapes shape) {
+		return shape.getBlock(this);
 	}
 
 	public ItemStack getItem(RockShapes shape) {
-		return new ItemStack(this.getID(shape), 1, this.ordinal()%16);
+		return new ItemStack(this.getID(shape), 1, shape.metadata);
 	}
 
-	public Icon getIcon() {
-		return this.getBlock(RockShapes.SMOOTH).getBlockInstance().getIcon(0, this.getBlockMetadata());
+	public ItemStack getStair(RockShapes shape) {
+		int meta = this.ordinal()*RockShapes.shapeList.length;
+		meta += shape.metadata+1;
+		return new ItemStack(GeoBlocks.STAIR.getBlockInstance(), 1, meta);
+	}
+
+	public ItemStack getSlab(RockShapes shape) {
+		int meta = this.ordinal()*RockShapes.shapeList.length;
+		meta += shape.metadata+1;
+		return new ItemStack(GeoBlocks.SLAB.getBlockInstance(), 1, meta);
+	}
+
+	public IIcon getIcon() {
+		return this.getID(RockShapes.SMOOTH).getIcon(0, 0);
+	}
+
+	public IIcon getIcon(RockShapes s) {
+		return this.getID(s).getIcon(0, s.metadata);
 	}
 
 	public boolean isHarvestable(ItemStack held) {
@@ -148,21 +138,21 @@ public enum RockTypes {
 				return false;
 			}
 		}
-		if (held.itemID == RedstoneArsenalHandler.getInstance().pickID) {
+		if (held.getItem() == RedstoneArsenalHandler.getInstance().pickID) {
 			return RedstoneArsenalHandler.getInstance().pickLevel >= harvestTool.getHarvestLevel();
 		}
 		Item i = held.getItem();
 		switch (harvestTool) {
 		case EMERALD: //Diamond
-			return held.canHarvestBlock(Block.obsidian);
+			return held.func_150998_b(Blocks.obsidian);
 		case GOLD:
-			return held.canHarvestBlock(Block.stone);
+			return held.func_150998_b(Blocks.stone);
 		case IRON:
-			return held.canHarvestBlock(Block.oreGold);
+			return held.func_150998_b(Blocks.gold_ore);
 		case STONE:
-			return held.canHarvestBlock(Block.oreIron);
+			return held.func_150998_b(Blocks.iron_ore);
 		case WOOD:
-			return held.canHarvestBlock(Block.stone);
+			return held.func_150998_b(Blocks.stone);
 		}
 		return false;
 	}
@@ -199,7 +189,13 @@ public enum RockTypes {
 			return true;
 		case SHALE:
 		case SLATE:
-			return !BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), Type.DESERT);
+			if (BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), Type.SANDY))
+				return false;
+			if (BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), Type.DRY))
+				return false;
+			if (BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), Type.SAVANNA))
+				return false;
+			return true;
 		case ONYX:
 			return ReikaWorldHelper.checkForAdjMaterial(world, x, y, z, Material.lava) != null;
 		case SCHIST:
@@ -243,27 +239,14 @@ public enum RockTypes {
 		return types;
 	}
 
-	static {
+	public static void loadMappings() {
 		for (int i = 0; i < rockList.length; i++) {
 			RockTypes rock = rockList[i];
-			int offset = rock.getBlockOffset();
-			ArrayList<GeoBlocks> li = new ArrayList();
-			GeoBlocks smooth = RockShapes.SMOOTH.getBlockType(rock);
-			ArrayList<RockTypes> li2 = IDMappings.get(smooth);
-			boolean fill = li2 == null;
-			if (fill) {
-				li2 = new ArrayList();
-			}
 			for (int k = 0; k < RockShapes.shapeList.length; k++) {
-				RockShapes shape = RockShapes.shapeList[k];
-				GeoBlocks b = shape.getBlockType(rock);
-				li.add(b);
-				if (fill) {
-					IDMappings.put(b, li2);
-				}
+				RockShapes s = RockShapes.shapeList[k];
+				Block b = s.getBlock(rock);
+				mappings.put(b, rock);
 			}
-			rockMappings.put(rock, li);
-			li2.add(rock);
 		}
 	}
 

@@ -9,24 +9,18 @@
  ******************************************************************************/
 package Reika.GeoStrata.Registry;
 
-import net.minecraftforge.common.Configuration;
 import Reika.DragonAPI.Exception.RegistrationException;
 import Reika.DragonAPI.Interfaces.ConfigList;
 import Reika.GeoStrata.GeoStrata;
 
+import net.minecraftforge.common.config.Configuration;
+
 public enum GeoOptions implements ConfigList {
 
-	RETROGEN("Retrogen Crystals", false),
-	NOISE("Lamp Noises", true),
-	EFFECTS("Lamp Effects", false),
-	NETHER("Nether Crystals", true),
-	PURPLE("Instant-XP on Purple Crystals Break", false),
 	TFGEN("Generate Rock in the Twilight Forest", true),
 	DIMGEN("Generate Rock in Other Dimensions", true),
 	BOXRECIPES("Alternate Brick Recipes", false),
-	DENSITY("Rock Density", 1F),
-	NOPARTICLES("Disable Pendant Particles", true),
-	CRYSTALFARM("Crystal Plants May Drop Shards", true);
+	DENSITY("Rock Density", 1F);
 
 	private String label;
 	private boolean defaultState;

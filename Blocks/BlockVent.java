@@ -9,26 +9,29 @@
  ******************************************************************************/
 package Reika.GeoStrata.Blocks;
 
+import Reika.GeoStrata.GeoStrata;
+
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.world.World;
-import Reika.GeoStrata.GeoStrata;
 
 public class BlockVent extends Block {
 
-	public BlockVent(int par1, Material par2Material) {
-		super(par1, par2Material);
+	public BlockVent(Material par2Material) {
+		super(par2Material);
 		this.setCreativeTab(GeoStrata.tabGeo);
 		this.setTickRandomly(true);
-		this.setResistance(Block.stone.blockResistance);
-		this.setHardness(Block.stone.blockHardness);
+		//this.setResistance(Blocks.stone.blockResistance);
+		//this.setHardness(Blocks.stone.blockHardness);
 	}
 
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand) {
-		world.scheduleBlockUpdate(x, y, z, blockID, this.tickRate(world));
+		world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world));
 	}
 
 	@Override
@@ -37,8 +40,14 @@ public class BlockVent extends Block {
 	}
 
 	@Override
-	public int idDropped(int id, Random r, int fortune) {
-		return 0;
+	public Item getItemDropped(int id, Random r, int fortune) {
+		return Blocks.stone.getItemDropped(id, r, fortune);
 	}
+
+	@Override
+	public boolean canSilkHarvest() {
+		return false;
+	}
+
 
 }

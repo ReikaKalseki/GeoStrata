@@ -9,32 +9,39 @@
  ******************************************************************************/
 package Reika.GeoStrata.Items;
 
+import Reika.GeoStrata.Registry.RockShapes;
+import Reika.GeoStrata.Registry.RockTypes;
+
 import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import Reika.GeoStrata.Registry.GeoBlocks;
-import Reika.GeoStrata.Registry.RockTypes;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class ItemBlockRock extends ItemBlock {
 
-	public ItemBlockRock(int ID) {
-		super(ID);
+	public ItemBlockRock(Block b) {
+		super(b);
 		hasSubtypes = true;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public final void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List) //Adds the metadata blocks to the creative inventory
+	public final void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List li) //Adds the metadata blocks to the creative inventory
 	{
-		for (int i = 0; i < RockTypes.getTypesForID(par1); i++) {
-			ItemStack item = new ItemStack(par1, 1, i);
-			par3List.add(item);
+		if (li.size() < RockTypes.rockList.length*RockShapes.shapeList.length) {
+			for (int i = 0; i < RockTypes.rockList.length; i++) {
+				for (int k = 0; k < RockShapes.shapeList.length; k++) {
+					ItemStack item = RockTypes.rockList[i].getItem(RockShapes.shapeList[k]);
+					li.add(item);
+				}
+			}
 		}
 	}
 
@@ -45,9 +52,10 @@ public class ItemBlockRock extends ItemBlock {
 	}
 
 	@Override
-	public final String getItemDisplayName(ItemStack is) {
-		GeoBlocks b = GeoBlocks.getFromID(is.itemID);
-		return b.getMultiValuedName(is.getItemDamage());
+	public final String getItemStackDisplayName(ItemStack is) {
+		RockTypes r = RockTypes.getTypeFromID(field_150939_a);
+		RockShapes s = RockShapes.getShape(field_150939_a, is.getItemDamage());
+		return s.getName()+" "+r.getName();
 	}
 
 	@Override
@@ -57,9 +65,9 @@ public class ItemBlockRock extends ItemBlock {
 
 	@Override
 	public void addInformation(ItemStack is, EntityPlayer ep, List li, boolean par4) {
-		RockTypes rock = RockTypes.getTypeFromIDandMeta(is.itemID, is.getItemDamage());
+		RockTypes rock = RockTypes.getTypeFromID(field_150939_a);
 		float blast = rock.blastResistance;
-		float more = blast/Block.stone.blockResistance;
+		float more = blast/Blocks.stone.blockResistance;
 		li.add(String.format("Blast Resistance: %.1f (%.1fx stone)", blast, more));
 	}
 

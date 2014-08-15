@@ -9,20 +9,6 @@
  ******************************************************************************/
 package Reika.GeoStrata.Base;
 
-import java.awt.Color;
-import java.util.Random;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.Libraries.ReikaEnchantmentHelper;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
@@ -32,15 +18,32 @@ import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.RockTypes;
 import Reika.RotaryCraft.API.ItemFetcher;
 import Reika.RotaryCraft.API.Laserable;
+
+import java.awt.Color;
+import java.util.Random;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class RockBlock extends Block implements Laserable {
 
-	protected Icon[] icons = new Icon[16];
+	protected IIcon[] icons = new IIcon[RockTypes.rockList.length];
 
-	public RockBlock(int ID, Material mat) {
-		super(ID, mat);
+	public RockBlock() {
+		super(Material.rock);
 		this.setCreativeTab(GeoStrata.tabGeo);
 		blockHardness = 1F;
 	}
@@ -63,7 +66,7 @@ public abstract class RockBlock extends Block implements Laserable {
 		if (TinkerToolHandler.getInstance().isPick(is) || TinkerToolHandler.getInstance().isHammer(is)) {
 			return 0.05F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness*6*eff;
 		}
-		return 0.05F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness*is.getItem().getStrVsBlock(is, this)*eff*buff;
+		return 0.05F/RockTypes.getTypeAtCoords(world, x, y, z).blockHardness*is.getItem().getDigSpeed(is, this, meta)*eff*buff;
 	}
 
 	@Override
@@ -80,20 +83,20 @@ public abstract class RockBlock extends Block implements Laserable {
 	public final boolean canHarvestBlock(EntityPlayer player, int meta) {
 		if (player.capabilities.isCreativeMode)
 			return false;
-		return RockTypes.getTypeFromIDandMeta(blockID, meta).isHarvestable(player.getCurrentEquippedItem());
+		return RockTypes.getTypeFromID(this).isHarvestable(player.getCurrentEquippedItem());
 	}
 
 	@Override
-	public final Icon getIcon(int s, int meta) {
-		return icons[meta];
+	public IIcon getIcon(int s, int meta) {
+		return icons[RockTypes.getTypeFromID(this).ordinal()];
 	}
 
 	public final int getBaseRockTypeOrdinal() {
-		return RockTypes.getTypeFromIDandMeta(blockID, 0).ordinal();
+		return RockTypes.getTypeFromID(this).ordinal();
 	}
 
 	@Override
-	public abstract int idDropped(int id, Random r, int fortune);
+	public abstract Item getItemDropped(int id, Random r, int fortune);
 
 	@Override
 	public abstract int damageDropped(int meta);
@@ -119,7 +122,7 @@ public abstract class RockBlock extends Block implements Laserable {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public final int getRenderColor(int dmg) {
-		RockTypes rock = RockTypes.getTypeFromIDandMeta(blockID, dmg);
+		RockTypes rock = RockTypes.getTypeFromID(this);
 		EntityPlayer ep = Minecraft.getMinecraft().thePlayer;
 		int x = MathHelper.floor_double(ep.posX);
 		int y = MathHelper.floor_double(ep.posY);
@@ -151,7 +154,7 @@ public abstract class RockBlock extends Block implements Laserable {
 			chance = 80;
 
 		if (ReikaRandomHelper.doWithChance(chance)) {
-			world.setBlock(x, y, z, Block.lavaMoving.blockID);
+			world.setBlock(x, y, z, Blocks.flowing_lava);
 		}
 	}
 

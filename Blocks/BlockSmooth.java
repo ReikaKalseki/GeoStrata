@@ -9,26 +9,28 @@
  ******************************************************************************/
 package Reika.GeoStrata.Blocks;
 
-import java.util.Random;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.world.World;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 
+import java.util.Random;
+
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.world.World;
+
 public class BlockSmooth extends RockBlock {
 
-	public BlockSmooth(int ID, Material mat) {
-		super(ID, mat);
+	public BlockSmooth() {
+		super();
 	}
 
 	@Override
-	public final int idDropped(int id, Random r, int fortune) {
-		return RockTypes.getTypeFromIDandMeta(blockID, 0).getID(RockShapes.COBBLE);
+	public final Item getItemDropped(int id, Random r, int fortune) {
+		return Item.getItemFromBlock(RockTypes.getTypeFromID(this).getID(RockShapes.COBBLE));
 	}
 
 	@Override
@@ -42,16 +44,17 @@ public class BlockSmooth extends RockBlock {
 	}
 
 	@Override
-	public void registerIcons(IconRegister ico) {
-		for (int i = 0; i < RockTypes.getTypesForID(blockID); i++) {
-			icons[i] = ico.registerIcon("GeoStrata:"+RockTypes.getTypeFromIDandMeta(blockID, i).getName().toLowerCase());
-			GeoStrata.logger.debug("Adding "+RockTypes.getTypeFromIDandMeta(blockID, i).getName()+" rock icon "+icons[i].getIconName());
+	public void registerBlockIcons(IIconRegister ico) {
+		for (int i = 0; i < RockTypes.rockList.length; i++) {
+			RockTypes r = RockTypes.rockList[i];
+			icons[i] = ico.registerIcon("GeoStrata:"+r.getName().toLowerCase());
+			GeoStrata.logger.debug("Adding "+r.getName()+" rock icon "+icons[i].getIconName());
 		}
 	}
 
 	@Override
-	public boolean isGenMineableReplaceable(World world, int x, int y, int z, int target)
+	public boolean isReplaceableOreGen(World world, int x, int y, int z, Block target)
 	{
-		return target == blockID || target == Block.stone.blockID;
+		return target == this || target == Blocks.stone;
 	}
 }

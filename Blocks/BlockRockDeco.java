@@ -9,29 +9,30 @@
  ******************************************************************************/
 package Reika.GeoStrata.Blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IconRegister;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Icon;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.DecoBlocks;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+
 public class BlockRockDeco extends Block {
 
-	private Icon[] icons = new Icon[DecoBlocks.list.length];
+	private IIcon[] icons = new IIcon[DecoBlocks.list.length];
 
-	public BlockRockDeco(int par1, Material par2Material) {
-		super(par1, par2Material);
+	public BlockRockDeco(Material par2Material) {
+		super(par2Material);
 		this.setCreativeTab(GeoStrata.tabGeo);
 	}
 
 	@Override
-	public void registerIcons(IconRegister ico) {
+	public void registerBlockIcons(IIconRegister ico) {
 		for (int i = 0; i < DecoBlocks.list.length; i++) {
 			icons[i] = ico.registerIcon("GeoStrata:"+DecoBlocks.list[i].getTex());
 			GeoStrata.logger.debug("Adding "+DecoBlocks.list[i].getName()+" decorative block icon "+icons[i].getIconName());
@@ -39,7 +40,7 @@ public class BlockRockDeco extends Block {
 	}
 
 	@Override
-	public Icon getIcon(int s, int m) {
+	public IIcon getIcon(int s, int m) {
 		return icons[m];
 	}
 
@@ -56,7 +57,7 @@ public class BlockRockDeco extends Block {
 			return 0.1F/DecoBlocks.getTypeAtCoords(world, x, y, z).getHardness();
 		if (is == null)
 			return 0.4F/DecoBlocks.getTypeAtCoords(world, x, y, z).getHardness();
-		return 0.1F/DecoBlocks.getTypeAtCoords(world, x, y, z).getHardness()*is.getItem().getStrVsBlock(is, this);
+		return 0.1F/DecoBlocks.getTypeAtCoords(world, x, y, z).getHardness()*is.getItem().func_150893_a(is, this);
 	}
 
 	@Override
