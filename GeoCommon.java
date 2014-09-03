@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 public class GeoCommon {
 
 	public static int connectedRender;
+	public static int ventRender;
 	//public static int shapedRender;
 
 	/**

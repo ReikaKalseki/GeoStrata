@@ -9,6 +9,12 @@
  ******************************************************************************/
 package Reika.GeoStrata.Registry;
 
+import java.util.HashMap;
+
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import Reika.DragonAPI.Interfaces.BlockEnum;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
@@ -23,13 +29,6 @@ import Reika.GeoStrata.Blocks.BlockVent;
 import Reika.GeoStrata.Items.ItemBlockAnyGeoVariant;
 import Reika.GeoStrata.Items.ItemBlockRockDeco;
 import Reika.GeoStrata.Items.ItemBlockVent;
-
-import java.util.HashMap;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 
 public enum GeoBlocks implements BlockEnum {
 

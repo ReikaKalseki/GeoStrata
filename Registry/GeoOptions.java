@@ -9,11 +9,10 @@
  ******************************************************************************/
 package Reika.GeoStrata.Registry;
 
+import net.minecraftforge.common.config.Configuration;
 import Reika.DragonAPI.Exception.RegistrationException;
 import Reika.DragonAPI.Interfaces.ConfigList;
 import Reika.GeoStrata.GeoStrata;
-
-import net.minecraftforge.common.config.Configuration;
 
 public enum GeoOptions implements ConfigList {
 

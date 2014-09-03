@@ -9,6 +9,14 @@
  ******************************************************************************/
 package Reika.GeoStrata;
 
+import java.net.URL;
+import java.util.ArrayList;
+
+import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 import Reika.DragonAPI.DragonAPICore;
 import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.Auxiliary.CommandableUpdateChecker;
@@ -20,25 +28,16 @@ import Reika.DragonAPI.Instantiable.IO.ModLogger;
 import Reika.DragonAPI.Libraries.ReikaRecipeHelper;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
 import Reika.DragonAPI.ModInteract.ExtraUtilsHandler;
-import Reika.DragonAPI.ModInteract.ReikaThaumHelper;
 import Reika.DragonAPI.ModInteract.ThermalRecipeHelper;
+import Reika.GeoStrata.Blocks.BlockVent.TileEntityVent;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 import Reika.GeoStrata.World.RockGenerator;
+import Reika.GeoStrata.World.VentGenerator;
 import Reika.RotaryCraft.API.BlockColorInterface;
 import Reika.RotaryCraft.API.GrinderAPI;
-
-import java.net.URL;
-import java.util.ArrayList;
-
-import net.minecraft.block.Block;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.OreDictionary;
-import thaumcraft.api.aspects.Aspect;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -69,6 +68,7 @@ public class GeoStrata extends DragonAPIMod {
 	public static ModLogger logger;
 
 	public static Block[] blocks = new Block[GeoBlocks.blockList.length];
+	public static final ArrayList<Block> rockBlocks = new ArrayList();
 
 	@SidedProxy(clientSide="Reika.GeoStrata.GeoClient", serverSide="Reika.GeoStrata.GeoCommon")
 	public static GeoCommon proxy;
@@ -90,6 +90,7 @@ public class GeoStrata extends DragonAPIMod {
 		this.loadClasses();
 		this.loadDictionary();
 		GameRegistry.registerWorldGenerator(new RockGenerator(), Integer.MIN_VALUE);
+		GameRegistry.registerWorldGenerator(new VentGenerator(), 0);
 
 		GeoRecipes.addRecipes();
 		proxy.registerRenderers();
@@ -120,8 +121,7 @@ public class GeoStrata extends DragonAPIMod {
 			for (int k = 0; k < RockShapes.shapeList.length; k++) {
 				ItemStack is = RockTypes.rockList[i].getItem(RockShapes.shapeList[k]);
 				FMLInterModComms.sendMessage("ForgeMicroblock", "microMaterial", is);
-				FMLInterModComms.sendMessage(ModList.BCTRANSPORT.modLabel, "add-facade", is.getItem()+"@"+is.getItemDamage());
-
+				FMLInterModComms.sendMessage(ModList.BCTRANSPORT.modLabel, "add-facade", is);
 			}
 		}
 	}
@@ -148,7 +148,7 @@ public class GeoStrata extends DragonAPIMod {
 			for (int i = 0; i < RockTypes.rockList.length; i++) {
 				RockTypes rock = RockTypes.rockList[i];
 				ItemStack rockblock = rock.getItem(RockShapes.SMOOTH);
-				ReikaThaumHelper.addAspects(rockblock, Aspect.STONE, (int)(rock.blockHardness/5));
+				//ReikaThaumHelper.addAspects(rockblock, Aspect.STONE, (int)(rock.blockHardness/5));
 			}
 		}
 
@@ -183,9 +183,11 @@ public class GeoStrata extends DragonAPIMod {
 				blocks.add(b);
 			}
 		}
+		rockBlocks.addAll(blocks);
 		RockShapes.initalize();
 		RockTypes.loadMappings();
 		GameRegistry.registerTileEntity(TileEntityGeoBlocks.class, "geostratatile");
+		GameRegistry.registerTileEntity(TileEntityVent.class, "geostratavent");
 	}
 
 	public static void loadDictionary() {

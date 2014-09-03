@@ -9,11 +9,6 @@
  ******************************************************************************/
 package Reika.GeoStrata.Rendering;
 
-import Reika.DragonAPI.Base.BaseBlockRenderer;
-import Reika.DragonAPI.Libraries.Java.ReikaGLHelper.BlendMode;
-import Reika.GeoStrata.Blocks.BlockShapedRock;
-import Reika.GeoStrata.Registry.RockTypes;
-
 import java.awt.Color;
 
 import net.minecraft.block.Block;
@@ -25,6 +20,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
+
+import Reika.DragonAPI.Base.BaseBlockRenderer;
+import Reika.DragonAPI.Libraries.Java.ReikaGLHelper.BlendMode;
+import Reika.GeoStrata.Blocks.BlockShapedRock;
+import Reika.GeoStrata.Registry.RockTypes;
 
 public class ShapedStoneRenderer extends BaseBlockRenderer {
 

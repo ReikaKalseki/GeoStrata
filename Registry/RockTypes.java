@@ -9,12 +9,6 @@
  ******************************************************************************/
 package Reika.GeoStrata.Registry;
 
-import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
-import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
-import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
-import Reika.DragonAPI.ModInteract.RedstoneArsenalHandler;
-import Reika.DragonAPI.ModInteract.TinkerToolHandler;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +25,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
+import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
+import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
+import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
+import Reika.DragonAPI.ModInteract.RedstoneArsenalHandler;
+import Reika.DragonAPI.ModInteract.TinkerToolHandler;
 
 public enum RockTypes {
 	//Generic makeup: Igneous 0-24; Metamorphic 16-40; Sedimentary 40+;
@@ -56,7 +55,7 @@ public enum RockTypes {
 
 	public final float blockHardness;
 	public final float blastResistance;
-	private ToolMaterial harvestTool;
+	public final ToolMaterial harvestTool;
 	public final int minY;
 	public final int maxY;
 	public final float rarity;
@@ -68,7 +67,7 @@ public enum RockTypes {
 
 	private RockTypes(float blast, float hard, int ylo, int yhi, float rare, ToolMaterial tool, int color) {
 		blastResistance = blast;
-		blockHardness = hard;
+		blockHardness = hard*0.675F;
 		harvestTool = tool;
 		minY = ylo;
 		maxY = yhi;

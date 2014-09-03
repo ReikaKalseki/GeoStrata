@@ -9,10 +9,6 @@
  ******************************************************************************/
 package Reika.GeoStrata.Blocks;
 
-import Reika.GeoStrata.GeoStrata;
-import Reika.GeoStrata.Base.RockBlock;
-import Reika.GeoStrata.Registry.RockTypes;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -22,6 +18,9 @@ import net.minecraft.item.Item;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
+import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.Base.RockBlock;
+import Reika.GeoStrata.Registry.RockTypes;
 
 public class BlockConnectedRock extends RockBlock {
 

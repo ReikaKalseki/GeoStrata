@@ -9,16 +9,15 @@
  ******************************************************************************/
 package Reika.GeoStrata.Registry;
 
-import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
-import Reika.DragonAPI.ModInteract.MekToolHandler;
-import Reika.DragonAPI.ModInteract.TinkerToolHandler;
-
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
+import Reika.DragonAPI.ModInteract.MekToolHandler;
+import Reika.DragonAPI.ModInteract.TinkerToolHandler;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public enum DecoBlocks {

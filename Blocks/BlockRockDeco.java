@@ -9,9 +9,6 @@
  ******************************************************************************/
 package Reika.GeoStrata.Blocks;
 
-import Reika.GeoStrata.GeoStrata;
-import Reika.GeoStrata.Registry.DecoBlocks;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -21,6 +18,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.Registry.DecoBlocks;
 
 public class BlockRockDeco extends Block {
 

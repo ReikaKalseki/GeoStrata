@@ -9,19 +9,20 @@
  ******************************************************************************/
 package Reika.GeoStrata;
 
-import Reika.GeoStrata.Registry.GeoBlocks;
-import Reika.GeoStrata.Rendering.ConnectedStoneRenderer;
-import Reika.GeoStrata.Rendering.StairItemRenderer;
-
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
+import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Rendering.ConnectedStoneRenderer;
+import Reika.GeoStrata.Rendering.StairItemRenderer;
+import Reika.GeoStrata.Rendering.VentRenderer;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
 public class GeoClient extends GeoCommon {
 
 	private static ConnectedStoneRenderer connected;
+	private static VentRenderer vent;
 	//private static ShapedStoneRenderer shaped;
 	private static final StairItemRenderer stair = new StairItemRenderer();
 
@@ -35,6 +36,10 @@ public class GeoClient extends GeoCommon {
 		connectedRender = RenderingRegistry.getNextAvailableRenderId();
 		connected = new ConnectedStoneRenderer(connectedRender);
 		RenderingRegistry.registerBlockHandler(connectedRender, connected);
+
+		ventRender = RenderingRegistry.getNextAvailableRenderId();
+		vent = new VentRenderer();
+		RenderingRegistry.registerBlockHandler(ventRender, vent);
 
 		//shapedRender = RenderingRegistry.getNextAvailableRenderId();
 		//shaped = new ShapedStoneRenderer(shapedRender);

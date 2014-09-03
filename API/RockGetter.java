@@ -9,6 +9,8 @@
  ******************************************************************************/
 package Reika.GeoStrata.API;
 
+import java.util.ArrayList;
+
 import net.minecraft.block.Block;
 
 public class RockGetter {
@@ -16,12 +18,13 @@ public class RockGetter {
 	private static Class modClass;
 	private static Block[] geoBlocks;
 
-	public static final int ROCK_INDEX = 0;
+	private static ArrayList<Block> rockBlocks;
 
 	static {
 		try {
 			modClass = Class.forName("Reika.GeoStrata.GeoStrata", false, RockGetter.class.getClassLoader());
 			geoBlocks = (Block[])modClass.getField("blocks").get(null);
+			rockBlocks = (ArrayList)modClass.getField("rockBlocks").get(null);
 		}
 		catch (ClassNotFoundException e) {
 			System.out.println("GeoStrata class not found!");
@@ -43,6 +46,10 @@ public class RockGetter {
 			System.out.println("GeoStrata class not read correctly!");
 			e.printStackTrace();
 		}
+	}
+
+	public static boolean isGeoStrataRock(Block b) {
+		return rockBlocks.contains(b);
 	}
 
 }

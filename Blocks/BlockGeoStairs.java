@@ -9,11 +9,6 @@
  ******************************************************************************/
 package Reika.GeoStrata.Blocks;
 
-import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
-import Reika.GeoStrata.GeoStrata;
-import Reika.GeoStrata.TileEntityGeoBlocks;
-import Reika.GeoStrata.Registry.RockTypes;
-
 import java.awt.Color;
 
 import net.minecraft.block.BlockStairs;
@@ -23,12 +18,18 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
+import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.TileEntityGeoBlocks;
+import Reika.GeoStrata.Registry.RockTypes;
 
 public class BlockGeoStairs extends BlockStairs {
 
 	public BlockGeoStairs(Material mat) {
 		super(Blocks.stone, 0);
 		this.setCreativeTab(GeoStrata.tabGeoStairs);
+		this.setHardness(2);
+		this.setResistance(10);
 	}
 
 	@Override

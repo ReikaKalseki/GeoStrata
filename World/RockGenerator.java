@@ -9,12 +9,6 @@
  ******************************************************************************/
 package Reika.GeoStrata.World;
 
-import Reika.DragonAPI.ModInteract.ReikaTwilightHelper;
-import Reika.GeoStrata.GeoStrata;
-import Reika.GeoStrata.Registry.GeoOptions;
-import Reika.GeoStrata.Registry.RockShapes;
-import Reika.GeoStrata.Registry.RockTypes;
-
 import java.util.List;
 import java.util.Random;
 
@@ -24,6 +18,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.feature.WorldGenMinable;
+import Reika.DragonAPI.ModInteract.ReikaTwilightHelper;
+import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.Registry.GeoOptions;
+import Reika.GeoStrata.Registry.RockShapes;
+import Reika.GeoStrata.Registry.RockTypes;
 import cpw.mods.fml.common.IWorldGenerator;
 
 public class RockGenerator implements IWorldGenerator {

@@ -9,6 +9,12 @@
  ******************************************************************************/
 package Reika.GeoStrata.Registry;
 
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.HashMap;
+
+import net.minecraft.block.Block;
+import net.minecraft.world.IBlockAccess;
 import Reika.DragonAPI.Exception.RegistrationException;
 import Reika.DragonAPI.Instantiable.Data.BlockMap;
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
@@ -17,13 +23,6 @@ import Reika.GeoStrata.Blocks.BlockConnectedRock;
 import Reika.GeoStrata.Blocks.BlockShapedRock;
 import Reika.GeoStrata.Blocks.BlockSmooth;
 import Reika.GeoStrata.Items.ItemBlockRock;
-
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.HashMap;
-
-import net.minecraft.block.Block;
-import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 
@@ -109,6 +108,9 @@ public enum RockShapes {
 
 				String name = "geostrata_rock_"+(r.name()+"_"+this.name()).toLowerCase();
 				GameRegistry.registerBlock(b, ItemBlockRock.class, name);
+				b.setHardness(r.blockHardness);
+				b.setResistance(r.blastResistance);
+				b.setHarvestLevel("pickaxe", r.harvestTool.ordinal());
 				return b;
 			}
 			catch (Exception e) {
