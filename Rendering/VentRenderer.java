@@ -89,7 +89,7 @@ public class VentRenderer implements ISimpleBlockRenderingHandler {
 			v5.setBrightness(b.getMixedBrightnessForBlock(world, x, y+1, z));
 		}
 		v5.setColorOpaque_F(255, 255, 255);
-		rb.renderFaceYPos(b, x, y-0.001, z, ico);
+		rb.renderFaceYPos(b, x, y-0.002, z, ico);
 		return true;
 	}
 

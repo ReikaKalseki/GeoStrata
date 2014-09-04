@@ -19,6 +19,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class TileEntityGeoBlocks extends TileEntity {
 
@@ -36,6 +38,7 @@ public class TileEntityGeoBlocks extends TileEntity {
 		return type.getID(shape);
 	}
 
+	@SideOnly(Side.CLIENT)
 	public IIcon getIcon() {
 		if (type == null || shape == null)
 			return Blocks.stone.getIcon(0, 0);
