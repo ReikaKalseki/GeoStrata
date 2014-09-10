@@ -17,7 +17,6 @@ import net.minecraft.block.Block;
 import net.minecraft.world.IBlockAccess;
 import Reika.DragonAPI.Exception.RegistrationException;
 import Reika.DragonAPI.Instantiable.Data.BlockMap;
-import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Blocks.BlockConnectedRock;
 import Reika.GeoStrata.Blocks.BlockShapedRock;
@@ -29,21 +28,21 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 public enum RockShapes {
 
-	SMOOTH(BlockSmooth.class),
-	COBBLE(BlockShapedRock.class, 		0),
-	BRICK(BlockShapedRock.class, 		1),
-	ROUND(BlockShapedRock.class, 		2),
-	FITTED(BlockShapedRock.class, 		3),
-	TILE(BlockShapedRock.class, 		4),
-	ENGRAVED(BlockShapedRock.class, 	5),
-	INSCRIBED(BlockShapedRock.class, 	6),
-	CUBED(BlockShapedRock.class, 		7),
-	LINED(BlockShapedRock.class, 		8),
-	EMBOSSED(BlockShapedRock.class, 	9),
-	CENTERED(BlockShapedRock.class, 	10),
-	RAISED(BlockShapedRock.class, 		11),
-	ETCHED(BlockShapedRock.class, 		12),
-	CONNECTED(BlockConnectedRock.class);
+	SMOOTH(BlockSmooth.class, 					"Smooth"),
+	COBBLE(BlockShapedRock.class, 		0,		"#Cobblestone"),
+	BRICK(BlockShapedRock.class, 		1,		"#Bricks"),
+	ROUND(BlockShapedRock.class, 		2,		"Round"),
+	FITTED(BlockShapedRock.class, 		3,		"Fitted"),
+	TILE(BlockShapedRock.class, 		4,		"Tile"),
+	ENGRAVED(BlockShapedRock.class, 	5,		"Engraved"),
+	INSCRIBED(BlockShapedRock.class, 	6,		"Inscribed"),
+	CUBED(BlockShapedRock.class, 		7,		"Cubed"),
+	LINED(BlockShapedRock.class, 		8,		"Lined"),
+	EMBOSSED(BlockShapedRock.class, 	9,		"Embossed"),
+	CENTERED(BlockShapedRock.class, 	10,		"Centered"),
+	RAISED(BlockShapedRock.class, 		11,		"Raised"),
+	ETCHED(BlockShapedRock.class, 		12,		"Etched"),
+	CONNECTED(BlockConnectedRock.class,			"Connected");
 
 	//public final String typeName;
 	//private final GeoBlocks blockType;
@@ -51,6 +50,8 @@ public enum RockShapes {
 	public final boolean needsOwnBlock;
 	public final int metadata;
 	private final int offset;
+	public final String name;
+	public final boolean nameFirst;
 
 	public static final RockShapes[] shapeList = values();
 	private static final BlockMap<RockShapes> shapeMap = new BlockMap();
@@ -63,15 +64,17 @@ public enum RockShapes {
 		blockType = b;
 	}*/
 
-	private RockShapes(Class block, int meta) {
+	private RockShapes(Class block, int meta, String n) {
 		blockClass = block;
 		metadata = meta >= 0 ? meta%16 : 0;
 		offset = meta/16;
 		needsOwnBlock = meta == -1;
+		name = n.replaceAll("#", "");
+		nameFirst = n.startsWith("#");
 	}
 
-	private RockShapes(Class block) {
-		this(block, -1);
+	private RockShapes(Class block, String n) {
+		this(block, -1, n);
 	}
 
 	public static RockShapes getShape(IBlockAccess world, int x, int y, int z) {
@@ -177,7 +180,7 @@ public enum RockShapes {
 	}
 
 	public String getName() {
-		return ReikaStringParser.capFirstChar(this.name());
+		return name;
 	}
 
 }
