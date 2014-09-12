@@ -34,6 +34,7 @@ import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.ReikaAABBHelper;
 import Reika.DragonAPI.Libraries.IO.ReikaSoundHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaParticleHelper;
+import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.GeoStrata;
 
 public class BlockVent extends Block {
@@ -67,7 +68,7 @@ public class BlockVent extends Block {
 
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block id) {
-		if (world.isBlockIndirectlyGettingPowered(x, y, z)) {
+		if (id != this && world.isBlockIndirectlyGettingPowered(x, y, z)) {
 			TileEntityVent te = (TileEntityVent)world.getTileEntity(x, y, z);
 			te.activate();
 		}
@@ -240,6 +241,13 @@ public class BlockVent extends Block {
 				for (int i = 0; i < li.size(); i++) {
 					EntityLivingBase e = li.get(i);
 					e.addPotionEffect(new PotionEffect(Potion.poison.id, 20+rand.nextInt(200), rand.nextInt(4) == 0 ? 1 : 0));
+				}
+			}
+
+			if (rand.nextInt(20) == 0) {
+				if (type == VentType.FIRE || type == VentType.LAVA) {
+					for (int i = 0; i < 5; i++)
+						ReikaWorldHelper.temperatureEnvironment(worldObj, xCoord, yCoord+i, zCoord, 800);
 				}
 			}
 
