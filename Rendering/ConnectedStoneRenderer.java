@@ -28,6 +28,8 @@ import Reika.GeoStrata.Registry.RockTypes;
 
 public class ConnectedStoneRenderer extends BaseBlockRenderer {
 
+	public static int renderPass;
+
 	public ConnectedStoneRenderer(int ID) {
 		super(ID);
 	}
@@ -146,66 +148,73 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		int color = b.colorMultiplier(world, x, y, z);
 		Color c = new Color(color);
 
-		for (int i = 0; i < 6; i++) {
-			IIcon ico = b.getIcon(world, x, y, z, i);
+		if (renderPass == 0) {
 
-			float u = ico.getMinU();
-			float v = ico.getMinV();
-			float du = ico.getMaxU();
-			float dv = ico.getMaxV();
+			for (int i = 0; i < 6; i++) {
+				IIcon ico = b.getIcon(world, x, y, z, i);
 
-			this.faceBrightnessColor(dirs[i].getOpposite(), v5, c.getRed()/255F, c.getGreen()/255F, c.getBlue()/255F);
-			switch(i) {
-			case 0:
-				v5.addVertexWithUV(0, 0, 0, u, v);
-				v5.addVertexWithUV(1, 0, 0, du, v);
-				v5.addVertexWithUV(1, 0, 1, du, dv);
-				v5.addVertexWithUV(0, 0, 1, u, dv);
-				break;
-			case 1:
-				v5.addVertexWithUV(0, 1, 1, u, dv);
-				v5.addVertexWithUV(1, 1, 1, du, dv);
-				v5.addVertexWithUV(1, 1, 0, du, v);
-				v5.addVertexWithUV(0, 1, 0, u, v);
-				break;
-			case 2:
-				v5.addVertexWithUV(0, 1, 0, u, v);
-				v5.addVertexWithUV(1, 1, 0, du, v);
-				v5.addVertexWithUV(1, 0, 0, du, dv);
-				v5.addVertexWithUV(0, 0, 0, u, dv);
-				break;
-			case 3:
-				v5.addVertexWithUV(0, 0, 1, u, dv);
-				v5.addVertexWithUV(1, 0, 1, du, dv);
-				v5.addVertexWithUV(1, 1, 1, du, v);
-				v5.addVertexWithUV(0, 1, 1, u, v);
-				break;
-			case 4:
-				v5.addVertexWithUV(0, 0, 0, u, dv);
-				v5.addVertexWithUV(0, 0, 1, du, dv);
-				v5.addVertexWithUV(0, 1, 1, du, v);
-				v5.addVertexWithUV(0, 1, 0, u, v);
-				break;
-			case 5:
-				v5.addVertexWithUV(1, 1, 0, u, v);
-				v5.addVertexWithUV(1, 1, 1, du, v);
-				v5.addVertexWithUV(1, 0, 1, du, dv);
-				v5.addVertexWithUV(1, 0, 0, u, dv);
-				break;
+				float u = ico.getMinU();
+				float v = ico.getMinV();
+				float du = ico.getMaxU();
+				float dv = ico.getMaxV();
+
+				this.faceBrightnessColor(dirs[i].getOpposite(), v5, c.getRed()/255F, c.getGreen()/255F, c.getBlue()/255F);
+				switch(i) {
+				case 0:
+					v5.addVertexWithUV(0, 0, 0, u, v);
+					v5.addVertexWithUV(1, 0, 0, du, v);
+					v5.addVertexWithUV(1, 0, 1, du, dv);
+					v5.addVertexWithUV(0, 0, 1, u, dv);
+					break;
+				case 1:
+					v5.addVertexWithUV(0, 1, 1, u, dv);
+					v5.addVertexWithUV(1, 1, 1, du, dv);
+					v5.addVertexWithUV(1, 1, 0, du, v);
+					v5.addVertexWithUV(0, 1, 0, u, v);
+					break;
+				case 2:
+					v5.addVertexWithUV(0, 1, 0, u, v);
+					v5.addVertexWithUV(1, 1, 0, du, v);
+					v5.addVertexWithUV(1, 0, 0, du, dv);
+					v5.addVertexWithUV(0, 0, 0, u, dv);
+					break;
+				case 3:
+					v5.addVertexWithUV(0, 0, 1, u, dv);
+					v5.addVertexWithUV(1, 0, 1, du, dv);
+					v5.addVertexWithUV(1, 1, 1, du, v);
+					v5.addVertexWithUV(0, 1, 1, u, v);
+					break;
+				case 4:
+					v5.addVertexWithUV(0, 0, 0, u, dv);
+					v5.addVertexWithUV(0, 0, 1, du, dv);
+					v5.addVertexWithUV(0, 1, 1, du, v);
+					v5.addVertexWithUV(0, 1, 0, u, v);
+					break;
+				case 5:
+					v5.addVertexWithUV(1, 1, 0, u, v);
+					v5.addVertexWithUV(1, 1, 1, du, v);
+					v5.addVertexWithUV(1, 0, 1, du, dv);
+					v5.addVertexWithUV(1, 0, 0, u, dv);
+					break;
+				}
 			}
+
+		}
+		else {
+
+			//v5.addTranslation(-x, -y, -z);
+			//v5.draw();
+			//GL11.glEnable(GL11.GL_BLEND);
+			//BlendMode.DEFAULT.apply();
+			//v5.startDrawingQuads();
+			//	v5.addTranslation(x, y, z);
+			this.renderOverlay(world, x, y, z, block, modelId, rb);
+			//v5.draw();
+			//GL11.glDisable(GL11.GL_BLEND);
+			//v5.startDrawingQuads();
 		}
 
 		v5.addTranslation(-x, -y, -z);
-		v5.draw();
-		GL11.glEnable(GL11.GL_BLEND);
-		BlendMode.DEFAULT.apply();
-		v5.startDrawingQuads();
-		v5.addTranslation(x, y, z);
-		this.renderOverlay(world, x, y, z, block, modelId, rb);
-		v5.addTranslation(-x, -y, -z);
-		v5.draw();
-		GL11.glDisable(GL11.GL_BLEND);
-		v5.startDrawingQuads();
 
 		return true;
 	}
@@ -217,9 +226,9 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		v5.setColorOpaque(255, 255, 255);
 
 		double d = 0.001;
-		ArrayList<Integer> li = b.getEdgesForFace(world, x, y, z, ForgeDirection.UP, type);
-		this.faceBrightness(ForgeDirection.DOWN, v5);
-		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.UP.ordinal()))
+		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.UP.ordinal())) {
+			ArrayList<Integer> li = b.getEdgesForFace(world, x, y, z, ForgeDirection.UP, type);
+			this.faceBrightness(ForgeDirection.DOWN, v5);
 			for (int i = 0; i < li.size(); i++) {
 				int edge = li.get(i);
 				IIcon ico = b.getIconForEdge(edge, type);
@@ -238,10 +247,29 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 				v5.addVertexWithUV(1+d, 1+d, 1+d, u, dv);
 			}
 
+			li = b.getSectionsForTexture(world, x, y, z, ForgeDirection.UP, type);
+			for (int i = 0; i < li.size(); i++) {
+				int edge = li.get(i);
+				IIcon ico = b.getSectionForTexture(edge, type);
+				float u = ico.getMinU();
+				float du = ico.getMaxU();
+				float v = ico.getMinV();
+				float dv = ico.getMaxV();
+				float uu = du-u;
+				float vv = dv-v;
+				float dx = uu/16F;
+				float dz = vv/16F;
 
-		li = b.getEdgesForFace(world, x, y, z, ForgeDirection.DOWN, type);
-		this.faceBrightness(ForgeDirection.UP, v5);
-		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.DOWN.ordinal()))
+				v5.addVertexWithUV(1+d, 1+d, 0-d, u, v);
+				v5.addVertexWithUV(0-d, 1+d, 0-d, du, v);
+				v5.addVertexWithUV(0-d, 1+d, 1+d, du, dv);
+				v5.addVertexWithUV(1+d, 1+d, 1+d, u, dv);
+			}
+		}
+
+		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.DOWN.ordinal())) {
+			ArrayList<Integer> li = b.getEdgesForFace(world, x, y, z, ForgeDirection.DOWN, type);
+			this.faceBrightness(ForgeDirection.UP, v5);
 			for (int i = 0; i < li.size(); i++) {
 				int edge = li.get(i);
 				IIcon ico = b.getIconForEdge(edge, type);
@@ -259,11 +287,11 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 				v5.addVertexWithUV(1+d, 0-d, 1+d, u, dv);
 				v5.addVertexWithUV(0-d, 0-d, 1+d, du, dv);
 			}
+		}
 
-
-		li = b.getEdgesForFace(world, x, y, z, ForgeDirection.EAST, type);
-		this.faceBrightness(ForgeDirection.WEST, v5);
-		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.EAST.ordinal()))
+		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.EAST.ordinal())) {
+			ArrayList<Integer> li = b.getEdgesForFace(world, x, y, z, ForgeDirection.EAST, type);
+			this.faceBrightness(ForgeDirection.WEST, v5);
 			for (int i = 0; i < li.size(); i++) {
 				int edge = li.get(i);
 				IIcon ico = b.getIconForEdge(edge, type);
@@ -281,10 +309,11 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 				v5.addVertexWithUV(1+d, 1+d, 1+d, u, dv);
 				v5.addVertexWithUV(1+d, 0-d, 1+d, du, dv);
 			}
+		}
 
-		li = b.getEdgesForFace(world, x, y, z, ForgeDirection.WEST, type);
-		this.faceBrightness(ForgeDirection.EAST, v5);
-		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.WEST.ordinal()))
+		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.WEST.ordinal())) {
+			ArrayList<Integer> li = b.getEdgesForFace(world, x, y, z, ForgeDirection.WEST, type);
+			this.faceBrightness(ForgeDirection.EAST, v5);
 			for (int i = 0; i < li.size(); i++) {
 				int edge = li.get(i);
 				IIcon ico = b.getIconForEdge(edge, type);
@@ -302,10 +331,11 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 				v5.addVertexWithUV(0-d, 0-d, 1+d, du, dv);
 				v5.addVertexWithUV(0-d, 1+d, 1+d, u, dv);
 			}
+		}
 
-		li = b.getEdgesForFace(world, x, y, z, ForgeDirection.SOUTH, type);
-		this.faceBrightness(ForgeDirection.NORTH, v5);
-		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.SOUTH.ordinal()))
+		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.SOUTH.ordinal())) {
+			ArrayList<Integer> li = b.getEdgesForFace(world, x, y, z, ForgeDirection.SOUTH, type);
+			this.faceBrightness(ForgeDirection.NORTH, v5);
 			for (int i = 0; i < li.size(); i++) {
 				int edge = li.get(i);
 				IIcon ico = b.getIconForEdge(edge, type);
@@ -323,10 +353,11 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 				v5.addVertexWithUV(1+d, 0-d, 1+d, du, dv);
 				v5.addVertexWithUV(1+d, 1+d, 1+d, u, dv);
 			}
+		}
 
-		li = b.getEdgesForFace(world, x, y, z, ForgeDirection.NORTH, type);
-		this.faceBrightness(ForgeDirection.SOUTH, v5);
-		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.NORTH.ordinal()))
+		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.NORTH.ordinal())) {
+			ArrayList<Integer> li = b.getEdgesForFace(world, x, y, z, ForgeDirection.NORTH, type);
+			this.faceBrightness(ForgeDirection.SOUTH, v5);
 			for (int i = 0; i < li.size(); i++) {
 				int edge = li.get(i);
 				IIcon ico = b.getIconForEdge(edge, type);
@@ -344,6 +375,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 				v5.addVertexWithUV(1+d, 1+d, 0-d, u, dv);
 				v5.addVertexWithUV(1+d, 0-d, 0-d, du, dv);
 			}
+		}
 	}
 
 	@Override

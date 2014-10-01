@@ -20,13 +20,16 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.RockBlock;
+import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
+import Reika.GeoStrata.Rendering.ConnectedStoneRenderer;
 
 public class BlockConnectedRock extends RockBlock {
 
 	private final ArrayList<Integer> allDirs = new ArrayList();
 
 	private IIcon[][] edges = new IIcon[10][RockTypes.rockList.length];
+	private IIcon[][] sections = new IIcon[10][RockTypes.rockList.length];
 
 	public BlockConnectedRock() {
 		super();
@@ -57,6 +60,17 @@ public class BlockConnectedRock extends RockBlock {
 	}
 
 	@Override
+	public final boolean canRenderInPass(int pass) {
+		ConnectedStoneRenderer.renderPass = pass;
+		return true;
+	}
+
+	@Override
+	public final int getRenderBlockPass() {
+		return 1;
+	}
+
+	@Override
 	public void registerBlockIcons(IIconRegister ico) {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
 			RockTypes r = RockTypes.rockList[i];
@@ -65,7 +79,8 @@ public class BlockConnectedRock extends RockBlock {
 			GeoStrata.logger.debug("Adding "+name+" rock icon "+icons[r.ordinal()].getIconName());
 
 			for (int k = 0; k < 10; k++) {
-				edges[k][r.ordinal()] = ico.registerIcon("GeoStrata:connected/"+k);
+				edges[k][r.ordinal()] = ico.registerIcon("GeoStrata:"+RockShapes.getShape(this, 0).name.toLowerCase()+"/"+k);
+				sections[k][r.ordinal()] = ico.registerIcon("GeoStrata:"+RockShapes.getShape(this, 0).name.toLowerCase()+"/"+k+"_sec");
 			}
 		}
 	}
@@ -78,11 +93,18 @@ public class BlockConnectedRock extends RockBlock {
 		return id != this || meta != iba.getBlockMetadata(x, y, z);
 	}
 
+	public boolean rendersFrontTextureIndividually() {
+		return RockShapes.getShape(this, 0) == RockShapes.CONNECTED2;
+	}
+
 	/** Returns the unconnected sides. Each integer represents one of 8 adjacent corners to a face, with the same
 	 * numbering convention as is found on a calculator or computer number pad. */
 	public ArrayList<Integer> getEdgesForFace(IBlockAccess world, int x, int y, int z, ForgeDirection face, RockTypes rock) {
 		ArrayList<Integer> li = new ArrayList();
 		li.addAll(allDirs);
+
+		if (this.rendersFrontTextureIndividually())
+			li.remove(new Integer(5));
 
 		if (face.offsetX != 0) { //test YZ
 			//sides; removed if have adjacent on side
@@ -150,8 +172,19 @@ public class BlockConnectedRock extends RockBlock {
 		return li;
 	}
 
+	public ArrayList<Integer> getSectionsForTexture(IBlockAccess world, int x, int y, int z, ForgeDirection face, RockTypes rock) {
+		ArrayList<Integer> li = new ArrayList();
+		li.addAll(allDirs);
+		li.removeAll(this.getEdgesForFace(world, x, y, z, face, rock));
+		return li;
+	}
+
 	public IIcon getIconForEdge(int edge, RockTypes rock) {
 		return edges[edge][rock.ordinal()];
+	}
+
+	public IIcon getSectionForTexture(int sec, RockTypes rock) {
+		return sections[sec][rock.ordinal()];
 	}
 
 }

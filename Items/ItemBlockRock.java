@@ -34,12 +34,13 @@ public class ItemBlockRock extends ItemBlock {
 	@SideOnly(Side.CLIENT)
 	public final void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List li) //Adds the metadata blocks to the creative inventory
 	{
-		if (li.size() < RockTypes.rockList.length*RockShapes.shapeList.length) {
-			for (int i = 0; i < RockTypes.rockList.length; i++) {
-				for (int k = 0; k < RockShapes.shapeList.length; k++) {
-					ItemStack item = RockTypes.rockList[i].getItem(RockShapes.shapeList[k]);
-					li.add(item);
-				}
+		Block b = Block.getBlockFromItem(par1);
+		RockTypes type = RockTypes.getTypeFromID(b);
+		for (int k = 0; k < 16; k++) {
+			RockShapes shape = RockShapes.getShape(b, k);
+			if (shape != null) {
+				ItemStack item = type.getItem(shape);
+				li.add(item);
 			}
 		}
 	}

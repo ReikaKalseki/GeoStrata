@@ -32,6 +32,7 @@ public class GeoRecipes {
 			ItemStack engraved = type.getItem(RockShapes.ENGRAVED);
 			ItemStack inscribed = type.getItem(RockShapes.INSCRIBED);
 			ItemStack connected = type.getItem(RockShapes.CONNECTED);
+			ItemStack connected2 = type.getItem(RockShapes.CONNECTED2);
 			ItemStack etched = type.getItem(RockShapes.ETCHED);
 			ItemStack centered = type.getItem(RockShapes.CENTERED);
 			ItemStack cubed = type.getItem(RockShapes.CUBED);
@@ -55,6 +56,8 @@ public class GeoRecipes {
 				"BS", "SB", 'S', smooth, 'B', brick});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(connected, 8), new Object[]{
 				"SSS", "S S", "SSS", 'S', smooth});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(connected2, 8), new Object[]{
+				"SSS", "S S", "SSS", 'S', connected});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(etched, 3), new Object[]{
 				"SSS", 'S', inscribed});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(cubed, 9), new Object[]{

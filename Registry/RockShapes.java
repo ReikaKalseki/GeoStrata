@@ -42,7 +42,8 @@ public enum RockShapes {
 	CENTERED(BlockShapedRock.class, 	10,		"Centered"),
 	RAISED(BlockShapedRock.class, 		11,		"Raised"),
 	ETCHED(BlockShapedRock.class, 		12,		"Etched"),
-	CONNECTED(BlockConnectedRock.class,			"Connected");
+	CONNECTED(BlockConnectedRock.class,			"Connected"),
+	CONNECTED2(BlockConnectedRock.class,		"Connected2");
 
 	//public final String typeName;
 	//private final GeoBlocks blockType;
