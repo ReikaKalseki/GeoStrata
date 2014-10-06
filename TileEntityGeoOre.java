@@ -17,6 +17,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import Reika.DragonAPI.Interfaces.OreType;
 import Reika.DragonAPI.Libraries.Registry.ReikaOreHelper;
 import Reika.DragonAPI.ModRegistry.ModOreList;
 import Reika.GeoStrata.Registry.RockTypes;
@@ -48,6 +49,14 @@ public class TileEntityGeoOre extends TileEntity {
 		return block.getIcon(worldObj, xCoord, yCoord, zCoord, side);
 	}
 
+	public Block getOreBlock() {
+		return block;
+	}
+
+	public int getOreMeta() {
+		return metadata;
+	}
+
 	@Override
 	public void writeToNBT(NBTTagCompound NBT) {
 		super.writeToNBT(NBT);
@@ -57,6 +66,8 @@ public class TileEntityGeoOre extends TileEntity {
 			NBT.setInteger("ore", ore.ordinal());
 		if (modore != null)
 			NBT.setInteger("more", modore.ordinal());
+		NBT.setInteger("orem", metadata);
+		block = Block.getBlockById(NBT.getInteger("blockid"));
 	}
 
 	@Override
@@ -66,6 +77,8 @@ public class TileEntityGeoOre extends TileEntity {
 		type = RockTypes.rockList[NBT.getInteger("type")];
 		modore = NBT.hasKey("more") ? ModOreList.oreList[NBT.getInteger("more")] : null;
 		ore = NBT.hasKey("ore") ? ReikaOreHelper.oreList[NBT.getInteger("ore")] : null;
+		metadata = NBT.getInteger("orem");
+		NBT.setInteger("blockid", Block.getIdFromBlock(block));
 	}
 
 	@Override
@@ -79,6 +92,10 @@ public class TileEntityGeoOre extends TileEntity {
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity p)  {
 		this.readFromNBT(p.field_148860_e);
+	}
+
+	public OreType getOreType() {
+		return modore != null ? modore : ore != null ? ore : null;
 	}
 
 }

@@ -15,6 +15,7 @@ public class GeoCommon {
 
 	public static int connectedRender;
 	public static int ventRender;
+	public static int oreRender;
 	//public static int shapedRender;
 
 	/**

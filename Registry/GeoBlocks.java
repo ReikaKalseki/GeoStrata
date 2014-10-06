@@ -28,6 +28,7 @@ import Reika.GeoStrata.Blocks.BlockShapedRock;
 import Reika.GeoStrata.Blocks.BlockSmooth;
 import Reika.GeoStrata.Blocks.BlockVent;
 import Reika.GeoStrata.Items.ItemBlockAnyGeoVariant;
+import Reika.GeoStrata.Items.ItemBlockGeoOre;
 import Reika.GeoStrata.Items.ItemBlockRockDeco;
 import Reika.GeoStrata.Items.ItemBlockVent;
 
@@ -37,7 +38,7 @@ public enum GeoBlocks implements BlockEnum {
 	VENT(BlockVent.class, ItemBlockVent.class, "Vent"),
 	STAIR(BlockGeoStairs.class, ItemBlockAnyGeoVariant.class, "Stairs"),
 	SLAB(BlockGeoSlab.class, ItemBlockAnyGeoVariant.class, "Slab"),
-	ORETILE(BlockOreTile.class, null, "Ore");
+	ORETILE(BlockOreTile.class, ItemBlockGeoOre.class, "Ore");
 
 	private final Class blockClass;
 	private final String blockName;

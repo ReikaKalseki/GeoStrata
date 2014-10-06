@@ -112,7 +112,7 @@ public enum RockTypes {
 	}
 
 	public IIcon getIcon() {
-		return this.getID(RockShapes.SMOOTH).getIcon(0, 0);
+		return this.getIcon(RockShapes.SMOOTH);
 	}
 
 	public IIcon getIcon(RockShapes s) {

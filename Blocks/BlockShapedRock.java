@@ -24,7 +24,7 @@ public class BlockShapedRock extends RockBlock {
 	//public final String shapeType;
 
 	private static final IIcon[][] textures = new IIcon[RockTypes.rockList.length][RockShapes.shapeList.length];
-	private static boolean texturesLoaded = false;
+	//private static boolean texturesLoaded = false;
 
 	public BlockShapedRock() {
 		super();
@@ -66,7 +66,7 @@ public class BlockShapedRock extends RockBlock {
 				//int b = type.ordinal();
 				textures[i][k] = ico.registerIcon("GeoStrata:shaped/unstitched/tile"+k+"_"+i);
 				//GeoStrata.logger.debug("Adding "+type.getName()+" "+shapeType+" icon "+icons[i].getIconName());
-				texturesLoaded = true;
+				//texturesLoaded = true;
 			}
 		}
 		/*

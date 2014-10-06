@@ -16,6 +16,7 @@ import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import Reika.DragonAPI.DragonAPICore;
 import Reika.DragonAPI.ModList;
@@ -34,6 +35,7 @@ import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
+import Reika.GeoStrata.Rendering.OreRenderer;
 import Reika.GeoStrata.World.RockGenerator;
 import Reika.GeoStrata.World.VentGenerator;
 import Reika.RotaryCraft.API.BlockColorInterface;
@@ -46,7 +48,10 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod( modid = GeoStrata.MOD_NAME, name=GeoStrata.MOD_NAME, version="Gamma", certificateFingerprint = "@GET_FINGERPRINT@", dependencies="required-after:DragonAPI")
 
@@ -64,6 +69,7 @@ public class GeoStrata extends DragonAPIMod {
 	public static CreativeTabs tabGeo = new GeoTab(CreativeTabs.getNextID(), GeoStrata.MOD_NAME);
 	public static CreativeTabs tabGeoStairs = new GeoTabStairs(CreativeTabs.getNextID(), GeoStrata.MOD_NAME+" Stairs");
 	public static CreativeTabs tabGeoSlabs = new GeoTabSlab(CreativeTabs.getNextID(), GeoStrata.MOD_NAME+" Slabs");
+	public static CreativeTabs tabGeoOres = new GeoTabOres(CreativeTabs.getNextID(), GeoStrata.MOD_NAME+" Ores");
 
 	public static ModLogger logger;
 
@@ -160,6 +166,12 @@ public class GeoStrata extends DragonAPIMod {
 				ReikaRecipeHelper.addSmelting(RockTypes.QUARTZ.getItem(RockShapes.SMOOTH), burned, 0.05F);
 			}
 		}
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void generateDynamicOreTextures(TextureStitchEvent.Pre evt) {
+		OreRenderer.regenIcons(evt);
 	}
 
 	private static void loadClasses() {
