@@ -15,9 +15,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.Item;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-
-import org.lwjgl.input.Keyboard;
-
 import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
@@ -56,8 +53,6 @@ public class BlockShapedRock extends RockBlock {
 
 	@Override
 	public final IIcon getIcon(int side, int meta) {
-		if (Keyboard.isKeyDown(Keyboard.KEY_F3) || Keyboard.isKeyDown(Keyboard.KEY_T))
-			texturesLoaded = false;
 		RockTypes r = RockTypes.getTypeFromID(this);
 		RockShapes s = RockShapes.getShape(this, meta);
 		return textures[r.ordinal()][s.ordinal()];
@@ -65,8 +60,6 @@ public class BlockShapedRock extends RockBlock {
 
 	@Override
 	public void registerBlockIcons(IIconRegister ico) {
-		if (texturesLoaded)
-			return;
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
 			for (int k = 0; k < RockShapes.shapeList.length; k++) {
 				//int a = RockShapes.getShape(this).ordinal();

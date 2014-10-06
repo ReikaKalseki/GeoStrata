@@ -12,16 +12,12 @@ package Reika.GeoStrata.World;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.feature.WorldGenMinable;
 import Reika.DragonAPI.ModInteract.ReikaTwilightHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.GeoOptions;
-import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 import cpw.mods.fml.common.IWorldGenerator;
 
@@ -63,8 +59,8 @@ public class RockGenerator implements IWorldGenerator {
 				int posY = geo.minY + random.nextInt(geo.maxY-geo.minY);
 				GeoStrata.logger.debug(geo.name()+":"+geo.canGenerateAt(world, posX, posY, posZ, random));
 				if (geo.canGenerateAt(world, posX, posY, posZ, random)) {
-					Block id = geo.getID(RockShapes.SMOOTH);
-					(new WorldGenMinable(id, VEIN_SIZE, Blocks.stone)).generate(world, random, posX, posY, posZ);
+					//(new WorldGenMinable(geo.getID(RockShapes.SMOOTH), VEIN_SIZE, Blocks.stone)).generate(world, random, posX, posY, posZ);
+					(new WorldGenMinableOreAbsorber(geo, VEIN_SIZE)).generate(world, random, posX, posY, posZ);
 					//GeoStrata.logger.log("Generating "+geo+" at "+posX+", "+posY+", "+posZ);
 				}
 			}
