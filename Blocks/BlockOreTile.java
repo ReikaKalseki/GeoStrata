@@ -31,6 +31,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeEventFactory;
 import Reika.DragonAPI.Instantiable.Data.PluralMap;
+import Reika.DragonAPI.Instantiable.Data.TileEntityCache;
 import Reika.DragonAPI.Interfaces.OreType;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaOreHelper;
@@ -48,6 +49,8 @@ public class BlockOreTile extends Block {
 	private static boolean init = false;
 
 	private IIcon[] icons = new IIcon[RockTypes.rockList.length];
+
+	private final TileEntityCache<TileEntityGeoOre> tileCache = new TileEntityCache();
 
 	public BlockOreTile(Material mat) {
 		super(mat);
@@ -194,8 +197,8 @@ public class BlockOreTile extends Block {
 
 	@Override
 	public boolean canSilkHarvest(World world, EntityPlayer player, int x, int y, int z, int metadata) {
-		TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);
-		return te.getOreBlock().canSilkHarvest(world, player, x, y, z, metadata);
+		TileEntityGeoOre te = tileCache.get(x, y, z);
+		return te != null && te.getOreBlock().canSilkHarvest(world, player, x, y, z, metadata);
 	}
 	/*
 	@Override
@@ -205,11 +208,22 @@ public class BlockOreTile extends Block {
 	}
 	 */
 	@Override
+	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer ep) {
+		tileCache.put(x, y, z, (TileEntityGeoOre)world.getTileEntity(x, y, z));
+	}
+
+	@Override
+	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean willHarvest)
+	{
+		return super.removedByPlayer(world, player, x, y, z, willHarvest); //setToAir
+	}
+
+	@Override
 	public void harvestBlock(World world, EntityPlayer ep, int x, int y, int z, int meta)
 	{
 		ep.addStat(StatList.mineBlockStatArray[getIdFromBlock(this)], 1);
 		ep.addExhaustion(0.025F);
-		TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);
+		TileEntityGeoOre te = tileCache.get(x, y, z);
 		if (this.canSilkHarvest(world, ep, x, y, z, meta) && EnchantmentHelper.getSilkTouchModifier(ep)) {
 			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
 			items.add(new ItemStack(te.getOreBlock(), 1, te.getOreMeta()));
@@ -224,6 +238,7 @@ public class BlockOreTile extends Block {
 			this.dropBlockAsItem(world, x, y, z, meta, i1);
 			harvesters.set(null);
 		}
+		tileCache.remove(x, y, z);
 	}
 
 	@Override
