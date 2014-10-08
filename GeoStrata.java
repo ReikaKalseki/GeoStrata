@@ -201,6 +201,8 @@ public class GeoStrata extends DragonAPIMod {
 		RockTypes.loadMappings();
 		GameRegistry.registerTileEntity(TileEntityGeoBlocks.class, "geostratatile");
 		GameRegistry.registerTileEntity(TileEntityVent.class, "geostratavent");
+		GameRegistry.registerTileEntity(TileEntityGeoOre.class, "geostrataore");
+		//GameRegistry.registerTileEntity(TileEntityOreConverter.class, "geostrataoreconvert");
 	}
 
 	public static void loadDictionary() {

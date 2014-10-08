@@ -74,7 +74,7 @@ public class WorldGenMinableOreAbsorber extends WorldGenerator {
 									Block b = world.getBlock(dx, dy, dz);
 									int meta = world.getBlockMetadata(dx, dy, dz);
 									if (b.isReplaceableOreGen(world, dx, dy, dz, overwrite)) {
-										world.setBlock(dx, dy, dz, /*id*/Blocks.air, 0, 2);
+										world.setBlock(dx, dy, dz, id, 0, 2);
 										count++;
 									}
 									else if (ReikaBlockHelper.isOre(b, meta)) {

@@ -24,20 +24,23 @@ public class ItemBlockGeoOre extends ItemBlock {
 			TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);
 			ItemStack is = BlockOreTile.getOreByItemBlock(stack);
 			Block b = Block.getBlockFromItem(is.getItem());
-			int meta = is.getItemDamage();
-			RockTypes rock = this.getType(meta);
-			te.initialize(rock, b, meta);
+			RockTypes rock = BlockOreTile.getRockFromItem(stack.getItemDamage());
+			te.initialize(rock, b, is.getItemDamage());
 		}
 		return flag;
-	}
-
-	public static RockTypes getType(int dmg) {
-		return RockTypes.rockList[dmg%RockTypes.rockList.length];
 	}
 
 	@Override
 	public int getMetadata(int meta) {
 		return 0;
+	}
+
+	@Override
+	public String getItemStackDisplayName(ItemStack is) {
+		ItemStack is2 = BlockOreTile.getOreByItemBlock(is);
+		Block b = Block.getBlockFromItem(is2.getItem());
+		int meta = is2.getItemDamage();
+		return is2.getDisplayName()+" "+BlockOreTile.getRockFromItem(is.getItemDamage()).getName();
 	}
 
 }

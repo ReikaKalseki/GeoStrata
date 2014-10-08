@@ -16,16 +16,23 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.event.ForgeEventFactory;
 import Reika.DragonAPI.Instantiable.Data.PluralMap;
 import Reika.DragonAPI.Interfaces.OreType;
+import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaOreHelper;
 import Reika.DragonAPI.ModRegistry.ModOreList;
 import Reika.GeoStrata.GeoStrata;
@@ -34,9 +41,13 @@ import Reika.GeoStrata.Registry.RockTypes;
 
 public class BlockOreTile extends Block {
 
-	private static PluralMap<Integer> metaMap = new PluralMap(2);
+	private static PluralMap<Integer> metaMap = new PluralMap(3);
 	private static HashMap<Integer, ItemStack> oreMap = new HashMap();
+	private static HashMap<Integer, RockTypes> rockMap = new HashMap();
+	private static HashMap<Integer, OreType> enumMap = new HashMap();
 	private static boolean init = false;
+
+	private IIcon[] icons = new IIcon[RockTypes.rockList.length];
 
 	public BlockOreTile(Material mat) {
 		super(mat);
@@ -46,6 +57,8 @@ public class BlockOreTile extends Block {
 	}
 
 	private static void initSubs(Item item) {
+		metaMap.clear();
+		oreMap.clear();
 		ArrayList<ItemStack> li = new ArrayList();
 		int k = 0;
 		for (int r = 0; r < RockTypes.rockList.length; r++) {
@@ -54,14 +67,18 @@ public class BlockOreTile extends Block {
 				ReikaOreHelper ore = ReikaOreHelper.oreList[i];
 				if (ore.canGenerateIn(Blocks.stone)) {
 					Collection<ItemStack> c = ore.getAllOreBlocks();
+					Collection<ItemStack> has = new ArrayList();
 					int f = 0;
 					for (ItemStack is : c) {
-						Block b = Block.getBlockFromItem(is.getItem());
-						IIcon ico = b.getIcon(1, is.getItemDamage());
-						li.add(new ItemStack(item, 1, k));
-						setMappings(ore, f, rock, k, is);
-						f++;
-						k++;
+						if (!ReikaItemHelper.listContainsItemStack(has, is)) {
+							Block b = Block.getBlockFromItem(is.getItem());
+							IIcon ico = b.getIcon(1, is.getItemDamage());
+							li.add(new ItemStack(item, 1, k));
+							setMappings(ore, f, rock, k, is);
+							f++;
+							k++;
+							has.add(is);
+						}
 					}
 				}
 			}
@@ -69,19 +86,24 @@ public class BlockOreTile extends Block {
 				ModOreList ore = ModOreList.oreList[i];
 				if (ore.canGenerateIn(Blocks.stone)) {
 					Collection<ItemStack> c = ore.getAllOreBlocks();
+					Collection<ItemStack> has = new ArrayList();
 					int f = 0;
 					for (ItemStack is : c) {
-						Block b = Block.getBlockFromItem(is.getItem());
-						IIcon ico = b.getIcon(1, is.getItemDamage());
-						li.add(new ItemStack(item, 1, k));
-						setMappings(ore, f, rock, k, is);
-						f++;
-						k++;
+						if (!ReikaItemHelper.listContainsItemStack(has, is)) {
+							Block b = Block.getBlockFromItem(is.getItem());
+							IIcon ico = b.getIcon(1, is.getItemDamage());
+							li.add(new ItemStack(item, 1, k));
+							setMappings(ore, f, rock, k, is);
+							f++;
+							k++;
+							has.add(is);
+						}
 					}
 				}
 			}
 		}
 		init = true;
+		//ReikaJavaLibrary.pConsole(metaMap.get(ModOreList.PLATINUM, 0, RockTypes.BASALT));
 	}
 
 	@Override
@@ -97,14 +119,28 @@ public class BlockOreTile extends Block {
 	private static void setMappings(OreType ore, int index, RockTypes r, int meta, ItemStack is) {
 		oreMap.put(meta, is);
 		metaMap.put(meta, ore, index, r);
+		rockMap.put(meta, r);
+		enumMap.put(meta, ore);
+		//ReikaJavaLibrary.pConsole(ore+" "+index+" in "+r+": "+meta);
 	}
 
-	public static ItemStack getOreByItemMetadata(int meta) {
+	public static RockTypes getRockFromItem(int meta) {
+		return rockMap.get(meta);
+	}
+
+	public static OreType getOreFromItem(int meta) {
+		return enumMap.get(meta);
+	}
+
+	public static ItemStack getOreByItemMetadata(Item item, int meta) {
+		if (!init) {
+			initSubs(item);
+		}
 		return oreMap.get(meta).copy();
 	}
 
 	public static ItemStack getOreByItemBlock(ItemStack is) {
-		return getOreByItemMetadata(is.getItemDamage());
+		return getOreByItemMetadata(is.getItem(), is.getItemDamage());
 	}
 
 	@Override
@@ -140,6 +176,7 @@ public class BlockOreTile extends Block {
 		int metadata = te.getOreMeta();
 		b.breakBlock(world, x, y, z, b, metadata);
 		super.breakBlock(world, x, y, z, oldid, oldmeta);
+		//this.initSubs(Item.getItemFromBlock(this));
 	}
 
 	@Override
@@ -147,7 +184,8 @@ public class BlockOreTile extends Block {
 		TileEntity tile = iba.getTileEntity(x, y, z);
 		if (tile instanceof TileEntityGeoOre) {
 			TileEntityGeoOre te = (TileEntityGeoOre)tile;
-			return te.getType().getIcon();
+			//return te.getType().getIcon();
+			return icons[te.getType().ordinal()];
 		}
 		else {
 			return Blocks.stone.getIcon(0, 0);
@@ -155,8 +193,61 @@ public class BlockOreTile extends Block {
 	}
 
 	@Override
+	public boolean canSilkHarvest(World world, EntityPlayer player, int x, int y, int z, int metadata) {
+		TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);
+		return te.getOreBlock().canSilkHarvest(world, player, x, y, z, metadata);
+	}
+	/*
+	@Override
+	protected void dropBlockAsItem(World world, int x, int y, int z, ItemStack is) {
+		TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);
+		te.getOreBlock().dropBlockAsItem(world, x, y, z, is);
+	}
+	 */
+	@Override
+	public void harvestBlock(World world, EntityPlayer ep, int x, int y, int z, int meta)
+	{
+		ep.addStat(StatList.mineBlockStatArray[getIdFromBlock(this)], 1);
+		ep.addExhaustion(0.025F);
+		TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);
+		if (this.canSilkHarvest(world, ep, x, y, z, meta) && EnchantmentHelper.getSilkTouchModifier(ep)) {
+			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+			items.add(new ItemStack(te.getOreBlock(), 1, te.getOreMeta()));
+			ForgeEventFactory.fireBlockHarvesting(items, world, this, x, y, z, meta, 0, 1.0f, true, ep);
+			for (ItemStack is : items) {
+				this.dropBlockAsItem(world, x, y, z, is);
+			}
+		}
+		else {
+			harvesters.set(ep);
+			int i1 = EnchantmentHelper.getFortuneModifier(ep);
+			this.dropBlockAsItem(world, x, y, z, meta, i1);
+			harvesters.set(null);
+		}
+	}
+
+	@Override
 	public int getRenderType() {
 		return GeoStrata.proxy.oreRender;
+	}
+
+	@Override
+	public void registerBlockIcons(IIconRegister ico) {
+		for (int i = 0; i < RockTypes.rockList.length; i++) {
+			RockTypes r = RockTypes.rockList[i];
+			icons[i] = ico.registerIcon("geostrata:ore/"+r.name().toLowerCase());
+		}
+	}
+
+	public IIcon getRockIcon(RockTypes r) {
+		return icons[r.ordinal()];
+	}
+
+	@Override
+	public ItemStack getPickBlock(MovingObjectPosition mov, World world, int x, int y, int z) {
+		TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);
+		int meta = metaMap.get(te.getOreType(), 0, te.getType());
+		return new ItemStack(this, 1, meta);
 	}
 
 }

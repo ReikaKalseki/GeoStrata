@@ -10,6 +10,7 @@
 package Reika.GeoStrata;
 
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -30,9 +31,14 @@ public class TileEntityGeoOre extends TileEntity {
 	private Block block;
 	private int metadata;
 
+	@Override
+	public boolean canUpdate() {
+		return false;
+	}
+
 	public void initialize(RockTypes rock, Block b, int meta) {
 		type = rock;
-		ItemStack is = new ItemStack(b, meta);
+		ItemStack is = new ItemStack(b, 1, meta);
 		ore = ReikaOreHelper.getFromVanillaOre(b);
 		if (ore == null)
 			ore = ReikaOreHelper.getEntryByOreDict(is);
@@ -42,7 +48,7 @@ public class TileEntityGeoOre extends TileEntity {
 	}
 
 	public RockTypes getType() {
-		return type;
+		return type != null ? type : RockTypes.SHALE;
 	}
 
 	public IIcon getOreIcon(int side) {
@@ -50,7 +56,7 @@ public class TileEntityGeoOre extends TileEntity {
 	}
 
 	public Block getOreBlock() {
-		return block;
+		return block != null ? block : Blocks.stone;
 	}
 
 	public int getOreMeta() {
@@ -81,17 +87,36 @@ public class TileEntityGeoOre extends TileEntity {
 		NBT.setInteger("blockid", Block.getIdFromBlock(block));
 	}
 
+	/** Single char names to minimize packet size */
+	private void writeToPacket(NBTTagCompound NBT) {
+		NBT.setInteger("r", type.ordinal());
+		if (ore != null)
+			NBT.setInteger("a", ore.ordinal());
+		if (modore != null)
+			NBT.setInteger("b", modore.ordinal());
+		NBT.setInteger("m", metadata);
+		block = Block.getBlockById(NBT.getInteger("i"));
+	}
+
+	private void readFromPacket(NBTTagCompound NBT) {
+		type = RockTypes.rockList[NBT.getInteger("r")];
+		modore = NBT.hasKey("b") ? ModOreList.oreList[NBT.getInteger("b")] : null;
+		ore = NBT.hasKey("a") ? ReikaOreHelper.oreList[NBT.getInteger("a")] : null;
+		metadata = NBT.getInteger("m");
+		NBT.setInteger("i", Block.getIdFromBlock(block));
+	}
+
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound NBT = new NBTTagCompound();
-		this.writeToNBT(NBT);
+		this.writeToPacket(NBT);
 		S35PacketUpdateTileEntity pack = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, NBT);
 		return pack;
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity p)  {
-		this.readFromNBT(p.field_148860_e);
+		this.readFromPacket(p.field_148860_e);
 	}
 
 	public OreType getOreType() {
