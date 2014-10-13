@@ -9,6 +9,7 @@
  ******************************************************************************/
 package Reika.GeoStrata.Blocks;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -26,13 +28,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import Reika.DragonAPI.Instantiable.Data.PluralMap;
 import Reika.DragonAPI.Instantiable.Data.TileEntityCache;
 import Reika.DragonAPI.Interfaces.OreType;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
+import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaOreHelper;
 import Reika.DragonAPI.ModRegistry.ModOreList;
@@ -282,6 +287,59 @@ public class BlockOreTile extends Block {
 		TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);
 		int meta = metaMap.get(te.getOreType(), 0, te.getType());
 		return new ItemStack(this, 1, meta);
+	}
+
+	@Override
+	public boolean shouldSideBeRendered(IBlockAccess world, int dx, int dy, int dz, int s) {
+		ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[s];
+		Block b = world.getBlock(dx, dy, dz);
+		if (b.isOpaqueCube())
+			return false;
+		switch(dir) {
+		case EAST:
+		case WEST:
+		case SOUTH:
+		case NORTH:
+		case UP:
+		case DOWN:
+		default:
+			return true;
+		}
+	}
+
+	@Override
+	public final int colorMultiplier(IBlockAccess iba, int x, int y, int z) {
+		TileEntityGeoOre te = (TileEntityGeoOre)iba.getTileEntity(x, y, z);
+		RockTypes rock = te.getType();
+		//ReikaJavaLibrary.pConsole(rock);
+		if (rock == RockTypes.OPAL) {
+			int sc = 48;
+			float hue1 = (float)(ReikaMathLibrary.py3d(x, y*4, z+x)%sc)/sc;
+			//float hue2 = (float)(Math.cos(x/24D)+Math.sin(z/24D))+(y%360)*0.05F;
+			return Color.HSBtoRGB(hue1, 0.4F, 1F);
+		}
+		else {
+			return super.colorMultiplier(iba, x, y, z);
+		}
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public final int getRenderColor(int dmg) {
+		RockTypes rock = rockMap.get(dmg);
+		EntityPlayer ep = Minecraft.getMinecraft().thePlayer;
+		int x = MathHelper.floor_double(ep.posX);
+		int y = MathHelper.floor_double(ep.posY);
+		int z = MathHelper.floor_double(ep.posZ);
+		if (rock == RockTypes.OPAL) {
+			int sc = 48;
+			float hue1 = (float)(ReikaMathLibrary.py3d(x, y*4, z+x)%sc)/sc;
+			//float hue2 = (float)(Math.cos(x/24D)+Math.sin(z/24D))+(y%360)*0.05F;
+			return Color.HSBtoRGB(hue1, 0.4F, 1F);
+		}
+		else {
+			return super.getRenderColor(dmg);
+		}
 	}
 
 }

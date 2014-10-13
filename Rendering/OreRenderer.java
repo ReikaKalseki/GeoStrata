@@ -21,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
@@ -128,28 +129,23 @@ public class OreRenderer implements ISimpleBlockRenderingHandler {
 			GL11.glRotated(90, 0, 1, 0);
 			GL11.glTranslated(-0.5, -0.5, -0.5);
 			v5.startDrawingQuads();
+			int color = block.getRenderColor(metadata);
+			v5.setColorOpaque_I(color);
 			v5.setNormal(0, -1, 0);
 			rb.renderFaceYNeg(b, dx, dy-d, dz, icon);
-			v5.draw();
 
-			v5.startDrawingQuads();
 			v5.setNormal(0, 1, 0);
 			rb.renderFaceYPos(b, dx, dy+d, dz, icon);
-			v5.draw();
 
-			v5.startDrawingQuads();
 			v5.setNormal(0, 0, -1);
 			rb.renderFaceZNeg(b, dx, dy, dz-d, icon);
-			v5.draw();
-			v5.startDrawingQuads();
+
 			v5.setNormal(0, 0, 1);
 			rb.renderFaceZPos(b, dx, dy, dz+d, icon);
-			v5.draw();
-			v5.startDrawingQuads();
+
 			v5.setNormal(-1, 0, 0);
 			rb.renderFaceXNeg(b, dx-d, dy, dz, icon);
-			v5.draw();
-			v5.startDrawingQuads();
+
 			v5.setNormal(1, 0, 0);
 			rb.renderFaceXPos(b, dx+d, dy, dz, icon);
 			v5.draw();
@@ -169,33 +165,44 @@ public class OreRenderer implements ISimpleBlockRenderingHandler {
 		v5.setColorOpaque(r, r, r);
 		v5.setNormal(0, -1, 0);
 		v5.setBrightness(b.getMixedBrightnessForBlock(world, x, y-1, z));
-		rb.renderFaceYNeg(b, x, y, z, icon);
+		if (b.shouldSideBeRendered(world, x, y-1, z, ForgeDirection.DOWN.ordinal()))
+			rb.renderFaceYNeg(b, x, y, z, icon);
 		r = 255;
 		v5.setColorOpaque(r, r, r);
 		v5.setNormal(0, 1, 0);
 		v5.setBrightness(b.getMixedBrightnessForBlock(world, x, y+1, z));
-		rb.renderFaceYPos(b, x, y, z, icon);
+		if (b.shouldSideBeRendered(world, x, y+1, z, ForgeDirection.UP.ordinal()))
+			rb.renderFaceYPos(b, x, y, z, icon);
 		r = 192;
 		v5.setColorOpaque(r, r, r);
 		v5.setNormal(0, 0, -1);
 		v5.setBrightness(b.getMixedBrightnessForBlock(world, x, y, z-1));
-		rb.renderFaceZNeg(b, x, y, z, icon);
+		if (b.shouldSideBeRendered(world, x, y, z-1, ForgeDirection.NORTH.ordinal()))
+			rb.renderFaceZNeg(b, x, y, z, icon);
 		v5.setColorOpaque(r, r, r);
 		v5.setNormal(0, 0, 1);
 		v5.setBrightness(b.getMixedBrightnessForBlock(world, x, y, z+1));
-		rb.renderFaceZPos(b, x, y, z, icon);
+		if (b.shouldSideBeRendered(world, x, y, z+1, ForgeDirection.SOUTH.ordinal()))
+			rb.renderFaceZPos(b, x, y, z, icon);
 		r = 160;
 		v5.setColorOpaque(r, r, r);
 		v5.setNormal(-1, 0, 0);
 		v5.setBrightness(b.getMixedBrightnessForBlock(world, x-1, y, z));
-		rb.renderFaceXNeg(b, x, y, z, icon);
+		if (b.shouldSideBeRendered(world, x-1, y, z, ForgeDirection.WEST.ordinal()))
+			rb.renderFaceXNeg(b, x, y, z, icon);
 		v5.setColorOpaque(r, r, r);
 		v5.setNormal(1, 0, 0);
 		v5.setBrightness(b.getMixedBrightnessForBlock(world, x+1, y, z));
-		rb.renderFaceXPos(b, x, y, z, icon);
+		if (b.shouldSideBeRendered(world, x+1, y, z, ForgeDirection.EAST.ordinal()))
+			rb.renderFaceXPos(b, x, y, z, icon);
 		v5.setColorOpaque(r, r, r);
 
-		rb.renderStandardBlockWithAmbientOcclusion(b, x, y, z, 1, 1, 1);/*
+		int color = b.colorMultiplier(world, x, y, z);
+		float red = color >> 16 & 0xFF;
+		float green = color >> 8 & 0xFF;
+		float blue = color >> 0 & 0xFF;
+		rb.renderStandardBlockWithAmbientOcclusion(b, x, y, z, red/255, green/255, blue/255);
+		/*
 		OreType ore = te.getOreType();
 		//IIcon ico = this.getRandomizedTexture(ore);//vent.getIcon();
 		IIcon ico = this.getOreTexture(te.getOreBlock(), te.getOreMeta());
