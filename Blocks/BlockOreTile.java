@@ -29,16 +29,19 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.event.ForgeEventFactory;
 import Reika.DragonAPI.Instantiable.Data.PluralMap;
 import Reika.DragonAPI.Instantiable.Data.TileEntityCache;
 import Reika.DragonAPI.Interfaces.OreType;
+import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaOreHelper;
 import Reika.DragonAPI.ModRegistry.ModOreList;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.TileEntityGeoOre;
 import Reika.GeoStrata.Registry.RockTypes;
+import Reika.GeoStrata.World.RockGenerator;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockOreTile extends Block {
 
@@ -57,6 +60,9 @@ public class BlockOreTile extends Block {
 		this.setHardness(Blocks.iron_ore.blockHardness);
 		this.setResistance(Blocks.iron_ore.blockResistance);
 		this.setCreativeTab(GeoStrata.tabGeoOres);
+		if (RockGenerator.instance.destroyOres()) {
+			this.setTickRandomly(true);
+		}
 	}
 
 	private static void initSubs(Item item) {
@@ -156,28 +162,40 @@ public class BlockOreTile extends Block {
 		return new TileEntityGeoOre();
 	}
 
+	public void updateTick(World world, int x, int y, int z) {
+		if (RockGenerator.instance.destroyOres()) {
+			TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);
+			Block b = te.getOreBlock();
+			int meta = te.getOreMeta();
+			world.setBlock(x, y, z, b, meta, 3);
+		}
+	}
+
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune) {
 		TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);
-		Block b = te.getOreBlock();
-		int metadata = te.getOreMeta();
-		return b.getDrops(world, x, y, z, metadata, fortune);
+		return te != null ? te.getOreBlock().getDrops(world, x, y, z, te.getOreMeta(), fortune) : new ArrayList();
 	}
 
 	@Override
 	public void dropBlockAsItemWithChance(World world, int x, int y, int z, int meta, float chance, int fortune) {
-		TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);
-		Block b = te.getOreBlock();
-		int metadata = te.getOreMeta();
-		b.dropBlockAsItemWithChance(world, x, y, z, metadata, chance, fortune);
+		TileEntityGeoOre te = tileCache.get(x, y, z);
+		ReikaJavaLibrary.pConsole(te);
+		if (te != null) {
+			Block b = te.getOreBlock();
+			int metadata = te.getOreMeta();
+			b.dropBlockAsItemWithChance(world, x, y, z, metadata, chance, fortune);
+		}
 	}
 
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block oldid, int oldmeta) {
 		TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);
-		Block b = te.getOreBlock();
-		int metadata = te.getOreMeta();
-		b.breakBlock(world, x, y, z, b, metadata);
+		if (te != null) {
+			Block b = te.getOreBlock();
+			int metadata = te.getOreMeta();
+			b.breakBlock(world, x, y, z, b, metadata);
+		}
 		super.breakBlock(world, x, y, z, oldid, oldmeta);
 		//this.initSubs(Item.getItemFromBlock(this));
 	}
@@ -225,9 +243,9 @@ public class BlockOreTile extends Block {
 		ep.addExhaustion(0.025F);
 		TileEntityGeoOre te = tileCache.get(x, y, z);
 		if (this.canSilkHarvest(world, ep, x, y, z, meta) && EnchantmentHelper.getSilkTouchModifier(ep)) {
-			ArrayList<ItemStack> items = new ArrayList<ItemStack>();
+			ArrayList<ItemStack> items = new ArrayList();
 			items.add(new ItemStack(te.getOreBlock(), 1, te.getOreMeta()));
-			ForgeEventFactory.fireBlockHarvesting(items, world, this, x, y, z, meta, 0, 1.0f, true, ep);
+			//ForgeEventFactory.fireBlockHarvesting(items, world, this, x, y, z, meta, 0, 1.0f, true, ep);
 			for (ItemStack is : items) {
 				this.dropBlockAsItem(world, x, y, z, is);
 			}
@@ -247,6 +265,7 @@ public class BlockOreTile extends Block {
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister ico) {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
 			RockTypes r = RockTypes.rockList[i];

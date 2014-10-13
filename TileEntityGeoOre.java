@@ -21,6 +21,7 @@ import net.minecraft.util.IIcon;
 import Reika.DragonAPI.Interfaces.OreType;
 import Reika.DragonAPI.Libraries.Registry.ReikaOreHelper;
 import Reika.DragonAPI.ModRegistry.ModOreList;
+import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 
 public class TileEntityGeoOre extends TileEntity {
@@ -56,7 +57,7 @@ public class TileEntityGeoOre extends TileEntity {
 	}
 
 	public Block getOreBlock() {
-		return block != null ? block : Blocks.stone;
+		return block != null ? block : type != null ? type.getID(RockShapes.SMOOTH) : Blocks.stone;
 	}
 
 	public int getOreMeta() {
@@ -73,7 +74,7 @@ public class TileEntityGeoOre extends TileEntity {
 		if (modore != null)
 			NBT.setInteger("more", modore.ordinal());
 		NBT.setInteger("orem", metadata);
-		block = Block.getBlockById(NBT.getInteger("blockid"));
+		NBT.setInteger("blockid", Block.getIdFromBlock(block));
 	}
 
 	@Override
@@ -84,7 +85,21 @@ public class TileEntityGeoOre extends TileEntity {
 		modore = NBT.hasKey("more") ? ModOreList.oreList[NBT.getInteger("more")] : null;
 		ore = NBT.hasKey("ore") ? ReikaOreHelper.oreList[NBT.getInteger("ore")] : null;
 		metadata = NBT.getInteger("orem");
-		NBT.setInteger("blockid", Block.getIdFromBlock(block));
+		block = Block.getBlockById(NBT.getInteger("blockid"));
+		if (block == null || block == Blocks.air) { //in case of NBT failure
+			this.calculateBlock();
+		}
+	}
+
+	private void calculateBlock() {
+		if (ore != null) {
+			block = ore.getOreBlockInstance();
+		}
+		else if (modore != null) {
+			ItemStack is = modore.getFirstOreBlock();
+			block = Block.getBlockFromItem(is.getItem());
+			metadata = is.getItemDamage();
+		}
 	}
 
 	/** Single char names to minimize packet size */
@@ -95,7 +110,7 @@ public class TileEntityGeoOre extends TileEntity {
 		if (modore != null)
 			NBT.setInteger("b", modore.ordinal());
 		NBT.setInteger("m", metadata);
-		block = Block.getBlockById(NBT.getInteger("i"));
+		NBT.setInteger("i", Block.getIdFromBlock(block));
 	}
 
 	private void readFromPacket(NBTTagCompound NBT) {
@@ -103,7 +118,11 @@ public class TileEntityGeoOre extends TileEntity {
 		modore = NBT.hasKey("b") ? ModOreList.oreList[NBT.getInteger("b")] : null;
 		ore = NBT.hasKey("a") ? ReikaOreHelper.oreList[NBT.getInteger("a")] : null;
 		metadata = NBT.getInteger("m");
-		NBT.setInteger("i", Block.getIdFromBlock(block));
+		int id = NBT.getInteger("i");
+		block = Block.getBlockById(id);
+		if (block == null || block == Blocks.air) { //in case of NBT failure
+			this.calculateBlock();
+		}
 	}
 
 	@Override
@@ -121,6 +140,11 @@ public class TileEntityGeoOre extends TileEntity {
 
 	public OreType getOreType() {
 		return modore != null ? modore : ore != null ? ore : null;
+	}
+
+	@Override
+	public String toString() {
+		return type+" "+block+":"+metadata+" ("+ore+" & "+modore+")";
 	}
 
 }

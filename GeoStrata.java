@@ -96,7 +96,7 @@ public class GeoStrata extends DragonAPIMod {
 	public void load(FMLInitializationEvent event) {
 		this.loadClasses();
 		this.loadDictionary();
-		GameRegistry.registerWorldGenerator(new RockGenerator(), Integer.MIN_VALUE);
+		GameRegistry.registerWorldGenerator(RockGenerator.instance, Integer.MIN_VALUE);
 		GameRegistry.registerWorldGenerator(new VentGenerator(), 0);
 
 		GeoRecipes.addRecipes();

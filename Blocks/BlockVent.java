@@ -214,8 +214,7 @@ public class BlockVent extends Block {
 			if (type.dealsDamage()) {
 				AxisAlignedBB box = this.getEffectBox();
 				List<EntityLivingBase> li = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, box);
-				for (int i = 0; i < li.size(); i++) {
-					EntityLivingBase e = li.get(i);
+				for (EntityLivingBase e : li) {
 					e.attackEntityFrom(type.getDamageSrc(), type.damage);
 					if (type == VentType.FIRE || type == VentType.LAVA)
 						e.setFire(type.damage);

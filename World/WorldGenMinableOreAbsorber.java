@@ -77,7 +77,7 @@ public class WorldGenMinableOreAbsorber extends WorldGenerator {
 										world.setBlock(dx, dy, dz, id, 0, 2);
 										count++;
 									}
-									else if (ReikaBlockHelper.isOre(b, meta)) {
+									else if (RockGenerator.instance.generateOres() && ReikaBlockHelper.isOre(b, meta)) {
 										TileEntityGeoOre te = new TileEntityGeoOre();
 										te.initialize(rock, b, meta);
 										world.setBlock(dx, dy, dz, GeoBlocks.ORETILE.getBlockInstance());

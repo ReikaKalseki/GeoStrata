@@ -17,18 +17,22 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import Reika.DragonAPI.Libraries.World.ReikaBlockHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.TileEntityGeoOre;
 import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
+import Reika.GeoStrata.World.RockGenerator;
 
 public class BlockSmooth extends RockBlock {
 
 	public BlockSmooth() {
 		super();
-		//this.setTickRandomly(true);
+		if (RockGenerator.instance.postConvertOres()) {
+			this.setTickRandomly(true);
+		}
 	}
 
 	@Override
@@ -72,10 +76,10 @@ public class BlockSmooth extends RockBlock {
 		}
 
 	}*/
-	/*
+
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand) {
-		if (rand.nextInt(100) == 0) {
+		if (RockGenerator.instance.postConvertOres() && rand.nextInt(100) == 0) {
 			RockTypes r = RockTypes.getTypeFromID(this);
 			for (int i = 0; i < 6; i++) {
 				ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[i];
@@ -90,7 +94,7 @@ public class BlockSmooth extends RockBlock {
 			}
 		}
 	}
-	 */
+
 	private void checkAndConvertOre(World world, int x, int y, int z, Block b, int meta, RockTypes r) {
 		int count = 0;
 		for (int i = 0; i < 6; i++) {

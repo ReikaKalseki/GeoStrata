@@ -27,6 +27,14 @@ public class RockGenerator implements IWorldGenerator {
 	public static final int VEIN_SIZE = 32;
 	public static final int REPLACE_PERCENT = 15;
 
+	public static final RockGenerator instance = new RockGenerator();
+
+	private final int oreControl;
+
+	private RockGenerator() {
+		oreControl = GeoOptions.GEOORE.getValue();
+	}
+
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkgen, IChunkProvider provider) {
 		if (this.canGenInDimension(world.provider.dimensionId)) {
@@ -75,6 +83,18 @@ public class RockGenerator implements IWorldGenerator {
 		if (rock == RockTypes.ONYX)
 			h *= 2;
 		return f*1F*h/64D*(3D/types.size());
+	}
+
+	public boolean postConvertOres() {
+		return oreControl == 1;
+	}
+
+	public boolean generateOres() {
+		return oreControl >= 0;
+	}
+
+	public boolean destroyOres() {
+		return oreControl == -1;
 	}
 
 }

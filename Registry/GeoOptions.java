@@ -19,7 +19,8 @@ public enum GeoOptions implements ConfigList {
 	TFGEN("Generate Rock in the Twilight Forest", true),
 	DIMGEN("Generate Rock in Other Dimensions", true),
 	BOXRECIPES("Alternate Brick Recipes", false),
-	DENSITY("Rock Density", 1F);
+	DENSITY("Rock Density", 1F),
+	GEOORE("Ore Mode", 0);
 
 	private String label;
 	private boolean defaultState;
