@@ -247,23 +247,25 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 				v5.addVertexWithUV(1+d, 1+d, 1+d, u, dv);
 			}
 
-			li = b.getSectionsForTexture(world, x, y, z, ForgeDirection.UP, type);
-			for (int i = 0; i < li.size(); i++) {
-				int edge = li.get(i);
-				IIcon ico = b.getSectionForTexture(edge, type);
-				float u = ico.getMinU();
-				float du = ico.getMaxU();
-				float v = ico.getMinV();
-				float dv = ico.getMaxV();
-				float uu = du-u;
-				float vv = dv-v;
-				float dx = uu/16F;
-				float dz = vv/16F;
+			if (b.hasCentralTexture(type)) {
+				li = b.getSectionsForTexture(world, x, y, z, ForgeDirection.UP, type);
+				for (int i = 0; i < li.size(); i++) {
+					int edge = li.get(i);
+					IIcon ico = b.getSectionForTexture(edge, type);
+					float u = ico.getMinU();
+					float du = ico.getMaxU();
+					float v = ico.getMinV();
+					float dv = ico.getMaxV();
+					float uu = du-u;
+					float vv = dv-v;
+					float dx = uu/16F;
+					float dz = vv/16F;
 
-				v5.addVertexWithUV(1+d, 1+d, 0-d, u, v);
-				v5.addVertexWithUV(0-d, 1+d, 0-d, du, v);
-				v5.addVertexWithUV(0-d, 1+d, 1+d, du, dv);
-				v5.addVertexWithUV(1+d, 1+d, 1+d, u, dv);
+					v5.addVertexWithUV(1+d, 1+d, 0-d, u, v);
+					v5.addVertexWithUV(0-d, 1+d, 0-d, du, v);
+					v5.addVertexWithUV(0-d, 1+d, 1+d, du, dv);
+					v5.addVertexWithUV(1+d, 1+d, 1+d, u, dv);
+				}
 			}
 		}
 
@@ -287,6 +289,27 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 				v5.addVertexWithUV(1+d, 0-d, 1+d, u, dv);
 				v5.addVertexWithUV(0-d, 0-d, 1+d, du, dv);
 			}
+
+			if (b.hasCentralTexture(type)) {
+				li = b.getSectionsForTexture(world, x, y, z, ForgeDirection.DOWN, type);
+				for (int i = 0; i < li.size(); i++) {
+					int edge = li.get(i);
+					IIcon ico = b.getSectionForTexture(edge, type);
+					float u = ico.getMinU();
+					float du = ico.getMaxU();
+					float v = ico.getMinV();
+					float dv = ico.getMaxV();
+					float uu = du-u;
+					float vv = dv-v;
+					float dx = uu/16F;
+					float dz = vv/16F;
+
+					v5.addVertexWithUV(0-d, 0-d, 0-d, du, v);
+					v5.addVertexWithUV(1+d, 0-d, 0-d, u, v);
+					v5.addVertexWithUV(1+d, 0-d, 1+d, u, dv);
+					v5.addVertexWithUV(0-d, 0-d, 1+d, du, dv);
+				}
+			}
 		}
 
 		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.EAST.ordinal())) {
@@ -308,6 +331,27 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 				v5.addVertexWithUV(1+d, 1+d, 0-d, u, v);
 				v5.addVertexWithUV(1+d, 1+d, 1+d, u, dv);
 				v5.addVertexWithUV(1+d, 0-d, 1+d, du, dv);
+			}
+
+			if (b.hasCentralTexture(type)) {
+				li = b.getSectionsForTexture(world, x, y, z, ForgeDirection.EAST, type);
+				for (int i = 0; i < li.size(); i++) {
+					int edge = li.get(i);
+					IIcon ico = b.getSectionForTexture(edge, type);
+					float u = ico.getMinU();
+					float du = ico.getMaxU();
+					float v = ico.getMinV();
+					float dv = ico.getMaxV();
+					float uu = du-u;
+					float vv = dv-v;
+					float dx = uu/16F;
+					float dz = vv/16F;
+
+					v5.addVertexWithUV(1+d, 0-d, 0-d, du, v);
+					v5.addVertexWithUV(1+d, 1+d, 0-d, u, v);
+					v5.addVertexWithUV(1+d, 1+d, 1+d, u, dv);
+					v5.addVertexWithUV(1+d, 0-d, 1+d, du, dv);
+				}
 			}
 		}
 
@@ -331,6 +375,27 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 				v5.addVertexWithUV(0-d, 0-d, 1+d, du, dv);
 				v5.addVertexWithUV(0-d, 1+d, 1+d, u, dv);
 			}
+
+			if (b.hasCentralTexture(type)) {
+				li = b.getSectionsForTexture(world, x, y, z, ForgeDirection.WEST, type);
+				for (int i = 0; i < li.size(); i++) {
+					int edge = li.get(i);
+					IIcon ico = b.getSectionForTexture(edge, type);
+					float u = ico.getMinU();
+					float du = ico.getMaxU();
+					float v = ico.getMinV();
+					float dv = ico.getMaxV();
+					float uu = du-u;
+					float vv = dv-v;
+					float dx = uu/16F;
+					float dz = vv/16F;
+
+					v5.addVertexWithUV(0-d, 1+d, 0-d, u, v);
+					v5.addVertexWithUV(0-d, 0-d, 0-d, du, v);
+					v5.addVertexWithUV(0-d, 0-d, 1+d, du, dv);
+					v5.addVertexWithUV(0-d, 1+d, 1+d, u, dv);
+				}
+			}
 		}
 
 		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.SOUTH.ordinal())) {
@@ -353,6 +418,27 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 				v5.addVertexWithUV(1+d, 0-d, 1+d, du, dv);
 				v5.addVertexWithUV(1+d, 1+d, 1+d, u, dv);
 			}
+
+			if (b.hasCentralTexture(type)) {
+				li = b.getSectionsForTexture(world, x, y, z, ForgeDirection.SOUTH, type);
+				for (int i = 0; i < li.size(); i++) {
+					int edge = li.get(i);
+					IIcon ico = b.getSectionForTexture(edge, type);
+					float u = ico.getMinU();
+					float du = ico.getMaxU();
+					float v = ico.getMinV();
+					float dv = ico.getMaxV();
+					float uu = du-u;
+					float vv = dv-v;
+					float dx = uu/16F;
+					float dz = vv/16F;
+
+					v5.addVertexWithUV(0-d, 1+d, 1+d, u, v);
+					v5.addVertexWithUV(0-d, 0-d, 1+d, du, v);
+					v5.addVertexWithUV(1+d, 0-d, 1+d, du, dv);
+					v5.addVertexWithUV(1+d, 1+d, 1+d, u, dv);
+				}
+			}
 		}
 
 		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.NORTH.ordinal())) {
@@ -374,6 +460,27 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 				v5.addVertexWithUV(0-d, 1+d, 0-d, u, v);
 				v5.addVertexWithUV(1+d, 1+d, 0-d, u, dv);
 				v5.addVertexWithUV(1+d, 0-d, 0-d, du, dv);
+			}
+
+			if (b.hasCentralTexture(type)) {
+				li = b.getSectionsForTexture(world, x, y, z, ForgeDirection.NORTH, type);
+				for (int i = 0; i < li.size(); i++) {
+					int edge = li.get(i);
+					IIcon ico = b.getSectionForTexture(edge, type);
+					float u = ico.getMinU();
+					float du = ico.getMaxU();
+					float v = ico.getMinV();
+					float dv = ico.getMaxV();
+					float uu = du-u;
+					float vv = dv-v;
+					float dx = uu/16F;
+					float dz = vv/16F;
+
+					v5.addVertexWithUV(0-d, 0-d, 0-d, du, v);
+					v5.addVertexWithUV(0-d, 1+d, 0-d, u, v);
+					v5.addVertexWithUV(1+d, 1+d, 0-d, u, dv);
+					v5.addVertexWithUV(1+d, 0-d, 0-d, du, dv);
+				}
 			}
 		}
 	}

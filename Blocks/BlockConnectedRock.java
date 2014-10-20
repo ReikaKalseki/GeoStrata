@@ -179,6 +179,10 @@ public class BlockConnectedRock extends RockBlock {
 		return li;
 	}
 
+	public boolean hasCentralTexture(RockTypes rock) {
+		return this == RockShapes.CONNECTED2.getBlock(rock);
+	}
+
 	public IIcon getIconForEdge(int edge, RockTypes rock) {
 		return edges[edge][rock.ordinal()];
 	}
