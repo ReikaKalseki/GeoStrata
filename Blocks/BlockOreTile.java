@@ -36,7 +36,6 @@ import net.minecraftforge.common.util.ForgeDirection;
 import Reika.DragonAPI.Instantiable.Data.PluralMap;
 import Reika.DragonAPI.Instantiable.Data.TileEntityCache;
 import Reika.DragonAPI.Interfaces.OreType;
-import Reika.DragonAPI.Libraries.IO.ReikaChatHelper;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
@@ -311,7 +310,6 @@ public class BlockOreTile extends Block {
 	@Override
 	public final int colorMultiplier(IBlockAccess iba, int x, int y, int z) {
 		TileEntity tile = iba.getTileEntity(x, y, z);
-		//because some TEs *cough*thaumcraft.common.tiles.TileNode*cough* get placed without a block set, resulting in an ore block with a wrong TE
 		if (tile instanceof TileEntityGeoOre) {
 			TileEntityGeoOre te = (TileEntityGeoOre)tile;
 			RockTypes rock = te.getType();
@@ -327,6 +325,7 @@ public class BlockOreTile extends Block {
 			}
 		}
 		else {
+			/*
 			String s1 = "Ore block @ "+x+", "+y+", "+z+" had its TileEntity overwritten by "+tile.getClass().getName()+"!";
 			String s2 = "This is caused by that tile's mod setting the TileEntity without also setting the block type!";
 			String s3 = "This is very dangerous and is a bug on the part of that mod, NOT GeoStrata!";
@@ -335,7 +334,7 @@ public class BlockOreTile extends Block {
 			ReikaChatHelper.writeString(s3);
 			GeoStrata.logger.logError(s1);
 			GeoStrata.logger.logError(s2);
-			GeoStrata.logger.logError(s3);
+			GeoStrata.logger.logError(s3);*/
 			return super.colorMultiplier(iba, x, y, z);
 		}
 	}
