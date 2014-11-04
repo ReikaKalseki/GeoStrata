@@ -184,7 +184,7 @@ public class BlockOreTile extends Block {
 
 	@Override
 	public void dropBlockAsItemWithChance(World world, int x, int y, int z, int meta, float chance, int fortune) {
-		TileEntityGeoOre te = tileCache.get(x, y, z);
+		TileEntityGeoOre te = tileCache.get(world, x, y, z);
 		ReikaJavaLibrary.pConsole(te);
 		if (te != null) {
 			Block b = te.getOreBlock();
@@ -220,7 +220,7 @@ public class BlockOreTile extends Block {
 
 	@Override
 	public boolean canSilkHarvest(World world, EntityPlayer player, int x, int y, int z, int metadata) {
-		TileEntityGeoOre te = tileCache.get(x, y, z);
+		TileEntityGeoOre te = tileCache.get(world, x, y, z);
 		return te != null && te.getOreBlock().canSilkHarvest(world, player, x, y, z, metadata);
 	}
 	/*
@@ -232,7 +232,7 @@ public class BlockOreTile extends Block {
 	 */
 	@Override
 	public void onBlockHarvested(World world, int x, int y, int z, int meta, EntityPlayer ep) {
-		tileCache.put(x, y, z, (TileEntityGeoOre)world.getTileEntity(x, y, z));
+		tileCache.put(world, x, y, z, (TileEntityGeoOre)world.getTileEntity(x, y, z));
 	}
 
 	@Override
@@ -246,7 +246,7 @@ public class BlockOreTile extends Block {
 	{
 		ep.addStat(StatList.mineBlockStatArray[getIdFromBlock(this)], 1);
 		ep.addExhaustion(0.025F);
-		TileEntityGeoOre te = tileCache.get(x, y, z);
+		TileEntityGeoOre te = tileCache.get(world, x, y, z);
 		if (this.canSilkHarvest(world, ep, x, y, z, meta) && EnchantmentHelper.getSilkTouchModifier(ep)) {
 			ArrayList<ItemStack> items = new ArrayList();
 			items.add(new ItemStack(te.getOreBlock(), 1, te.getOreMeta()));
@@ -261,7 +261,7 @@ public class BlockOreTile extends Block {
 			this.dropBlockAsItem(world, x, y, z, meta, i1);
 			harvesters.set(null);
 		}
-		tileCache.remove(x, y, z);
+		tileCache.remove(world, x, y, z);
 	}
 
 	@Override
