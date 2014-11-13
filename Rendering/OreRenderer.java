@@ -104,6 +104,9 @@ public class OreRenderer implements ISimpleBlockRenderingHandler {
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks rb) {
 		RockTypes r = BlockOreTile.getRockFromItem(metadata);
+		if (r == null) {
+			return;
+		}
 		//ReikaJavaLibrary.pConsole(r);
 		ItemStack ore = BlockOreTile.getOreByItemMetadata(Item.getItemFromBlock(block), metadata);
 		Block b = Block.getBlockFromItem(ore.getItem());
