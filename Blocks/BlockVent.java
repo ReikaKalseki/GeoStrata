@@ -9,6 +9,7 @@
  ******************************************************************************/
 package Reika.GeoStrata.Blocks;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -19,6 +20,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -31,13 +33,15 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import Reika.ChromatiCraft.API.MinerBlock;
 import Reika.DragonAPI.Libraries.ReikaAABBHelper;
 import Reika.DragonAPI.Libraries.IO.ReikaSoundHelper;
+import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.Registry.ReikaParticleHelper;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.GeoStrata;
 
-public class BlockVent extends Block {
+public class BlockVent extends Block implements MinerBlock {
 
 	private final IIcon[] icons = new IIcon[VentType.list.length];
 	private static final IIcon[] internal = new IIcon[VentType.list.length];
@@ -371,6 +375,16 @@ public class BlockVent extends Block {
 		public boolean isSelfLit() {
 			return this == FIRE || this == LAVA;
 		}
+	}
+
+	@Override
+	public boolean isMineable(int meta) {
+		return true;
+	}
+
+	@Override
+	public ArrayList<ItemStack> getHarvestItems(World world, int x, int y, int z, int meta, int fortune) {
+		return ReikaJavaLibrary.makeListFrom(new ItemStack(this, 1, meta));
 	}
 
 

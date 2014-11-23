@@ -36,7 +36,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import Reika.DragonAPI.Instantiable.Data.PluralMap;
 import Reika.DragonAPI.Instantiable.Data.TileEntityCache;
 import Reika.DragonAPI.Interfaces.OreType;
-import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
+import Reika.DragonAPI.Interfaces.SpecialOreBlock;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaOreHelper;
@@ -48,7 +48,7 @@ import Reika.GeoStrata.World.RockGenerator;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockOreTile extends Block {
+public class BlockOreTile extends Block implements SpecialOreBlock {
 
 	private static PluralMap<Integer> metaMap = new PluralMap(3);
 	private static HashMap<Integer, ItemStack> oreMap = new HashMap();
@@ -185,7 +185,6 @@ public class BlockOreTile extends Block {
 	@Override
 	public void dropBlockAsItemWithChance(World world, int x, int y, int z, int meta, float chance, int fortune) {
 		TileEntityGeoOre te = tileCache.get(world, x, y, z);
-		ReikaJavaLibrary.pConsole(te);
 		if (te != null) {
 			Block b = te.getOreBlock();
 			int metadata = te.getOreMeta();
@@ -356,6 +355,27 @@ public class BlockOreTile extends Block {
 		else {
 			return super.getRenderColor(dmg);
 		}
+	}
+
+	@Override
+	public OreType getOre(IBlockAccess world, int x, int y, int z) {
+		return this.getOreFromItem(world.getBlockMetadata(x, y, z));
+	}
+
+	@Override
+	public ItemStack getSilkTouchVersion(World world, int x, int y, int z) {
+		TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);
+		return new ItemStack(te.getOreBlock(), 1, te.getOreMeta());
+	}
+
+	@Override
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int fortune) {
+		return this.getDrops(world, x, y, z, world.getBlockMetadata(x, y, z), fortune);
+	}
+
+	@Override
+	public ItemStack getReplacementBlock(World world, int x, int y, int z) {
+		return new ItemStack(Blocks.stone);
 	}
 
 }
