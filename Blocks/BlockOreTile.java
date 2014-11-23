@@ -378,4 +378,9 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 		return new ItemStack(Blocks.stone);
 	}
 
+	@Override
+	public ItemStack getDisplayItem(World world, int x, int y, int z) {
+		return this.getSilkTouchVersion(world, x, y, z);
+	}
+
 }
