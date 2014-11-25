@@ -198,7 +198,8 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 		if (te != null) {
 			Block b = te.getOreBlock();
 			int metadata = te.getOreMeta();
-			b.breakBlock(world, x, y, z, b, metadata);
+			if (b != this)
+				b.breakBlock(world, x, y, z, b, metadata);
 		}
 		super.breakBlock(world, x, y, z, oldid, oldmeta);
 		//this.initSubs(Item.getItemFromBlock(this));
