@@ -56,9 +56,8 @@ public class BlockGeoStairs extends BlockStairs {
 	@Override
 	public final int colorMultiplier(IBlockAccess iba, int x, int y, int z) {
 		TileEntityGeoBlocks te = (TileEntityGeoBlocks)iba.getTileEntity(x, y, z);
-		RockTypes rock = te.getRockType();
 		//ReikaJavaLibrary.pConsole(rock);
-		if (rock == RockTypes.OPAL) {
+		if (te != null && te.getRockType() == RockTypes.OPAL) {
 			int sc = 48;
 			float hue1 = (float)(ReikaMathLibrary.py3d(x, y*4, z+x)%sc)/sc;
 			//float hue2 = (float)(Math.cos(x/24D)+Math.sin(z/24D))+(y%360)*0.05F;
