@@ -179,7 +179,7 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune) {
 		TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);
-		return te != null ? te.getOreBlock().getDrops(world, x, y, z, te.getOreMeta(), fortune) : new ArrayList();
+		return te != null && te.getOreBlock() != this ? te.getOreBlock().getDrops(world, x, y, z, te.getOreMeta(), fortune) : new ArrayList();
 	}
 
 	@Override
