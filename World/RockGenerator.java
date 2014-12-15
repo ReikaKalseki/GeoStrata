@@ -86,11 +86,11 @@ public class RockGenerator implements IWorldGenerator {
 	}
 
 	public boolean postConvertOres() {
-		return oreControl == 1;
+		return oreControl == 2;
 	}
 
 	public boolean generateOres() {
-		return oreControl >= 0;
+		return oreControl >= 1;
 	}
 
 	public boolean destroyOres() {

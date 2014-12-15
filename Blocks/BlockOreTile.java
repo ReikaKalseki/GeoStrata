@@ -221,7 +221,7 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 	@Override
 	public boolean canSilkHarvest(World world, EntityPlayer player, int x, int y, int z, int metadata) {
 		TileEntityGeoOre te = tileCache.get(world, x, y, z);
-		return te != null && te.getOreBlock().canSilkHarvest(world, player, x, y, z, metadata);
+		return te != null && te.getOreBlock() != this && te.getOreBlock().canSilkHarvest(world, player, x, y, z, metadata);
 	}
 	/*
 	@Override
