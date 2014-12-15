@@ -53,14 +53,19 @@ public class OreRenderer implements ISimpleBlockRenderingHandler {
 				//oreIcons.put(ore, li);
 				int k = 0;
 				for (ItemStack is : c) {
-					Block b = Block.getBlockFromItem(is.getItem());
-					int meta = is.getItemDamage();
-					IIcon ico = b.getIcon(1, meta);
-					String n = "geostrata:ore_"+ore.name().toLowerCase()+"_"+k;
-					k++;
-					IIcon tex = ReikaIconHelper.clipFrom(ico, stone, evt.map, n);
-					//li.add(tex);
-					icons.put(b, meta, tex);
+					try {
+						Block b = Block.getBlockFromItem(is.getItem());
+						int meta = is.getItemDamage();
+						IIcon ico = b.getIcon(1, meta);
+						String n = "geostrata:ore_"+ore.name().toLowerCase()+"_"+k;
+						k++;
+						IIcon tex = ReikaIconHelper.clipFrom(ico, stone, evt.map, n);
+						//li.add(tex);
+						icons.put(b, meta, tex);
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
@@ -72,14 +77,19 @@ public class OreRenderer implements ISimpleBlockRenderingHandler {
 				//modOreIcons.put(ore, li);
 				int k = 0;
 				for (ItemStack is : c) {
-					Block b = Block.getBlockFromItem(is.getItem());
-					int meta = is.getItemDamage();
-					IIcon ico = b.getIcon(1, meta);
-					String n = "geostrata:ore_"+ore.name().toLowerCase()+"_"+k;
-					k++;
-					IIcon tex = ReikaIconHelper.clipFrom(ico, stone, evt.map, n);
-					//li.add(tex);
-					icons.put(b, meta, tex);
+					try {
+						Block b = Block.getBlockFromItem(is.getItem());
+						int meta = is.getItemDamage();
+						IIcon ico = b.getIcon(1, meta);
+						String n = "geostrata:ore_"+ore.name().toLowerCase()+"_"+k;
+						k++;
+						IIcon tex = ReikaIconHelper.clipFrom(ico, stone, evt.map, n);
+						//li.add(tex);
+						icons.put(b, meta, tex);
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
