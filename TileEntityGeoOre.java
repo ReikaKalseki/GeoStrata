@@ -104,7 +104,7 @@ public class TileEntityGeoOre extends TileEntity {
 
 	/** Single char names to minimize packet size */
 	private void writeToPacket(NBTTagCompound NBT) {
-		NBT.setInteger("r", type.ordinal());
+		NBT.setInteger("r", this.getType().ordinal());
 		if (ore != null)
 			NBT.setInteger("a", ore.ordinal());
 		if (modore != null)
