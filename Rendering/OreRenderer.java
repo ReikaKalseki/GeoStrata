@@ -44,6 +44,8 @@ public class OreRenderer implements ISimpleBlockRenderingHandler {
 	private static final BlockMap<IIcon> icons = new BlockMap();
 
 	public static void regenIcons(TextureStitchEvent.Pre evt) {
+		if (true)
+			return;
 		IIcon stone = Blocks.stone.getIcon(0, 0);
 		for (int i = 0; i < ReikaOreHelper.oreList.length; i++) {
 			ReikaOreHelper ore = ReikaOreHelper.oreList[i];

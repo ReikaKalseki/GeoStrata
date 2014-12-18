@@ -188,7 +188,8 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 		if (te != null) {
 			Block b = te.getOreBlock();
 			int metadata = te.getOreMeta();
-			b.dropBlockAsItemWithChance(world, x, y, z, metadata, chance, fortune);
+			if (b != this)
+				b.dropBlockAsItemWithChance(world, x, y, z, metadata, chance, fortune);
 		}
 	}
 
