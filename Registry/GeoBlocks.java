@@ -15,6 +15,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import Reika.DragonAPI.Interfaces.BlockEnum;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
@@ -202,5 +203,10 @@ public enum GeoBlocks implements BlockEnum {
 
 	public Item getItem() {
 		return Item.getItemFromBlock(this.getBlockInstance());
+	}
+
+	@Override
+	public ItemStack getStackOfMetadata(int meta) {
+		return new ItemStack(this.getBlockInstance(), 1, meta);
 	}
 }

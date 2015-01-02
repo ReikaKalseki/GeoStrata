@@ -15,6 +15,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -22,15 +23,21 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
+import Reika.DragonAPI.ASM.APIStripper.Strippable;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.RockTypes;
 import Reika.RotaryCraft.API.Laserable;
+
+import com.carpentersblocks.api.IWrappableBlock;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public abstract class RockBlock extends Block implements Laserable {
+@Strippable(value={"com.carpentersblocks.api.IWrappableBlock"})
+public abstract class RockBlock extends Block implements Laserable, IWrappableBlock {
 
 	protected IIcon[] icons = new IIcon[RockTypes.rockList.length];
 
@@ -100,6 +107,10 @@ public abstract class RockBlock extends Block implements Laserable {
 	public final int colorMultiplier(IBlockAccess iba, int x, int y, int z) {
 		RockTypes rock = RockTypes.getTypeAtCoords(iba, x, y, z);
 		//ReikaJavaLibrary.pConsole(rock);
+		return this.getColor(iba, x, y, z, rock);
+	}
+
+	private int getColor(IBlockAccess iba, int x, int y, int z, RockTypes rock) {
 		if (rock == RockTypes.OPAL) {
 			int sc = 48;
 			float hue1 = (float)(ReikaMathLibrary.py3d(x, y*4, z+x)%sc)/sc;
@@ -153,6 +164,63 @@ public abstract class RockBlock extends Block implements Laserable {
 	@Override
 	public boolean blockBeam(World world, int x, int y, int z, long power) {
 		return true;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getColorMultiplier(IBlockAccess iba, int x, int y, int z, Block b, int meta) {
+		return this.getColor(iba, x, y, z, RockTypes.getTypeFromID(b));
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(IBlockAccess iba, int x, int y, int z, int side, Block b, int meta) {
+		return this.getIcon(side, meta);
+	}
+
+	@Override
+	public int getWeakRedstone(World world, int x, int y, int z, Block b, int meta) {
+		return super.isProvidingWeakPower(world, x, y, z, meta);
+	}
+
+	@Override
+	public int getStrongRedstone(World world, int x, int y, int z, Block b, int meta) {
+		return super.isProvidingStrongPower(world, x, y, z, meta);
+	}
+
+	@Override
+	public float getHardness(World world, int x, int y, int z, Block b, int meta) {
+		return RockTypes.getTypeFromID(b).blockHardness;
+	}
+
+	@Override
+	public float getBlastResistance(Entity entity, World world, int x, int y, int z, double explosionX, double explosionY, double explosionZ, Block b, int meta) {
+		return RockTypes.getTypeFromID(b).blastResistance*3; //x3 is in setResistance
+	}
+
+	@Override
+	public int getFlammability(IBlockAccess iba, int x, int y, int z, ForgeDirection side, Block b, int meta) {
+		return 0;
+	}
+
+	@Override
+	public int getFireSpread(IBlockAccess iba, int x, int y, int z, ForgeDirection side, Block b, int meta) {
+		return 0;
+	}
+
+	@Override
+	public boolean sustainsFire(IBlockAccess iba, int x, int y, int z, ForgeDirection side, Block b, int meta) {
+		return false;
+	}
+
+	@Override
+	public boolean isLog(IBlockAccess iba, int x, int y, int z, Block b, int meta) {
+		return false;
+	}
+
+	@Override
+	public boolean canEntityDestroy(IBlockAccess iba, int x, int y, int z, Entity e, Block b, int meta) {
+		return this.canEntityDestroy(iba, x, y, z, e);
 	}
 
 }
