@@ -27,14 +27,19 @@ public class ItemBlockAnyGeoVariant extends ItemBlock {
 
 	public ItemBlockAnyGeoVariant(Block b) {
 		super(b);
+		this.setHasSubtypes(true);
 	}
 
-	public RockTypes getRock(ItemStack is) {
+	public static RockTypes getRock(ItemStack is) {
 		return RockTypes.rockList[is.getItemDamage()/RockShapes.shapeList.length];
 	}
 
-	public RockShapes getShape(ItemStack is) {
+	public static RockShapes getShape(ItemStack is) {
 		return RockShapes.shapeList[is.getItemDamage()%RockShapes.shapeList.length];
+	}
+
+	public static int getStack(RockTypes r, RockShapes s) {
+		return r.ordinal()*RockShapes.shapeList.length+s.ordinal();
 	}
 
 	@Override

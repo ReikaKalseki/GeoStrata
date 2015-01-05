@@ -13,14 +13,18 @@ import java.awt.Color;
 
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
+import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.TileEntityGeoBlocks;
+import Reika.GeoStrata.Items.ItemBlockAnyGeoVariant;
 import Reika.GeoStrata.Registry.RockTypes;
 
 public class BlockGeoStairs extends BlockStairs {
@@ -65,6 +69,25 @@ public class BlockGeoStairs extends BlockStairs {
 		}
 		else {
 			return super.colorMultiplier(iba, x, y, z);
+		}
+	}
+
+	@Override
+	public boolean removedByPlayer(World world, EntityPlayer player, int x, int y, int z, boolean harvest)
+	{
+		if (harvest)
+			this.harvestBlock(world, player, x, y, z, 0);
+		return world.setBlockToAir(x, y, z);
+	}
+
+	@Override
+	public void harvestBlock(World world, EntityPlayer ep, int x, int y, int z, int meta)
+	{
+		TileEntity tile = world.getTileEntity(x, y, z);
+		if (tile instanceof TileEntityGeoBlocks) {
+			TileEntityGeoBlocks te = (TileEntityGeoBlocks)tile;
+			ItemStack is = new ItemStack(this, 1, ItemBlockAnyGeoVariant.getStack(te.getRockType(), te.getRockShape()));
+			ReikaItemHelper.dropItem(world, x+0.5, y+0.5, z+0.5, is);
 		}
 	}
 }

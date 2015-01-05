@@ -83,4 +83,8 @@ public class TileEntityGeoBlocks extends TileEntity {
 		return type;
 	}
 
+	public RockShapes getRockShape() {
+		return shape;
+	}
+
 }

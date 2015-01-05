@@ -43,6 +43,7 @@ public class OreRenderer implements ISimpleBlockRenderingHandler {
 	//private static final EnumMap<ReikaOreHelper, ArrayList<IIcon>> oreIcons = new EnumMap(ReikaOreHelper.class);
 	private static final BlockMap<IIcon> icons = new BlockMap();
 
+	@SuppressWarnings("unused")
 	public static void regenIcons(TextureStitchEvent.Pre evt) {
 		if (true)
 			return;

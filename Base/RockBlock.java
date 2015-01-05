@@ -29,7 +29,7 @@ import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.RockTypes;
-import Reika.RotaryCraft.API.Laserable;
+import Reika.RotaryCraft.API.Interfaces.Laserable;
 
 import com.carpentersblocks.api.IWrappableBlock;
 

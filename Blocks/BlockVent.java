@@ -40,8 +40,9 @@ import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.Registry.ReikaParticleHelper;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.GeoStrata;
+import Reika.RotaryCraft.API.Interfaces.EnvironmentalHeatSource;
 
-public class BlockVent extends Block implements MinerBlock {
+public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSource {
 
 	private final IIcon[] icons = new IIcon[VentType.list.length];
 	private static final IIcon[] internal = new IIcon[VentType.list.length];
@@ -385,6 +386,27 @@ public class BlockVent extends Block implements MinerBlock {
 	@Override
 	public ArrayList<ItemStack> getHarvestItems(World world, int x, int y, int z, int meta, int fortune) {
 		return ReikaJavaLibrary.makeListFrom(new ItemStack(this, 1, meta));
+	}
+
+	@Override
+	public SourceType getSourceType(IBlockAccess iba, int x, int y, int z) {
+		TileEntityVent te = (TileEntityVent)iba.getTileEntity(x, y, z);
+		switch(te.getType()) {
+		case FIRE:
+			return SourceType.FIRE;
+		case LAVA:
+			return SourceType.LAVA;
+		case WATER:
+			return SourceType.WATER;
+		default:
+			return null;
+		}
+	}
+
+	@Override
+	public boolean isActive(IBlockAccess iba, int x, int y, int z) {
+		TileEntityVent te = (TileEntityVent)iba.getTileEntity(x, y, z);
+		return te.activeTimer > 0;
 	}
 
 
