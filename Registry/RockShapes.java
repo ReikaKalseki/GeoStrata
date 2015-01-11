@@ -43,7 +43,7 @@ public enum RockShapes {
 	RAISED(BlockShapedRock.class, 		11,		"Raised"),
 	ETCHED(BlockShapedRock.class, 		12,		"Etched"),
 	CONNECTED(BlockConnectedRock.class,			"Connected"),
-	CONNECTED2(BlockConnectedRock.class,		"Connected2");
+	CONNECTED2(BlockConnectedRock.class,		"Connected 2");
 
 	//public final String typeName;
 	//private final GeoBlocks blockType;
@@ -178,10 +178,6 @@ public enum RockShapes {
 			max = Math.max(s.offset, max);
 		}
 		return max;
-	}
-
-	public String getName() {
-		return name;
 	}
 
 }

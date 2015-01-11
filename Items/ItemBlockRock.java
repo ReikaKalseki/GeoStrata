@@ -58,7 +58,7 @@ public class ItemBlockRock extends ItemBlock {
 		if (s == null || r == null) {
 			return "ERROR";
 		}
-		return s.nameFirst ? r.getName()+" "+s.getName() : s.getName()+" "+r.getName();
+		return s.nameFirst ? r.getName()+" "+s.name : s.name+" "+r.getName();
 	}
 
 	@Override

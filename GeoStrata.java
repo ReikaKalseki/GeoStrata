@@ -24,6 +24,7 @@ import Reika.DragonAPI.Auxiliary.Trackers.CommandableUpdateChecker;
 import Reika.DragonAPI.Auxiliary.Trackers.DonatorController;
 import Reika.DragonAPI.Auxiliary.Trackers.VanillaIntegrityTracker;
 import Reika.DragonAPI.Base.DragonAPIMod;
+import Reika.DragonAPI.Base.DragonAPIMod.LoadProfiler.LoadPhase;
 import Reika.DragonAPI.Instantiable.IO.ControlledConfig;
 import Reika.DragonAPI.Instantiable.IO.ModLogger;
 import Reika.DragonAPI.Libraries.ReikaRecipeHelper;
@@ -82,6 +83,7 @@ public class GeoStrata extends DragonAPIMod {
 	@Override
 	@EventHandler
 	public void preload(FMLPreInitializationEvent evt) {
+		this.startTiming(LoadPhase.PRELOAD);
 		this.verifyVersions();
 		config.loadSubfolderedConfigFile(evt);
 		config.initProps(evt);
@@ -89,11 +91,14 @@ public class GeoStrata extends DragonAPIMod {
 		proxy.registerSounds();
 
 		this.basicSetup(evt);
+		this.finishTiming();
 	}
 
 	@Override
 	@EventHandler
 	public void load(FMLInitializationEvent event) {
+		this.startTiming(LoadPhase.LOAD);
+
 		this.loadClasses();
 		this.loadDictionary();
 		GameRegistry.registerWorldGenerator(RockGenerator.instance, Integer.MIN_VALUE);
@@ -131,11 +136,15 @@ public class GeoStrata extends DragonAPIMod {
 				FMLInterModComms.sendMessage(ModList.BCTRANSPORT.modLabel, "add-facade", is);
 			}
 		}
+
+		this.finishTiming();
 	}
 
 	@Override
 	@EventHandler // Like the modsLoaded thing from ModLoader
 	public void postload(FMLPostInitializationEvent evt) {
+		this.startTiming(LoadPhase.POSTLOAD);
+
 		if (ModList.ROTARYCRAFT.isLoaded()) {
 			for (int i = 0; i < RockTypes.rockList.length; i++) {
 				RockTypes rock = RockTypes.rockList[i];
@@ -166,6 +175,8 @@ public class GeoStrata extends DragonAPIMod {
 				ReikaRecipeHelper.addSmelting(RockTypes.QUARTZ.getItem(RockShapes.SMOOTH), burned, 0.05F);
 			}
 		}
+
+		this.finishTiming();
 	}
 
 	@SubscribeEvent

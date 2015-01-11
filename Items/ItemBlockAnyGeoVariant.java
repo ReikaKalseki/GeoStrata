@@ -72,7 +72,14 @@ public class ItemBlockAnyGeoVariant extends ItemBlock {
 	public void addInformation(ItemStack is, EntityPlayer ep, List li, boolean par4) {
 		RockTypes r = this.getRock(is);
 		RockShapes s = this.getShape(is);
-		li.add(String.format("Type: %s %s", s.getName(), r.getName()));
+		String s1 = s.name;
+		String s2 = r.getName();
+		if (s.nameFirst) {
+			String sg = s1;
+			s1 = s2;
+			s2 = sg;
+		}
+		li.add(String.format("Type: %s %s", s1, s2));
 	}
 
 }

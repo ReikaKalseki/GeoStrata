@@ -18,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
+import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Registry.RockShapes;
@@ -79,8 +80,10 @@ public class BlockConnectedRock extends RockBlock {
 			GeoStrata.logger.debug("Adding "+name+" rock icon "+icons[r.ordinal()].getIconName());
 
 			for (int k = 0; k < 10; k++) {
-				edges[k][r.ordinal()] = ico.registerIcon("GeoStrata:"+RockShapes.getShape(this, 0).name.toLowerCase()+"/"+k);
-				sections[k][r.ordinal()] = ico.registerIcon("GeoStrata:"+RockShapes.getShape(this, 0).name.toLowerCase()+"/"+k+"_sec");
+				String e = ReikaStringParser.stripSpaces("GeoStrata:"+RockShapes.getShape(this, 0).name.toLowerCase()+"/"+k);
+				String s = ReikaStringParser.stripSpaces("GeoStrata:"+RockShapes.getShape(this, 0).name.toLowerCase()+"/"+k+"_sec");
+				edges[k][r.ordinal()] = ico.registerIcon(e);
+				sections[k][r.ordinal()] = ico.registerIcon(s);
 			}
 		}
 	}

@@ -101,7 +101,7 @@ public enum RockTypes {
 
 	public ItemStack getStair(RockShapes shape) {
 		int meta = this.ordinal()*RockShapes.shapeList.length;
-		meta += shape.metadata+1;
+		meta += shape.needsOwnBlock ? shape.metadata : shape.metadata+1;
 		return new ItemStack(GeoBlocks.STAIR.getBlockInstance(), 1, meta);
 	}
 
