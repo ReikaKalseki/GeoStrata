@@ -16,7 +16,7 @@ import java.util.HashMap;
 import net.minecraft.block.Block;
 import net.minecraft.world.IBlockAccess;
 import Reika.DragonAPI.Exception.RegistrationException;
-import Reika.DragonAPI.Instantiable.Data.BlockMap;
+import Reika.DragonAPI.Instantiable.Data.Maps.BlockMap;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Blocks.BlockConnectedRock;
 import Reika.GeoStrata.Blocks.BlockShapedRock;
