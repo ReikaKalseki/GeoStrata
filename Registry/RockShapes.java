@@ -119,7 +119,7 @@ public enum RockShapes {
 			}
 			catch (Exception e) {
 				e.printStackTrace();
-				throw new RegistrationException(GeoStrata.instance, "Block type for "+r+" "+this+" could not be created!");
+				throw new RegistrationException(GeoStrata.instance, "Block type for "+r+" "+this+" could not be created: "+e.getLocalizedMessage());
 			}
 		}
 	}
