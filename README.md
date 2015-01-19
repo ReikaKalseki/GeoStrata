@@ -1,4 +1,4 @@
-GeoGen
+GeoStrata
 ======
 
 A realistic geological world-gen mod.
