@@ -286,6 +286,8 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 	@Override
 	public ItemStack getPickBlock(MovingObjectPosition mov, World world, int x, int y, int z) {
 		TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);
+		if (te == null)
+			return null;
 		int meta = metaMap.get(te.getOreType(), 0, te.getType());
 		return new ItemStack(this, 1, meta);
 	}
