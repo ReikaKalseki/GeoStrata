@@ -9,18 +9,22 @@
  ******************************************************************************/
 package Reika.GeoStrata;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
+import java.util.Comparator;
+
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+import Reika.DragonAPI.Instantiable.GUI.SortedCreativeTab;
+import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
+import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class GeoTab extends CreativeTabs {
+public class GeoTab extends SortedCreativeTab {
 
-	public GeoTab(int position, String tabID) {
-		super(position, tabID); //The constructor for your tab
+	public GeoTab(String tabID) {
+		super(tabID);
 	}
 
 	@Override
@@ -30,14 +34,29 @@ public class GeoTab extends CreativeTabs {
 	}
 
 	@Override
-	public String getTranslatedTabLabel() {
-		return GeoStrata.MOD_NAME;
+	protected Comparator<ItemStack> getComparator() {
+		return sorter;
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public Item getTabIconItem() {
-		return null;
+	private static final RockSorter sorter = new RockSorter();
+
+	private static class RockSorter implements Comparator<ItemStack> {
+
+		@Override
+		public int compare(ItemStack o1, ItemStack o2) {
+			return this.getIndex(o1)-this.getIndex(o2);
+		}
+
+		private int getIndex(ItemStack o1) {
+			Block b = Block.getBlockFromItem(o1.getItem());
+			if (!(b instanceof RockBlock)) {
+				return -1000000+1000*ReikaRegistryHelper.getRegistry(b).ordinal()+o1.getItemDamage();
+			}
+			RockTypes r = RockTypes.getTypeFromID(b);
+			RockShapes s = RockShapes.getShape(b, o1.getItemDamage());
+			return r.ordinal()*1000+s.ordinal();
+		}
+
 	}
 
 }

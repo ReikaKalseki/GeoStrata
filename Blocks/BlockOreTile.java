@@ -70,10 +70,9 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 		}
 	}
 
-	private static void initSubs(Item item) {
+	private static void initSubs() {
 		metaMap.clear();
 		oreMap.clear();
-		ArrayList<ItemStack> li = new ArrayList();
 		int k = 0;
 		for (int r = 0; r < RockTypes.rockList.length; r++) {
 			RockTypes rock = RockTypes.rockList[r];
@@ -87,7 +86,6 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 						if (!ReikaItemHelper.listContainsItemStack(has, is)) {
 							Block b = Block.getBlockFromItem(is.getItem());
 							IIcon ico = b.getIcon(1, is.getItemDamage());
-							li.add(new ItemStack(item, 1, k));
 							setMappings(ore, f, rock, k, is);
 							f++;
 							k++;
@@ -106,7 +104,6 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 						if (!ReikaItemHelper.listContainsItemStack(has, is)) {
 							Block b = Block.getBlockFromItem(is.getItem());
 							IIcon ico = b.getIcon(1, is.getItemDamage());
-							li.add(new ItemStack(item, 1, k));
 							setMappings(ore, f, rock, k, is);
 							f++;
 							k++;
@@ -123,7 +120,7 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 	@Override
 	public void getSubBlocks(Item item, CreativeTabs tab, List li) {
 		if (!init) {
-			this.initSubs(item);
+			this.initSubs();
 		}
 		for (int meta : oreMap.keySet()) {
 			li.add(new ItemStack(item, 1, meta));
@@ -139,16 +136,29 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 	}
 
 	public static RockTypes getRockFromItem(int meta) {
+		if (!init) {
+			initSubs();
+		}
 		return rockMap.get(meta);
 	}
 
 	public static OreType getOreFromItem(int meta) {
+		if (!init) {
+			initSubs();
+		}
 		return enumMap.get(meta);
+	}
+
+	public static int getMetadataByTypes(RockTypes r, OreType o) {
+		if (!init) {
+			initSubs();
+		}
+		return metaMap.get(o, 0, r);
 	}
 
 	public static ItemStack getOreByItemMetadata(Item item, int meta) {
 		if (!init) {
-			initSubs(item);
+			initSubs();
 		}
 		return oreMap.get(meta).copy();
 	}
@@ -288,7 +298,7 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 		TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);
 		if (te == null)
 			return null;
-		int meta = metaMap.get(te.getOreType(), 0, te.getType());
+		int meta = this.getMetadataByTypes(te.getType(), te.getOreType());
 		return new ItemStack(this, 1, meta);
 	}
 

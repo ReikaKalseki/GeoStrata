@@ -67,10 +67,10 @@ public class GeoStrata extends DragonAPIMod {
 
 	public static final String packetChannel = GeoStrata.MOD_NAME+"Data";
 
-	public static CreativeTabs tabGeo = new GeoTab(CreativeTabs.getNextID(), GeoStrata.MOD_NAME);
-	public static CreativeTabs tabGeoStairs = new GeoTabStairs(CreativeTabs.getNextID(), GeoStrata.MOD_NAME+" Stairs");
-	public static CreativeTabs tabGeoSlabs = new GeoTabSlab(CreativeTabs.getNextID(), GeoStrata.MOD_NAME+" Slabs");
-	public static CreativeTabs tabGeoOres = new GeoTabOres(CreativeTabs.getNextID(), GeoStrata.MOD_NAME+" Ores");
+	public static CreativeTabs tabGeo = new GeoTab(GeoStrata.MOD_NAME);
+	public static CreativeTabs tabGeoStairs = new GeoTabStairs(GeoStrata.MOD_NAME+" Stairs");
+	public static CreativeTabs tabGeoSlabs = new GeoTabSlab(GeoStrata.MOD_NAME+" Slabs");
+	public static CreativeTabs tabGeoOres = new GeoTabOres(GeoStrata.MOD_NAME+" Ores");
 
 	public static ModLogger logger;
 
@@ -84,7 +84,7 @@ public class GeoStrata extends DragonAPIMod {
 	@EventHandler
 	public void preload(FMLPreInitializationEvent evt) {
 		this.startTiming(LoadPhase.PRELOAD);
-		this.verifyVersions();
+		this.verifyInstallation();
 		config.loadSubfolderedConfigFile(evt);
 		config.initProps(evt);
 		logger = new ModLogger(instance, false);

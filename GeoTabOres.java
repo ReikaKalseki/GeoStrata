@@ -9,39 +9,46 @@
  ******************************************************************************/
 package Reika.GeoStrata;
 
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.item.Item;
+import java.util.Comparator;
+
 import net.minecraft.item.ItemStack;
+import Reika.DragonAPI.Instantiable.GUI.SortedCreativeTab;
 import Reika.DragonAPI.Libraries.Registry.ReikaOreHelper;
 import Reika.DragonAPI.ModRegistry.ModOreList;
+import Reika.GeoStrata.Blocks.BlockOreTile;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.RockTypes;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class GeoTabOres extends CreativeTabs {
+public class GeoTabOres extends SortedCreativeTab {
 
-	public GeoTabOres(int position, String tabID) {
-		super(position, tabID); //The constructor for your tab
+	public GeoTabOres(String tabID) {
+		super(tabID);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public ItemStack getIconItemStack() {
 		int list = ReikaOreHelper.oreList.length+ModOreList.oreList.length;
-		int meta = RockTypes.BASALT.ordinal()*list+ReikaOreHelper.REDSTONE.ordinal();
+		int meta = BlockOreTile.getMetadataByTypes(RockTypes.BASALT, ReikaOreHelper.REDSTONE);
 		return new ItemStack(GeoBlocks.ORETILE.getBlockInstance(), 1, meta);
 	}
 
 	@Override
-	public String getTranslatedTabLabel() {
-		return GeoStrata.MOD_NAME+" Ores";
+	protected Comparator<ItemStack> getComparator() {
+		return sorter;
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public Item getTabIconItem() {
-		return null;
+	private static final RockOreSorter sorter = new RockOreSorter();
+
+	private static class RockOreSorter implements Comparator<ItemStack> {
+
+		@Override
+		public int compare(ItemStack o1, ItemStack o2) {
+			return o1.getItemDamage()-o2.getItemDamage();
+		}
+
 	}
 
 }
