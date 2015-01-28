@@ -37,6 +37,7 @@ import Reika.ChromatiCraft.API.MinerBlock;
 import Reika.DragonAPI.Libraries.ReikaAABBHelper;
 import Reika.DragonAPI.Libraries.IO.ReikaSoundHelper;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
+import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaParticleHelper;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.GeoStrata;
@@ -237,6 +238,19 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 					else {
 						e.extinguish();
 					}
+				}
+
+				if (rand.nextInt(20) == 0) {
+					int rx = ReikaRandomHelper.getRandomPlusMinus(xCoord, 6);
+					int ry = ReikaRandomHelper.getRandomPlusMinus(yCoord, 1);
+					int rz = ReikaRandomHelper.getRandomPlusMinus(zCoord, 6);
+					Block b = worldObj.getBlock(rx, ry, rz);
+					if (b == Blocks.farmland) {
+						int meta = worldObj.getBlockMetadata(rx, ry, rz);
+						worldObj.setBlockMetadataWithNotify(rx, ry, rz, 7, 3);
+					}
+					if (rand.nextInt(3) == 0)
+						b.updateTick(worldObj, rx, ry, rz, rand);
 				}
 			}
 			else if (type == VentType.GAS) {
