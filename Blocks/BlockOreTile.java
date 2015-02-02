@@ -83,7 +83,7 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 					Collection<ItemStack> has = new ArrayList();
 					int f = 0;
 					for (ItemStack is : c) {
-						if (!ReikaItemHelper.listContainsItemStack(has, is)) {
+						if (!ReikaItemHelper.collectionContainsItemStack(has, is)) {
 							Block b = Block.getBlockFromItem(is.getItem());
 							IIcon ico = b.getIcon(1, is.getItemDamage());
 							setMappings(ore, f, rock, k, is);
@@ -101,7 +101,7 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 					Collection<ItemStack> has = new ArrayList();
 					int f = 0;
 					for (ItemStack is : c) {
-						if (!ReikaItemHelper.listContainsItemStack(has, is)) {
+						if (!ReikaItemHelper.collectionContainsItemStack(has, is)) {
 							Block b = Block.getBlockFromItem(is.getItem());
 							IIcon ico = b.getIcon(1, is.getItemDamage());
 							setMappings(ore, f, rock, k, is);
