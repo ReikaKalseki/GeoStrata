@@ -28,8 +28,8 @@ import net.minecraftforge.common.BiomeDictionary.Type;
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
-import Reika.DragonAPI.ModInteract.RedstoneArsenalHandler;
-import Reika.DragonAPI.ModInteract.TinkerToolHandler;
+import Reika.DragonAPI.ModInteract.ItemHandlers.RedstoneArsenalHandler;
+import Reika.DragonAPI.ModInteract.ItemHandlers.TinkerToolHandler;
 
 public enum RockTypes {
 	//Generic makeup: Igneous 0-24; Metamorphic 16-40; Sedimentary 40+;

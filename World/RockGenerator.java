@@ -15,17 +15,16 @@ import java.util.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
+import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
 import Reika.DragonAPI.ModInteract.ReikaTwilightHelper;
-import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockTypes;
-import cpw.mods.fml.common.IWorldGenerator;
 
-public class RockGenerator implements IWorldGenerator {
+public class RockGenerator implements RetroactiveGenerator {
 
-	public static final int BASE_GEN = 24;
-	public static final int VEIN_SIZE = 32;
-	public static final int REPLACE_PERCENT = 15;
+	private static final int BASE_GEN = 24;
+	private static final int VEIN_SIZE = 32;
+	private static final int REPLACE_PERCENT = 15;
 
 	public static final RockGenerator instance = new RockGenerator();
 
@@ -65,7 +64,7 @@ public class RockGenerator implements IWorldGenerator {
 				int posX = chunkX + random.nextInt(16);
 				int posZ = chunkZ + random.nextInt(16);
 				int posY = geo.minY + random.nextInt(geo.maxY-geo.minY);
-				GeoStrata.logger.debug(geo.name()+":"+geo.canGenerateAt(world, posX, posY, posZ, random));
+				//GeoStrata.logger.debug(geo.name()+":"+geo.canGenerateAt(world, posX, posY, posZ, random));
 				if (geo.canGenerateAt(world, posX, posY, posZ, random)) {
 					//(new WorldGenMinable(geo.getID(RockShapes.SMOOTH), VEIN_SIZE, Blocks.stone)).generate(world, random, posX, posY, posZ);
 					(new WorldGenMinableOreAbsorber(geo, VEIN_SIZE)).generate(world, random, posX, posY, posZ);
@@ -95,6 +94,16 @@ public class RockGenerator implements IWorldGenerator {
 
 	public boolean destroyOres() {
 		return oreControl == -1;
+	}
+
+	@Override
+	public boolean canGenerateAt(Random rand, World world, int chunkX, int chunkZ) {
+		return true;
+	}
+
+	@Override
+	public String getIDString() {
+		return "GeoStrata Rock";
 	}
 
 }

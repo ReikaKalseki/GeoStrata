@@ -22,6 +22,7 @@ import Reika.DragonAPI.DragonAPICore;
 import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.Auxiliary.Trackers.CommandableUpdateChecker;
 import Reika.DragonAPI.Auxiliary.Trackers.DonatorController;
+import Reika.DragonAPI.Auxiliary.Trackers.RetroGenController;
 import Reika.DragonAPI.Auxiliary.Trackers.VanillaIntegrityTracker;
 import Reika.DragonAPI.Base.DragonAPIMod;
 import Reika.DragonAPI.Base.DragonAPIMod.LoadProfiler.LoadPhase;
@@ -29,8 +30,8 @@ import Reika.DragonAPI.Instantiable.IO.ControlledConfig;
 import Reika.DragonAPI.Instantiable.IO.ModLogger;
 import Reika.DragonAPI.Libraries.ReikaRecipeHelper;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
-import Reika.DragonAPI.ModInteract.ExtraUtilsHandler;
-import Reika.DragonAPI.ModInteract.ThermalRecipeHelper;
+import Reika.DragonAPI.ModInteract.ItemHandlers.ExtraUtilsHandler;
+import Reika.DragonAPI.ModInteract.RecipeHandlers.ThermalRecipeHelper;
 import Reika.GeoStrata.Blocks.BlockVent.TileEntityVent;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoOptions;
@@ -101,8 +102,8 @@ public class GeoStrata extends DragonAPIMod {
 
 		this.loadClasses();
 		this.loadDictionary();
-		GameRegistry.registerWorldGenerator(RockGenerator.instance, Integer.MIN_VALUE);
-		GameRegistry.registerWorldGenerator(new VentGenerator(), 0);
+		RetroGenController.instance.addHybridGenerator(RockGenerator.instance, Integer.MIN_VALUE, GeoOptions.RETROGEN.getState());
+		RetroGenController.instance.addHybridGenerator(VentGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 
 		GeoRecipes.addRecipes();
 		proxy.registerRenderers();

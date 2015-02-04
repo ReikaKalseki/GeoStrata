@@ -16,14 +16,20 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.IChunkProvider;
+import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.Blocks.BlockVent.VentType;
 import Reika.GeoStrata.Registry.GeoBlocks;
-import cpw.mods.fml.common.IWorldGenerator;
 
-public class VentGenerator implements IWorldGenerator {
+public class VentGenerator implements RetroactiveGenerator {
 
-	public static final int PER_CHUNK = 60; //calls per chunk; vast majority fail
+	public static final VentGenerator instance = new VentGenerator();
+
+	private static final int PER_CHUNK = 60; //calls per chunk; vast majority fail
+
+	private VentGenerator() {
+
+	}
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
@@ -89,6 +95,16 @@ public class VentGenerator implements IWorldGenerator {
 		if (id == Blocks.mossy_cobblestone)
 			return true;
 		return id.isReplaceableOreGen(world, x, y, z, Blocks.stone);
+	}
+
+	@Override
+	public boolean canGenerateAt(Random rand, World world, int chunkX, int chunkZ) {
+		return true;
+	}
+
+	@Override
+	public String getIDString() {
+		return "GeoStrata Vents";
 	}
 
 }

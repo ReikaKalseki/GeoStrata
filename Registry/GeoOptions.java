@@ -20,7 +20,8 @@ public enum GeoOptions implements ConfigList {
 	DIMGEN("Generate Rock in Other Dimensions", true),
 	BOXRECIPES("Alternate Brick Recipes", false),
 	DENSITY("Rock Density", 1F),
-	GEOORE("Ore Mode", 0);
+	GEOORE("Ore Mode", 0),
+	RETROGEN("Retrogeneration", false);
 
 	private String label;
 	private boolean defaultState;
