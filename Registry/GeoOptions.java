@@ -9,6 +9,7 @@
  ******************************************************************************/
 package Reika.GeoStrata.Registry;
 
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.config.Configuration;
 import Reika.DragonAPI.Exception.RegistrationException;
 import Reika.DragonAPI.Interfaces.ConfigList;
@@ -129,9 +130,7 @@ public enum GeoOptions implements ConfigList {
 	}
 
 	public static float getRockDensity() {
-		float f = DENSITY.getFloat();
-		f = Math.min(f, 2.5F);
-		return Math.max(f, 0.5F);
+		return MathHelper.clamp_float(DENSITY.getFloat(), 0.5F, 4F);
 	}
 
 }
