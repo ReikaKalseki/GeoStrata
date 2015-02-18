@@ -18,6 +18,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.oredict.OreDictionary;
+import thaumcraft.api.aspects.Aspect;
 import Reika.DragonAPI.DragonAPICore;
 import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.Auxiliary.Trackers.CommandableUpdateChecker;
@@ -30,9 +31,11 @@ import Reika.DragonAPI.Instantiable.IO.ControlledConfig;
 import Reika.DragonAPI.Instantiable.IO.ModLogger;
 import Reika.DragonAPI.Libraries.ReikaRecipeHelper;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
+import Reika.DragonAPI.ModInteract.DeepInteract.ReikaThaumHelper;
 import Reika.DragonAPI.ModInteract.ItemHandlers.ExtraUtilsHandler;
 import Reika.DragonAPI.ModInteract.RecipeHandlers.ThermalRecipeHelper;
 import Reika.GeoStrata.Blocks.BlockVent.TileEntityVent;
+import Reika.GeoStrata.Blocks.BlockVent.VentType;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockShapes;
@@ -167,6 +170,13 @@ public class GeoStrata extends DragonAPIMod {
 				ItemStack rockblock = rock.getItem(RockShapes.SMOOTH);
 				//ReikaThaumHelper.addAspects(rockblock, Aspect.STONE, (int)(rock.blockHardness/5));
 			}
+
+			ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.VENT.getBlockInstance(), VentType.WATER.ordinal(), Aspect.WATER, 2, Aspect.EARTH, 2);
+			ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.VENT.getBlockInstance(), VentType.FIRE.ordinal(), Aspect.EARTH, 2, Aspect.FIRE, 3);
+			ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.VENT.getBlockInstance(), VentType.GAS.ordinal(), Aspect.AIR, 2, Aspect.EARTH, 2, Aspect.POISON, 5);
+			ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.VENT.getBlockInstance(), VentType.SMOKE.ordinal(), Aspect.AIR, 2, Aspect.EARTH, 2);
+			ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.VENT.getBlockInstance(), VentType.STEAM.ordinal(), Aspect.AIR, 2, Aspect.WATER, 2, Aspect.EARTH, 2, Aspect.FIRE, 2);
+			ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.VENT.getBlockInstance(), VentType.LAVA.ordinal(), Aspect.EARTH, 4, Aspect.FIRE, 5);
 		}
 
 		if (ModList.EXTRAUTILS.isLoaded()) {
