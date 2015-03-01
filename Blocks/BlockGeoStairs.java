@@ -34,6 +34,7 @@ public class BlockGeoStairs extends BlockStairs {
 		this.setCreativeTab(GeoStrata.tabGeoStairs);
 		this.setHardness(2);
 		this.setResistance(10);
+		this.setLightOpacity(0); //fixes the dark side bug
 	}
 
 	@Override
