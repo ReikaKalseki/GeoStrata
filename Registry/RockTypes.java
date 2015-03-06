@@ -101,13 +101,15 @@ public enum RockTypes {
 
 	public ItemStack getStair(RockShapes shape) {
 		int meta = this.ordinal()*RockShapes.shapeList.length;
-		meta += shape.needsOwnBlock ? shape.metadata : shape.metadata+1;
+		//meta += shape.needsOwnBlock ? shape.metadata : shape.metadata+1;
+		meta += shape.ordinal();
 		return new ItemStack(GeoBlocks.STAIR.getBlockInstance(), 1, meta);
 	}
 
 	public ItemStack getSlab(RockShapes shape) {
 		int meta = this.ordinal()*RockShapes.shapeList.length;
-		meta += shape.metadata+1;
+		//meta += shape.metadata+1;
+		meta += shape.ordinal();
 		return new ItemStack(GeoBlocks.SLAB.getBlockInstance(), 1, meta);
 	}
 
