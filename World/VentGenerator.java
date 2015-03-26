@@ -58,7 +58,7 @@ public class VentGenerator implements RetroactiveGenerator {
 		if (posY < 32 && random.nextInt(6) == 0)
 			return VentType.GAS;
 		if (posY > 24 && random.nextInt(4) == 0)
-			return VentType.WATER;
+			return world.provider.dimensionId == -1 ? VentType.STEAM : VentType.WATER;
 		return random.nextBoolean() ? VentType.STEAM : VentType.SMOKE;
 	}
 
