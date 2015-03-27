@@ -244,13 +244,15 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 					int rx = ReikaRandomHelper.getRandomPlusMinus(xCoord, 6);
 					int ry = ReikaRandomHelper.getRandomPlusMinus(yCoord, 1);
 					int rz = ReikaRandomHelper.getRandomPlusMinus(zCoord, 6);
-					Block b = worldObj.getBlock(rx, ry, rz);
-					if (b == Blocks.farmland) {
-						int meta = worldObj.getBlockMetadata(rx, ry, rz);
-						worldObj.setBlockMetadataWithNotify(rx, ry, rz, 7, 3);
+					if (worldObj.checkChunksExist(rx, ry, rz, rx, ry, rz)) {
+						Block b = worldObj.getBlock(rx, ry, rz);
+						if (b == Blocks.farmland) {
+							int meta = worldObj.getBlockMetadata(rx, ry, rz);
+							worldObj.setBlockMetadataWithNotify(rx, ry, rz, 7, 3);
+						}
+						if (rand.nextInt(3) == 0)
+							b.updateTick(worldObj, rx, ry, rz, rand);
 					}
-					if (rand.nextInt(3) == 0)
-						b.updateTick(worldObj, rx, ry, rz, rand);
 				}
 			}
 			else if (type == VentType.GAS) {
