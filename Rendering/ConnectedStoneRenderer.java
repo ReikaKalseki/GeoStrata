@@ -21,7 +21,9 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
+import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.Base.BaseBlockRenderer;
+import Reika.DragonAPI.Libraries.IO.ReikaColorAPI;
 import Reika.DragonAPI.Libraries.Java.ReikaGLHelper.BlendMode;
 import Reika.GeoStrata.Blocks.BlockConnectedRock;
 import Reika.GeoStrata.Registry.RockTypes;
@@ -144,12 +146,12 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		BlockConnectedRock b = (BlockConnectedRock)block;
 		RockTypes type = RockTypes.getTypeFromID(block);
 		Tessellator v5 = Tessellator.instance;
-		v5.addTranslation(x, y, z);
 		int color = b.colorMultiplier(world, x, y, z);
-		Color c = new Color(color);
+		int[] rgb = ReikaColorAPI.HexToRGB(color);
 
 		if (renderPass == 0) {
-
+			rb.renderStandardBlockWithAmbientOcclusion(b, x, y, z, rgb[0]/255F, rgb[1]/255F, rgb[2]/255F);
+			/*
 			for (int i = 0; i < 6; i++) {
 				IIcon ico = b.getIcon(world, x, y, z, i);
 
@@ -198,7 +200,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 					break;
 				}
 			}
-
+			 */
 		}
 		else {
 
@@ -208,13 +210,13 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 			//BlendMode.DEFAULT.apply();
 			//v5.startDrawingQuads();
 			//	v5.addTranslation(x, y, z);
+			v5.addTranslation(x, y, z);
 			this.renderOverlay(world, x, y, z, block, modelId, rb);
+			v5.addTranslation(-x, -y, -z);
 			//v5.draw();
 			//GL11.glDisable(GL11.GL_BLEND);
 			//v5.startDrawingQuads();
 		}
-
-		v5.addTranslation(-x, -y, -z);
 
 		return true;
 	}
@@ -225,8 +227,8 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		Tessellator v5 = Tessellator.instance;
 		v5.setColorOpaque(255, 255, 255);
 
-		double d = 0.001;
-		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.UP.ordinal())) {
+		double d = ModList.optifineInstalled() ? 0.005 : 0.001;
+		if (b.shouldSideBeRendered(world, x, y+1, z, ForgeDirection.UP.ordinal())) {
 			ArrayList<Integer> li = b.getEdgesForFace(world, x, y, z, ForgeDirection.UP, type);
 			this.faceBrightness(ForgeDirection.DOWN, v5);
 			for (int i = 0; i < li.size(); i++) {
@@ -269,7 +271,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 			}
 		}
 
-		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.DOWN.ordinal())) {
+		if (b.shouldSideBeRendered(world, x, y-1, z, ForgeDirection.DOWN.ordinal())) {
 			ArrayList<Integer> li = b.getEdgesForFace(world, x, y, z, ForgeDirection.DOWN, type);
 			this.faceBrightness(ForgeDirection.UP, v5);
 			for (int i = 0; i < li.size(); i++) {
@@ -312,7 +314,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 			}
 		}
 
-		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.EAST.ordinal())) {
+		if (b.shouldSideBeRendered(world, x+1, y, z, ForgeDirection.EAST.ordinal())) {
 			ArrayList<Integer> li = b.getEdgesForFace(world, x, y, z, ForgeDirection.EAST, type);
 			this.faceBrightness(ForgeDirection.WEST, v5);
 			for (int i = 0; i < li.size(); i++) {
@@ -355,7 +357,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 			}
 		}
 
-		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.WEST.ordinal())) {
+		if (b.shouldSideBeRendered(world, x-1, y, z, ForgeDirection.WEST.ordinal())) {
 			ArrayList<Integer> li = b.getEdgesForFace(world, x, y, z, ForgeDirection.WEST, type);
 			this.faceBrightness(ForgeDirection.EAST, v5);
 			for (int i = 0; i < li.size(); i++) {
@@ -398,7 +400,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 			}
 		}
 
-		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.SOUTH.ordinal())) {
+		if (b.shouldSideBeRendered(world, x, y, z+1, ForgeDirection.SOUTH.ordinal())) {
 			ArrayList<Integer> li = b.getEdgesForFace(world, x, y, z, ForgeDirection.SOUTH, type);
 			this.faceBrightness(ForgeDirection.NORTH, v5);
 			for (int i = 0; i < li.size(); i++) {
@@ -441,7 +443,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 			}
 		}
 
-		if (b.shouldSideBeRendered(world, x, y, z, ForgeDirection.NORTH.ordinal())) {
+		if (b.shouldSideBeRendered(world, x, y, z-1, ForgeDirection.NORTH.ordinal())) {
 			ArrayList<Integer> li = b.getEdgesForFace(world, x, y, z, ForgeDirection.NORTH, type);
 			this.faceBrightness(ForgeDirection.SOUTH, v5);
 			for (int i = 0; i < li.size(); i++) {
