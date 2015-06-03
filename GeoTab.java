@@ -50,7 +50,7 @@ public class GeoTab extends SortedCreativeTab {
 		private int getIndex(ItemStack o1) {
 			Block b = Block.getBlockFromItem(o1.getItem());
 			if (!(b instanceof RockBlock)) {
-				return -1000000+1000*ReikaRegistryHelper.getRegistry(b).ordinal()+o1.getItemDamage();
+				return -1000000+1000*ReikaRegistryHelper.getRegistryForObject(b).ordinal()+o1.getItemDamage();
 			}
 			RockTypes r = RockTypes.getTypeFromID(b);
 			RockShapes s = RockShapes.getShape(b, o1.getItemDamage());
