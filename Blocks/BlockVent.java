@@ -76,7 +76,8 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block id) {
 		if (id != this && world.isBlockIndirectlyGettingPowered(x, y, z)) {
 			TileEntityVent te = (TileEntityVent)world.getTileEntity(x, y, z);
-			te.activate();
+			if (te.canFire())
+				te.activate();
 		}
 	}
 
@@ -120,7 +121,7 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 		}*/
 
 		TileEntityVent te = (TileEntityVent)world.getTileEntity(x, y, z);
-		if (!world.isBlockIndirectlyGettingPowered(x, y, z))
+		if (!world.isBlockIndirectlyGettingPowered(x, y, z) && te.canFire())
 			te.activate();
 		world.scheduleBlockUpdate(x, y, z, this, this.tickRate(world)+rand.nextInt(2400));
 	}
@@ -165,12 +166,20 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 		private VentType type;
 		private static final Random rand = new Random();
 
-		public void activate() {
+		private void activate() {
 			activeTimer = 40+rand.nextInt(600);
 			type = this.getType();
 			//worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, type.ordinal()*2+1, 3);
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			ReikaSoundHelper.playSoundAtBlock(worldObj, xCoord, yCoord, zCoord, "fire.ignite");
+		}
+
+		public boolean canFire() {
+			return !this.isBlocking(worldObj, xCoord, yCoord+1, zCoord);
+		}
+
+		private boolean isBlocking(World world, int x, int y, int z) {
+			return world.getBlock(x, y, z).isOpaqueCube();
 		}
 
 		private void onDeactivate() {
@@ -290,7 +299,12 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 		}
 
 		private AxisAlignedBB getEffectBox() {
-			return AxisAlignedBB.getBoundingBox(xCoord, yCoord+1, zCoord, xCoord+1, yCoord+4, zCoord+1);
+			int i = 1;
+			for (i = 1; i < 4; i++) {
+				if (this.isBlocking(worldObj, xCoord, yCoord+i, zCoord))
+					break;
+			}
+			return AxisAlignedBB.getBoundingBox(xCoord, yCoord+1, zCoord, xCoord+1, yCoord+i+1, zCoord+1);
 		}
 
 		public VentType getType() {
