@@ -51,13 +51,14 @@ public class VentGenerator implements RetroactiveGenerator {
 	}
 
 	private VentType getVentTypeFor(World world, int posX, int posY, int posZ, Random random) {
-		if (posY < 20 && random.nextInt(4) == 0)
+		float f = Math.min(1, Math.max(0.25F, world.provider.getAverageGroundLevel()/64F));
+		if (posY < VentType.LAVA.getMaxHeight()*f && random.nextInt(4) == 0)
 			return VentType.LAVA;
-		if (posY < 32 && random.nextInt(4) == 0)
+		if (posY < VentType.FIRE.getMaxHeight()*f && random.nextInt(4) == 0)
 			return VentType.FIRE;
-		if (posY < 32 && random.nextInt(6) == 0)
+		if (posY < VentType.GAS.getMaxHeight()*f && random.nextInt(6) == 0)
 			return VentType.GAS;
-		if (posY > 24 && random.nextInt(4) == 0)
+		if (posY > VentType.WATER.getMinHeight()*f && random.nextInt(4) == 0)
 			return world.provider.dimensionId == -1 ? VentType.STEAM : VentType.WATER;
 		return random.nextBoolean() ? VentType.STEAM : VentType.SMOKE;
 	}

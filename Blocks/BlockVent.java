@@ -347,17 +347,31 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 	public static enum VentType {
 		STEAM(1),
 		SMOKE(0),
-		FIRE(2),
-		LAVA(8),
-		GAS(0),
-		WATER(0);
+		FIRE(2, 32),
+		LAVA(8, 20),
+		GAS(0, 32),
+		WATER(0, 24);
 
 		public final int damage;
+		private final int heightThresh;
 
 		public static final VentType[] list = values();
 
 		private VentType(int dmg) {
+			this(dmg, 256);
+		}
+
+		private VentType(int dmg, int maxh) {
 			damage = dmg;
+			heightThresh = maxh;
+		}
+
+		public int getMaxHeight() {
+			return heightThresh > 0 ? heightThresh : 256;
+		}
+
+		public int getMinHeight() {
+			return heightThresh < 0 ? -heightThresh : 0;
 		}
 
 		public boolean dealsDamage() {
