@@ -10,24 +10,37 @@
 package Reika.GeoStrata.Base;
 
 import java.awt.Color;
+import java.util.List;
 import java.util.Random;
 
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
+import mcp.mobius.waila.api.IWailaDataProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.ASM.APIStripper.Strippable;
+import Reika.DragonAPI.ASM.DependentMethodStripper.ModDependent;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
+import Reika.DragonAPI.ModInteract.LegacyWailaHelper;
 import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockTypes;
 import Reika.RotaryCraft.API.Interfaces.Laserable;
 
@@ -36,8 +49,8 @@ import com.carpentersblocks.api.IWrappableBlock;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Strippable(value={"com.carpentersblocks.api.IWrappableBlock"})
-public abstract class RockBlock extends Block implements Laserable, IWrappableBlock {
+@Strippable(value={"com.carpentersblocks.api.IWrappableBlock", "mcp.mobius.waila.api.IWailaDataProvider"})
+public abstract class RockBlock extends Block implements Laserable, IWrappableBlock, IWailaDataProvider {
 
 	protected IIcon[] icons = new IIcon[RockTypes.rockList.length];
 
@@ -221,6 +234,46 @@ public abstract class RockBlock extends Block implements Laserable, IWrappableBl
 	@Override
 	public boolean canEntityDestroy(IBlockAccess iba, int x, int y, int z, Entity e, Block b, int meta) {
 		return this.canEntityDestroy(iba, x, y, z, e);
+	}
+
+	@Override
+	@ModDependent(ModList.WAILA)
+	public final ItemStack getWailaStack(IWailaDataAccessor acc, IWailaConfigHandler cfg) {
+		return null;
+	}
+
+	@Override
+	@ModDependent(ModList.WAILA)
+	public List<String> getWailaHead(ItemStack is, List<String> currenttip, IWailaDataAccessor acc, IWailaConfigHandler cfg) {
+		currenttip.add(EnumChatFormatting.WHITE+"?");
+		return currenttip;
+	}
+
+	@Override
+	@ModDependent(ModList.WAILA)
+	public List<String> getWailaBody(ItemStack is, List<String> currenttip, IWailaDataAccessor acc, IWailaConfigHandler cfg) {
+		if (LegacyWailaHelper.cacheAndReturn(acc))
+			return currenttip;
+		if (GeoOptions.WAILA.getState()) {
+			RockTypes type = RockTypes.getTypeFromID(acc.getBlock());
+			currenttip.add(String.format("%.2fR / %.2fH", type.blastResistance, type.blockHardness));
+		}
+		return currenttip;
+	}
+
+	@Override
+	@ModDependent(ModList.WAILA)
+	public List<String> getWailaTail(ItemStack is, List<String> currenttip, IWailaDataAccessor acc, IWailaConfigHandler cfg) {
+		String s1 = EnumChatFormatting.ITALIC.toString();
+		String s2 = EnumChatFormatting.BLUE.toString();
+		currenttip.add(s2+s1+"RotaryCraft");
+		return currenttip;
+	}
+
+	@Override
+	@ModDependent(ModList.WAILA)
+	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
+		return tag;
 	}
 
 }

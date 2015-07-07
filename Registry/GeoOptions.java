@@ -22,7 +22,8 @@ public enum GeoOptions implements ConfigList {
 	BOXRECIPES("Alternate Brick Recipes", false),
 	DENSITY("Rock Density", 1F),
 	GEOORE("Ore Mode", 0),
-	RETROGEN("Retrogeneration", false);
+	RETROGEN("Retrogeneration", false),
+	WAILA("Waila Overlay", true);
 
 	private String label;
 	private boolean defaultState;

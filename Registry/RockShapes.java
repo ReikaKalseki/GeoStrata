@@ -17,6 +17,7 @@ import net.minecraft.block.Block;
 import net.minecraft.world.IBlockAccess;
 import Reika.DragonAPI.Exception.RegistrationException;
 import Reika.DragonAPI.Instantiable.Data.Maps.BlockMap;
+import Reika.DragonAPI.ModInteract.LegacyWailaHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Blocks.BlockConnectedRock;
 import Reika.GeoStrata.Blocks.BlockShapedRock;
@@ -116,6 +117,7 @@ public enum RockShapes {
 				b.setHardness(r.blockHardness);
 				b.setResistance(r.blastResistance);
 				b.setHarvestLevel("pickaxe", r.harvestTool.ordinal());
+				LegacyWailaHelper.registerLegacyWAILACompat(b);
 				return b;
 			}
 			catch (Exception e) {
