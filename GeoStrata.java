@@ -44,7 +44,7 @@ import Reika.GeoStrata.Rendering.OreRenderer;
 import Reika.GeoStrata.World.RockGenerator;
 import Reika.GeoStrata.World.VentGenerator;
 import Reika.RotaryCraft.API.BlockColorInterface;
-import Reika.RotaryCraft.API.GrinderAPI;
+import Reika.RotaryCraft.API.RecipeInterface;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -154,8 +154,8 @@ public class GeoStrata extends DragonAPIMod {
 				RockTypes rock = RockTypes.rockList[i];
 				ItemStack smooth = rock.getItem(RockShapes.SMOOTH);
 				ItemStack cobble = rock.getItem(RockShapes.COBBLE);
-				GrinderAPI.addRecipe(smooth, cobble);
-				GrinderAPI.addRecipe(cobble, new ItemStack(Blocks.gravel));
+				RecipeInterface.grinder.addAPIRecipe(smooth, cobble);
+				RecipeInterface.grinder.addAPIRecipe(cobble, new ItemStack(Blocks.gravel));
 
 				for (int k = 0; k < RockShapes.shapeList.length; k++) {
 					RockShapes shape = RockShapes.shapeList[k];
