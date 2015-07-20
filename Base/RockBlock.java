@@ -27,7 +27,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
@@ -245,7 +244,6 @@ public abstract class RockBlock extends Block implements Laserable, IWrappableBl
 	@Override
 	@ModDependent(ModList.WAILA)
 	public List<String> getWailaHead(ItemStack is, List<String> currenttip, IWailaDataAccessor acc, IWailaConfigHandler cfg) {
-		currenttip.add(EnumChatFormatting.WHITE+"?");
 		return currenttip;
 	}
 
@@ -264,9 +262,6 @@ public abstract class RockBlock extends Block implements Laserable, IWrappableBl
 	@Override
 	@ModDependent(ModList.WAILA)
 	public List<String> getWailaTail(ItemStack is, List<String> currenttip, IWailaDataAccessor acc, IWailaConfigHandler cfg) {
-		String s1 = EnumChatFormatting.ITALIC.toString();
-		String s2 = EnumChatFormatting.BLUE.toString();
-		currenttip.add(s2+s1+"RotaryCraft");
 		return currenttip;
 	}
 
