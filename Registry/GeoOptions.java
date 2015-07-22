@@ -10,12 +10,12 @@
 package Reika.GeoStrata.Registry;
 
 import net.minecraft.util.MathHelper;
-import net.minecraftforge.common.config.Configuration;
-import Reika.DragonAPI.Exception.RegistrationException;
-import Reika.DragonAPI.Interfaces.ConfigList;
+import Reika.DragonAPI.Interfaces.Configuration.BooleanConfig;
+import Reika.DragonAPI.Interfaces.Configuration.DecimalConfig;
+import Reika.DragonAPI.Interfaces.Configuration.IntegerConfig;
 import Reika.GeoStrata.GeoStrata;
 
-public enum GeoOptions implements ConfigList {
+public enum GeoOptions implements BooleanConfig, IntegerConfig, DecimalConfig {
 
 	TFGEN("Generate Rock in the Twilight Forest", true),
 	DIMGEN("Generate Rock in Other Dimensions", true),
@@ -63,12 +63,6 @@ public enum GeoOptions implements ConfigList {
 		return type == float.class;
 	}
 
-	public float setDecimal(Configuration config) {
-		if (!this.isDecimal())
-			throw new RegistrationException(GeoStrata.instance, "Config Property \""+this.getLabel()+"\" is not decimal!");
-		return (float)config.get("Control Setup", this.getLabel(), defaultFloat).getDouble(defaultFloat);
-	}
-
 	public float getFloat() {
 		return (Float)GeoStrata.config.getControl(this.ordinal());
 	}
@@ -77,20 +71,8 @@ public enum GeoOptions implements ConfigList {
 		return type;
 	}
 
-	public int setValue(Configuration config) {
-		if (!this.isNumeric())
-			throw new RegistrationException(GeoStrata.instance, "Config Property \""+this.getLabel()+"\" is not numerical!");
-		return config.get("Control Setup", this.getLabel(), defaultValue).getInt();
-	}
-
 	public String getLabel() {
 		return label;
-	}
-
-	public boolean setState(Configuration config) {
-		if (!this.isBoolean())
-			throw new RegistrationException(GeoStrata.instance, "Config Property \""+this.getLabel()+"\" is not boolean!");
-		return config.get("Control Setup", this.getLabel(), defaultState).getBoolean(defaultState);
 	}
 
 	public boolean getState() {
