@@ -37,7 +37,6 @@ import Reika.DragonAPI.ASM.APIStripper.Strippable;
 import Reika.DragonAPI.ASM.DependentMethodStripper.ModDependent;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
-import Reika.DragonAPI.ModInteract.LegacyWailaHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockTypes;
@@ -250,7 +249,7 @@ public abstract class RockBlock extends Block implements Laserable, IWrappableBl
 	@Override
 	@ModDependent(ModList.WAILA)
 	public List<String> getWailaBody(ItemStack is, List<String> currenttip, IWailaDataAccessor acc, IWailaConfigHandler cfg) {
-		if (LegacyWailaHelper.cacheAndReturn(acc))
+		if (/*LegacyWailaHelper.cacheAndReturn(acc)*/!currenttip.isEmpty())
 			return currenttip;
 		if (GeoOptions.WAILA.getState()) {
 			RockTypes type = RockTypes.getTypeFromID(acc.getBlock());

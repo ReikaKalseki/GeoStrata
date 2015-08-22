@@ -46,6 +46,15 @@ import Reika.GeoStrata.World.RockGenerator;
 import Reika.GeoStrata.World.VentGenerator;
 import Reika.RotaryCraft.API.BlockColorInterface;
 import Reika.RotaryCraft.API.RecipeInterface;
+
+import com.cricketcraft.chisel.api.carving.CarvableHelper;
+import com.cricketcraft.chisel.api.carving.CarvingUtils;
+import com.cricketcraft.chisel.api.carving.CarvingUtils.SimpleCarvingGroup;
+import com.cricketcraft.chisel.api.carving.CarvingUtils.SimpleCarvingVariation;
+import com.cricketcraft.chisel.api.carving.ICarvingGroup;
+import com.cricketcraft.chisel.api.carving.ICarvingRegistry;
+import com.cricketcraft.chisel.api.carving.ICarvingVariation;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -98,6 +107,31 @@ public class GeoStrata extends DragonAPIMod {
 		proxy.registerSounds();
 
 		this.loadClasses();
+
+		if (ModList.CHISEL.isLoaded()) {
+			ICarvingRegistry chisel = CarvingUtils.getChiselRegistry();
+			if (chisel == null) {
+				GeoStrata.logger.logError("Could not load Chisel Integration: Chisel's API registries are null!");
+			}
+			else {
+				for (int i = 0; i < RockTypes.rockList.length; i++) {
+					RockTypes rock = RockTypes.rockList[i];
+					CarvableHelper cv = new CarvableHelper(rock.getID(RockShapes.SMOOTH));
+					ICarvingGroup grp = new SimpleCarvingGroup("GeoStrata_"+rock.getName());
+					grp.setOreName("Geo_"+rock.getName());
+					grp.setSound(Block.soundTypeStone.soundName);
+					chisel.addGroup(grp);
+					for (int k = 0; k < RockShapes.shapeList.length; k++) {
+						RockShapes s = RockShapes.shapeList[k];
+						Block bk = rock.getID(s);
+						int meta = rock.getItem(s).getItemDamage();
+						ICarvingVariation icv = new SimpleCarvingVariation(bk, meta, k);
+						grp.addVariation(icv);
+						cv.addVariation(s.name, meta, bk, meta);
+					}
+				}
+			}
+		}
 
 		this.basicSetup(evt);
 		this.finishTiming();
