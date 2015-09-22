@@ -50,9 +50,9 @@ public class GeoRecipes {
 				" S ", "S S", " S ", 'S', smooth});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(inscribed, 3), new Object[]{
 				"B", "S", "B", 'S', smooth, 'B', brick});
-			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(engraved, 2), new Object[]{
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(engraved, 4), new Object[]{
 				"SB", "BS", 'S', smooth, 'B', brick});
-			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(engraved, 2), new Object[]{
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(engraved, 4), new Object[]{
 				"BS", "SB", 'S', smooth, 'B', brick});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(connected, 8), new Object[]{
 				"SSS", "S S", "SSS", 'S', smooth});

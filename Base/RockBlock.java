@@ -249,11 +249,10 @@ public abstract class RockBlock extends Block implements Laserable, IWrappableBl
 	@Override
 	@ModDependent(ModList.WAILA)
 	public List<String> getWailaBody(ItemStack is, List<String> currenttip, IWailaDataAccessor acc, IWailaConfigHandler cfg) {
-		if (/*LegacyWailaHelper.cacheAndReturn(acc)*/!currenttip.isEmpty())
-			return currenttip;
 		if (GeoOptions.WAILA.getState()) {
 			RockTypes type = RockTypes.getTypeFromID(acc.getBlock());
-			currenttip.add(String.format("%.2fR / %.2fH", type.blastResistance, type.blockHardness));
+			String tag = String.format("%.2fR / %.2fH", type.blastResistance, type.blockHardness);
+			currenttip.add(tag);
 		}
 		return currenttip;
 	}
