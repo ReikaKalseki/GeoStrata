@@ -28,7 +28,6 @@ import Reika.DragonAPI.Auxiliary.Trackers.RetroGenController;
 import Reika.DragonAPI.Auxiliary.Trackers.VanillaIntegrityTracker;
 import Reika.DragonAPI.Base.DragonAPIMod;
 import Reika.DragonAPI.Base.DragonAPIMod.LoadProfiler.LoadPhase;
-import Reika.DragonAPI.Instantiable.IO.ControlledConfig;
 import Reika.DragonAPI.Instantiable.IO.ModLogger;
 import Reika.DragonAPI.Libraries.ReikaRecipeHelper;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
@@ -42,6 +41,7 @@ import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 import Reika.GeoStrata.Rendering.OreRenderer;
+import Reika.GeoStrata.World.BandedGenerator;
 import Reika.GeoStrata.World.RockGenerator;
 import Reika.GeoStrata.World.VentGenerator;
 import Reika.RotaryCraft.API.BlockColorInterface;
@@ -59,7 +59,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Mod( modid = GeoStrata.MOD_NAME, name=GeoStrata.MOD_NAME, certificateFingerprint = "@GET_FINGERPRINT@", dependencies="required-after:DragonAPI")
+@Mod(modid = GeoStrata.MOD_NAME, name = GeoStrata.MOD_NAME, certificateFingerprint = "@GET_FINGERPRINT@", dependencies="required-after:DragonAPI")
 
 public class GeoStrata extends DragonAPIMod {
 
@@ -68,7 +68,7 @@ public class GeoStrata extends DragonAPIMod {
 	@Instance(GeoStrata.MOD_NAME)
 	public static GeoStrata instance = new GeoStrata();
 
-	public static final ControlledConfig config = new ControlledConfig(instance, GeoOptions.optionList, null, 1);
+	public static final GeoConfig config = new GeoConfig(instance, GeoOptions.optionList, null, 1);
 
 	public static final String packetChannel = GeoStrata.MOD_NAME+"Data";
 
@@ -112,7 +112,8 @@ public class GeoStrata extends DragonAPIMod {
 	public void load(FMLInitializationEvent event) {
 		this.startTiming(LoadPhase.LOAD);
 		this.loadDictionary();
-		RetroGenController.instance.addHybridGenerator(RockGenerator.instance, Integer.MIN_VALUE, GeoOptions.RETROGEN.getState());
+		RockGenerator gen = GeoOptions.BANDED.getState() ? BandedGenerator.instance : RockGenerator.instance;
+		RetroGenController.instance.addHybridGenerator(gen, Integer.MIN_VALUE, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(VentGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 
 		GeoRecipes.addRecipes();
@@ -243,7 +244,8 @@ public class GeoStrata extends DragonAPIMod {
 			OreDictionary.registerOre("stone", rock);
 			OreDictionary.registerOre("rock"+type.getName(), rock);
 			OreDictionary.registerOre("stone"+type.getName(), rock);
-			OreDictionary.registerOre(type.getName().toLowerCase(), rock);
+			if (type != RockTypes.QUARTZ) //Nether quartz is "quartz"
+				OreDictionary.registerOre(type.getName().toLowerCase(), rock);
 		}
 		OreDictionary.registerOre("sandstone", RockTypes.SANDSTONE.getItem(RockShapes.SMOOTH));
 		OreDictionary.registerOre("sandstone", Blocks.sandstone);

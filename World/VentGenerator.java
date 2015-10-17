@@ -20,15 +20,20 @@ import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.Blocks.BlockVent.VentType;
 import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Registry.GeoOptions;
 
 public class VentGenerator implements RetroactiveGenerator {
 
 	public static final VentGenerator instance = new VentGenerator();
 
-	private static final int PER_CHUNK = 60; //calls per chunk; vast majority fail
+	private static final int PER_CHUNK = getVentAttemptsPerChunk(); //calls per chunk; vast majority fail
 
 	private VentGenerator() {
 
+	}
+
+	private static int getVentAttemptsPerChunk() {
+		return (int)(60*GeoOptions.getVentDensity());
 	}
 
 	@Override

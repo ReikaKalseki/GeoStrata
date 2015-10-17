@@ -21,9 +21,11 @@ public enum GeoOptions implements BooleanConfig, IntegerConfig, DecimalConfig {
 	DIMGEN("Generate Rock in Other Dimensions", true),
 	BOXRECIPES("Alternate Brick Recipes", false),
 	DENSITY("Rock Density", 1F),
+	VENTDENSITY("Vent Density", 1F),
 	GEOORE("Ore Mode", 0),
 	RETROGEN("Retrogeneration", false),
-	WAILA("Waila Overlay", true);
+	WAILA("Waila Overlay", true),
+	BANDED("Banded Generation", false);
 
 	private String label;
 	private boolean defaultState;
@@ -110,6 +112,10 @@ public enum GeoOptions implements BooleanConfig, IntegerConfig, DecimalConfig {
 	@Override
 	public boolean shouldLoad() {
 		return true;
+	}
+
+	public static float getVentDensity() {
+		return MathHelper.clamp_float(VENTDENSITY.getFloat(), 0.25F, 4F);
 	}
 
 	public static float getRockDensity() {
