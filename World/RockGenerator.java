@@ -9,13 +9,17 @@
  ******************************************************************************/
 package Reika.GeoStrata.World;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
 import Reika.DragonAPI.ModInteract.ReikaTwilightHelper;
+import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.API.RockGenerationPatterns.RockGenerationPattern;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockTypes;
 
@@ -28,12 +32,30 @@ public class RockGenerator implements RetroactiveGenerator {
 
 	private final int oreControl;
 
+	private final Comparator<RockGenerationPattern> genSorter = new RockGenComparator();
+
+	private final ArrayList<RockGenerationPattern> generators = new ArrayList();
+
 	protected RockGenerator() {
 		oreControl = GeoOptions.GEOORE.getValue();
 	}
 
+	public void registerGenerationPattern(RockGenerationPattern p) {
+		generators.add(p);
+		Collections.sort(generators, genSorter);
+		GeoStrata.logger.log("Adding rock generator "+p);
+	}
+
+	public void removeGenerator(RockGenerationPattern p) {
+		generators.remove(p);
+		GeoStrata.logger.log("Removing rock generator "+p);
+	}
+
 	@Override
 	public final void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkgen, IChunkProvider provider) {
+		if (generators.isEmpty()) {
+			throw new IllegalStateException("No generators to run!");
+		}
 		if (this.canGenInDimension(world.provider.dimensionId)) {
 			this.generateRock(world, random, chunkX, chunkZ);
 		}
@@ -61,29 +83,9 @@ public class RockGenerator implements RetroactiveGenerator {
 	}
 
 	protected void generateRockType(RockTypes geo, World world, Random random, int chunkX, int chunkZ) {
-		double max = BASE_GEN*geo.rarity*this.getDensityFactor(geo);
-		//ReikaJavaLibrary.pConsole("Genning "+geo+" "+max+" times.");
-		for (int i = 0; i < max; i++) {
-			int posX = chunkX + random.nextInt(16);
-			int posZ = chunkZ + random.nextInt(16);
-			int posY = geo.minY + random.nextInt(geo.maxY-geo.minY);
-			//GeoStrata.logger.debug(geo.name()+":"+geo.canGenerateAt(world, posX, posY, posZ, random));
-			if (geo.canGenerateAt(world, posX, posY, posZ, random)) {
-				//(new WorldGenMinable(geo.getID(RockShapes.SMOOTH), VEIN_SIZE, Blocks.stone)).generate(world, random, posX, posY, posZ);
-				(new WorldGenMinableOreAbsorber(geo, VEIN_SIZE)).generate(world, random, posX, posY, posZ);
-				//GeoStrata.logger.log("Generating "+geo+" at "+posX+", "+posY+", "+posZ);
-			}
+		for (RockGenerationPattern p : generators) {
+			p.generateRockType(geo, world, random, chunkX, chunkZ);
 		}
-	}
-
-	/** if compressed in small y, or lots of coincident rocks, reduce density */
-	protected final double getDensityFactor(RockTypes rock) {
-		float f = GeoOptions.getRockDensity();
-		List<RockTypes> types = rock.getCoincidentTypes();
-		int h = rock.maxY-rock.minY;
-		if (rock == RockTypes.ONYX)
-			h *= 2;
-		return f*h/64D*(3D/types.size());
 	}
 
 	public final boolean postConvertOres() {
@@ -106,6 +108,15 @@ public class RockGenerator implements RetroactiveGenerator {
 	@Override
 	public final String getIDString() {
 		return "GeoStrata Rock";
+	}
+
+	private static class RockGenComparator implements Comparator<RockGenerationPattern> {
+
+		@Override
+		public int compare(RockGenerationPattern o1, RockGenerationPattern o2) {
+			return o1.getOrderingIndex() == o2.getOrderingIndex() ? 0 : (o1.getOrderingIndex() > o2.getOrderingIndex() ? 1 : -1);
+		}
+
 	}
 
 }

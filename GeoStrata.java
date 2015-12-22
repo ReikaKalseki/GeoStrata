@@ -42,6 +42,7 @@ import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 import Reika.GeoStrata.Rendering.OreRenderer;
 import Reika.GeoStrata.World.BandedGenerator;
+import Reika.GeoStrata.World.BasicRockGenerator;
 import Reika.GeoStrata.World.RockGenerator;
 import Reika.GeoStrata.World.VentGenerator;
 import Reika.RotaryCraft.API.BlockColorInterface;
@@ -112,8 +113,8 @@ public class GeoStrata extends DragonAPIMod {
 	public void load(FMLInitializationEvent event) {
 		this.startTiming(LoadPhase.LOAD);
 		this.loadDictionary();
-		RockGenerator gen = GeoOptions.BANDED.getState() ? BandedGenerator.instance : RockGenerator.instance;
-		RetroGenController.instance.addHybridGenerator(gen, Integer.MIN_VALUE, GeoOptions.RETROGEN.getState());
+		RockGenerator.instance.registerGenerationPattern(GeoOptions.BANDED.getState() ? BandedGenerator.instance : BasicRockGenerator.instance);
+		RetroGenController.instance.addHybridGenerator(RockGenerator.instance, Integer.MIN_VALUE, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(VentGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 
 		GeoRecipes.addRecipes();

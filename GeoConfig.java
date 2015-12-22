@@ -22,22 +22,19 @@ import Reika.GeoStrata.Registry.RockTypes;
 public class GeoConfig extends ControlledConfig {
 
 	private static final ArrayList<String> entries = ReikaJavaLibrary.getEnumEntriesWithoutInitializing(RockTypes.class);
-	private final int[] rockBands = new int[entries.size()];
+	private final DataElement<Integer>[] rockBands = new DataElement[entries.size()];
 
 	public GeoConfig(DragonAPIMod mod, ConfigList[] option, IDRegistry[] id, int cfg) {
 		super(mod, option, id, cfg);
-	}
 
-	@Override
-	protected void loadAdditionalData() {
 		for (int i = 0; i < entries.size(); i++) {
 			String name = entries.get(i);
-			rockBands[i] = config.get("Rock Band Heights", name, 0).getInt();
+			rockBands[i] = this.registerAdditionalOption("Rock Band Heights", name, 0);
 		}
 	}
 
 	public int getRockBand(RockTypes r) {
-		return rockBands[r.ordinal()];
+		return rockBands[r.ordinal()].getData();
 	}
 
 }
