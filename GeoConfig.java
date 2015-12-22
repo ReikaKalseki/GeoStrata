@@ -24,8 +24,8 @@ public class GeoConfig extends ControlledConfig {
 	private static final ArrayList<String> entries = ReikaJavaLibrary.getEnumEntriesWithoutInitializing(RockTypes.class);
 	private final DataElement<Integer>[] rockBands = new DataElement[entries.size()];
 
-	public GeoConfig(DragonAPIMod mod, ConfigList[] option, IDRegistry[] id, int cfg) {
-		super(mod, option, id, cfg);
+	public GeoConfig(DragonAPIMod mod, ConfigList[] option, IDRegistry[] id) {
+		super(mod, option, id);
 
 		for (int i = 0; i < entries.size(); i++) {
 			String name = entries.get(i);

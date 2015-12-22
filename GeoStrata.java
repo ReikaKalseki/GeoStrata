@@ -69,7 +69,7 @@ public class GeoStrata extends DragonAPIMod {
 	@Instance(GeoStrata.MOD_NAME)
 	public static GeoStrata instance = new GeoStrata();
 
-	public static final GeoConfig config = new GeoConfig(instance, GeoOptions.optionList, null, 1);
+	public static final GeoConfig config = new GeoConfig(instance, GeoOptions.optionList, null);
 
 	public static final String packetChannel = GeoStrata.MOD_NAME+"Data";
 
