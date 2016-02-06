@@ -53,10 +53,10 @@ public class BlockRockDeco extends Block {
 		ItemStack is = ep.getCurrentEquippedItem();
 		int meta = world.getBlockMetadata(x, y, z);
 		if (!this.canHarvestBlock(ep, meta))
-			return 0.1F/DecoBlocks.getTypeAtCoords(world, x, y, z).getHardness();
+			return 0.0025F/DecoBlocks.getTypeAtCoords(world, x, y, z).getHardness();
 		if (is == null)
-			return 0.4F/DecoBlocks.getTypeAtCoords(world, x, y, z).getHardness();
-		return 0.1F/DecoBlocks.getTypeAtCoords(world, x, y, z).getHardness()*is.getItem().func_150893_a(is, this);
+			return 0.0125F/DecoBlocks.getTypeAtCoords(world, x, y, z).getHardness();
+		return 0.025F/DecoBlocks.getTypeAtCoords(world, x, y, z).getHardness()*is.getItem().func_150893_a(is, this);
 	}
 
 	@Override

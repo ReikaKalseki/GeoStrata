@@ -34,6 +34,8 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import Reika.ChromatiCraft.API.Interfaces.MinerBlock;
+import Reika.DragonAPI.Instantiable.Event.BlockTickEvent;
+import Reika.DragonAPI.Instantiable.Event.BlockTickEvent.UpdateFlags;
 import Reika.DragonAPI.Libraries.ReikaAABBHelper;
 import Reika.DragonAPI.Libraries.IO.ReikaSoundHelper;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
@@ -54,7 +56,7 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 		this.setCreativeTab(GeoStrata.tabGeo);
 		this.setTickRandomly(true);
 		this.setHardness(Blocks.stone.blockHardness);
-		this.setResistance(Blocks.stone.blockResistance);
+		this.setResistance(Blocks.stone.blockResistance/3F);
 	}
 
 	@Override
@@ -74,11 +76,12 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block id) {
+		TileEntityVent te = (TileEntityVent)world.getTileEntity(x, y, z);
 		if (id != this && world.isBlockIndirectlyGettingPowered(x, y, z)) {
-			TileEntityVent te = (TileEntityVent)world.getTileEntity(x, y, z);
 			if (te.canFire())
 				te.activate();
 		}
+		te.checkPlug();
 	}
 
 	@Override
@@ -165,6 +168,7 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 		private int activeTimer = 0;
 		private VentType type;
 		private static final Random rand = new Random();
+		private boolean plugged;
 
 		private void activate() {
 			activeTimer = 40+rand.nextInt(600);
@@ -172,6 +176,27 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 			//worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, type.ordinal()*2+1, 3);
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			ReikaSoundHelper.playSoundAtBlock(worldObj, xCoord, yCoord, zCoord, "fire.ignite");
+		}
+
+		private void checkPlug() {
+			boolean last = plugged;
+			plugged = this.isBlocking(worldObj, xCoord, yCoord+1, zCoord);
+			if (plugged && !last && activeTimer > 0) { //just got plugged, firing
+				this.explode();
+			}
+		}
+
+		private void explode() {
+			worldObj.setBlockToAir(xCoord, yCoord, zCoord);
+			boolean fire = type == VentType.FIRE || type == VentType.LAVA;
+			float f = 2;
+			if (type == VentType.FIRE || type == VentType.LAVA)
+				f = 3;
+			else if (type == VentType.STEAM)
+				f = 4;
+			else if (type == VentType.GAS)
+				f = 6;
+			worldObj.newExplosion(null, xCoord, yCoord, zCoord, f, fire, true);
 		}
 
 		public boolean canFire() {
@@ -203,25 +228,25 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 		private void onTick() {
 			if (activeTimer%4 == 0) {
 				switch(type) {
-				case FIRE:
-				case LAVA:
-					ReikaSoundHelper.playSoundAtBlock(worldObj, xCoord, yCoord, zCoord, "mob.ghast.fireball", 0.25F, 1);
-					break;
-				case STEAM:
-				case GAS:
-					ReikaSoundHelper.playSoundAtBlock(worldObj, xCoord, yCoord, zCoord, "random.fizz", 0.25F, 1.5F);
-					break;
-				case SMOKE:
-					ReikaSoundHelper.playSoundAtBlock(worldObj, xCoord, yCoord, zCoord, "random.fizz", 0.25F, 0.25F);
-					break;
-				case WATER:
-					if (activeTimer%32 == 0) {
-						ReikaSoundHelper.playSoundAtBlock(worldObj, xCoord, yCoord, zCoord, "liquid.water", 2F, 1F);
-						ReikaSoundHelper.playSoundAtBlock(worldObj, xCoord, yCoord, zCoord, "liquid.water", 2F, 1F);
-					}
-					break;
-				default:
-					break;
+					case FIRE:
+					case LAVA:
+						ReikaSoundHelper.playSoundAtBlock(worldObj, xCoord, yCoord, zCoord, "mob.ghast.fireball", 0.25F, 1);
+						break;
+					case STEAM:
+					case GAS:
+						ReikaSoundHelper.playSoundAtBlock(worldObj, xCoord, yCoord, zCoord, "random.fizz", 0.25F, 1.5F);
+						break;
+					case SMOKE:
+						ReikaSoundHelper.playSoundAtBlock(worldObj, xCoord, yCoord, zCoord, "random.fizz", 0.25F, 0.25F);
+						break;
+					case WATER:
+						if (activeTimer%32 == 0) {
+							ReikaSoundHelper.playSoundAtBlock(worldObj, xCoord, yCoord, zCoord, "liquid.water", 2F, 1F);
+							ReikaSoundHelper.playSoundAtBlock(worldObj, xCoord, yCoord, zCoord, "liquid.water", 2F, 1F);
+						}
+						break;
+					default:
+						break;
 				}
 			}
 
@@ -259,8 +284,10 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 							int meta = worldObj.getBlockMetadata(rx, ry, rz);
 							worldObj.setBlockMetadataWithNotify(rx, ry, rz, 7, 3);
 						}
-						if (rand.nextInt(3) == 0)
+						if (rand.nextInt(3) == 0) {
 							b.updateTick(worldObj, rx, ry, rz, rand);
+							BlockTickEvent.fire(worldObj, rx, ry, rz, b, UpdateFlags.FORCED.flag+UpdateFlags.NATURAL.flag);
+						}
 					}
 				}
 			}
@@ -380,32 +407,32 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 
 		public DamageSource getDamageSrc() {
 			switch(this) {
-			case STEAM:
-			case FIRE:
-				return DamageSource.inFire;
-			case LAVA:
-				return DamageSource.lava;
-			default:
-				return null;
+				case STEAM:
+				case FIRE:
+					return DamageSource.inFire;
+				case LAVA:
+					return DamageSource.lava;
+				default:
+					return null;
 			}
 		}
 
 		public ReikaParticleHelper getParticle() {
 			switch(this) {
-			case STEAM:
-				return ReikaParticleHelper.CLOUD;
-			case SMOKE:
-				return ReikaParticleHelper.LARGESMOKE;
-			case FIRE:
-				return ReikaParticleHelper.FLAME;
-			case LAVA:
-				return ReikaParticleHelper.LAVA;
-			case GAS:
-				return ReikaParticleHelper.MOBSPELL;
-			case WATER:
-				return ReikaParticleHelper.RAIN;
-			default:
-				return null;
+				case STEAM:
+					return ReikaParticleHelper.CLOUD;
+				case SMOKE:
+					return ReikaParticleHelper.LARGESMOKE;
+				case FIRE:
+					return ReikaParticleHelper.FLAME;
+				case LAVA:
+					return ReikaParticleHelper.LAVA;
+				case GAS:
+					return ReikaParticleHelper.MOBSPELL;
+				case WATER:
+					return ReikaParticleHelper.RAIN;
+				default:
+					return null;
 			}
 		}
 
@@ -436,14 +463,14 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 	public SourceType getSourceType(IBlockAccess iba, int x, int y, int z) {
 		TileEntityVent te = (TileEntityVent)iba.getTileEntity(x, y, z);
 		switch(te.getType()) {
-		case FIRE:
-			return SourceType.FIRE;
-		case LAVA:
-			return SourceType.LAVA;
-		case WATER:
-			return SourceType.WATER;
-		default:
-			return null;
+			case FIRE:
+				return SourceType.FIRE;
+			case LAVA:
+				return SourceType.LAVA;
+			case WATER:
+				return SourceType.WATER;
+			default:
+				return null;
 		}
 	}
 
