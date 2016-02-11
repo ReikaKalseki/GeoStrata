@@ -138,6 +138,8 @@ public abstract class RockBlock extends Block implements Laserable, IWrappableBl
 	public final int getRenderColor(int dmg) {
 		RockTypes rock = RockTypes.getTypeFromID(this);
 		EntityPlayer ep = Minecraft.getMinecraft().thePlayer;
+		if (ep == null)
+			return Color.HSBtoRGB(((System.currentTimeMillis()/20)%360)/360F, 0.4F, 1F);
 		int x = MathHelper.floor_double(ep.posX);
 		int y = MathHelper.floor_double(ep.posY);
 		int z = MathHelper.floor_double(ep.posZ);
