@@ -123,8 +123,20 @@ public abstract class RockBlock extends Block implements Laserable, IWrappableBl
 
 	private int getColor(IBlockAccess iba, int x, int y, int z, RockTypes rock) {
 		if (rock == RockTypes.OPAL) {
-			int sc = 48;
-			float hue1 = (float)(ReikaMathLibrary.py3d(x, y*4, z+x)%sc)/sc;
+			//int sc = 48;
+
+			//float hue1 = (float)(ReikaMathLibrary.py3d(offX, y*4, offX+offZ)%sc)/sc;
+
+			//float hue1 = (float)(ReikaMathLibrary.py3d(x, y*4, z+x)%sc)/sc;
+
+			double n = 7;//+1*Math.cos(Math.toRadians((x+y+z)/500D*360D));
+			//double n = 7+0.0625*Math.cos(Math.toRadians((x+y+z)/500D*360D));
+			//double n = 7+1*Math.cos(Math.toRadians(x%360));
+			//float hue1 = (float)((n-6)/2);
+			//float hue1 = (float)(y+(n*2)+(z+(n*6)+0.5+0.5*Math.sin((x)/(n*2))));
+			float hue1 = (float)(y/(n*2)+(z/(n*6)+0.5+0.5*Math.sin((x)/(n*2))));
+			//ReikaJavaLibrary.pConsole("@ "+x+","+z+": N="+n+"; hue = "+hue1);
+
 			//float hue2 = (float)(Math.cos(x/24D)+Math.sin(z/24D))+(y%360)*0.05F;
 			return Color.HSBtoRGB(hue1, 0.4F, 1F);
 		}
@@ -139,19 +151,19 @@ public abstract class RockBlock extends Block implements Laserable, IWrappableBl
 		RockTypes rock = RockTypes.getTypeFromID(this);
 		EntityPlayer ep = Minecraft.getMinecraft().thePlayer;
 		if (ep == null)
-			return Color.HSBtoRGB(((System.currentTimeMillis()/20)%360)/360F, 0.4F, 1F);
-		int x = MathHelper.floor_double(ep.posX);
-		int y = MathHelper.floor_double(ep.posY);
-		int z = MathHelper.floor_double(ep.posZ);
-		if (rock == RockTypes.OPAL) {
-			int sc = 48;
-			float hue1 = (float)(ReikaMathLibrary.py3d(x, y*4, z+x)%sc)/sc;
-			//float hue2 = (float)(Math.cos(x/24D)+Math.sin(z/24D))+(y%360)*0.05F;
-			return Color.HSBtoRGB(hue1, 0.4F, 1F);
-		}
-		else {
-			return super.getRenderColor(dmg);
-		}
+			return rock == RockTypes.OPAL ? Color.HSBtoRGB(((System.currentTimeMillis()/20)%360)/360F, 0.4F, 1F) : super.getRenderColor(dmg);
+			int x = MathHelper.floor_double(ep.posX);
+			int y = MathHelper.floor_double(ep.posY);
+			int z = MathHelper.floor_double(ep.posZ);
+			if (rock == RockTypes.OPAL) {
+				int sc = 48;
+				float hue1 = (float)(ReikaMathLibrary.py3d(x, y*4, z+x)%sc)/sc;
+				//float hue2 = (float)(Math.cos(x/24D)+Math.sin(z/24D))+(y%360)*0.05F;
+				return Color.HSBtoRGB(hue1, 0.4F, 1F);
+			}
+			else {
+				return super.getRenderColor(dmg);
+			}
 	}
 
 	@Override
