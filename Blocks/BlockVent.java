@@ -11,6 +11,7 @@ package Reika.GeoStrata.Blocks;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -102,8 +103,8 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 	public void registerBlockIcons(IIconRegister ico) {
 		for (int i = 0; i < icons.length; i++) {
 			VentType v = VentType.list[i];
-			icons[i] = ico.registerIcon("geostrata:vent/"+v.name().toLowerCase()+"_top");
-			internal[i] = ico.registerIcon("geostrata:vent/"+v.name().toLowerCase()+"_inside");
+			icons[i] = ico.registerIcon("geostrata:vent/"+v.name().toLowerCase(Locale.ENGLISH)+"_top");
+			internal[i] = ico.registerIcon("geostrata:vent/"+v.name().toLowerCase(Locale.ENGLISH)+"_inside");
 		}
 		//inactive = ico.registerIcon("geostrata:vent/inactive");
 	}

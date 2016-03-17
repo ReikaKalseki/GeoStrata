@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -285,7 +286,7 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 	public void registerBlockIcons(IIconRegister ico) {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
 			RockTypes r = RockTypes.rockList[i];
-			icons[i] = ico.registerIcon("geostrata:ore/"+r.name().toLowerCase());
+			icons[i] = ico.registerIcon("geostrata:ore/"+r.name().toLowerCase(Locale.ENGLISH));
 		}
 	}
 
@@ -309,14 +310,14 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 		if (b.isOpaqueCube())
 			return false;
 		switch(dir) {
-		case EAST:
-		case WEST:
-		case SOUTH:
-		case NORTH:
-		case UP:
-		case DOWN:
-		default:
-			return true;
+			case EAST:
+			case WEST:
+			case SOUTH:
+			case NORTH:
+			case UP:
+			case DOWN:
+			default:
+				return true;
 		}
 	}
 

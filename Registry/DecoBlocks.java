@@ -9,6 +9,8 @@
  ******************************************************************************/
 package Reika.GeoStrata.Registry;
 
+import java.util.Locale;
+
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -63,7 +65,7 @@ public enum DecoBlocks {
 	}
 
 	public String getTex() {
-		return this.name().toLowerCase();
+		return this.name().toLowerCase(Locale.ENGLISH);
 	}
 
 	public float getHardness() {
@@ -85,31 +87,31 @@ public enum DecoBlocks {
 			return true;
 		if (TinkerToolHandler.getInstance().isPick(held) || TinkerToolHandler.getInstance().isHammer(held)) {
 			switch(mat) {
-			case WOOD:
-				return true;
-			case STONE:
-			case GOLD:
-				return TinkerToolHandler.getInstance().isStoneOrBetter(held);
-			case IRON:
-				return TinkerToolHandler.getInstance().isIronOrBetter(held);
-			case EMERALD:
-				return TinkerToolHandler.getInstance().isDiamondOrBetter(held);
-			default:
-				return false;
+				case WOOD:
+					return true;
+				case STONE:
+				case GOLD:
+					return TinkerToolHandler.getInstance().isStoneOrBetter(held);
+				case IRON:
+					return TinkerToolHandler.getInstance().isIronOrBetter(held);
+				case EMERALD:
+					return TinkerToolHandler.getInstance().isDiamondOrBetter(held);
+				default:
+					return false;
 			}
 		}
 		Item i = held.getItem();
 		switch (mat) {
-		case EMERALD: //Diamond
-			return held.func_150998_b(Blocks.obsidian);
-		case GOLD:
-			return held.func_150998_b(Blocks.stone);
-		case IRON:
-			return held.func_150998_b(Blocks.gold_ore);
-		case STONE:
-			return held.func_150998_b(Blocks.iron_ore);
-		case WOOD:
-			return held.func_150998_b(Blocks.stone);
+			case EMERALD: //Diamond
+				return held.func_150998_b(Blocks.obsidian);
+			case GOLD:
+				return held.func_150998_b(Blocks.stone);
+			case IRON:
+				return held.func_150998_b(Blocks.gold_ore);
+			case STONE:
+				return held.func_150998_b(Blocks.iron_ore);
+			case WOOD:
+				return held.func_150998_b(Blocks.stone);
 		}
 		return false;
 	}

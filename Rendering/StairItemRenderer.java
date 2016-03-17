@@ -23,6 +23,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.IItemRenderer;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
+import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Items.ItemBlockAnyGeoVariant;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
@@ -94,10 +95,7 @@ public class StairItemRenderer implements IItemRenderer {
 			int y = MathHelper.floor_double(ep.posY);
 			int z = MathHelper.floor_double(ep.posZ);
 			if (rock == RockTypes.OPAL) {
-				int sc = 48;
-				float hue1 = (float)(ReikaMathLibrary.py3d(x, y*4, z+x)%sc)/sc;
-				//float hue2 = (float)(Math.cos(x/24D)+Math.sin(z/24D))+(y%360)*0.05F;
-				return Color.HSBtoRGB(hue1, 0.4F, 1F);
+				return GeoStrata.getOpalPositionColor(ep.worldObj, x, y, z);
 			}
 			else {
 				return super.getRenderColor(dmg);

@@ -10,6 +10,7 @@
 package Reika.GeoStrata.Blocks;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -81,12 +82,12 @@ public class BlockConnectedRock extends RockBlock {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
 			RockTypes r = RockTypes.rockList[i];
 			String name = r.getName();
-			icons[r.ordinal()] = ico.registerIcon("GeoStrata:"+name.toLowerCase());
+			icons[r.ordinal()] = ico.registerIcon("GeoStrata:"+name.toLowerCase(Locale.ENGLISH));
 			GeoStrata.logger.debug("Adding "+name+" rock icon "+icons[r.ordinal()].getIconName());
 
 			for (int k = 0; k < 10; k++) {
-				String e = ReikaStringParser.stripSpaces("GeoStrata:"+RockShapes.getShape(this, 0).name.toLowerCase()+"/"+k);
-				String s = ReikaStringParser.stripSpaces("GeoStrata:"+RockShapes.getShape(this, 0).name.toLowerCase()+"/"+k+"_sec");
+				String e = ReikaStringParser.stripSpaces("GeoStrata:"+RockShapes.getShape(this, 0).name.toLowerCase(Locale.ENGLISH)+"/"+k);
+				String s = ReikaStringParser.stripSpaces("GeoStrata:"+RockShapes.getShape(this, 0).name.toLowerCase(Locale.ENGLISH)+"/"+k+"_sec");
 				edges[k][r.ordinal()] = ico.registerIcon(e);
 				sections[k][r.ordinal()] = ico.registerIcon(s);
 			}

@@ -9,6 +9,7 @@
  ******************************************************************************/
 package Reika.GeoStrata.Blocks;
 
+import java.util.Locale;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -119,7 +120,7 @@ public class BlockSmooth extends RockBlock {
 	public void registerBlockIcons(IIconRegister ico) {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
 			RockTypes r = RockTypes.rockList[i];
-			icons[i] = ico.registerIcon("GeoStrata:"+r.getName().toLowerCase());
+			icons[i] = ico.registerIcon("GeoStrata:"+r.getName().toLowerCase(Locale.ENGLISH));
 			GeoStrata.logger.debug("Adding "+r.getName()+" rock icon "+icons[i].getIconName());
 		}
 	}

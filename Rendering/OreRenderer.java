@@ -10,6 +10,7 @@
 package Reika.GeoStrata.Rendering;
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -60,7 +61,7 @@ public class OreRenderer implements ISimpleBlockRenderingHandler {
 						Block b = Block.getBlockFromItem(is.getItem());
 						int meta = is.getItemDamage();
 						IIcon ico = b.getIcon(1, meta);
-						String n = "geostrata:ore_"+ore.name().toLowerCase()+"_"+k;
+						String n = "geostrata:ore_"+ore.name().toLowerCase(Locale.ENGLISH)+"_"+k;
 						k++;
 						IIcon tex = ReikaIconHelper.clipFrom(ico, stone, evt.map, n);
 						//li.add(tex);
@@ -84,7 +85,7 @@ public class OreRenderer implements ISimpleBlockRenderingHandler {
 						Block b = Block.getBlockFromItem(is.getItem());
 						int meta = is.getItemDamage();
 						IIcon ico = b.getIcon(1, meta);
-						String n = "geostrata:ore_"+ore.name().toLowerCase()+"_"+k;
+						String n = "geostrata:ore_"+ore.name().toLowerCase(Locale.ENGLISH)+"_"+k;
 						k++;
 						IIcon tex = ReikaIconHelper.clipFrom(ico, stone, evt.map, n);
 						//li.add(tex);

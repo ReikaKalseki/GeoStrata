@@ -9,13 +9,16 @@
  ******************************************************************************/
 package Reika.GeoStrata;
 
+import java.awt.Color;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.oredict.OreDictionary;
 import thaumcraft.api.aspects.Aspect;
@@ -246,7 +249,7 @@ public class GeoStrata extends DragonAPIMod {
 			OreDictionary.registerOre("rock"+type.getName(), rock);
 			OreDictionary.registerOre("stone"+type.getName(), rock);
 			if (type != RockTypes.QUARTZ) //Nether quartz is "quartz"
-				OreDictionary.registerOre(type.getName().toLowerCase(), rock);
+				OreDictionary.registerOre(type.getName().toLowerCase(Locale.ENGLISH), rock);
 		}
 		OreDictionary.registerOre("sandstone", RockTypes.SANDSTONE.getItem(RockShapes.SMOOTH));
 		OreDictionary.registerOre("sandstone", Blocks.sandstone);
@@ -280,5 +283,24 @@ public class GeoStrata extends DragonAPIMod {
 	@Override
 	public ModLogger getModLogger() {
 		return logger;
+	}
+
+	public static int getOpalPositionColor(IBlockAccess iba, int x, int y, int z) {
+		//int sc = 48;
+
+		//float hue1 = (float)(ReikaMathLibrary.py3d(offX, y*4, offX+offZ)%sc)/sc;
+
+		//float hue1 = (float)(ReikaMathLibrary.py3d(x, y*4, z+x)%sc)/sc;
+
+		double n = 7;//+1*Math.cos(Math.toRadians((x+y+z)/500D*360D));
+		//double n = 7+0.0625*Math.cos(Math.toRadians((x+y+z)/500D*360D));
+		//double n = 7+1*Math.cos(Math.toRadians(x%360));
+		//float hue1 = (float)((n-6)/2);
+		//float hue1 = (float)(y+(n*2)+(z+(n*6)+0.5+0.5*Math.sin((x)/(n*2))));
+		float hue1 = (float)(y/(n*2)+(z/(n*6)+0.5+0.5*Math.sin((x)/(n*2))));
+		//ReikaJavaLibrary.pConsole("@ "+x+","+z+": N="+n+"; hue = "+hue1);
+
+		//float hue2 = (float)(Math.cos(x/24D)+Math.sin(z/24D))+(y%360)*0.05F;
+		return Color.HSBtoRGB(hue1, 0.4F, 1F);
 	}
 }

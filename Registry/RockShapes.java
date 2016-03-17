@@ -12,6 +12,7 @@ package Reika.GeoStrata.Registry;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Locale;
 
 import net.minecraft.block.Block;
 import net.minecraft.world.IBlockAccess;
@@ -111,7 +112,7 @@ public enum RockShapes {
 				Block b = (Block)blockClass.newInstance();
 				map.put(r, b);
 
-				String name = "geostrata_rock_"+(r.name()+"_"+this.name()).toLowerCase();
+				String name = "geostrata_rock_"+(r.name()+"_"+this.name()).toLowerCase(Locale.ENGLISH);
 				b.setBlockName(name);
 				GameRegistry.registerBlock(b, ItemBlockRock.class, name);
 				b.setHardness(r.blockHardness);
