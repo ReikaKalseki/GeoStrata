@@ -13,9 +13,10 @@ import net.minecraft.util.MathHelper;
 import Reika.DragonAPI.Interfaces.Configuration.BooleanConfig;
 import Reika.DragonAPI.Interfaces.Configuration.DecimalConfig;
 import Reika.DragonAPI.Interfaces.Configuration.IntegerConfig;
+import Reika.DragonAPI.Interfaces.Configuration.UserSpecificConfig;
 import Reika.GeoStrata.GeoStrata;
 
-public enum GeoOptions implements BooleanConfig, IntegerConfig, DecimalConfig {
+public enum GeoOptions implements BooleanConfig, IntegerConfig, DecimalConfig, UserSpecificConfig {
 
 	TFGEN("Generate Rock in the Twilight Forest", true),
 	DIMGEN("Generate Rock in Other Dimensions", true),
@@ -120,6 +121,16 @@ public enum GeoOptions implements BooleanConfig, IntegerConfig, DecimalConfig {
 
 	public static float getRockDensity() {
 		return MathHelper.clamp_float(DENSITY.getFloat(), 0.5F, 4F);
+	}
+
+	@Override
+	public boolean isUserSpecific() {
+		switch(this) {
+			case WAILA:
+				return true;
+			default:
+				return false;
+		}
 	}
 
 }

@@ -36,7 +36,6 @@ import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.ASM.APIStripper.Strippable;
 import Reika.DragonAPI.ASM.DependentMethodStripper.ModDependent;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
-import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockTypes;

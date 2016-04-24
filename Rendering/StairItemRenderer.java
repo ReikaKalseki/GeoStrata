@@ -9,8 +9,6 @@
  ******************************************************************************/
 package Reika.GeoStrata.Rendering;
 
-import java.awt.Color;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.BlockStairs;
@@ -22,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.IItemRenderer;
-import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Items.ItemBlockAnyGeoVariant;
 import Reika.GeoStrata.Registry.RockShapes;

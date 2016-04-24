@@ -177,17 +177,22 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 			//worldObj.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, type.ordinal()*2+1, 3);
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			ReikaSoundHelper.playSoundAtBlock(worldObj, xCoord, yCoord, zCoord, "fire.ignite");
+			if (this.getType() == VentType.GAS) {
+				if (worldObj.getBlock(xCoord, yCoord+1, zCoord) == Blocks.fire || worldObj.getBlock(xCoord, yCoord+1, zCoord) == Blocks.lava) {
+					this.explode(1.5F);
+				}
+			}
 		}
 
 		private void checkPlug() {
 			boolean last = plugged;
 			plugged = this.isBlocking(worldObj, xCoord, yCoord+1, zCoord);
 			if (plugged && !last && activeTimer > 0) { //just got plugged, firing
-				this.explode();
+				this.explode(1);
 			}
 		}
 
-		private void explode() {
+		private void explode(float factor) {
 			worldObj.setBlockToAir(xCoord, yCoord, zCoord);
 			boolean fire = type == VentType.FIRE || type == VentType.LAVA;
 			float f = 2;
@@ -197,7 +202,7 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 				f = 4;
 			else if (type == VentType.GAS)
 				f = 6;
-			worldObj.newExplosion(null, xCoord, yCoord, zCoord, f, fire, true);
+			worldObj.newExplosion(null, xCoord, yCoord, zCoord, f*factor, fire, true);
 		}
 
 		public boolean canFire() {
