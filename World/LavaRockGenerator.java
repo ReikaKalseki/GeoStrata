@@ -25,14 +25,14 @@ public class LavaRockGenerator implements RetroactiveGenerator {
 
 	public static final LavaRockGenerator instance = new LavaRockGenerator();
 
-	private static final int PER_CHUNK = getAttemptsPerChunk(); //calls per chunk; vast majority fail
+	private static final int PER_CHUNK = getAttemptsPerChunk(); //calls per chunk; majority fail (?)
 
 	private LavaRockGenerator() {
 
 	}
 
 	private static int getAttemptsPerChunk() {
-		return 6;
+		return 2;
 	}
 
 	@Override
@@ -54,6 +54,9 @@ public class LavaRockGenerator implements RetroactiveGenerator {
 
 	private void generate(World world, int x, int y, int z) {
 		BlockArray b = new BlockArray();
+		b.maxDepth = 48;
+		b.taxiCabDistance = true;
+		//b.extraSpread = true;
 		b.recursiveAddWithBounds(world, x, y, z, world.getBlock(x, y, z), x-16, y-8, z-24, x+16, y+8, z+24);
 		BlockArray[] arrays = new BlockArray[4];
 		for (int i = 0; i < 4; i++) {
