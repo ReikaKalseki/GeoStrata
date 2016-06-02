@@ -46,6 +46,7 @@ import Reika.GeoStrata.Registry.RockTypes;
 import Reika.GeoStrata.Rendering.OreRenderer;
 import Reika.GeoStrata.World.BandedGenerator;
 import Reika.GeoStrata.World.BasicRockGenerator;
+import Reika.GeoStrata.World.LavaRockGenerator;
 import Reika.GeoStrata.World.RockGenerator;
 import Reika.GeoStrata.World.VentGenerator;
 import Reika.RotaryCraft.API.BlockColorInterface;
@@ -119,6 +120,7 @@ public class GeoStrata extends DragonAPIMod {
 		RockGenerator.instance.registerGenerationPattern(GeoOptions.BANDED.getState() ? BandedGenerator.instance : BasicRockGenerator.instance);
 		RetroGenController.instance.addHybridGenerator(RockGenerator.instance, Integer.MIN_VALUE, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(VentGenerator.instance, 0, GeoOptions.RETROGEN.getState());
+		RetroGenController.instance.addHybridGenerator(LavaRockGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 
 		GeoRecipes.addRecipes();
 		proxy.registerRenderers();
@@ -131,7 +133,7 @@ public class GeoStrata extends DragonAPIMod {
 		VanillaIntegrityTracker.instance.addWatchedBlock(instance, Blocks.lapis_block);
 		VanillaIntegrityTracker.instance.addWatchedBlock(instance, Blocks.emerald_block);
 
-		DonatorController.instance.addDonation(instance, "sophieguerette", 10.00F);
+		DonatorController.instance.registerMod(this, DonatorController.reikaURL);
 
 		if (ModList.THERMALEXPANSION.isLoaded()) {
 			for (int i = 0; i < RockTypes.rockList.length; i++) {

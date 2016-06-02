@@ -16,6 +16,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import Reika.DragonAPI.Instantiable.MetadataItemBlock;
 import Reika.DragonAPI.Interfaces.Registry.BlockEnum;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
@@ -23,6 +24,7 @@ import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Blocks.BlockGeoSlab;
 import Reika.GeoStrata.Blocks.BlockGeoStairs;
+import Reika.GeoStrata.Blocks.BlockLavaRock;
 import Reika.GeoStrata.Blocks.BlockOreTile;
 import Reika.GeoStrata.Blocks.BlockRockDeco;
 import Reika.GeoStrata.Blocks.BlockShapedRock;
@@ -39,7 +41,8 @@ public enum GeoBlocks implements BlockEnum {
 	VENT(BlockVent.class, ItemBlockVent.class, "Vent"),
 	STAIR(BlockGeoStairs.class, ItemBlockAnyGeoVariant.class, "Stairs"),
 	SLAB(BlockGeoSlab.class, ItemBlockAnyGeoVariant.class, "Slab"),
-	ORETILE(BlockOreTile.class, ItemBlockGeoOre.class, "Ore");
+	ORETILE(BlockOreTile.class, ItemBlockGeoOre.class, "Ore"),
+	LAVAROCK(BlockLavaRock.class, MetadataItemBlock.class, "Lava Rock");
 
 	private final Class blockClass;
 	private final String blockName;
@@ -153,16 +156,16 @@ public enum GeoBlocks implements BlockEnum {
 			return "";//((BlockShapedRock)this.getBlockInstance()).getDisplayName()+" "+RockTypes.getTypeFromID(this.getBlockInstance(), meta).getName();
 		}*/
 		switch(this) {
-		//case SMOOTH:
-		//case SMOOTH2:
-		//	return RockTypes.getTypeFromID(this.getBlockInstance(), meta).getName();
-		case DECO:
-			return DecoBlocks.list[meta].getName();
-			//case CONNECTED:
-			//case CONNECTED2:
-			//	return "Connected "+RockTypes.getTypeFromID(this.getBlockInstance(), meta).getName();
-		default:
-			return "";
+			//case SMOOTH:
+			//case SMOOTH2:
+			//	return RockTypes.getTypeFromID(this.getBlockInstance(), meta).getName();
+			case DECO:
+				return DecoBlocks.list[meta].getName();
+				//case CONNECTED:
+				//case CONNECTED2:
+				//	return "Connected "+RockTypes.getTypeFromID(this.getBlockInstance(), meta).getName();
+			default:
+				return "";
 		}
 	}
 
@@ -173,8 +176,10 @@ public enum GeoBlocks implements BlockEnum {
 	@Override
 	public boolean hasMultiValuedName() {
 		switch(this) {
-		default:
-			return true;
+			case LAVAROCK:
+				return false;
+			default:
+				return true;
 		}
 	}
 
