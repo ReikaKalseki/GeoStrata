@@ -17,11 +17,11 @@ import net.minecraft.world.IBlockAccess;
 
 import org.lwjgl.opengl.GL11;
 
+import Reika.DragonAPI.Interfaces.ISBRH;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Blocks.BlockVent.VentType;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
-public class VentRenderer implements ISimpleBlockRenderingHandler {
+public class VentRenderer implements ISBRH {
 
 	@Override
 	public void renderInventoryBlock(Block b, int metadata, int modelId, RenderBlocks rb) {

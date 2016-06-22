@@ -28,9 +28,10 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import Reika.GeoStrata.GeoStrata;
+import Reika.RotaryCraft.API.Interfaces.EnvironmentalHeatSource;
 
 
-public class BlockLavaRock extends Block {
+public class BlockLavaRock extends Block implements EnvironmentalHeatSource {
 
 	public static final IIcon[] overlay = new IIcon[4];
 
@@ -117,6 +118,16 @@ public class BlockLavaRock extends Block {
 	public boolean isReplaceableOreGen(World world, int x, int y, int z, Block target)
 	{
 		return target == this || target == Blocks.stone;
+	}
+
+	@Override
+	public SourceType getSourceType(IBlockAccess iba, int x, int y, int z) {
+		return iba.getBlockMetadata(x, y, z) == 0 ? SourceType.LAVA : SourceType.FIRE;
+	}
+
+	@Override
+	public boolean isActive(IBlockAccess iba, int x, int y, int z) {
+		return true;
 	}
 
 }

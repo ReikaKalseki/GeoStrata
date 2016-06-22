@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Rendering.ConnectedStoneRenderer;
+import Reika.GeoStrata.Rendering.DecoGenRenderer;
 import Reika.GeoStrata.Rendering.LavaRockRenderer;
 import Reika.GeoStrata.Rendering.OreRenderer;
 import Reika.GeoStrata.Rendering.StairItemRenderer;
@@ -29,6 +30,7 @@ public class GeoClient extends GeoCommon {
 	private static final StairItemRenderer stair = new StairItemRenderer();
 	private static OreRenderer ore;
 	private static LavaRockRenderer lavarock;
+	private static DecoGenRenderer deco;
 
 	@Override
 	public void registerSounds() {
@@ -52,6 +54,10 @@ public class GeoClient extends GeoCommon {
 		lavarockRender = RenderingRegistry.getNextAvailableRenderId();
 		lavarock = new LavaRockRenderer();
 		RenderingRegistry.registerBlockHandler(lavarockRender, lavarock);
+
+		decoRender = RenderingRegistry.getNextAvailableRenderId();
+		deco = new DecoGenRenderer();
+		RenderingRegistry.registerBlockHandler(decoRender, deco);
 
 		//shapedRender = RenderingRegistry.getNextAvailableRenderId();
 		//shaped = new ShapedStoneRenderer(shapedRender);

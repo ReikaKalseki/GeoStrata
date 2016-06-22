@@ -19,10 +19,10 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import Reika.ChromatiCraft.ChromatiCraft;
+import Reika.DragonAPI.Interfaces.ISBRH;
 import Reika.GeoStrata.Blocks.BlockLavaRock;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
-public class LavaRockRenderer implements ISimpleBlockRenderingHandler {
+public class LavaRockRenderer implements ISBRH {
 
 	@Override
 	public void renderInventoryBlock(Block b, int metadata, int modelId, RenderBlocks rb) {

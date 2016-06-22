@@ -17,6 +17,7 @@ public class GeoCommon {
 	public static int ventRender;
 	public static int oreRender;
 	public static int lavarockRender;
+	public static int decoRender;
 	//public static int shapedRender;
 
 	/**

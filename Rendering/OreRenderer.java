@@ -27,6 +27,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import Reika.DragonAPI.Instantiable.Data.Maps.BlockMap;
+import Reika.DragonAPI.Interfaces.ISBRH;
 import Reika.DragonAPI.Libraries.ReikaIconHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaOreHelper;
 import Reika.DragonAPI.ModRegistry.ModOreList;
@@ -34,9 +35,8 @@ import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.TileEntityGeoOre;
 import Reika.GeoStrata.Blocks.BlockOreTile;
 import Reika.GeoStrata.Registry.RockTypes;
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
-public class OreRenderer implements ISimpleBlockRenderingHandler {
+public class OreRenderer implements ISBRH {
 
 	private static final Random rand = new Random();
 

@@ -227,7 +227,7 @@ public class ConnectedStoneRenderer extends BaseBlockRenderer {
 		Tessellator v5 = Tessellator.instance;
 		v5.setColorOpaque(255, 255, 255);
 
-		double d = CoreModDetection.optifineInstalled() ? 0.005 : 0.001;
+		double d = CoreModDetection.OPTIFINE.isInstalled() ? 0.005 : 0.001;
 		if (b.shouldSideBeRendered(world, x, y+1, z, ForgeDirection.UP.ordinal())) {
 			ArrayList<Integer> li = b.getEdgesForFace(world, x, y, z, ForgeDirection.UP, type);
 			this.faceBrightness(ForgeDirection.DOWN, v5);

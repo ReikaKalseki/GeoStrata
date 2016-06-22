@@ -20,6 +20,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 import thaumcraft.api.aspects.Aspect;
 import Reika.DragonAPI.DragonAPICore;
@@ -46,6 +47,7 @@ import Reika.GeoStrata.Registry.RockTypes;
 import Reika.GeoStrata.Rendering.OreRenderer;
 import Reika.GeoStrata.World.BandedGenerator;
 import Reika.GeoStrata.World.BasicRockGenerator;
+import Reika.GeoStrata.World.DecoGenerator;
 import Reika.GeoStrata.World.LavaRockGenerator;
 import Reika.GeoStrata.World.RockGenerator;
 import Reika.GeoStrata.World.VentGenerator;
@@ -121,9 +123,12 @@ public class GeoStrata extends DragonAPIMod {
 		RetroGenController.instance.addHybridGenerator(RockGenerator.instance, Integer.MIN_VALUE, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(VentGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(LavaRockGenerator.instance, 0, GeoOptions.RETROGEN.getState());
+		RetroGenController.instance.addHybridGenerator(DecoGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 
 		GeoRecipes.addRecipes();
 		proxy.registerRenderers();
+
+		MinecraftForge.EVENT_BUS.register(GeoEvents.instance);
 
 		VanillaIntegrityTracker.instance.addWatchedBlock(instance, Blocks.obsidian);
 		VanillaIntegrityTracker.instance.addWatchedBlock(instance, Blocks.stone);

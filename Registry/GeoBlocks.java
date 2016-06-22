@@ -22,6 +22,7 @@ import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.RockBlock;
+import Reika.GeoStrata.Blocks.BlockDecoGen;
 import Reika.GeoStrata.Blocks.BlockGeoSlab;
 import Reika.GeoStrata.Blocks.BlockGeoStairs;
 import Reika.GeoStrata.Blocks.BlockLavaRock;
@@ -42,7 +43,8 @@ public enum GeoBlocks implements BlockEnum {
 	STAIR(BlockGeoStairs.class, ItemBlockAnyGeoVariant.class, "Stairs"),
 	SLAB(BlockGeoSlab.class, ItemBlockAnyGeoVariant.class, "Slab"),
 	ORETILE(BlockOreTile.class, ItemBlockGeoOre.class, "Ore"),
-	LAVAROCK(BlockLavaRock.class, MetadataItemBlock.class, "Lava Rock");
+	LAVAROCK(BlockLavaRock.class, MetadataItemBlock.class, "Lava Rock"),
+	DECOGEN(BlockDecoGen.class,	MetadataItemBlock.class, "geo.decogen");
 
 	private final Class blockClass;
 	private final String blockName;
@@ -164,6 +166,8 @@ public enum GeoBlocks implements BlockEnum {
 				//case CONNECTED:
 				//case CONNECTED2:
 				//	return "Connected "+RockTypes.getTypeFromID(this.getBlockInstance(), meta).getName();
+			case DECOGEN:
+				return BlockDecoGen.Types.list[meta].name;
 			default:
 				return "";
 		}
@@ -189,6 +193,8 @@ public enum GeoBlocks implements BlockEnum {
 		//	return RockTypes.getTypesForID(this.getBlockInstance());
 		if (this == DECO)
 			return DecoBlocks.list.length;
+		if (this == DECOGEN)
+			return BlockDecoGen.Types.list.length;
 		return 1;
 	}
 
