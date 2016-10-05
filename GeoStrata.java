@@ -65,6 +65,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import forestry.api.storage.BackpackManager;
 
 @Mod(modid = GeoStrata.MOD_NAME, name = GeoStrata.MOD_NAME, certificateFingerprint = "@GET_FINGERPRINT@", dependencies="required-after:DragonAPI")
 
@@ -148,6 +149,14 @@ public class GeoStrata extends DragonAPIMod {
 				int energy = (int)(200+800*(r.blockHardness-1));
 				ThermalRecipeHelper.addPulverizerRecipe(smooth, cobble, energy); //make proportional to hardness
 				ThermalRecipeHelper.addPulverizerRecipe(cobble, new ItemStack(Blocks.sand), new ItemStack(Blocks.gravel), 20, energy);
+			}
+		}
+
+		if (ModList.FORESTRY.isLoaded()) {
+			for (int i = 0; i < RockTypes.rockList.length; i++) {
+				RockTypes r = RockTypes.rockList[i];
+				BackpackManager.backpackItems[1].add(r.getItem(RockShapes.COBBLE));
+				BackpackManager.backpackItems[1].add(r.getItem(RockShapes.SMOOTH));
 			}
 		}
 

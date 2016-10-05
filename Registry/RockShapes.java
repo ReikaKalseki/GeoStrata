@@ -116,7 +116,7 @@ public enum RockShapes {
 				b.setBlockName(name);
 				GameRegistry.registerBlock(b, ItemBlockRock.class, name);
 				b.setHardness(r.blockHardness);
-				b.setResistance(r.blastResistance);
+				b.setResistance(r.blastResistance/3F); //compensate for the x3
 				b.setHarvestLevel("pickaxe", r.harvestTool.ordinal());
 				LegacyWailaHelper.registerLegacyWAILACompat(b);
 				return b;

@@ -266,6 +266,13 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 						e.setFire(type.damage);
 				}
 			}
+			else if (type == VentType.SMOKE) {
+				AxisAlignedBB box = this.getEffectBox();
+				List<EntityLivingBase> li = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, box);
+				for (EntityLivingBase e : li) {
+					e.setAir(Math.max(0, e.getAir()-1));
+				}
+			}
 			else if (type == VentType.WATER) {
 				AxisAlignedBB box = this.getEffectBox();
 				List<EntityLivingBase> li = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, box);

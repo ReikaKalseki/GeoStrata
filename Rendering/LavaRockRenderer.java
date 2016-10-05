@@ -12,6 +12,7 @@ package Reika.GeoStrata.Rendering;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -20,7 +21,6 @@ import org.lwjgl.opengl.GL11;
 
 import Reika.ChromatiCraft.ChromatiCraft;
 import Reika.DragonAPI.Interfaces.ISBRH;
-import Reika.GeoStrata.Blocks.BlockLavaRock;
 
 public class LavaRockRenderer implements ISBRH {
 
@@ -35,63 +35,59 @@ public class LavaRockRenderer implements ISBRH {
 		rb.renderMinZ = 0;
 		rb.renderMaxY = 1;
 
-		IIcon ico = b.getIcon(0, metadata);
+		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
+		IIcon ico = Blocks.lava.getIcon(0, 0);
+		tessellator.startDrawingQuads();
+		tessellator.setBrightness(240);
+		tessellator.setNormal(0.0F, -1.0F, 0.0F);
+		rb.renderFaceYNeg(b, 0.0D, 0.0D, 0.0D, ico);
+
+		tessellator.setNormal(0.0F, 1.0F, 0.0F);
+		rb.renderFaceYPos(b, 0.0D, 0.0D, 0.0D, ico);
+
+		tessellator.setNormal(0.0F, 0.0F, -1.0F);
+		rb.renderFaceZNeg(b, 0.0D, 0.0D, 0.0D, ico);
+
+		tessellator.setNormal(0.0F, 0.0F, 1.0F);
+		rb.renderFaceZPos(b, 0.0D, 0.0D, 0.0D, ico);
+
+		tessellator.setNormal(-1.0F, 0.0F, 0.0F);
+		rb.renderFaceXNeg(b, 0.0D, 0.0D, 0.0D, ico);
+
+		tessellator.setNormal(1.0F, 0.0F, 0.0F);
+		rb.renderFaceXPos(b, 0.0D, 0.0D, 0.0D, ico);
+		tessellator.draw();
+
+		ico = b.getIcon(0, metadata);
+
+		GL11.glTranslatef(0, 0, 1);
 
 		GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
-		GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
 		tessellator.startDrawingQuads();
 		tessellator.setNormal(0.0F, -1.0F, 0.0F);
-		rb.renderFaceYNeg(b, 0.0D, 0.0D, 0.0D, ico);
+		rb.renderFaceYNeg(b, 0.0D, -0.01D, 0.0D, ico);
 		tessellator.draw();
 
 		tessellator.startDrawingQuads();
 		tessellator.setNormal(0.0F, 1.0F, 0.0F);
-		rb.renderFaceYPos(b, 0.0D, 0.0D, 0.0D, ico);
+		rb.renderFaceYPos(b, 0.0D, 0.01D, 0.0D, ico);
 		tessellator.draw();
 
 		tessellator.startDrawingQuads();
 		tessellator.setNormal(0.0F, 0.0F, -1.0F);
-		rb.renderFaceZNeg(b, 0.0D, 0.0D, 0.0D, ico);
+		rb.renderFaceZNeg(b, 0.0D, 0.0D, -0.01D, ico);
 		tessellator.draw();
 		tessellator.startDrawingQuads();
 		tessellator.setNormal(0.0F, 0.0F, 1.0F);
-		rb.renderFaceZPos(b, 0.0D, 0.0D, 0.0D, ico);
+		rb.renderFaceZPos(b, 0.0D, 0.0D, 0.01D, ico);
 		tessellator.draw();
 		tessellator.startDrawingQuads();
 		tessellator.setNormal(-1.0F, 0.0F, 0.0F);
-		rb.renderFaceXNeg(b, 0.0D, 0.0D, 0.0D, ico);
+		rb.renderFaceXNeg(b, -0.01D, 0.0D, 0.0D, ico);
 		tessellator.draw();
 		tessellator.startDrawingQuads();
 		tessellator.setNormal(1.0F, 0.0F, 0.0F);
-		rb.renderFaceXPos(b, 0.0D, 0.0D, 0.0D, ico);
-		tessellator.draw();
-
-		ico = BlockLavaRock.overlay[metadata];
-		tessellator.startDrawingQuads();
-		tessellator.setNormal(0.0F, -1.0F, 0.0F);
-		rb.renderFaceYNeg(b, 0.0D, 0.0D, 0.0D, ico);
-		tessellator.draw();
-
-		tessellator.startDrawingQuads();
-		tessellator.setNormal(0.0F, 1.0F, 0.0F);
-		rb.renderFaceYPos(b, 0.0D, 0.0D, 0.0D, ico);
-		tessellator.draw();
-
-		tessellator.startDrawingQuads();
-		tessellator.setNormal(0.0F, 0.0F, -1.0F);
-		rb.renderFaceZNeg(b, 0.0D, 0.0D, 0.0D, ico);
-		tessellator.draw();
-		tessellator.startDrawingQuads();
-		tessellator.setNormal(0.0F, 0.0F, 1.0F);
-		rb.renderFaceZPos(b, 0.0D, 0.0D, 0.0D, ico);
-		tessellator.draw();
-		tessellator.startDrawingQuads();
-		tessellator.setNormal(-1.0F, 0.0F, 0.0F);
-		rb.renderFaceXNeg(b, 0.0D, 0.0D, 0.0D, ico);
-		tessellator.draw();
-		tessellator.startDrawingQuads();
-		tessellator.setNormal(1.0F, 0.0F, 0.0F);
-		rb.renderFaceXPos(b, 0.0D, 0.0D, 0.0D, ico);
+		rb.renderFaceXPos(b, 0.01D, 0.0D, 0.0D, ico);
 		tessellator.draw();
 
 		GL11.glTranslatef(0.5F, 0.5F, 0.5F);
@@ -102,11 +98,9 @@ public class LavaRockRenderer implements ISBRH {
 		Tessellator v5 = Tessellator.instance;
 		int meta = world.getBlockMetadata(x, y, z);
 
-		rb.renderStandardBlockWithAmbientOcclusion(b, x, y, z, 1, 1, 1);
-
-		IIcon ico = BlockLavaRock.overlay[meta];
+		IIcon ico = Blocks.lava.getIcon(0, 0);
 		v5.setBrightness(240);
-		v5.setColorOpaque_F(255, 255, 255);
+		v5.setColorOpaque(255, 255, 255);
 		if (b.shouldSideBeRendered(world, x, y-1, z, ForgeDirection.DOWN.ordinal()))
 			rb.renderFaceYNeg(b, x, y, z, ico);
 		if (b.shouldSideBeRendered(world, x, y+1, z, ForgeDirection.UP.ordinal()))
@@ -119,6 +113,8 @@ public class LavaRockRenderer implements ISBRH {
 			rb.renderFaceXNeg(b, x, y, z, ico);
 		if (b.shouldSideBeRendered(world, x+1, y, z, ForgeDirection.EAST.ordinal()))
 			rb.renderFaceXPos(b, x, y, z, ico);
+
+		rb.renderStandardBlockWithAmbientOcclusion(b, x, y, z, 1, 1, 1);
 		return true;
 	}
 

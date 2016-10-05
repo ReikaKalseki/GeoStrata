@@ -23,6 +23,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
@@ -33,7 +34,7 @@ import Reika.RotaryCraft.API.Interfaces.EnvironmentalHeatSource;
 
 public class BlockLavaRock extends Block implements EnvironmentalHeatSource {
 
-	public static final IIcon[] overlay = new IIcon[4];
+	private final IIcon[] overlay = new IIcon[4];
 
 	public BlockLavaRock(Material mat) {
 		super(mat);
@@ -65,6 +66,28 @@ public class BlockLavaRock extends Block implements EnvironmentalHeatSource {
 	}
 
 	@Override
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
+	{
+		float maxY = 1;
+		int meta = world.getBlockMetadata(x, y, z);
+		switch(meta) {
+			case 0:
+				maxY = 1;
+				break;
+			case 1:
+				maxY = 0.9375F;
+				break;
+			case 2:
+				maxY = 0.875F;
+				break;
+			case 3:
+				maxY = 0.75F;
+				break;
+		}
+		return AxisAlignedBB.getBoundingBox(x, y, z, x + 1, y + maxY, z + 1);
+	}
+
+	@Override
 	public void getSubBlocks(Item id, CreativeTabs tab, List li) {
 		for (int i = 0; i < 4; i++) {
 			li.add(new ItemStack(this, 1, i));
@@ -88,7 +111,7 @@ public class BlockLavaRock extends Block implements EnvironmentalHeatSource {
 
 	@Override
 	public IIcon getIcon(int s, int meta) {
-		return Blocks.stone.getIcon(s, meta);//icons[meta];
+		return overlay[meta];
 	}
 
 	@Override
@@ -128,6 +151,11 @@ public class BlockLavaRock extends Block implements EnvironmentalHeatSource {
 	@Override
 	public boolean isActive(IBlockAccess iba, int x, int y, int z) {
 		return true;
+	}
+
+	@Override
+	public int damageDropped(int meta) {
+		return meta;
 	}
 
 }
