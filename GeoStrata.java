@@ -153,10 +153,12 @@ public class GeoStrata extends DragonAPIMod {
 		}
 
 		if (ModList.FORESTRY.isLoaded()) {
-			for (int i = 0; i < RockTypes.rockList.length; i++) {
-				RockTypes r = RockTypes.rockList[i];
-				BackpackManager.backpackItems[1].add(r.getItem(RockShapes.COBBLE));
-				BackpackManager.backpackItems[1].add(r.getItem(RockShapes.SMOOTH));
+			if (BackpackManager.backpackItems != null && BackpackManager.backpackItems.length > 0) {
+				for (int i = 0; i < RockTypes.rockList.length; i++) {
+					RockTypes r = RockTypes.rockList[i];
+					BackpackManager.backpackItems[1].add(r.getItem(RockShapes.COBBLE));
+					BackpackManager.backpackItems[1].add(r.getItem(RockShapes.SMOOTH));
+				}
 			}
 		}
 
