@@ -10,6 +10,7 @@
 package Reika.GeoStrata;
 
 import java.awt.Color;
+import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -301,6 +302,11 @@ public class GeoStrata extends DragonAPIMod {
 	@Override
 	public ModLogger getModLogger() {
 		return logger;
+	}
+
+	@Override
+	public File getConfigFolder() {
+		return config.getConfigFolder();
 	}
 
 	public static int getOpalPositionColor(IBlockAccess iba, int x, int y, int z) {
