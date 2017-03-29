@@ -18,18 +18,19 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import Reika.DragonAPI.Libraries.World.ReikaBlockHelper;
 import Reika.GeoStrata.TileEntityGeoOre;
+import Reika.GeoStrata.API.RockProofStone;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 
-public class WorldGenMinableOreAbsorber extends WorldGenerator {
+public class WorldGenGeoRock extends WorldGenerator {
 
 	private final int size;
 	private final RockTypes rock;
 	private final Block overwrite;
 	private final Block id;
 
-	public WorldGenMinableOreAbsorber(RockTypes r, int size) {
+	public WorldGenGeoRock(RockTypes r, int size) {
 		this.size = size;
 		overwrite = Blocks.stone;
 		rock = r;
@@ -37,22 +38,22 @@ public class WorldGenMinableOreAbsorber extends WorldGenerator {
 	}
 
 	@Override
-	public boolean generate(World world, Random r, int x, int y, int z) {
+	public boolean generate(World world, Random rand, int x, int y, int z) {
 		int count = 0;
-		float f = r.nextFloat() * (float)Math.PI;
+		float f = rand.nextFloat() * (float)Math.PI;
 		double d0 = x + 8 + MathHelper.sin(f) * size / 8.0F;
 		double d1 = x + 8 - MathHelper.sin(f) * size / 8.0F;
 		double d2 = z + 8 + MathHelper.cos(f) * size / 8.0F;
 		double d3 = z + 8 - MathHelper.cos(f) * size / 8.0F;
-		double d4 = y + r.nextInt(3) - 2;
-		double d5 = y + r.nextInt(3) - 2;
+		double d4 = y + rand.nextInt(3) - 2;
+		double d5 = y + rand.nextInt(3) - 2;
 
 		for (int l = 0; l <= size; ++l)
 		{
 			double d6 = d0 + (d1 - d0) * l / size;
 			double d7 = d4 + (d5 - d4) * l / size;
 			double d8 = d2 + (d3 - d2) * l / size;
-			double d9 = r.nextDouble() * size / 16.0D;
+			double d9 = rand.nextDouble() * size / 16.0D;
 			double d10 = (MathHelper.sin(l * (float)Math.PI / size) + 1.0F) * d9 + 1.0D;
 			double d11 = (MathHelper.sin(l * (float)Math.PI / size) + 1.0F) * d9 + 1.0D;
 			int i1 = MathHelper.floor_double(d6 - d10 / 2.0D);
@@ -73,7 +74,7 @@ public class WorldGenMinableOreAbsorber extends WorldGenerator {
 								if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D) {
 									Block b = world.getBlock(dx, dy, dz);
 									int meta = world.getBlockMetadata(dx, dy, dz);
-									if (b.isReplaceableOreGen(world, dx, dy, dz, overwrite)) {
+									if (this.canGenerateIn(world, dx, dy, dz, b, meta)) {
 										world.setBlock(dx, dy, dz, id, 0, 2);
 										count++;
 									}
@@ -92,6 +93,12 @@ public class WorldGenMinableOreAbsorber extends WorldGenerator {
 		}
 
 		return count > 0;
+	}
+
+	private boolean canGenerateIn(World world, int x, int y, int z, Block b, int meta) {
+		if (b instanceof RockProofStone && ((RockProofStone)b).blockRockGeneration(world, x, y, z, b, meta))
+			return false;
+		return b.isReplaceableOreGen(world, x, y, z, overwrite);
 	}
 
 }

@@ -41,6 +41,7 @@ import Reika.DragonAPI.ModInteract.ItemHandlers.ExtraUtilsHandler;
 import Reika.DragonAPI.ModInteract.RecipeHandlers.ThermalRecipeHelper;
 import Reika.GeoStrata.Blocks.BlockVent.TileEntityVent;
 import Reika.GeoStrata.Blocks.BlockVent.VentType;
+import Reika.GeoStrata.Items.ItemBlockAnyGeoVariant;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockShapes;
@@ -68,7 +69,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import forestry.api.storage.BackpackManager;
 
-@Mod(modid = GeoStrata.MOD_NAME, name = GeoStrata.MOD_NAME, certificateFingerprint = "@GET_FINGERPRINT@", dependencies="required-after:DragonAPI")
+@Mod(modid = GeoStrata.MOD_NAME, name = GeoStrata.MOD_NAME, version = "v@MAJOR_VERSION@@MINOR_VERSION@", certificateFingerprint = "@GET_FINGERPRINT@", dependencies="required-after:DragonAPI")
 
 public class GeoStrata extends DragonAPIMod {
 
@@ -263,10 +264,12 @@ public class GeoStrata extends DragonAPIMod {
 			RockTypes type = RockTypes.rockList[i];
 			ItemStack cobble = type.getItem(RockShapes.COBBLE);
 			ItemStack rock = type.getItem(RockShapes.SMOOTH);
+			ItemStack slab = new ItemStack(GeoBlocks.SLAB.getBlockInstance(), 1, ItemBlockAnyGeoVariant.getStack(type, RockShapes.COBBLE));
 			OreDictionary.registerOre("cobblestone", cobble);
 			OreDictionary.registerOre("stone", rock);
 			OreDictionary.registerOre("rock"+type.getName(), rock);
 			OreDictionary.registerOre("stone"+type.getName(), rock);
+			OreDictionary.registerOre("slabCobblestone", slab);
 			if (type != RockTypes.QUARTZ) //Nether quartz is "quartz"
 				OreDictionary.registerOre(type.getName().toLowerCase(Locale.ENGLISH), rock);
 		}

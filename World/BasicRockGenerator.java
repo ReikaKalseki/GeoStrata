@@ -35,7 +35,7 @@ public class BasicRockGenerator implements RockGenerationPattern {
 			//GeoStrata.logger.debug(geo.name()+":"+geo.canGenerateAt(world, posX, posY, posZ, random));
 			if (geo.canGenerateAt(world, posX, posY, posZ, random)) {
 				//(new WorldGenMinable(geo.getID(RockShapes.SMOOTH), VEIN_SIZE, Blocks.stone)).generate(world, random, posX, posY, posZ);
-				(new WorldGenMinableOreAbsorber(geo, RockGenerator.VEIN_SIZE)).generate(world, random, posX, posY, posZ);
+				(new WorldGenGeoRock(geo, RockGenerator.VEIN_SIZE)).generate(world, random, posX, posY, posZ);
 				//GeoStrata.logger.log("Generating "+geo+" at "+posX+", "+posY+", "+posZ);
 			}
 		}
