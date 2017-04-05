@@ -101,7 +101,7 @@ public class RockGenerator implements RetroactiveGenerator {
 	}
 
 	@Override
-	public final boolean canGenerateAt(Random rand, World world, int chunkX, int chunkZ) {
+	public final boolean canGenerateAt(World world, int chunkX, int chunkZ) {
 		return true;
 	}
 
