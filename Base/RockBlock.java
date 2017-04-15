@@ -9,7 +9,6 @@
  ******************************************************************************/
 package Reika.GeoStrata.Base;
 
-import java.awt.Color;
 import java.util.List;
 import java.util.Random;
 
@@ -19,8 +18,8 @@ import mcp.mobius.waila.api.IWailaDataProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -28,7 +27,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -53,7 +51,7 @@ public abstract class RockBlock extends Block implements Laserable, IWrappableBl
 
 	public RockBlock() {
 		super(Material.rock);
-		this.setCreativeTab(GeoStrata.tabGeo);
+		this.setCreativeTab(GeoStrata.tabGeoRock);
 		//blockHardness = 1F;
 	}
 	/*
@@ -120,7 +118,7 @@ public abstract class RockBlock extends Block implements Laserable, IWrappableBl
 		return this.getColor(iba, x, y, z, rock);
 	}
 
-	private int getColor(IBlockAccess iba, int x, int y, int z, RockTypes rock) {
+	public int getColor(IBlockAccess iba, int x, int y, int z, RockTypes rock) {
 		if (rock == RockTypes.OPAL) {
 			return GeoStrata.getOpalPositionColor(iba, x, y, z);
 		}
@@ -133,18 +131,12 @@ public abstract class RockBlock extends Block implements Laserable, IWrappableBl
 	@SideOnly(Side.CLIENT)
 	public final int getRenderColor(int dmg) {
 		RockTypes rock = RockTypes.getTypeFromID(this);
-		EntityPlayer ep = Minecraft.getMinecraft().thePlayer;
-		if (ep == null)
-			return rock == RockTypes.OPAL ? Color.HSBtoRGB(((System.currentTimeMillis()/20)%360)/360F, 0.4F, 1F) : super.getRenderColor(dmg);
-			int x = MathHelper.floor_double(ep.posX);
-			int y = MathHelper.floor_double(ep.posY);
-			int z = MathHelper.floor_double(ep.posZ);
-			if (rock == RockTypes.OPAL) {
-				return GeoStrata.getOpalPositionColor(Minecraft.getMinecraft().theWorld, x, y, z);
-			}
-			else {
-				return super.getRenderColor(dmg);
-			}
+		if (rock == RockTypes.OPAL) {
+			return GeoStrata.getOpalPositionColor(Minecraft.getMinecraft().theWorld, RenderManager.renderPosX, RenderManager.renderPosY, RenderManager.renderPosZ);
+		}
+		else {
+			return super.getRenderColor(dmg);
+		}
 	}
 
 	@Override

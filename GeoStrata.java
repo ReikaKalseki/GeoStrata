@@ -39,6 +39,7 @@ import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
 import Reika.DragonAPI.ModInteract.DeepInteract.ReikaThaumHelper;
 import Reika.DragonAPI.ModInteract.ItemHandlers.ExtraUtilsHandler;
 import Reika.DragonAPI.ModInteract.RecipeHandlers.ThermalRecipeHelper;
+import Reika.GeoStrata.Blocks.BlockPartialBounds.TilePartialBounds;
 import Reika.GeoStrata.Blocks.BlockVent.TileEntityVent;
 import Reika.GeoStrata.Blocks.BlockVent.VentType;
 import Reika.GeoStrata.Items.ItemBlockAnyGeoVariant;
@@ -50,6 +51,7 @@ import Reika.GeoStrata.Rendering.OreRenderer;
 import Reika.GeoStrata.World.BandedGenerator;
 import Reika.GeoStrata.World.BasicRockGenerator;
 import Reika.GeoStrata.World.DecoGenerator;
+import Reika.GeoStrata.World.GlowCrystalGenerator;
 import Reika.GeoStrata.World.LavaRockGenerator;
 import Reika.GeoStrata.World.RockGenerator;
 import Reika.GeoStrata.World.VentGenerator;
@@ -83,6 +85,7 @@ public class GeoStrata extends DragonAPIMod {
 	public static final String packetChannel = GeoStrata.MOD_NAME+"Data";
 
 	public static CreativeTabs tabGeo = new GeoTab(GeoStrata.MOD_NAME);
+	public static CreativeTabs tabGeoRock = new GeoTabRock(GeoStrata.MOD_NAME+" Stone");
 	public static CreativeTabs tabGeoStairs = new GeoTabStairs(GeoStrata.MOD_NAME+" Stairs");
 	public static CreativeTabs tabGeoSlabs = new GeoTabSlab(GeoStrata.MOD_NAME+" Slabs");
 	public static CreativeTabs tabGeoOres = new GeoTabOres(GeoStrata.MOD_NAME+" Ores");
@@ -127,6 +130,7 @@ public class GeoStrata extends DragonAPIMod {
 		RetroGenController.instance.addHybridGenerator(VentGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(LavaRockGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(DecoGenerator.instance, 0, GeoOptions.RETROGEN.getState());
+		RetroGenController.instance.addHybridGenerator(GlowCrystalGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 
 		GeoRecipes.addRecipes();
 		proxy.registerRenderers();
@@ -257,6 +261,7 @@ public class GeoStrata extends DragonAPIMod {
 		GameRegistry.registerTileEntity(TileEntityVent.class, "geostratavent");
 		GameRegistry.registerTileEntity(TileEntityGeoOre.class, "geostrataore");
 		//GameRegistry.registerTileEntity(TileEntityOreConverter.class, "geostrataoreconvert");
+		GameRegistry.registerTileEntity(TilePartialBounds.class, "geostratapartial");
 	}
 
 	public static void loadDictionary() {
@@ -312,19 +317,21 @@ public class GeoStrata extends DragonAPIMod {
 		return config.getConfigFolder();
 	}
 
-	public static int getOpalPositionColor(IBlockAccess iba, int x, int y, int z) {
+	public static int getOpalPositionColor(IBlockAccess iba, double x, double y, double z) {
 		//int sc = 48;
 
 		//float hue1 = (float)(ReikaMathLibrary.py3d(offX, y*4, offX+offZ)%sc)/sc;
 
 		//float hue1 = (float)(ReikaMathLibrary.py3d(x, y*4, z+x)%sc)/sc;
 
+		double d = GeoOptions.OPALFREQ.getFloat();
 		double n = 7;//+1*Math.cos(Math.toRadians((x+y+z)/500D*360D));
 		//double n = 7+0.0625*Math.cos(Math.toRadians((x+y+z)/500D*360D));
 		//double n = 7+1*Math.cos(Math.toRadians(x%360));
 		//float hue1 = (float)((n-6)/2);
 		//float hue1 = (float)(y+(n*2)+(z+(n*6)+0.5+0.5*Math.sin((x)/(n*2))));
-		float hue1 = (float)(y/(n*2)+(z/(n*6)+0.5+0.5*Math.sin((x)/(n*2))));
+		float hue1 = (float)(y/(n*2)+(d*z/(n*6)+0.5+0.5*Math.sin((d*x)/(n*2))));
+		hue1 += GeoOptions.OPALHUE.getValue()/360F;
 		//ReikaJavaLibrary.pConsole("@ "+x+","+z+": N="+n+"; hue = "+hue1);
 
 		//float hue2 = (float)(Math.cos(x/24D)+Math.sin(z/24D))+(y%360)*0.05F;

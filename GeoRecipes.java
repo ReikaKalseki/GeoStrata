@@ -9,10 +9,13 @@
  ******************************************************************************/
 package Reika.GeoStrata;
 
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.ShapedOreRecipe;
 import Reika.DragonAPI.Libraries.ReikaRecipeHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.GeoStrata.Registry.DecoBlocks;
+import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
@@ -93,6 +96,8 @@ public class GeoRecipes {
 			else
 				block.addSizedCrafting(4*block.recipeMultiplier, "BB", "BB", 'B', block.material);
 		}
+
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(GeoBlocks.PARTIAL.getBlockInstance(), 16, 0), "BSB", "SPS", "BSB", 'P', Blocks.planks, 'S', "stone", 'B', Blocks.iron_bars));
 
 	}
 }

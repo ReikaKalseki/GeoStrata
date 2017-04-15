@@ -25,8 +25,10 @@ import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Blocks.BlockDecoGen;
 import Reika.GeoStrata.Blocks.BlockGeoSlab;
 import Reika.GeoStrata.Blocks.BlockGeoStairs;
+import Reika.GeoStrata.Blocks.BlockGlowCrystal;
 import Reika.GeoStrata.Blocks.BlockLavaRock;
 import Reika.GeoStrata.Blocks.BlockOreTile;
+import Reika.GeoStrata.Blocks.BlockPartialBounds;
 import Reika.GeoStrata.Blocks.BlockRockDeco;
 import Reika.GeoStrata.Blocks.BlockShapedRock;
 import Reika.GeoStrata.Blocks.BlockSmooth;
@@ -44,7 +46,9 @@ public enum GeoBlocks implements BlockEnum {
 	SLAB(BlockGeoSlab.class, ItemBlockAnyGeoVariant.class, "Slab"),
 	ORETILE(BlockOreTile.class, ItemBlockGeoOre.class, "Ore"),
 	LAVAROCK(BlockLavaRock.class, MetadataItemBlock.class, "Lava Rock"),
-	DECOGEN(BlockDecoGen.class,	MetadataItemBlock.class, "geo.decogen");
+	DECOGEN(BlockDecoGen.class,	MetadataItemBlock.class, "geo.decogen"),
+	GLOWCRYS(BlockGlowCrystal.class, MetadataItemBlock.class, "Luminous Crystal"),
+	PARTIAL(BlockPartialBounds.class, null, "Partial Bounds Block");
 
 	private final Class blockClass;
 	private final String blockName;
@@ -181,6 +185,8 @@ public enum GeoBlocks implements BlockEnum {
 	public boolean hasMultiValuedName() {
 		switch(this) {
 			case LAVAROCK:
+			case PARTIAL:
+			case GLOWCRYS:
 				return false;
 			default:
 				return true;

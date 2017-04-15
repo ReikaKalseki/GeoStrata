@@ -82,7 +82,7 @@ public class BlockConnectedRock extends RockBlock {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
 			RockTypes r = RockTypes.rockList[i];
 			String name = r.getName();
-			icons[r.ordinal()] = ico.registerIcon("GeoStrata:"+name.toLowerCase(Locale.ENGLISH));
+			icons[r.ordinal()] = ico.registerIcon("GeoStrata:rock/"+name.toLowerCase(Locale.ENGLISH));
 			GeoStrata.logger.debug("Adding "+name+" rock icon "+icons[r.ordinal()].getIconName());
 
 			for (int k = 0; k < 10; k++) {

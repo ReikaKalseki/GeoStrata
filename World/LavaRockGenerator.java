@@ -20,10 +20,14 @@ import Reika.DragonAPI.Instantiable.Data.BlockStruct.BlockArray;
 import Reika.DragonAPI.Instantiable.Data.Immutable.Coordinate;
 import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
 import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Registry.GeoOptions;
 
 public class LavaRockGenerator implements RetroactiveGenerator {
 
 	public static final LavaRockGenerator instance = new LavaRockGenerator();
+
+	private static final int BASE_CHANCE = Math.max(1, (int)(1F/GeoOptions.getLavaRockDensity()));
+	private static final int COUNT_CHANCE = Math.max(1, (int)(2F/GeoOptions.getLavaRockDensity()));
 
 	private LavaRockGenerator() {
 
@@ -31,10 +35,10 @@ public class LavaRockGenerator implements RetroactiveGenerator {
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
-		if (world.getWorldInfo().getTerrainType() != WorldType.FLAT && Math.abs(world.provider.dimensionId) != 1) {
+		if (world.getWorldInfo().getTerrainType() != WorldType.FLAT && Math.abs(world.provider.dimensionId) != 1 && random.nextInt(BASE_CHANCE) == 0) {
 			chunkX *= 16;
 			chunkZ *= 16;
-			int n = random.nextBoolean() ? 1 : 2;
+			int n = random.nextInt(COUNT_CHANCE) == 0 ? 1 : 2;
 			for (int i = 0; i < n; i++) {
 				int x = chunkX + random.nextInt(16);
 				int z = chunkZ + random.nextInt(16);

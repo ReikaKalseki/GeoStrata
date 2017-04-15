@@ -120,14 +120,13 @@ public class BlockSmooth extends RockBlock {
 	public void registerBlockIcons(IIconRegister ico) {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {
 			RockTypes r = RockTypes.rockList[i];
-			icons[i] = ico.registerIcon("GeoStrata:"+r.getName().toLowerCase(Locale.ENGLISH));
+			icons[i] = ico.registerIcon("GeoStrata:rock/"+r.getName().toLowerCase(Locale.ENGLISH));
 			GeoStrata.logger.debug("Adding "+r.getName()+" rock icon "+icons[i].getIconName());
 		}
 	}
 
 	@Override
-	public boolean isReplaceableOreGen(World world, int x, int y, int z, Block target)
-	{
+	public boolean isReplaceableOreGen(World world, int x, int y, int z, Block target) {
 		return target == this || target == Blocks.stone;
 	}
 }

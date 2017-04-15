@@ -18,10 +18,13 @@ import net.minecraft.world.chunk.IChunkProvider;
 import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
 import Reika.DragonAPI.Libraries.World.ReikaBiomeHelper;
 import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Registry.GeoOptions;
 
 public class DecoGenerator implements RetroactiveGenerator {
 
 	public static final DecoGenerator instance = new DecoGenerator();
+
+	private static final int BASE_CHANCE = (int)(1/GeoOptions.getDecoDensity());
 
 	private DecoGenerator() {
 
@@ -36,7 +39,7 @@ public class DecoGenerator implements RetroactiveGenerator {
 		if (this.generateIn(world)) {
 			for (int i = 0; i < Decorations.list.length; i++) {
 				Decorations p = Decorations.list[i];
-				if (random.nextInt(p.getGenerationChance()) == 0) {
+				if (random.nextInt(Math.max(1, (int)(p.getGenerationChance()/GeoOptions.getDecoDensity()))) == 0) {
 					int x = chunkX+random.nextInt(16)+8;
 					int z = chunkZ+random.nextInt(16)+8;
 					int y = world.getTopSolidOrLiquidBlock(x, z);
