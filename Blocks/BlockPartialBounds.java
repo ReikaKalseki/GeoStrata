@@ -5,9 +5,12 @@ import java.util.Locale;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -25,6 +28,7 @@ import Reika.DragonAPI.Instantiable.Data.Immutable.BlockKey;
 import Reika.DragonAPI.Libraries.ReikaAABBHelper;
 import Reika.DragonAPI.Libraries.IO.ReikaSoundHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
+import Reika.DragonAPI.ModInteract.ItemHandlers.CarpenterBlockHandler;
 import Reika.DragonAPI.ModRegistry.InterfaceCache;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.RockBlock;
@@ -35,12 +39,15 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockPartialBounds extends BlockContainer {
 
+	public static IIcon fenceOverlay;
+
 	public BlockPartialBounds(Material mat) {
 		super(mat);
 
 		this.setHardness(1);
 		this.setResistance(5);
 		this.setCreativeTab(GeoStrata.tabGeo);
+		useNeighborBrightness = true;
 	}
 
 	@Override
@@ -122,6 +129,11 @@ public class BlockPartialBounds extends BlockContainer {
 	}
 
 	@Override
+	public void registerBlockIcons(IIconRegister ico) {
+		fenceOverlay = ico.registerIcon("geostrata:partialfencegroove");
+	}
+
+	@Override
 	public float getBlockHardness(World world, int x, int y, int z) {
 		TilePartialBounds te = (TilePartialBounds)world.getTileEntity(x, y, z);
 		if (te == null || te.renderBlock == null)
@@ -142,7 +154,10 @@ public class BlockPartialBounds extends BlockContainer {
 		TilePartialBounds te = (TilePartialBounds)world.getTileEntity(x, y, z);
 		if (te == null)
 			return ReikaAABBHelper.getBlockAABB(x, y, z);
-		return te.bounds.roundToNearest(0.125).asAABB(x, y, z);
+		AxisAlignedBB box = te.bounds.roundToNearest(0.125).asAABB(x, y, z);
+		if (te.isFence())
+			box.maxY = y+1.5;
+		return box;
 	}
 
 	@Override
@@ -184,8 +199,27 @@ public class BlockPartialBounds extends BlockContainer {
 	}
 
 	@Override
+	public int getMixedBrightnessForBlock(IBlockAccess iba, int x, int y, int z) {
+		return super.getMixedBrightnessForBlock(iba, x, y, z);
+	}
+
+	@Override
 	public TileEntity createNewTileEntity(World world, int meta) {
 		return new TilePartialBounds();
+	}
+
+	@Override
+	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase e, ItemStack is) {
+		/*
+		if (e instanceof EntityPlayer) {
+			TilePartialBounds te = (TilePartialBounds)world.getTileEntity(x, y, z);
+			NBTTagCompound tag = ReikaPlayerAPI.getDeathPersistentNBT((EntityPlayer)e);
+			if (tag.hasKey("partialbounds")) {
+				te.bounds = BlockBounds.readFromNBT("partialbounds", tag);
+				world.markBlockForUpdate(x, y, z);
+			}
+		}
+		 */
 	}
 
 	@Override
@@ -198,15 +232,33 @@ public class BlockPartialBounds extends BlockContainer {
 		if (InterfaceCache.IWRENCH.instanceOf(is) || n.contains("wrench") || n.contains("screwdriver") || n.contains("hammer")) {
 			double d = 0.03125;
 			te.bounds = te.bounds.cut(ForgeDirection.VALID_DIRECTIONS[s], ep.isSneaking() ? -d : d);
+			//te.bounds.writeToNBT("partialbounds", ReikaPlayerAPI.getDeathPersistentNBT(ep));
 			world.markBlockForUpdate(x, y, z);
 			ReikaSoundHelper.playPlaceSound(world, x, y, z, Blocks.stone);
 			return true;
 		}
-		else if (ReikaItemHelper.isBlock(is)) {
+		else if (ReikaItemHelper.matchStackWithBlock(is, Blocks.fence)) {
+			te.fence = !te.fence;
+			world.markBlockForUpdate(x, y, z);
+			ReikaSoundHelper.playPlaceSound(world, x, y, z, Blocks.planks);
+			return true;
+		}
+		else if (ReikaItemHelper.isBlock(is) && Block.getBlockFromItem(is.getItem()) != this) {
 			this.changeCover(te, world, x, y, z, is);
 			//is.stackSize--;
 			ReikaSoundHelper.playPlaceSound(world, x, y, z, Blocks.wool);
 			return true;
+		}
+		else if (is.getItem() == Items.book) {
+			if (is.stackTagCompound != null && is.stackTagCompound.hasKey("partialbounds")) {
+				te.bounds = BlockBounds.readFromNBT("partialbounds", is.stackTagCompound);
+				world.markBlockForUpdate(x, y, z);
+				ReikaSoundHelper.playPlaceSound(world, x, y, z, Blocks.stone);
+			}
+			else {
+				is.stackTagCompound = new NBTTagCompound();
+				te.bounds.writeToNBT("partialbounds", is.stackTagCompound);
+			}
 		}
 		return false;
 	}
@@ -214,6 +266,8 @@ public class BlockPartialBounds extends BlockContainer {
 	private void changeCover(TilePartialBounds te, World world, int x, int y, int z, ItemStack is) {
 		Block b = Block.getBlockFromItem(is.getItem());
 		if (b == this)
+			return;
+		if (CarpenterBlockHandler.getInstance().isCarpenterBlock(b))
 			return;
 		if (te.renderBlock != null) {
 			//ReikaItemHelper.dropItem(world, x+0.5, y+0.5, z+0.5, te.renderBlock.asItemStack());
@@ -231,6 +285,7 @@ public class BlockPartialBounds extends BlockContainer {
 
 		private BlockKey renderBlock;
 		private BlockBounds bounds = BlockBounds.block();
+		private boolean fence;
 
 		@Override
 		public void writeToNBT(NBTTagCompound NBT) {
@@ -239,6 +294,11 @@ public class BlockPartialBounds extends BlockContainer {
 			bounds.writeToNBT("bounds", NBT);
 			if (renderBlock != null)
 				renderBlock.writeToNBT("render", NBT);
+			NBT.setBoolean("fence", fence);
+		}
+
+		public boolean isFence() {
+			return fence;
 		}
 
 		@Override
@@ -250,6 +310,7 @@ public class BlockPartialBounds extends BlockContainer {
 				renderBlock = BlockKey.readFromNBT("render", NBT);
 			if (renderBlock != null && renderBlock.blockID instanceof BlockPartialBounds)
 				renderBlock = null;
+			fence = NBT.getBoolean("fence");
 		}
 
 		@Override

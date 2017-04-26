@@ -10,8 +10,11 @@
 package Reika.GeoStrata;
 
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import Reika.DragonAPI.ModList;
+import Reika.DragonAPI.ASM.DependentMethodStripper.ModDependent;
 import Reika.DragonAPI.Libraries.ReikaRecipeHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.GeoStrata.Registry.DecoBlocks;
@@ -19,6 +22,7 @@ import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
+import buildcraft.BuildCraftCore;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public class GeoRecipes {
@@ -97,7 +101,15 @@ public class GeoRecipes {
 				block.addSizedCrafting(4*block.recipeMultiplier, "BB", "BB", 'B', block.material);
 		}
 
-		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(GeoBlocks.PARTIAL.getBlockInstance(), 16, 0), "BSB", "SPS", "BSB", 'P', Blocks.planks, 'S', "stone", 'B', Blocks.iron_bars));
+		ItemStack g = new ItemStack(Items.stick);
+		if (ModList.BUILDCRAFT.isLoaded())
+			g = getWoodGear();
+		GameRegistry.addRecipe(new ShapedOreRecipe(new ItemStack(GeoBlocks.PARTIAL.getBlockInstance(), 24, 0), "BSB", "SPS", "gSg", 'P', Blocks.planks, 'S', "stone", 'B', Blocks.iron_bars, 'g', g));
 
+	}
+
+	@ModDependent(ModList.BUILDCRAFT)
+	private static ItemStack getWoodGear() {
+		return new ItemStack(BuildCraftCore.woodenGearItem);
 	}
 }

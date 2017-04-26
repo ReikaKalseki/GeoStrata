@@ -113,7 +113,7 @@ public abstract class RockBlock extends Block implements Laserable, IWrappableBl
 
 	@Override
 	public final int colorMultiplier(IBlockAccess iba, int x, int y, int z) {
-		RockTypes rock = RockTypes.getTypeAtCoords(iba, x, y, z);
+		RockTypes rock = RockTypes.getTypeFromID(this); //not coords, to account for being used as a cover
 		//ReikaJavaLibrary.pConsole(rock);
 		return this.getColor(iba, x, y, z, rock);
 	}
