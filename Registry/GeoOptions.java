@@ -26,6 +26,8 @@ public enum GeoOptions implements BooleanConfig, IntegerConfig, DecimalConfig, U
 	DECODENSITY("Decoration Density", 1F),
 	CRYSTALDENSITY("Crystal Density", 1F),
 	LAVAROCKDENSITY("Lava Rock Density", 1F),
+	VINEDENSITY("Glowing Vine Density", 1F),
+	RFDENSITY("Flux Crystal Density", 1F),
 	GEOORE("Ore Mode", 0),
 	RETROGEN("Retrogeneration", false),
 	WAILA("Waila Overlay", true),
@@ -138,6 +140,14 @@ public enum GeoOptions implements BooleanConfig, IntegerConfig, DecimalConfig, U
 
 	public static float getCrystalDensity() {
 		return MathHelper.clamp_float(CRYSTALDENSITY.getFloat(), 0.25F, 2F);
+	}
+
+	public static float getVineDensity() {
+		return MathHelper.clamp_float(VINEDENSITY.getFloat(), 0.125F, 8F);
+	}
+
+	public static float getRFCrystalDensity() {
+		return MathHelper.clamp_float(RFDENSITY.getFloat(), 0, 2F);
 	}
 
 	@Override

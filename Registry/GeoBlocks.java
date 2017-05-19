@@ -26,15 +26,19 @@ import Reika.GeoStrata.Blocks.BlockDecoGen;
 import Reika.GeoStrata.Blocks.BlockGeoSlab;
 import Reika.GeoStrata.Blocks.BlockGeoStairs;
 import Reika.GeoStrata.Blocks.BlockGlowCrystal;
+import Reika.GeoStrata.Blocks.BlockGlowingVines;
 import Reika.GeoStrata.Blocks.BlockLavaRock;
 import Reika.GeoStrata.Blocks.BlockOreTile;
 import Reika.GeoStrata.Blocks.BlockPartialBounds;
+import Reika.GeoStrata.Blocks.BlockRFCrystal;
+import Reika.GeoStrata.Blocks.BlockRFCrystalSeed;
 import Reika.GeoStrata.Blocks.BlockRockDeco;
 import Reika.GeoStrata.Blocks.BlockShapedRock;
 import Reika.GeoStrata.Blocks.BlockSmooth;
 import Reika.GeoStrata.Blocks.BlockVent;
 import Reika.GeoStrata.Items.ItemBlockAnyGeoVariant;
 import Reika.GeoStrata.Items.ItemBlockGeoOre;
+import Reika.GeoStrata.Items.ItemBlockGlowingVines;
 import Reika.GeoStrata.Items.ItemBlockRockDeco;
 import Reika.GeoStrata.Items.ItemBlockVent;
 
@@ -48,7 +52,10 @@ public enum GeoBlocks implements BlockEnum {
 	LAVAROCK(BlockLavaRock.class, MetadataItemBlock.class, "Lava Rock"),
 	DECOGEN(BlockDecoGen.class,	MetadataItemBlock.class, "geo.decogen"),
 	GLOWCRYS(BlockGlowCrystal.class, MetadataItemBlock.class, "Luminous Crystal"),
-	PARTIAL(BlockPartialBounds.class, null, "Partial Bounds Block");
+	PARTIAL(BlockPartialBounds.class, null, "Partial Bounds Block"),
+	GLOWVINE(BlockGlowingVines.class, ItemBlockGlowingVines.class, "Glowing Vines"),
+	RFCRYSTAL(BlockRFCrystal.class,	null, "Flux Crystals"),
+	RFCRYSTALSEED(BlockRFCrystalSeed.class,	null, "Flux Crystal Seed");
 
 	private final Class blockClass;
 	private final String blockName;
@@ -112,6 +119,8 @@ public enum GeoBlocks implements BlockEnum {
 	}
 
 	public Material getBlockMaterial() {
+		if (BlockRFCrystal.class.isAssignableFrom(blockClass))
+			return Material.glass;
 		return Material.rock;
 	}
 
@@ -121,6 +130,8 @@ public enum GeoBlocks implements BlockEnum {
 
 	@Override
 	public Class[] getConstructorParamTypes() {
+		if (this == GLOWVINE)
+			return new Class[0];
 		if (typeName != null)
 			return new Class[]{Material.class, String.class};
 		return new Class[]{Material.class};
@@ -128,6 +139,8 @@ public enum GeoBlocks implements BlockEnum {
 
 	@Override
 	public Object[] getConstructorParams() {
+		if (this == GLOWVINE)
+			return new Object[0];
 		if (typeName != null)
 			return new Object[]{this.getBlockMaterial(), typeName};
 		return new Object[]{this.getBlockMaterial()};
@@ -187,6 +200,9 @@ public enum GeoBlocks implements BlockEnum {
 			case LAVAROCK:
 			case PARTIAL:
 			case GLOWCRYS:
+			case GLOWVINE:
+			case RFCRYSTAL:
+			case RFCRYSTALSEED:
 				return false;
 			default:
 				return true;

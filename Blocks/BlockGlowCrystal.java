@@ -16,23 +16,31 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
+import Reika.DragonAPI.ASM.APIStripper.Strippable;
 import Reika.DragonAPI.Instantiable.Math.SimplexNoiseGenerator;
 import Reika.DragonAPI.Libraries.IO.ReikaColorAPI;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
+import Reika.DragonAPI.ModInteract.ItemHandlers.CarpenterBlockHandler;
 import Reika.GeoStrata.GeoStrata;
+
+import com.carpentersblocks.api.IWrappableBlock;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 
-public class BlockGlowCrystal extends Block {
+@Strippable(value={"com.carpentersblocks.api.IWrappableBlock"})
+public class BlockGlowCrystal extends Block implements IWrappableBlock {
 
 	private final ImmutablePair<Integer, Integer>[] hueRanges = new ImmutablePair[4];
 
@@ -147,7 +155,7 @@ public class BlockGlowCrystal extends Block {
 		ImmutablePair<Integer, Integer> hueRange = hueRanges[meta];
 		double n0 = hueNoise.getValue(x/8D, z/8D);
 		double n1 = hueNoise2.getValue(x/8D, z/8D);
-		double f = y%16 >= 8 ? y%8/8D : 1-(((y-8)%8)/8D);
+		double f = 0.5+0.5*Math.sin(Math.toRadians(y*360/12D));//y%16 >= 8 ? y%8/8D : 1-(((y-8)%8)/8D);
 		double n = f*n0+(1-f)*n1;
 		int hue = hueRange.left+(int)(hueRange.right*n*1);//hueNoiseY.getValue(0, y/4D));
 		return ReikaColorAPI.getModifiedHue(0xff0000, hue);
@@ -162,7 +170,65 @@ public class BlockGlowCrystal extends Block {
 
 	@Override
 	public boolean shouldSideBeRendered(IBlockAccess iba, int x, int y, int z, int s) {
-		return super.shouldSideBeRendered(iba, x, y, z, s) && iba.getBlock(x, y, z) != this;
+		Block b = iba.getBlock(x, y, z);
+		return super.shouldSideBeRendered(iba, x, y, z, s) && (b != this && !(CarpenterBlockHandler.getInstance().isCarpenterBlock(b) && b.isSideSolid(iba, x, y, z, ForgeDirection.VALID_DIRECTIONS[s].getOpposite())));
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getColorMultiplier(IBlockAccess iba, int x, int y, int z, Block b, int meta) {
+		return this.colorMultiplier(iba, x, y, z);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public IIcon getIcon(IBlockAccess iba, int x, int y, int z, int side, Block b, int meta) {
+		return this.getIcon(iba, x, y, z, side);
+	}
+
+	@Override
+	public int getWeakRedstone(World world, int x, int y, int z, Block b, int meta) {
+		return 0;
+	}
+
+	@Override
+	public int getStrongRedstone(World world, int x, int y, int z, Block b, int meta) {
+		return 0;
+	}
+
+	@Override
+	public float getHardness(World world, int x, int y, int z, Block b, int meta) {
+		return this.getBlockHardness(world, x, y, z);
+	}
+
+	@Override
+	public float getBlastResistance(Entity entity, World world, int x, int y, int z, double explosionX, double explosionY, double explosionZ, Block b, int meta) {
+		return this.getExplosionResistance(entity, world, x, y, z, explosionX, explosionY, explosionZ);
+	}
+
+	@Override
+	public int getFlammability(IBlockAccess iba, int x, int y, int z, ForgeDirection side, Block b, int meta) {
+		return 0;
+	}
+
+	@Override
+	public int getFireSpread(IBlockAccess iba, int x, int y, int z, ForgeDirection side, Block b, int meta) {
+		return 0;
+	}
+
+	@Override
+	public boolean sustainsFire(IBlockAccess iba, int x, int y, int z, ForgeDirection side, Block b, int meta) {
+		return false;
+	}
+
+	@Override
+	public boolean isLog(IBlockAccess iba, int x, int y, int z, Block b, int meta) {
+		return false;
+	}
+
+	@Override
+	public boolean canEntityDestroy(IBlockAccess iba, int x, int y, int z, Entity e, Block b, int meta) {
+		return this.canEntityDestroy(iba, x, y, z, e);
 	}
 
 }

@@ -39,7 +39,10 @@ import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
 import Reika.DragonAPI.ModInteract.DeepInteract.ReikaThaumHelper;
 import Reika.DragonAPI.ModInteract.ItemHandlers.ExtraUtilsHandler;
 import Reika.DragonAPI.ModInteract.RecipeHandlers.ThermalRecipeHelper;
+import Reika.GeoStrata.Blocks.BlockGlowingVines.TileGlowingVines;
 import Reika.GeoStrata.Blocks.BlockPartialBounds.TilePartialBounds;
+import Reika.GeoStrata.Blocks.BlockRFCrystal.TileRFCrystalAux;
+import Reika.GeoStrata.Blocks.BlockRFCrystalSeed.TileRFCrystal;
 import Reika.GeoStrata.Blocks.BlockVent.TileEntityVent;
 import Reika.GeoStrata.Blocks.BlockVent.VentType;
 import Reika.GeoStrata.Items.ItemBlockAnyGeoVariant;
@@ -52,7 +55,9 @@ import Reika.GeoStrata.World.BandedGenerator;
 import Reika.GeoStrata.World.BasicRockGenerator;
 import Reika.GeoStrata.World.DecoGenerator;
 import Reika.GeoStrata.World.GlowCrystalGenerator;
+import Reika.GeoStrata.World.GlowingVineGenerator;
 import Reika.GeoStrata.World.LavaRockGenerator;
+import Reika.GeoStrata.World.RFCrystalGenerator;
 import Reika.GeoStrata.World.RockGenerator;
 import Reika.GeoStrata.World.VentGenerator;
 import Reika.RotaryCraft.API.BlockColorInterface;
@@ -131,6 +136,8 @@ public class GeoStrata extends DragonAPIMod {
 		RetroGenController.instance.addHybridGenerator(LavaRockGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(DecoGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(GlowCrystalGenerator.instance, 0, GeoOptions.RETROGEN.getState());
+		RetroGenController.instance.addHybridGenerator(GlowingVineGenerator.instance, 0, GeoOptions.RETROGEN.getState());
+		RetroGenController.instance.addHybridGenerator(RFCrystalGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 
 		GeoRecipes.addRecipes();
 		proxy.registerRenderers();
@@ -262,6 +269,9 @@ public class GeoStrata extends DragonAPIMod {
 		GameRegistry.registerTileEntity(TileEntityGeoOre.class, "geostrataore");
 		//GameRegistry.registerTileEntity(TileEntityOreConverter.class, "geostrataoreconvert");
 		GameRegistry.registerTileEntity(TilePartialBounds.class, "geostratapartial");
+		GameRegistry.registerTileEntity(TileGlowingVines.class, "geostratavines");
+		GameRegistry.registerTileEntity(TileRFCrystal.class, "geostratarf");
+		GameRegistry.registerTileEntity(TileRFCrystalAux.class, "geostratarfaux");
 	}
 
 	public static void loadDictionary() {

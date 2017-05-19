@@ -187,7 +187,7 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 		private void checkPlug() {
 			boolean last = plugged;
 			plugged = this.isBlocking(worldObj, xCoord, yCoord+1, zCoord);
-			if (plugged && !last && activeTimer > 0) { //just got plugged, firing
+			if (plugged && !last && this.isActive()) { //just got plugged, firing
 				this.explode(1);
 			}
 		}
@@ -220,7 +220,7 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 
 		@Override
 		public void updateEntity() {
-			if (activeTimer > 0) {
+			if (this.isActive()) {
 
 				this.onTick();
 
@@ -266,13 +266,14 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 						e.setFire(type.damage);
 				}
 			}
+			/*
 			else if (type == VentType.SMOKE) {
 				AxisAlignedBB box = this.getEffectBox();
 				List<EntityLivingBase> li = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, box);
 				for (EntityLivingBase e : li) {
 					e.setAir(Math.max(0, e.getAir()-1));
 				}
-			}
+			}*/
 			else if (type == VentType.WATER) {
 				AxisAlignedBB box = this.getEffectBox();
 				List<EntityLivingBase> li = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, box);
@@ -380,6 +381,10 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 		@Override
 		public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity p)  {
 			this.readFromNBT(p.field_148860_e);
+		}
+
+		public boolean isActive() {
+			return activeTimer > 0;
 		}
 
 	}
@@ -490,7 +495,7 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 	@Override
 	public boolean isActive(IBlockAccess iba, int x, int y, int z) {
 		TileEntityVent te = (TileEntityVent)iba.getTileEntity(x, y, z);
-		return te.activeTimer > 0;
+		return te.isActive();
 	}
 
 

@@ -10,19 +10,32 @@
 package Reika.GeoStrata;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
+import net.minecraftforge.client.GuiIngameForge;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+
+import org.lwjgl.opengl.GL11;
+
 import Reika.DragonAPI.Instantiable.Data.Immutable.BlockBounds;
 import Reika.DragonAPI.Instantiable.Data.Immutable.Coordinate;
+import Reika.DragonAPI.Instantiable.Event.EntityDecreaseAirEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.ItemEffectRenderEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.RenderBlockAtPosEvent;
+import Reika.DragonAPI.Libraries.IO.ReikaGuiAPI;
+import Reika.DragonAPI.Libraries.IO.ReikaTextureHelper;
 import Reika.GeoStrata.Blocks.BlockDecoGen.Types;
 import Reika.GeoStrata.Blocks.BlockPartialBounds;
 import Reika.GeoStrata.Blocks.BlockPartialBounds.TilePartialBounds;
+import Reika.GeoStrata.Blocks.BlockVent.TileEntityVent;
+import Reika.GeoStrata.Blocks.BlockVent.VentType;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -36,6 +49,51 @@ public class GeoEvents {
 
 	private GeoEvents() {
 
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void fixAirRender(RenderGameOverlayEvent.Pre evt) {
+		if (evt.type == ElementType.AIR) {
+			evt.setCanceled(true);
+
+			ReikaTextureHelper.bindHUDTexture();
+			Minecraft mc = Minecraft.getMinecraft();
+			mc.mcProfiler.startSection("air");
+			GL11.glEnable(GL11.GL_BLEND);
+			int left = evt.resolution.getScaledWidth() / 2 + 91;
+			int top = evt.resolution.getScaledHeight() - GuiIngameForge.right_height;
+
+			if (mc.thePlayer.getAir() < 300) { //instead of in water
+				int air = mc.thePlayer.getAir();
+				int full = MathHelper.ceiling_double_int((air - 2) * 10.0D / 300.0D);
+				int partial = MathHelper.ceiling_double_int(air * 10.0D / 300.0D) - full;
+
+				for (int i = 0; i < full + partial; ++i)
+				{
+					ReikaGuiAPI.instance.drawTexturedModalRect(left - i * 8 - 9, top, (i < full ? 16 : 25), 18, 9, 9);
+				}
+				GuiIngameForge.right_height += 10;
+			}
+
+			GL11.glDisable(GL11.GL_BLEND);
+			mc.mcProfiler.endSection();
+		}
+	}
+
+	@SubscribeEvent
+	public void smokeVentAir(EntityDecreaseAirEvent evt) {
+		int x = MathHelper.floor_double(evt.entityLiving.posX);
+		int y = MathHelper.floor_double(evt.entityLiving.posY-(evt.entityLiving.worldObj.isRemote ? 1.75 : 0.5));
+		int z = MathHelper.floor_double(evt.entityLiving.posZ);
+		//ReikaJavaLibrary.pConsole(evt.entityLiving.worldObj.getBlock(x, y, z)+" @ "+x+", "+z, Side.CLIENT, evt.entityLiving instanceof EntityPlayer);
+		if (evt.entityLiving.worldObj.getBlock(x, y, z) == GeoBlocks.VENT.getBlockInstance()) {
+			TileEntityVent te = (TileEntityVent)evt.entityLiving.worldObj.getTileEntity(x, y, z);
+			if (te.getType() == VentType.SMOKE && te.isActive()) {
+				evt.setResult(Result.ALLOW);
+				return;
+			}
+		}
 	}
 
 	@SubscribeEvent
