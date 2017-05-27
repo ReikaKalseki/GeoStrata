@@ -199,6 +199,7 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 			super.writeToNBT(NBT);
 
 			NBT.setLong("energy", energy);
+			crystal.writeToNBT("blocks", NBT);
 		}
 
 		@Override
@@ -206,6 +207,7 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 			super.readFromNBT(NBT);
 
 			energy = NBT.getLong("energy");
+			crystal.readFromNBT("blocks", NBT);
 		}
 
 		@Override

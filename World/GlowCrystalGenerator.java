@@ -9,7 +9,6 @@
  ******************************************************************************/
 package Reika.GeoStrata.World;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Random;
@@ -17,20 +16,13 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import Reika.DragonAPI.Instantiable.Data.Immutable.Coordinate;
-import Reika.DragonAPI.Instantiable.Data.Immutable.DecimalPosition;
-import Reika.DragonAPI.Instantiable.Math.DoublePolygon;
-import Reika.DragonAPI.Instantiable.Math.DoubleRectangle;
 import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
-import Reika.DragonAPI.Libraries.ReikaAABBHelper;
-import Reika.DragonAPI.Libraries.MathSci.ReikaVectorHelper;
 import Reika.DragonAPI.Libraries.World.ReikaBlockHelper;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.Registry.GeoBlocks;
@@ -88,17 +80,6 @@ public class GlowCrystalGenerator implements RetroactiveGenerator {
 	}
 
 	private boolean generate(World world, int x, int y, int z, Random rand) {
-		/*
-		Crystal cry = new Crystal(x, y, z);
-		cry.rootHeight = 12+rand.nextInt(18);//6+rand.nextInt(7);
-		cry.rootSize = 4+rand.nextInt(6);//1+rand.nextInt(4);
-		cry.rotX = 0;//rand.nextDouble()*360;
-		cry.rotY = rand.nextDouble()*360;
-		cry.rotZ = 30+rand.nextDouble()*30;//rand.nextDouble()*360;
-		cry.calculate();
-		cry.randomize(rand);
-		Collection<Coordinate> li = cry.getCoordinates();
-		 */
 		double x1 = x+rand.nextDouble();
 		double x2 = x1;
 		double z1 = z+rand.nextDouble();
@@ -218,97 +199,6 @@ public class GlowCrystalGenerator implements RetroactiveGenerator {
 	@Override
 	public String getIDString() {
 		return "GeoStrata GlowCrystal";
-	}
-
-	private static class Crystal {
-
-		private final int centerX;
-		private final int centerY;
-		private final int centerZ;
-
-		private double rootHeight = 8; //radius, not -ve to +ve
-		private double rootSize = 3; //radius, not -ve to +ve
-
-		private double rotX;
-		private double rotY;
-		private double rotZ;
-
-		private DecimalPosition lowerPoint;
-		private DecimalPosition upperPoint;
-		private DecimalPosition[] edgePoints;
-
-		private Crystal(int x, int y, int z) {
-			centerX = x;
-			centerY = y;
-			centerZ = z;
-		}
-
-		private void calculate() {
-			Vec3 lowerPointVec = Vec3.createVectorHelper(0, 0-rootHeight, 0);
-			Vec3 upperPointVec = Vec3.createVectorHelper(0, 0+rootHeight, 0);
-			Vec3[] edgePointsVec = new Vec3[4];
-			edgePointsVec[0] = Vec3.createVectorHelper(0+rootSize, 0, 0);
-			edgePointsVec[1] = Vec3.createVectorHelper(0, 			0, 0+rootSize);
-			edgePointsVec[2] = Vec3.createVectorHelper(0-rootSize, 0, 0);
-			edgePointsVec[3] = Vec3.createVectorHelper(0, 			0, 0-rootSize);
-
-			lowerPointVec = ReikaVectorHelper.rotateVector(lowerPointVec, rotX, rotY, rotZ);
-			upperPointVec = ReikaVectorHelper.rotateVector(upperPointVec, rotX, rotY, rotZ);
-			for (int i = 0; i < 4; i++) {
-				edgePointsVec[i] = ReikaVectorHelper.rotateVector(edgePointsVec[i], rotX, rotY, rotZ);
-			}
-
-			edgePoints = new DecimalPosition[4];
-			lowerPoint = new DecimalPosition(lowerPointVec).offset(centerX, centerY, centerZ);
-			upperPoint = new DecimalPosition(upperPointVec).offset(centerX, centerY, centerZ);
-			for (int i = 0; i < 4; i++) {
-				edgePoints[i] = new DecimalPosition(edgePointsVec[i]).offset(centerX, centerY, centerZ);
-			}
-		}
-
-		private void randomize(Random rand) {
-			lowerPoint = lowerPoint.offset(rand.nextDouble()-0.5, rand.nextDouble()-0.5, rand.nextDouble()-0.5);
-			upperPoint = upperPoint.offset(rand.nextDouble()-0.5, rand.nextDouble()-0.5, rand.nextDouble()-0.5);
-			for (int i = 0; i < 4; i++) {
-				edgePoints[i] = edgePoints[i].offset(rand.nextDouble()-0.5, rand.nextDouble()-0.5, rand.nextDouble()-0.5);
-			}
-		}
-
-		private Collection<Coordinate> getCoordinates() {
-			HashSet<Coordinate> set = new HashSet();
-			AxisAlignedBB box = ReikaAABBHelper.fromPoints(upperPoint, lowerPoint, edgePoints[0], edgePoints[1], edgePoints[2], edgePoints[3]);
-			int y0 = MathHelper.floor_double(box.minY);
-			int y1 = MathHelper.ceiling_double_int(box.maxY);
-			for (int y = y0; y < y1; y++) {
-				double dy = y+0.5;
-				DoublePolygon slice = new DoublePolygon();
-				for (int i = 0; i < 4; i++) {
-					DecimalPosition p = edgePoints[i];
-					double f = dy < centerY ? (centerY-dy)/(centerY-lowerPoint.yCoord) : 1-((dy-centerY)/(upperPoint.yCoord-centerY));
-					double cx = dy < centerY ? lowerPoint.xCoord : upperPoint.xCoord;
-					double cz = dy < centerY ? lowerPoint.zCoord : upperPoint.zCoord;
-					double x = cx+(p.xCoord-cx)*(dy < centerY ? 1-f : f);
-					double z = cz+(p.zCoord-cz)*(dy < centerY ? 1-f : f);
-					slice.addPoint(x, z);
-				}
-				DoubleRectangle r = slice.getBounds();
-				int x0 = MathHelper.floor_double(r.x);
-				int x1 = MathHelper.ceiling_double_int(r.x+r.width);
-				int z0 = MathHelper.floor_double(r.y);
-				int z1 = MathHelper.ceiling_double_int(r.y+r.height);
-				for (int x = x0; x <= x1; x++) {
-					for (int z = z0; z <= z1; z++) {
-						double dx = x+0.5;
-						double dz = z+0.5;
-						if (slice.contains(dx, dz) || slice.contains(dx-0.5, dz-0.5) || slice.contains(dx+0.5, dz+0.5)) {
-							set.add(new Coordinate(x, y, z));
-						}
-					}
-				}
-			}
-			return set;
-		}
-
 	}
 
 }
