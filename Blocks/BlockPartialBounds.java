@@ -13,6 +13,8 @@ import java.util.Locale;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockSlab;
+import net.minecraft.block.BlockStairs;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
@@ -252,7 +254,7 @@ public class BlockPartialBounds extends BlockContainer {
 			ReikaSoundHelper.playPlaceSound(world, x, y, z, Blocks.planks);
 			return true;
 		}
-		else if (ReikaItemHelper.isBlock(is) && Block.getBlockFromItem(is.getItem()) != this) {
+		else if (ReikaItemHelper.isBlock(is) && this.isAllowedBlock(Block.getBlockFromItem(is.getItem()))) {
 			this.changeCover(te, world, x, y, z, is);
 			//is.stackSize--;
 			ReikaSoundHelper.playPlaceSound(world, x, y, z, Blocks.wool);
@@ -270,6 +272,14 @@ public class BlockPartialBounds extends BlockContainer {
 			}
 		}
 		return false;
+	}
+
+	private boolean isAllowedBlock(Block b) {
+		if (b == this)
+			return false;
+		if (b instanceof BlockStairs || b instanceof BlockSlab)
+			return false;
+		return true;
 	}
 
 	private void changeCover(TilePartialBounds te, World world, int x, int y, int z, ItemStack is) {
