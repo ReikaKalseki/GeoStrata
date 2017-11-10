@@ -498,5 +498,15 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 		return te.isActive();
 	}
 
+	@Override
+	public MineralCategory getCategory() {
+		return MineralCategory.MISC_UNDERGROUND;
+	}
+
+	@Override
+	public Block getReplacedBlock(World world, int x, int y, int z) {
+		return Blocks.stone;
+	}
+
 
 }

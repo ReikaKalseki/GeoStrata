@@ -44,6 +44,9 @@ public enum RockShapes {
 	CENTERED(BlockShapedRock.class, 	10,		"Centered"),
 	RAISED(BlockShapedRock.class, 		11,		"Raised"),
 	ETCHED(BlockShapedRock.class, 		12,		"Etched"),
+	SPIRAL(BlockShapedRock.class, 		13,		"Spiral"),
+	FAN(BlockShapedRock.class, 			14,		"Fan"),
+	MOSSY(BlockShapedRock.class, 		15,		"Mossy"),
 	CONNECTED(BlockConnectedRock.class,			"Connected"),
 	CONNECTED2(BlockConnectedRock.class,		"Connected 2");
 

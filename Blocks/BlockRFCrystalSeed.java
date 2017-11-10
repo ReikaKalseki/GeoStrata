@@ -36,6 +36,7 @@ import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import cofh.api.energy.IEnergyHandler;
+import cofh.api.energy.IEnergyReceiver;
 
 
 public class BlockRFCrystalSeed extends BlockRFCrystal {
@@ -143,6 +144,19 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 				//ReikaJavaLibrary.pConsole(String.format("%.4f", energy/(float)cap)+" @ "+crystal.getSize()+" : "+energy+" / "+cap);
 				if (energy > cap*4/5 && crystal.getSize() < 2000) {
 					this.growNewCrystal();
+				}
+
+				if (energy > 0 && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) {
+					TileEntity te = worldObj.getTileEntity(xCoord, yCoord-1, zCoord);
+					if (te instanceof IEnergyReceiver) {
+						int pushable = this.getEnergyStored(null);
+						IEnergyReceiver ier = (IEnergyReceiver)te;
+						pushable = Math.min(pushable, ier.receiveEnergy(ForgeDirection.UP, pushable, true));
+						if (pushable > 0) {
+							pushable = ier.receiveEnergy(ForgeDirection.UP, pushable, false);
+							energy -= pushable;
+						}
+					}
 				}
 			}
 		}

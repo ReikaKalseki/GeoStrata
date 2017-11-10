@@ -46,6 +46,9 @@ public class GeoRecipes {
 			ItemStack lined = type.getItem(RockShapes.LINED);
 			ItemStack embossed = type.getItem(RockShapes.EMBOSSED);
 			ItemStack raised = type.getItem(RockShapes.RAISED);
+			ItemStack fan = type.getItem(RockShapes.FAN);
+			ItemStack spiral = type.getItem(RockShapes.SPIRAL);
+			ItemStack moss = type.getItem(RockShapes.MOSSY);
 
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(brick, 4), new Object[]{
 				"SS", "SS", 'S', smooth});
@@ -77,6 +80,12 @@ public class GeoRecipes {
 				"S", "T", "S", 'S', smooth, 'T', tile});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(raised, 4), new Object[]{
 				"SS", "SS", 'S', tile});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(fan, 8), new Object[]{
+				"AAB", "B B", "BAA", 'A', smooth, 'B', brick});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(spiral, 8), new Object[]{
+				"ABA", "B B", "ABA", 'A', smooth, 'B', brick});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(moss, 2), new Object[]{
+				"AB", "BA", 'A', smooth, 'B', Blocks.vine});
 
 			for (int k = 0; k < RockShapes.shapeList.length; k++) {
 				RockShapes shape = RockShapes.shapeList[k];
@@ -89,6 +98,7 @@ public class GeoRecipes {
 				GameRegistry.addRecipe(slab, "BBB", 'B', item);
 				GameRegistry.addRecipe(stair, "  B", " BB", "BBB", 'B', item);
 				GameRegistry.addRecipe(stair, "B  ", "BB ", "BBB", 'B', item);
+				GameRegistry.addRecipe(item, "B", "B", 'B', slab);
 			}
 			//GameRegistry.addShapelessRecipe(new ItemStack(Blocks.cobblestone), cobble);
 		}

@@ -20,10 +20,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import Reika.DragonAPI.Instantiable.Data.Immutable.Coordinate;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Blocks.BlockRFCrystalSeed.TileRFCrystal;
 import Reika.GeoStrata.Registry.GeoBlocks;
+import cofh.api.energy.IEnergyHandler;
 
 
 public class BlockRFCrystal extends Block {
@@ -94,7 +96,7 @@ public class BlockRFCrystal extends Block {
 		return (1+random.nextInt(6))*(1+random.nextInt(1+fortune));
 	}
 
-	public static class TileRFCrystalAux extends TileEntity {
+	public static class TileRFCrystalAux extends TileEntity implements IEnergyHandler {
 
 		private Coordinate controller;
 
@@ -103,22 +105,19 @@ public class BlockRFCrystal extends Block {
 			return false;
 		}
 
-		public void removeFromParent() {
+		private TileRFCrystal getParent() {
 			if (controller == null)
-				return;
+				return null;
 			TileEntity te = controller.getTileEntity(worldObj);
-			if (te instanceof TileRFCrystal) {
-				((TileRFCrystal)te).removeLocation(new Coordinate(this));
-			}
+			return te instanceof TileRFCrystal ? (TileRFCrystal)te : new TileRFCrystal(); //npe protection
+		}
+
+		public void removeFromParent() {
+			this.getParent().removeLocation(new Coordinate(this));
 		}
 
 		public void addToParent() {
-			if (controller == null)
-				return;
-			TileEntity te = controller.getTileEntity(worldObj);
-			if (te instanceof TileRFCrystal) {
-				((TileRFCrystal)te).addLocation(new Coordinate(this));
-			}
+			this.getParent().addLocation(new Coordinate(this));
 		}
 
 		@Override
@@ -134,6 +133,31 @@ public class BlockRFCrystal extends Block {
 			super.readFromNBT(NBT);
 
 			controller = Coordinate.readFromNBT("parent", NBT);
+		}
+
+		@Override
+		public boolean canConnectEnergy(ForgeDirection from) {
+			return false;
+		}
+
+		@Override
+		public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+			return 0;
+		}
+
+		@Override
+		public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
+			return 0;
+		}
+
+		@Override
+		public int getEnergyStored(ForgeDirection from) {
+			return this.getParent().getEnergyStored(from);
+		}
+
+		@Override
+		public int getMaxEnergyStored(ForgeDirection from) {
+			return this.getParent().getMaxEnergyStored(from);
 		}
 
 	}

@@ -164,7 +164,7 @@ public class BlockGlowingVines extends BlockContainer implements ShearablePlant 
 							if (world.getBlock(dx, dy, dz).isAir(world, dx, dy, dz) && te.isValidSide(world, dx, dy, dz, surface)) {
 								this.place(world, dx, dy, dz, surface);
 								ReikaSoundHelper.playBreakSound(world, x, y, z, this, 1, 1);
-								ReikaPacketHelper.sendDataPacket(DragonAPIInit.packetChannel, PacketIDs.BREAKPARTICLES.ordinal(), world, x, y, z, Block.getIdFromBlock(this), 0);
+								ReikaPacketHelper.sendDataPacketWithRadius(DragonAPIInit.packetChannel, PacketIDs.BREAKPARTICLES.ordinal(), world, x, y, z, 32, Block.getIdFromBlock(this), 0);
 								return;
 							}
 						}
@@ -183,7 +183,7 @@ public class BlockGlowingVines extends BlockContainer implements ShearablePlant 
 				if (fill != null) {
 					te.addVine(fill);
 					ReikaSoundHelper.playBreakSound(world, x, y, z, this, 1, 1);
-					ReikaPacketHelper.sendDataPacket(DragonAPIInit.packetChannel, PacketIDs.BREAKPARTICLES.ordinal(), world, x, y, z, Block.getIdFromBlock(this), 0);
+					ReikaPacketHelper.sendDataPacketWithRadius(DragonAPIInit.packetChannel, PacketIDs.BREAKPARTICLES.ordinal(), world, x, y, z, 32, Block.getIdFromBlock(this), 0);
 				}
 			}
 		}

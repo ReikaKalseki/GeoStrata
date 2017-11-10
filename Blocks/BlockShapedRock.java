@@ -9,6 +9,7 @@
  ******************************************************************************/
 package Reika.GeoStrata.Blocks;
 
+import java.util.Locale;
 import java.util.Random;
 
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -64,7 +65,10 @@ public class BlockShapedRock extends RockBlock {
 			for (int k = 0; k < RockShapes.shapeList.length; k++) {
 				//int a = RockShapes.getShape(this).ordinal();
 				//int b = type.ordinal();
-				textures[i][k] = ico.registerIcon("GeoStrata:shaped/unstitched/tile"+k+"_"+i);
+				String suff = k+"_"+i;
+				if (RockShapes.shapeList[k].name.toLowerCase(Locale.ENGLISH).contains("connected"))
+					suff = "0_"+i;
+				textures[i][k] = ico.registerIcon("GeoStrata:shaped/unstitched/tile"+suff);
 				//GeoStrata.logger.debug("Adding "+type.getName()+" "+shapeType+" icon "+icons[i].getIconName());
 				//texturesLoaded = true;
 			}

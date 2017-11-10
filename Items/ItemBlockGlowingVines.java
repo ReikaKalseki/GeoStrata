@@ -16,12 +16,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import Reika.GeoStrata.Blocks.BlockGlowingVines.TileGlowingVines;
+import Reika.GeoStrata.Registry.GeoBlocks;
 
 
 public class ItemBlockGlowingVines extends ItemBlock {
 
 	public ItemBlockGlowingVines(Block b) {
 		super(b);
+	}
+
+	@Override
+	public String getItemStackDisplayName(ItemStack is) {
+		return GeoBlocks.GLOWVINE.hasMultiValuedName() ? GeoBlocks.GLOWVINE.getMultiValuedName(is.getItemDamage()) : GeoBlocks.GLOWVINE.getBasicName();
 	}
 
 	@Override
