@@ -126,14 +126,14 @@ public class BlockLavaRock extends Block implements EnvironmentalHeatSource {
 		if (e instanceof EntityItem || e instanceof EntityXPOrb)
 			return;
 		int meta = world.getBlockMetadata(x, y, z);
-		if (meta == 0)
+		if (meta == 3)
 			return;
 		boolean doEffect = true;
 		if (e instanceof EntityLivingBase) {
 			doEffect = !((EntityLivingBase)e).isPotionActive(Potion.fireResistance);
 		}
 		if (doEffect) {
-			e.attackEntityFrom(meta == 0 ? DamageSource.lava : DamageSource.inFire, 3-meta);
+			e.attackEntityFrom(meta == 3 ? DamageSource.lava : DamageSource.inFire, 3-meta);
 		}
 	}
 
