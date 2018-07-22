@@ -70,7 +70,7 @@ public class BlockLavaRock extends Block implements EnvironmentalHeatSource {
 	{
 		float maxY = 1;
 		int meta = world.getBlockMetadata(x, y, z);
-		switch(meta) {
+		switch(3-meta) {
 			case 0:
 				maxY = 1;
 				break;
@@ -138,9 +138,8 @@ public class BlockLavaRock extends Block implements EnvironmentalHeatSource {
 	}
 
 	@Override
-	public boolean isReplaceableOreGen(World world, int x, int y, int z, Block target)
-	{
-		return target == this || target == Blocks.stone;
+	public boolean isReplaceableOreGen(World world, int x, int y, int z, Block target) {
+		return target == this || target == Blocks.stone || target.isReplaceableOreGen(world, x, y, z, Blocks.stone);
 	}
 
 	@Override

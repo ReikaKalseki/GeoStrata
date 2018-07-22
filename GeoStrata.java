@@ -36,6 +36,7 @@ import Reika.DragonAPI.Base.DragonAPIMod.LoadProfiler.LoadPhase;
 import Reika.DragonAPI.Instantiable.IO.ModLogger;
 import Reika.DragonAPI.Libraries.ReikaRecipeHelper;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
+import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.ModInteract.DeepInteract.ReikaThaumHelper;
 import Reika.DragonAPI.ModInteract.ItemHandlers.ExtraUtilsHandler;
 import Reika.DragonAPI.ModInteract.RecipeHandlers.ThermalRecipeHelper;
@@ -56,7 +57,7 @@ import Reika.GeoStrata.World.BasicRockGenerator;
 import Reika.GeoStrata.World.DecoGenerator;
 import Reika.GeoStrata.World.GlowCrystalGenerator;
 import Reika.GeoStrata.World.GlowingVineGenerator;
-import Reika.GeoStrata.World.LavaRockGenerator;
+import Reika.GeoStrata.World.LavaRockGeneratorRedesign;
 import Reika.GeoStrata.World.RFCrystalGenerator;
 import Reika.GeoStrata.World.RockGenerator;
 import Reika.GeoStrata.World.VentGenerator;
@@ -117,7 +118,7 @@ public class GeoStrata extends DragonAPIMod {
 
 		this.loadClasses();
 
-		if (ModList.CHISEL.isLoaded()) {
+		if (ModList.CHISEL.isLoaded() && ReikaJavaLibrary.doesClassExist("com.cricketcraft.chisel.api.carving.ICarvingGroup")) {
 			GeoChisel.loadChiselCompat();
 		}
 
@@ -133,7 +134,7 @@ public class GeoStrata extends DragonAPIMod {
 		RockGenerator.instance.registerGenerationPattern(GeoOptions.BANDED.getState() ? BandedGenerator.instance : BasicRockGenerator.instance);
 		RetroGenController.instance.addHybridGenerator(RockGenerator.instance, Integer.MIN_VALUE, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(VentGenerator.instance, 0, GeoOptions.RETROGEN.getState());
-		RetroGenController.instance.addHybridGenerator(LavaRockGenerator.instance, 0, GeoOptions.RETROGEN.getState());
+		RetroGenController.instance.addHybridGenerator(LavaRockGeneratorRedesign.instance, 0, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(DecoGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(GlowCrystalGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(GlowingVineGenerator.instance, 0, GeoOptions.RETROGEN.getState());
