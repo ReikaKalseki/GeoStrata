@@ -16,6 +16,8 @@ import java.util.Random;
 
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
+import Reika.DragonAPI.Auxiliary.Trackers.WorldgenProfiler;
+import Reika.DragonAPI.Auxiliary.Trackers.WorldgenProfiler.WorldProfilerParent;
 import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
 import Reika.DragonAPI.ModInteract.ReikaTwilightHelper;
 import Reika.GeoStrata.GeoStrata;
@@ -36,8 +38,19 @@ public class RockGenerator implements RetroactiveGenerator {
 
 	private final ArrayList<RockGenerationPattern> generators = new ArrayList();
 
+	private final RockParent[] parents = new RockParent[RockTypes.rockList.length];
+
 	protected RockGenerator() {
 		oreControl = GeoOptions.GEOORE.getValue();
+
+		for (int i = 0; i < parents.length; i++) {
+			parents[i] = new RockParent(RockTypes.rockList[i]);
+		}
+	}
+
+	public void registerProfilingSubgenerator(RockTypes r, RockGenerationPattern p, Object generator) {
+		parents[r.ordinal()].pattern = p;
+		WorldgenProfiler.registerGeneratorAsSubGenerator(parents[r.ordinal()], generator);
 	}
 
 	public void registerGenerationPattern(RockGenerationPattern p) {
@@ -84,7 +97,11 @@ public class RockGenerator implements RetroactiveGenerator {
 
 	protected void generateRockType(RockTypes geo, World world, Random random, int chunkX, int chunkZ) {
 		for (RockGenerationPattern p : generators) {
+			if (WorldgenProfiler.profilingEnabled())
+				WorldgenProfiler.startGenerator(world, parents[geo.ordinal()], chunkX >> 4, chunkZ >> 4);
 			p.generateRockType(geo, world, random, chunkX, chunkZ);
+			if (WorldgenProfiler.profilingEnabled())
+				WorldgenProfiler.onRunGenerator(world, parents[geo.ordinal()], chunkX >> 4, chunkZ >> 4);
 		}
 	}
 
@@ -115,6 +132,26 @@ public class RockGenerator implements RetroactiveGenerator {
 		@Override
 		public int compare(RockGenerationPattern o1, RockGenerationPattern o2) {
 			return o1.getOrderingIndex() == o2.getOrderingIndex() ? 0 : (o1.getOrderingIndex() > o2.getOrderingIndex() ? 1 : -1);
+		}
+
+	}
+
+	private static class RockParent implements WorldProfilerParent {
+
+		private final RockTypes type;
+		private RockGenerationPattern pattern;
+
+		private RockParent(RockTypes r) {
+			this(r, null);
+		}
+
+		private RockParent(RockTypes r, RockGenerationPattern p) {
+			type = r;
+			pattern = p;
+		}
+
+		public final String getWorldgenProfilerID() {
+			return type.getName()+" "+pattern.getClass().getName();
 		}
 
 	}

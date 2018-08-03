@@ -16,25 +16,29 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
+import Reika.DragonAPI.Interfaces.Subgenerator;
 import Reika.DragonAPI.Libraries.World.ReikaBlockHelper;
 import Reika.GeoStrata.TileEntityGeoOre;
+import Reika.GeoStrata.API.RockGenerationPatterns.RockGenerationPattern;
 import Reika.GeoStrata.API.RockProofStone;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 
-public class WorldGenGeoRock extends WorldGenerator {
+public class WorldGenGeoRock extends WorldGenerator implements Subgenerator {
 
 	private final int size;
 	private final RockTypes rock;
 	private final Block overwrite;
 	private final Block id;
+	private final RockGenerationPattern generator;
 
-	public WorldGenGeoRock(RockTypes r, int size) {
+	public WorldGenGeoRock(RockGenerationPattern p, RockTypes r, int size) {
 		this.size = size;
 		overwrite = Blocks.stone;
 		rock = r;
 		id = rock.getID(RockShapes.SMOOTH);
+		generator = p;
 	}
 
 	@Override
@@ -72,11 +76,18 @@ public class WorldGenGeoRock extends WorldGenerator {
 							for (int dz = k1; dz <= j2; dz++) {
 								double d14 = (dz + 0.5D - d8) / (d10 / 2.0D);
 								if (d12 * d12 + d13 * d13 + d14 * d14 < 1.0D) {
+									//if (this.isInChunk(x, z, dx, dz)) {
 									Block b = world.getBlock(dx, dy, dz);
 									int meta = world.getBlockMetadata(dx, dy, dz);
 									if (this.canGenerateIn(world, dx, dy, dz, b, meta)) {
+										//long time = System.nanoTime();
+
 										world.setBlock(dx, dy, dz, id, 0, 2);
 										count++;
+
+										//long time2 = System.nanoTime();
+										//long dur = time2-time;
+										//ReikaJavaLibrary.pConsole(rock+" block set time for "+dx+", "+dy+", "+dz+": "+dur+" nanos: "+this.isInChunk(x, z, dx, dz));
 									}
 									else if (RockGenerator.instance.generateOres() && ReikaBlockHelper.isOre(b, meta)) {
 										TileEntityGeoOre te = new TileEntityGeoOre();
@@ -84,6 +95,7 @@ public class WorldGenGeoRock extends WorldGenerator {
 										world.setBlock(dx, dy, dz, GeoBlocks.ORETILE.getBlockInstance());
 										world.setTileEntity(dx, dy, dz, te);
 									}
+									//}
 								}
 							}
 						}
@@ -95,10 +107,24 @@ public class WorldGenGeoRock extends WorldGenerator {
 		return count > 0;
 	}
 
+	/*
+	private boolean isInChunk(int x, int z, int dx, int dz) {
+		int cx = x >> 4;
+							int cz = z >> 4;
+					int dcx = dx >> 4;
+			int dcz = dz >> 4;
+			return cx == dcx && cz == dcz;
+	}*/
+
 	private boolean canGenerateIn(World world, int x, int y, int z, Block b, int meta) {
 		if (b instanceof RockProofStone && ((RockProofStone)b).blockRockGeneration(world, x, y, z, b, meta))
 			return false;
 		return b.isReplaceableOreGen(world, x, y, z, overwrite);
+	}
+
+	@Override
+	public Object getParentGenerator() {
+		return generator;
 	}
 
 }

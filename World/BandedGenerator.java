@@ -20,13 +20,16 @@ import Reika.GeoStrata.Registry.RockTypes;
 
 public class BandedGenerator implements RockGenerationPattern {
 
-	public static final BandedGenerator instance = new BandedGenerator();
-
 	private SimplexNoiseGenerator bandOffsets;
 	private static final int OFFSET_MARGIN = 16;
 
-	private BandedGenerator() {
+	private final WorldGenGeoRock[] generators = new WorldGenGeoRock[RockTypes.rockList.length];
 
+	public BandedGenerator() {
+		for (int i = 0; i < generators.length; i++) {
+			generators[i] = new WorldGenGeoRock(this, RockTypes.rockList[i], RockGenerator.VEIN_SIZE);
+			RockGenerator.instance.registerProfilingSubgenerator(RockTypes.rockList[i], this, generators[i]);
+		}
 	}
 
 	@Override
@@ -43,7 +46,7 @@ public class BandedGenerator implements RockGenerationPattern {
 			//GeoStrata.logger.debug(geo.name()+":"+geo.canGenerateAt(world, posX, posY, posZ, random));
 			if (geo.canGenerateAt(world, posX, posY, posZ, random)) {
 				//(new WorldGenMinable(geo.getID(RockShapes.SMOOTH), VEIN_SIZE, Blocks.stone)).generate(world, random, posX, posY, posZ);
-				(new WorldGenGeoRock(geo, RockGenerator.VEIN_SIZE)).generate(world, random, posX, posY, posZ);
+				generators[geo.ordinal()].generate(world, random, posX, posY, posZ);
 				//GeoStrata.logger.log("Generating "+geo+" at "+posX+", "+posY+", "+posZ);
 			}
 		}

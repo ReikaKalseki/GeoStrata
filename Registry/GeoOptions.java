@@ -13,10 +13,11 @@ import net.minecraft.util.MathHelper;
 import Reika.DragonAPI.Interfaces.Configuration.BooleanConfig;
 import Reika.DragonAPI.Interfaces.Configuration.DecimalConfig;
 import Reika.DragonAPI.Interfaces.Configuration.IntegerConfig;
+import Reika.DragonAPI.Interfaces.Configuration.StringConfig;
 import Reika.DragonAPI.Interfaces.Configuration.UserSpecificConfig;
 import Reika.GeoStrata.GeoStrata;
 
-public enum GeoOptions implements BooleanConfig, IntegerConfig, DecimalConfig, UserSpecificConfig {
+public enum GeoOptions implements BooleanConfig, IntegerConfig, DecimalConfig, StringConfig, UserSpecificConfig {
 
 	TFGEN("Generate Rock in the Twilight Forest", true),
 	DIMGEN("Generate Rock in Other Dimensions", true),
@@ -31,14 +32,15 @@ public enum GeoOptions implements BooleanConfig, IntegerConfig, DecimalConfig, U
 	GEOORE("Ore Mode", 0),
 	RETROGEN("Retrogeneration", false),
 	WAILA("Waila Overlay", true),
-	BANDED("Banded Generation", false),
 	OPALFREQ("Opal Color Frequency", 1F),
-	OPALHUE("Opal Hue Offset (degrees)", 0);
+	OPALHUE("Opal Hue Offset (degrees)", 0),
+	ROCKGEN("Rock Generation Pattern", "Legacy");
 
 	private String label;
 	private boolean defaultState;
 	private int defaultValue;
 	private float defaultFloat;
+	private String defaultString;
 	private Class type;
 
 	public static final GeoOptions[] optionList = GeoOptions.values();
@@ -59,6 +61,12 @@ public enum GeoOptions implements BooleanConfig, IntegerConfig, DecimalConfig, U
 		label = l;
 		defaultFloat = d;
 		type = float.class;
+	}
+
+	private GeoOptions(String l, String d) {
+		label = l;
+		defaultString = d;
+		type = String.class;
 	}
 
 	public boolean isBoolean() {
@@ -160,6 +168,20 @@ public enum GeoOptions implements BooleanConfig, IntegerConfig, DecimalConfig, U
 			default:
 				return false;
 		}
+	}
+
+	public boolean isString() {
+		return type == String.class;
+	}
+
+	@Override
+	public String getString() {
+		return (String)GeoStrata.config.getControl(this.ordinal());
+	}
+
+	@Override
+	public String getDefaultString() {
+		return defaultString;
 	}
 
 }

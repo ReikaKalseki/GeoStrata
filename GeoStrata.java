@@ -49,11 +49,10 @@ import Reika.GeoStrata.Blocks.BlockVent.VentType;
 import Reika.GeoStrata.Items.ItemBlockAnyGeoVariant;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoOptions;
+import Reika.GeoStrata.Registry.RockGeneratorTypes;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 import Reika.GeoStrata.Rendering.OreRenderer;
-import Reika.GeoStrata.World.BandedGenerator;
-import Reika.GeoStrata.World.BasicRockGenerator;
 import Reika.GeoStrata.World.DecoGenerator;
 import Reika.GeoStrata.World.GlowCrystalGenerator;
 import Reika.GeoStrata.World.GlowingVineGenerator;
@@ -131,7 +130,10 @@ public class GeoStrata extends DragonAPIMod {
 	public void load(FMLInitializationEvent event) {
 		this.startTiming(LoadPhase.LOAD);
 		this.loadDictionary();
-		RockGenerator.instance.registerGenerationPattern(GeoOptions.BANDED.getState() ? BandedGenerator.instance : BasicRockGenerator.instance);
+
+		RockGeneratorTypes type = RockGeneratorTypes.getType(GeoOptions.ROCKGEN.getString());
+		RockGenerator.instance.registerGenerationPattern(type.getGenerator());
+
 		RetroGenController.instance.addHybridGenerator(RockGenerator.instance, Integer.MIN_VALUE, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(VentGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(LavaRockGeneratorRedesign.instance, 0, GeoOptions.RETROGEN.getState());

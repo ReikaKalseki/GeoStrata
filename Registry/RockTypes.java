@@ -10,9 +10,12 @@
 package Reika.GeoStrata.Registry;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -60,6 +63,8 @@ public enum RockTypes {
 	public final int maxY;
 	public final float rarity;
 	public final int rockColor;
+
+	private final HashSet<RockTypes> coincidentTypes = new HashSet();
 
 	private static final HashMap<Block, RockTypes> mappings = new HashMap();
 
@@ -126,17 +131,17 @@ public enum RockTypes {
 			return harvestTool == null;
 		if (TinkerToolHandler.getInstance().isPick(held) || TinkerToolHandler.getInstance().isHammer(held)) {
 			switch(harvestTool) {
-			case WOOD:
-				return true;
-			case STONE:
-			case GOLD:
-				return TinkerToolHandler.getInstance().isStoneOrBetter(held);
-			case IRON:
-				return TinkerToolHandler.getInstance().isIronOrBetter(held);
-			case EMERALD:
-				return TinkerToolHandler.getInstance().isDiamondOrBetter(held);
-			default:
-				return false;
+				case WOOD:
+					return true;
+				case STONE:
+				case GOLD:
+					return TinkerToolHandler.getInstance().isStoneOrBetter(held);
+				case IRON:
+					return TinkerToolHandler.getInstance().isIronOrBetter(held);
+				case EMERALD:
+					return TinkerToolHandler.getInstance().isDiamondOrBetter(held);
+				default:
+					return false;
 			}
 		}
 		if (held.getItem() == RedstoneArsenalHandler.getInstance().pickID) {
@@ -144,65 +149,150 @@ public enum RockTypes {
 		}
 		Item i = held.getItem();
 		switch (harvestTool) {
-		case EMERALD: //Diamond
-			return held.func_150998_b(Blocks.obsidian);
-		case GOLD:
-			return held.func_150998_b(Blocks.stone);
-		case IRON:
-			return held.func_150998_b(Blocks.gold_ore);
-		case STONE:
-			return held.func_150998_b(Blocks.iron_ore);
-		case WOOD:
-			return held.func_150998_b(Blocks.stone);
+			case EMERALD: //Diamond
+				return held.func_150998_b(Blocks.obsidian);
+			case GOLD:
+				return held.func_150998_b(Blocks.stone);
+			case IRON:
+				return held.func_150998_b(Blocks.gold_ore);
+			case STONE:
+				return held.func_150998_b(Blocks.iron_ore);
+			case WOOD:
+				return held.func_150998_b(Blocks.stone);
 		}
 		return false;
 	}
 
-	public boolean canGenerateAt(World world, int x, int y, int z, Random r) {
-		int dist = 12;
+	public boolean canGenerateAtXZ(World world, int x, int z, Random r) {
+		switch(this) {
+			case BASALT:
+				return true;
+			case GRANITE:
+			case GNEISS:
+				return true;
+			case GRANULITE:
+				break;
+			case HORNFEL:
+				return world.getBiomeGenForCoords(x, z).getEnableSnow();
+			case LIMESTONE:
+				return true;
+			case MARBLE:
+				break;
+			case MIGMATITE:
+				return true;
+			case PERIDOTITE:
+				break;
+			case PUMICE:
+				return true;
+			case QUARTZ:
+				break;
+			case SANDSTONE:
+				return true;
+			case SHALE:
+			case SLATE:
+				if (BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), Type.SANDY))
+					return false;
+				if (BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), Type.DRY))
+					return false;
+				if (BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), Type.SAVANNA))
+					return false;
+				return true;
+			case ONYX:
+				return true;
+			case SCHIST:
+				break;
+			case OPAL:
+				break;
+		}
+		return true;
+	}
+
+	public boolean canGenerateAtSkipXZ(World world, int x, int y, int z, Random r) {
 		if (y > maxY)
 			return false;
 		if (y < minY)
 			return false;
 		switch(this) {
-		case BASALT:
-			return true;
-		case GRANITE:
-		case GNEISS:
-			return true;
-		case GRANULITE:
-			break;
-		case HORNFEL:
-			return world.getBiomeGenForCoords(x, z).getEnableSnow();
-		case LIMESTONE:
-			return true;
-		case MARBLE:
-			break;
-		case MIGMATITE:
-			return true;
-		case PERIDOTITE:
-			break;
-		case PUMICE:
-			return true;
-		case QUARTZ:
-			break;
-		case SANDSTONE:
-			return true;
-		case SHALE:
-		case SLATE:
-			if (BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), Type.SANDY))
-				return false;
-			if (BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), Type.DRY))
-				return false;
-			if (BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), Type.SAVANNA))
-				return false;
-			return true;
-		case ONYX:
-			return ReikaWorldHelper.checkForAdjMaterial(world, x, y, z, Material.lava) != null;
-		case SCHIST:
-			break;
-		case OPAL:
-			break;
+			case BASALT:
+				return true;
+			case GRANITE:
+			case GNEISS:
+				return true;
+			case GRANULITE:
+				break;
+			case HORNFEL:
+				return true;
+			case LIMESTONE:
+				return true;
+			case MARBLE:
+				break;
+			case MIGMATITE:
+				return true;
+			case PERIDOTITE:
+				break;
+			case PUMICE:
+				return true;
+			case QUARTZ:
+				break;
+			case SANDSTONE:
+				return true;
+			case SHALE:
+			case SLATE:
+				return true;
+			case ONYX:
+				return ReikaWorldHelper.checkForAdjMaterial(world, x, y, z, Material.lava) != null;
+			case SCHIST:
+				break;
+			case OPAL:
+				break;
+		}
+		return true;
+	}
+
+	public boolean canGenerateAt(World world, int x, int y, int z, Random r) {
+		if (y > maxY)
+			return false;
+		if (y < minY)
+			return false;
+		switch(this) {
+			case BASALT:
+				return true;
+			case GRANITE:
+			case GNEISS:
+				return true;
+			case GRANULITE:
+				break;
+			case HORNFEL:
+				return world.getBiomeGenForCoords(x, z).getEnableSnow();
+			case LIMESTONE:
+				return true;
+			case MARBLE:
+				break;
+			case MIGMATITE:
+				return true;
+			case PERIDOTITE:
+				break;
+			case PUMICE:
+				return true;
+			case QUARTZ:
+				break;
+			case SANDSTONE:
+				return true;
+			case SHALE:
+			case SLATE:
+				if (BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), Type.SANDY))
+					return false;
+				if (BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), Type.DRY))
+					return false;
+				if (BiomeDictionary.isBiomeOfType(world.getBiomeGenForCoords(x, z), Type.SAVANNA))
+					return false;
+				return true;
+			case ONYX:
+				return ReikaWorldHelper.checkForAdjMaterial(world, x, y, z, Material.lava) != null;
+			case SCHIST:
+				break;
+			case OPAL:
+				break;
 		}
 		return true;
 	}
@@ -229,15 +319,17 @@ public enum RockTypes {
 		return types;
 	}
 
-	public List<RockTypes> getCoincidentTypes() {
-		List<RockTypes> types = new ArrayList();
-		Random r = new Random();
+	public Set<RockTypes> getCoincidentTypes() {
+		return Collections.unmodifiableSet(coincidentTypes);
+	}
+
+	private void calcCoincidentTypes() {
 		for (int i = 0; i < rockList.length; i++) {
 			RockTypes rock = rockList[i];
-			if (ReikaMathLibrary.doRangesOverLap(minY, maxY, rock.minY, rock.maxY))
-				types.add(rock);
+			if (rock != this)
+				if (ReikaMathLibrary.doRangesOverLap(minY, maxY, rock.minY, rock.maxY))
+					coincidentTypes.add(rock);
 		}
-		return types;
 	}
 
 	public static void loadMappings() {
@@ -248,6 +340,7 @@ public enum RockTypes {
 				Block b = s.getBlock(rock);
 				mappings.put(b, rock);
 			}
+			rock.calcCoincidentTypes();
 		}
 	}
 
