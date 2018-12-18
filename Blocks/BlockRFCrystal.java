@@ -113,10 +113,18 @@ public class BlockRFCrystal extends Block {
 		}
 
 		public void removeFromParent() {
+			if (controller == null) {
+				GeoStrata.logger.logError("RF Crystal block has no parent?!");
+				return;
+			}
 			this.getParent().removeLocation(new Coordinate(this));
 		}
 
 		public void addToParent() {
+			if (controller == null) {
+				GeoStrata.logger.logError("RF Crystal block has no parent?!");
+				return;
+			}
 			this.getParent().addLocation(new Coordinate(this));
 		}
 
