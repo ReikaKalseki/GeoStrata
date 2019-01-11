@@ -19,6 +19,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityXPOrb;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -45,10 +46,22 @@ public class BlockLavaRock extends Block implements EnvironmentalHeatSource {
 		this.setCreativeTab(GeoStrata.tabGeo);
 	}
 
+	public static enum Flags {
+		NONREPLACEABLE();
+
+		public int flag() {
+			return 1 << (2+this.ordinal());
+		}
+
+		public boolean applies(int meta) {
+			return (meta & this.flag()) != 0;
+		}
+	}
+
 	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
 		float maxY = 1;
-		int meta = world.getBlockMetadata(x, y, z);
+		int meta = world.getBlockMetadata(x, y, z)%4;
 		if (world.getBlock(x, y+1, z).isAir(world, x, y+1, z)) {
 			switch(meta) {
 				case 0:
@@ -69,7 +82,7 @@ public class BlockLavaRock extends Block implements EnvironmentalHeatSource {
 	public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z)
 	{
 		float maxY = 1;
-		int meta = world.getBlockMetadata(x, y, z);
+		int meta = world.getBlockMetadata(x, y, z)%4;
 		switch(3-meta) {
 			case 0:
 				maxY = 1;
@@ -111,7 +124,7 @@ public class BlockLavaRock extends Block implements EnvironmentalHeatSource {
 
 	@Override
 	public IIcon getIcon(int s, int meta) {
-		return overlay[meta];
+		return overlay[meta%4];
 	}
 
 	@Override
@@ -125,26 +138,37 @@ public class BlockLavaRock extends Block implements EnvironmentalHeatSource {
 	public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity e) {
 		if (e instanceof EntityItem || e instanceof EntityXPOrb)
 			return;
-		int meta = world.getBlockMetadata(x, y, z);
+		int meta = world.getBlockMetadata(x, y, z)%4;
 		if (meta == 3)
 			return;
 		boolean doEffect = true;
 		if (e instanceof EntityLivingBase) {
 			doEffect = !((EntityLivingBase)e).isPotionActive(Potion.fireResistance);
+			if (e instanceof EntityPlayer) {
+				doEffect &= !((EntityPlayer)e).capabilities.isCreativeMode;
+			}
 		}
 		if (doEffect) {
-			e.attackEntityFrom(meta == 3 ? DamageSource.lava : DamageSource.inFire, 3-meta);
+			e.attackEntityFrom(meta == 0 ? DamageSource.lava : DamageSource.inFire, 3-meta);
+			if (meta == 0) { //lava is 15
+				e.setFire(8);
+			}
+			else if (meta == 1) {
+				e.setFire(4);
+			}
 		}
 	}
 
 	@Override
 	public boolean isReplaceableOreGen(World world, int x, int y, int z, Block target) {
+		if (Flags.NONREPLACEABLE.applies(world.getBlockMetadata(x, y, z)))
+			return false;
 		return target == this || target == Blocks.stone || target.isReplaceableOreGen(world, x, y, z, Blocks.stone);
 	}
 
 	@Override
 	public SourceType getSourceType(IBlockAccess iba, int x, int y, int z) {
-		return iba.getBlockMetadata(x, y, z) == 0 ? SourceType.LAVA : SourceType.FIRE;
+		return iba.getBlockMetadata(x, y, z)%4 == 0 ? SourceType.LAVA : SourceType.FIRE;
 	}
 
 	@Override
