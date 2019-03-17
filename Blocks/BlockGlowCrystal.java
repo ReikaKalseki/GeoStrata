@@ -11,6 +11,10 @@ package Reika.GeoStrata.Blocks;
 
 import java.util.List;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+
+import com.carpentersblocks.api.IWrappableBlock;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -24,16 +28,12 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-
 import Reika.DragonAPI.ASM.APIStripper.Strippable;
 import Reika.DragonAPI.Instantiable.Math.SimplexNoiseGenerator;
 import Reika.DragonAPI.Libraries.IO.ReikaColorAPI;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.ModInteract.ItemHandlers.CarpenterBlockHandler;
 import Reika.GeoStrata.GeoStrata;
-
-import com.carpentersblocks.api.IWrappableBlock;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

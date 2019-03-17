@@ -9,10 +9,6 @@
  ******************************************************************************/
 package Reika.GeoStrata;
 
-import net.minecraft.block.Block;
-import Reika.GeoStrata.Registry.RockShapes;
-import Reika.GeoStrata.Registry.RockTypes;
-
 import com.cricketcraft.chisel.api.carving.CarvableHelper;
 import com.cricketcraft.chisel.api.carving.CarvingUtils;
 import com.cricketcraft.chisel.api.carving.CarvingUtils.SimpleCarvingGroup;
@@ -20,6 +16,11 @@ import com.cricketcraft.chisel.api.carving.CarvingUtils.SimpleCarvingVariation;
 import com.cricketcraft.chisel.api.carving.ICarvingGroup;
 import com.cricketcraft.chisel.api.carving.ICarvingRegistry;
 import com.cricketcraft.chisel.api.carving.ICarvingVariation;
+
+import net.minecraft.block.Block;
+
+import Reika.GeoStrata.Registry.RockShapes;
+import Reika.GeoStrata.Registry.RockTypes;
 
 
 public class GeoChisel {

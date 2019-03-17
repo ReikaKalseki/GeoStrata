@@ -13,6 +13,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+
 import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.ASM.DependentMethodStripper.ModDependent;
 import Reika.DragonAPI.Libraries.ReikaRecipeHelper;
@@ -22,6 +23,7 @@ import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
+
 import buildcraft.BuildCraftCore;
 import cpw.mods.fml.common.registry.GameRegistry;
 

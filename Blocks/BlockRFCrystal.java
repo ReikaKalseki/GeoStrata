@@ -21,10 +21,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
 import Reika.DragonAPI.Instantiable.Data.Immutable.Coordinate;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Blocks.BlockRFCrystalSeed.TileRFCrystal;
 import Reika.GeoStrata.Registry.GeoBlocks;
+
 import cofh.api.energy.IEnergyHandler;
 
 

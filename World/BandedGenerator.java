@@ -12,6 +12,7 @@ package Reika.GeoStrata.World;
 import java.util.Random;
 
 import net.minecraft.world.World;
+
 import Reika.DragonAPI.Instantiable.Math.SimplexNoiseGenerator;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.API.RockGenerationPatterns.RockGenerationPattern;

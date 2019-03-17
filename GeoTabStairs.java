@@ -10,9 +10,11 @@
 package Reika.GeoStrata;
 
 import net.minecraft.item.ItemStack;
+
 import Reika.GeoStrata.Base.RockWrapperSortedTab;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

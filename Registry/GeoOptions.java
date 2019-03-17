@@ -10,6 +10,7 @@
 package Reika.GeoStrata.Registry;
 
 import net.minecraft.util.MathHelper;
+
 import Reika.DragonAPI.Interfaces.Configuration.BooleanConfig;
 import Reika.DragonAPI.Interfaces.Configuration.DecimalConfig;
 import Reika.DragonAPI.Interfaces.Configuration.IntegerConfig;

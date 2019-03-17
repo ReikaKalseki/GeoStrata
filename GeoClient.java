@@ -12,6 +12,7 @@ package Reika.GeoStrata;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
+
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Rendering.ConnectedStoneRenderer;
 import Reika.GeoStrata.Rendering.DecoGenRenderer;
@@ -20,6 +21,7 @@ import Reika.GeoStrata.Rendering.LavaRockRenderer;
 import Reika.GeoStrata.Rendering.OreRenderer;
 import Reika.GeoStrata.Rendering.StairItemRenderer;
 import Reika.GeoStrata.Rendering.VentRenderer;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 

@@ -12,6 +12,7 @@ package Reika.GeoStrata.API;
 import java.util.Random;
 
 import net.minecraft.world.World;
+
 import Reika.GeoStrata.Registry.RockTypes;
 import Reika.GeoStrata.World.RockGenerator;
 

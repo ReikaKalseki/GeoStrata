@@ -12,9 +12,11 @@ package Reika.GeoStrata;
 import java.util.Comparator;
 
 import net.minecraft.item.ItemStack;
+
 import Reika.DragonAPI.Instantiable.GUI.SortedCreativeTab;
 import Reika.GeoStrata.Blocks.BlockVent.VentType;
 import Reika.GeoStrata.Registry.GeoBlocks;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

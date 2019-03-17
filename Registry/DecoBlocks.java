@@ -17,9 +17,11 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.DragonAPI.ModInteract.ItemHandlers.MekToolHandler;
 import Reika.DragonAPI.ModInteract.ItemHandlers.TinkerToolHandler;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 
 public enum DecoBlocks {

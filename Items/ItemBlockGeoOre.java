@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+
 import Reika.GeoStrata.TileEntityGeoOre;
 import Reika.GeoStrata.Blocks.BlockOreTile;
 import Reika.GeoStrata.Registry.RockTypes;

@@ -16,6 +16,7 @@ import java.util.Locale;
 
 import net.minecraft.block.Block;
 import net.minecraft.world.IBlockAccess;
+
 import Reika.DragonAPI.Exception.RegistrationException;
 import Reika.DragonAPI.Instantiable.Data.Maps.BlockMap;
 import Reika.DragonAPI.ModInteract.LegacyWailaHelper;
@@ -24,6 +25,7 @@ import Reika.GeoStrata.Blocks.BlockConnectedRock;
 import Reika.GeoStrata.Blocks.BlockShapedRock;
 import Reika.GeoStrata.Blocks.BlockSmooth;
 import Reika.GeoStrata.Items.ItemBlockRock;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 
 

@@ -34,6 +34,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
 import Reika.DragonAPI.Instantiable.Data.Maps.PluralMap;
 import Reika.DragonAPI.Instantiable.Data.Maps.TileEntityCache;
 import Reika.DragonAPI.Interfaces.Block.SpecialOreBlock;
@@ -46,6 +47,7 @@ import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.TileEntityGeoOre;
 import Reika.GeoStrata.Registry.RockTypes;
 import Reika.GeoStrata.World.RockGenerator;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

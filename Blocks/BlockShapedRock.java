@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.Item;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+
 import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;

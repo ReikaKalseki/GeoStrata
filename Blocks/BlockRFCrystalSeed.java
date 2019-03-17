@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -17,6 +17,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -25,6 +26,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
 import Reika.DragonAPI.Instantiable.Data.BlockStruct.BlockArray;
 import Reika.DragonAPI.Instantiable.Data.BlockStruct.CurvedTrajectory;
 import Reika.DragonAPI.Instantiable.Data.BlockStruct.CurvedTrajectory.InitialAngleProvider;
@@ -35,6 +37,7 @@ import Reika.DragonAPI.Instantiable.Data.Immutable.DecimalPosition;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.Registry.GeoBlocks;
+
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyReceiver;
 
@@ -58,7 +61,7 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block old, int oldmeta) {
 		if (this.hasTileEntity(oldmeta))
-			((TileRFCrystal)world.getTileEntity(x, y, z)).breakEntireCrystal();
+			((TileRFCrystal)world.getTileEntity(x, y, z)).breakEntireCrystal(false);
 		super.breakBlock(world, x, y, z, old, oldmeta);
 	}
 
@@ -87,6 +90,8 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 
 		private HashSet<Coordinate> crystalShape;
 
+		private boolean isActivated = false;
+
 		private long energy;
 		private BlockArray crystal = new BlockArray();
 
@@ -95,38 +100,20 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 			return true;
 		}
 
-		public void breakEntireCrystal() {
+		public void breakEntireCrystal(boolean skipSelf) {
 			ArrayList<Coordinate> li = new ArrayList(crystal.keySet());
 			crystal.clear();
+			if (skipSelf)
+				crystal.addBlockCoordinate(xCoord, yCoord, zCoord);
 			for (Coordinate c : li) {
+				if (skipSelf && c.equals(xCoord, yCoord, zCoord))
+					continue;
 				ReikaWorldHelper.dropAndDestroyBlockAt(worldObj, c.xCoord, c.yCoord, c.zCoord, null, true, true);
 			}
 		}
 
 		@Override
 		public void updateEntity() {
-			/*
-			if (XYCrystalShape == null) {
-				XYCrystalShape = new SimplexNoiseGenerator(worldObj.getSeed());
-				XZCrystalShape = new SimplexNoiseGenerator(-worldObj.getSeed());
-				YZCrystalShape = new SimplexNoiseGenerator(~worldObj.getSeed());
-			}
-			 */
-			/*
-			if (crystalShape == null && !worldObj.isRemote) {
-				Lattice l = new Lattice(xCoord-32, yCoord-12, zCoord-32, xCoord+32, yCoord+24, zCoord+32);
-				l.pointCount = 8;//18;
-				l.rayCount = 6;//9;
-				Random rand = new Random(worldObj.getSeed());
-				l.addPoint(new Coordinate(this));
-				//l.generatePoints(rand);
-				l.generateRays(rand);
-				LatticeCache c = new LatticeCache(l, 2);
-				crystalShape = c.getLocations();
-				ReikaJavaLibrary.pConsole(crystalShape.size());
-			}
-			 */
-
 			if (crystalShape == null && !worldObj.isRemote) {
 				CurvedTrajectory cv = new CurvedTrajectory(xCoord, yCoord, zCoord);
 				cv.trailCount = 9;
@@ -138,24 +125,31 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 
 
 			if (!worldObj.isRemote) {
-				long cap = this.getCapacity();
-				if (energy > cap)
-					energy = cap;
-				//ReikaJavaLibrary.pConsole(String.format("%.4f", energy/(float)cap)+" @ "+crystal.getSize()+" : "+energy+" / "+cap);
-				if (energy > cap*4/5 && crystal.getSize() < 2000) {
-					this.growNewCrystal();
-				}
+				if (isActivated) {
+					long cap = this.getCapacity();
+					if (energy > cap)
+						energy = cap;
+					//ReikaJavaLibrary.pConsole(String.format("%.4f", energy/(float)cap)+" @ "+crystal.getSize()+" : "+energy+" / "+cap);
+					if (energy > cap*4/5 && crystal.getSize() < 2000) {
+						this.growNewCrystal();
+					}
 
-				if (energy > 0 && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) {
-					TileEntity te = worldObj.getTileEntity(xCoord, yCoord-1, zCoord);
-					if (te instanceof IEnergyReceiver) {
-						int pushable = this.getEnergyStored(null);
-						IEnergyReceiver ier = (IEnergyReceiver)te;
-						pushable = Math.min(pushable, ier.receiveEnergy(ForgeDirection.UP, pushable, true));
-						if (pushable > 0) {
-							pushable = ier.receiveEnergy(ForgeDirection.UP, pushable, false);
-							energy -= pushable;
+					if (energy > 0 && worldObj.isBlockIndirectlyGettingPowered(xCoord, yCoord, zCoord)) {
+						TileEntity te = worldObj.getTileEntity(xCoord, yCoord-1, zCoord);
+						if (te instanceof IEnergyReceiver) {
+							int pushable = this.getEnergyStored(null);
+							IEnergyReceiver ier = (IEnergyReceiver)te;
+							pushable = Math.min(pushable, ier.receiveEnergy(ForgeDirection.UP, pushable, true));
+							if (pushable > 0) {
+								pushable = ier.receiveEnergy(ForgeDirection.UP, pushable, false);
+								energy -= pushable;
+							}
 						}
+					}
+				}
+				else {
+					if (crystal.getSize() > 1) {
+						this.breakEntireCrystal(true);
 					}
 				}
 			}
@@ -169,7 +163,7 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 			Collections.shuffle(li);
 			for (Coordinate c : li) {
 				for (Coordinate c2 : c.getAdjacentCoordinates()) {
-					if (c2.getBlock(worldObj).isAir(worldObj, c2.xCoord, c2.yCoord, c2.zCoord) && this.isValidLocation(c2)) {
+					if (this.canGrowInto(worldObj, c2) && this.isValidLocation(c2)) {
 						//if (c2.getTaxicabDistanceTo(th) < 20 && c2.yCoord-yCoord < 4) {
 						loc = c2;
 						break;
@@ -182,6 +176,11 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 				//crystal.addBlockCoordinate(loc.xCoord, loc.yCoord, loc.zCoord);
 				BlockRFCrystal.place(worldObj, loc.xCoord, loc.yCoord, loc.zCoord, this);
 			}
+		}
+
+		private boolean canGrowInto(World worldObj, Coordinate c2) {
+			Block b = c2.getBlock(worldObj);
+			return b == Blocks.air || b == Blocks.water || b.isAir(worldObj, c2.xCoord, c2.yCoord, c2.zCoord);
 		}
 
 		private boolean isValidLocation(Coordinate c) {
@@ -214,6 +213,7 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 
 			NBT.setLong("energy", energy);
 			crystal.writeToNBT("blocks", NBT);
+			NBT.setBoolean("activated", isActivated);
 		}
 
 		@Override
@@ -222,6 +222,7 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 
 			energy = NBT.getLong("energy");
 			crystal.readFromNBT("blocks", NBT);
+			isActivated = NBT.getBoolean("activated");
 		}
 
 		@Override
@@ -318,6 +319,11 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 					}
 				}
 			}
+		}
+
+		public void activate() {
+			isActivated = true;
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 
 	}

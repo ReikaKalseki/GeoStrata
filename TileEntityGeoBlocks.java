@@ -17,8 +17,10 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
+
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

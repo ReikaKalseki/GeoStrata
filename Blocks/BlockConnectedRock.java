@@ -19,6 +19,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
+
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.RockBlock;

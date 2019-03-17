@@ -12,6 +12,7 @@ package Reika.GeoStrata.Base;
 import java.util.Comparator;
 
 import net.minecraft.item.ItemStack;
+
 import Reika.DragonAPI.Instantiable.GUI.SortedCreativeTab;
 
 public abstract class RockWrapperSortedTab extends SortedCreativeTab {

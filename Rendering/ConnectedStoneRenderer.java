@@ -12,14 +12,14 @@ package Reika.GeoStrata.Rendering;
 import java.awt.Color;
 import java.util.ArrayList;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import org.lwjgl.opengl.GL11;
 
 import Reika.DragonAPI.Auxiliary.CoreModDetection;
 import Reika.DragonAPI.Base.BaseBlockRenderer;

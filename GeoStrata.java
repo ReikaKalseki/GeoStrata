@@ -23,7 +23,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
-import thaumcraft.api.aspects.Aspect;
+
 import Reika.DragonAPI.DragonAPICore;
 import Reika.DragonAPI.DragonOptions;
 import Reika.DragonAPI.ModList;
@@ -62,6 +62,7 @@ import Reika.GeoStrata.World.RockGenerator;
 import Reika.GeoStrata.World.VentGenerator;
 import Reika.RotaryCraft.API.BlockColorInterface;
 import Reika.RotaryCraft.API.RecipeInterface;
+
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -75,6 +76,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import forestry.api.storage.BackpackManager;
+import thaumcraft.api.aspects.Aspect;
 
 @Mod(modid = GeoStrata.MOD_NAME, name = GeoStrata.MOD_NAME, version = "v@MAJOR_VERSION@@MINOR_VERSION@", certificateFingerprint = "@GET_FINGERPRINT@", dependencies="required-after:DragonAPI")
 

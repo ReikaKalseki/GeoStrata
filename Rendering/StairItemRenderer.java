@@ -20,10 +20,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.IItemRenderer;
+
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Items.ItemBlockAnyGeoVariant;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

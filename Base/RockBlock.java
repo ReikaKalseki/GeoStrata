@@ -12,9 +12,8 @@ package Reika.GeoStrata.Base;
 import java.util.List;
 import java.util.Random;
 
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import mcp.mobius.waila.api.IWailaDataProvider;
+import com.carpentersblocks.api.IWrappableBlock;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
@@ -30,6 +29,7 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+
 import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.ASM.APIStripper.Strippable;
 import Reika.DragonAPI.ASM.DependentMethodStripper.ModDependent;
@@ -39,10 +39,11 @@ import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockTypes;
 import Reika.RotaryCraft.API.Interfaces.Laserable;
 
-import com.carpentersblocks.api.IWrappableBlock;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
+import mcp.mobius.waila.api.IWailaDataProvider;
 
 @Strippable(value={"com.carpentersblocks.api.IWrappableBlock", "mcp.mobius.waila.api.IWailaDataProvider"})
 public abstract class RockBlock extends Block implements Laserable, IWrappableBlock, IWailaDataProvider {

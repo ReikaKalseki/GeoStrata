@@ -20,6 +20,7 @@ import net.minecraft.world.biome.BiomeGenTaiga;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
+
 import Reika.ChromatiCraft.World.BiomeGlowingCliffs;
 import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.ASM.DependentMethodStripper.ModDependent;

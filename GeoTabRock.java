@@ -13,11 +13,13 @@ import java.util.Comparator;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
+
 import Reika.DragonAPI.Instantiable.GUI.SortedCreativeTab;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
 import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

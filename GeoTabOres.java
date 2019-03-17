@@ -12,12 +12,14 @@ package Reika.GeoStrata;
 import java.util.Comparator;
 
 import net.minecraft.item.ItemStack;
+
 import Reika.DragonAPI.Instantiable.GUI.SortedCreativeTab;
 import Reika.DragonAPI.Libraries.Registry.ReikaOreHelper;
 import Reika.DragonAPI.ModRegistry.ModOreList;
 import Reika.GeoStrata.Blocks.BlockOreTile;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.RockTypes;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

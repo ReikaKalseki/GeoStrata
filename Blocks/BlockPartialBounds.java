@@ -34,6 +34,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.util.ForgeDirection;
+
 import Reika.DragonAPI.Instantiable.Data.Immutable.BlockBounds;
 import Reika.DragonAPI.Instantiable.Data.Immutable.BlockKey;
 import Reika.DragonAPI.Libraries.ReikaAABBHelper;
@@ -44,6 +45,7 @@ import Reika.DragonAPI.ModRegistry.InterfaceCache;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Registry.RockTypes;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -16,6 +16,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+
 import Reika.DragonAPI.Instantiable.MetadataItemBlock;
 import Reika.DragonAPI.Interfaces.Registry.BlockEnum;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
@@ -37,6 +38,7 @@ import Reika.GeoStrata.Blocks.BlockShapedRock;
 import Reika.GeoStrata.Blocks.BlockSmooth;
 import Reika.GeoStrata.Blocks.BlockVent;
 import Reika.GeoStrata.Items.ItemBlockAnyGeoVariant;
+import Reika.GeoStrata.Items.ItemBlockFluxCrystal;
 import Reika.GeoStrata.Items.ItemBlockGeoOre;
 import Reika.GeoStrata.Items.ItemBlockGlowingVines;
 import Reika.GeoStrata.Items.ItemBlockRockDeco;
@@ -54,7 +56,7 @@ public enum GeoBlocks implements BlockEnum {
 	GLOWCRYS(BlockGlowCrystal.class, MetadataItemBlock.class, "Luminous Crystal"),
 	PARTIAL(BlockPartialBounds.class, null, "Partial Bounds Block"),
 	GLOWVINE(BlockGlowingVines.class, ItemBlockGlowingVines.class, "Glowing Vines"),
-	RFCRYSTAL(BlockRFCrystal.class,	null, "Flux Crystals"),
+	RFCRYSTAL(BlockRFCrystal.class,	ItemBlockFluxCrystal.class, "Flux Crystals"),
 	RFCRYSTALSEED(BlockRFCrystalSeed.class,	null, "Flux Crystal Seed");
 
 	private final Class blockClass;

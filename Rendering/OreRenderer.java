@@ -13,6 +13,8 @@ import java.util.Collection;
 import java.util.Locale;
 import java.util.Random;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -23,8 +25,6 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import org.lwjgl.opengl.GL11;
 
 import Reika.DragonAPI.Instantiable.Data.Maps.BlockMap;
 import Reika.DragonAPI.Interfaces.ISBRH;
