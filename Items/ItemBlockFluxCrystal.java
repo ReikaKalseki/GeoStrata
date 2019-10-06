@@ -1,6 +1,6 @@
 package Reika.GeoStrata.Items;
 
-import java.util.HashSet;
+import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,20 +9,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
-import Reika.GeoStrata.API.FluxCrystalActivationHooks;
-import Reika.GeoStrata.API.FluxCrystalActivationHooks.FluxCrystalActivationHook;
-import Reika.GeoStrata.API.FluxCrystalActivationHooks.FluxCrystalActivationRegistry;
 import Reika.GeoStrata.Blocks.BlockRFCrystalSeed.TileRFCrystal;
+import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Registry.GeoOptions;
 
 
-public class ItemBlockFluxCrystal extends ItemBlock implements FluxCrystalActivationRegistry {
-
-	private final HashSet<FluxCrystalActivationHook> hooks = new HashSet();
+public class ItemBlockFluxCrystal extends ItemBlock {
 
 	public ItemBlockFluxCrystal(Block b) {
 		super(b);
-
-		FluxCrystalActivationHooks.instance = this;
 	}
 
 	@Override
@@ -31,14 +26,7 @@ public class ItemBlockFluxCrystal extends ItemBlock implements FluxCrystalActiva
 		if (ret) {
 			TileEntity te = world.getTileEntity(x, y, z);
 			if (te instanceof TileRFCrystal) {
-				boolean flag = true;
-				for (FluxCrystalActivationHook h : hooks) {
-					if (!h.isFluxCrystalActivatable(stack, te, player)) {
-						flag = false;
-						break;
-					}
-				}
-				if (flag)
+				if (!GeoOptions.RFACTIVATE.getState() || (stack.stackTagCompound != null && stack.stackTagCompound.getBoolean("activated")))
 					((TileRFCrystal)te).activate();
 			}
 		}
@@ -46,8 +34,20 @@ public class ItemBlockFluxCrystal extends ItemBlock implements FluxCrystalActiva
 	}
 
 	@Override
-	public void addHook(FluxCrystalActivationHook h) {
-		hooks.add(h);
+	public String getItemStackDisplayName(ItemStack is) {
+		return GeoBlocks.RFCRYSTALSEED.hasMultiValuedName() ? GeoBlocks.RFCRYSTALSEED.getMultiValuedName(is.getItemDamage()) : GeoBlocks.RFCRYSTALSEED.getBasicName();
+	}
+
+	@Override
+	public void addInformation(ItemStack is, EntityPlayer ep, List li, boolean vb) {
+		if (GeoOptions.RFACTIVATE.getState()) {
+			if (is.stackTagCompound != null && is.stackTagCompound.getBoolean("activated")) {
+				li.add("Activated");
+			}
+			else {
+				li.add("Needs activation");
+			}
+		}
 	}
 
 }

@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -22,7 +22,9 @@ import Reika.DragonAPI.Libraries.World.ReikaBlockHelper;
 import Reika.GeoStrata.TileEntityGeoOre;
 import Reika.GeoStrata.API.RockGenerationPatterns.RockGenerationPattern;
 import Reika.GeoStrata.API.RockProofStone;
+import Reika.GeoStrata.Base.RockBlock;
 import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 
@@ -119,6 +121,8 @@ public class WorldGenGeoRock extends WorldGenerator implements Subgenerator {
 
 	private boolean canGenerateIn(World world, int x, int y, int z, Block b, int meta) {
 		if (b instanceof RockProofStone && ((RockProofStone)b).blockRockGeneration(world, x, y, z, b, meta))
+			return false;
+		if (!GeoOptions.OVERGEN.getState() && b instanceof RockBlock)
 			return false;
 		return b.isReplaceableOreGen(world, x, y, z, overwrite);
 	}

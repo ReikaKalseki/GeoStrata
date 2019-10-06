@@ -56,8 +56,8 @@ public enum GeoBlocks implements BlockEnum {
 	GLOWCRYS(BlockGlowCrystal.class, MetadataItemBlock.class, "Luminous Crystal"),
 	PARTIAL(BlockPartialBounds.class, null, "Partial Bounds Block"),
 	GLOWVINE(BlockGlowingVines.class, ItemBlockGlowingVines.class, "Glowing Vines"),
-	RFCRYSTAL(BlockRFCrystal.class,	ItemBlockFluxCrystal.class, "Flux Crystals"),
-	RFCRYSTALSEED(BlockRFCrystalSeed.class,	null, "Flux Crystal Seed");
+	RFCRYSTAL(BlockRFCrystal.class,	null, "Flux Crystals"),
+	RFCRYSTALSEED(BlockRFCrystalSeed.class,	ItemBlockFluxCrystal.class, "Flux Crystal Seed");
 
 	private final Class blockClass;
 	private final String blockName;

@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -35,7 +35,9 @@ public enum GeoOptions implements BooleanConfig, IntegerConfig, DecimalConfig, S
 	WAILA("Waila Overlay", true),
 	OPALFREQ("Opal Color Frequency", 1F),
 	OPALHUE("Opal Hue Offset (degrees)", 0),
-	ROCKGEN("Rock Generation Pattern", "Legacy");
+	ROCKGEN("Rock Generation Pattern", "Legacy"),
+	RFACTIVATE("Flux Crystal Requires Activation", false),
+	OVERGEN("Rock Can Generate Into Other Rock", true);
 
 	private String label;
 	private boolean defaultState;

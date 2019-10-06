@@ -18,7 +18,7 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -34,9 +34,11 @@ import Reika.DragonAPI.Instantiable.Data.BlockStruct.CurvedTrajectory.TrailShape
 import Reika.DragonAPI.Instantiable.Data.Immutable.BlockBox;
 import Reika.DragonAPI.Instantiable.Data.Immutable.Coordinate;
 import Reika.DragonAPI.Instantiable.Data.Immutable.DecimalPosition;
+import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.Registry.GeoOptions;
 
 import cofh.api.energy.IEnergyHandler;
 import cofh.api.energy.IEnergyReceiver;
@@ -64,7 +66,7 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 			((TileRFCrystal)world.getTileEntity(x, y, z)).breakEntireCrystal(false);
 		super.breakBlock(world, x, y, z, old, oldmeta);
 	}
-
+	/*
 	@Override
 	public Item getItemDropped(int meta, Random random, int fortune) {
 		return Item.getItemFromBlock(this);
@@ -73,6 +75,19 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 	@Override
 	public int quantityDropped(int meta, int fortune, Random random)  {
 		return 1;
+	}*/
+
+	@Override
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune) {
+		ItemStack is = new ItemStack(this);
+		if (GeoOptions.RFACTIVATE.getState()) {
+			TileEntity te = world.getTileEntity(x, y, z);
+			if (te instanceof TileRFCrystal && ((TileRFCrystal)te).isActivated) {
+				is.stackTagCompound = new NBTTagCompound();
+				is.stackTagCompound.setBoolean("activated", true);
+			}
+		}
+		return ReikaJavaLibrary.makeListFrom(is);
 	}
 
 	public static class TileRFCrystal extends TileEntity implements IEnergyHandler, TrailShape, InitialAngleProvider {
@@ -222,7 +237,7 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 
 			energy = NBT.getLong("energy");
 			crystal.readFromNBT("blocks", NBT);
-			isActivated = NBT.getBoolean("activated");
+			isActivated = NBT.getBoolean("activated") || !GeoOptions.RFACTIVATE.getState();
 		}
 
 		@Override
@@ -308,7 +323,7 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 		}
 
 		public void removeLocation(Coordinate c) {
-			if (crystal.hasBlock(c.xCoord, c.yCoord, c.zCoord)) {
+			if (crystal.hasBlock(c)) {
 				crystal.remove(c.xCoord, c.yCoord, c.zCoord);
 				BlockArray b = new BlockArray();
 				b.recursiveMultiAddWithBounds(worldObj, xCoord, yCoord, zCoord, crystal.getMinX(), crystal.getMinY(), crystal.getMinZ(), crystal.getMaxX(), crystal.getMaxY(), crystal.getMaxZ(), this.getBlockType(), GeoBlocks.RFCRYSTAL.getBlockInstance());
