@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -207,7 +207,7 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 		}
 
 		public boolean canFire() {
-			return !this.isBlocking(worldObj, xCoord, yCoord+1, zCoord);
+			return this.canTick(worldObj, xCoord, zCoord) && !this.isBlocking(worldObj, xCoord, yCoord+1, zCoord);
 		}
 
 		private boolean isBlocking(World world, int x, int y, int z) {
@@ -385,7 +385,11 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 		}
 
 		public boolean isActive() {
-			return activeTimer > 0;
+			return activeTimer > 0 && canTick(worldObj, xCoord, zCoord);
+		}
+
+		private static boolean canTick(World world, int x, int z) {
+			return ReikaWorldHelper.isRadiusLoaded(world, x, z, 2);
 		}
 
 	}
