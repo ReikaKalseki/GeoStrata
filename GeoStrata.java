@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -20,6 +20,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
@@ -27,6 +28,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import Reika.DragonAPI.DragonAPICore;
 import Reika.DragonAPI.DragonOptions;
 import Reika.DragonAPI.ModList;
+import Reika.DragonAPI.Auxiliary.WorldGenInterceptionRegistry;
+import Reika.DragonAPI.Auxiliary.WorldGenInterceptionRegistry.InterceptionException;
 import Reika.DragonAPI.Auxiliary.Trackers.CommandableUpdateChecker;
 import Reika.DragonAPI.Auxiliary.Trackers.DonatorController;
 import Reika.DragonAPI.Auxiliary.Trackers.RetroGenController;
@@ -211,6 +214,14 @@ public class GeoStrata extends DragonAPIMod {
 				}
 			}
 		}
+
+		WorldGenInterceptionRegistry.instance.addException(new InterceptionException() { //performance
+			@Override
+			public boolean doesExceptionApply(World world, int x, int y, int z, Block set, int meta) {
+				return RockTypes.getTypeFromID(set) != null;
+			}
+
+		});
 
 		if (ModList.THAUMCRAFT.isLoaded()) {
 			for (int i = 0; i < RockTypes.rockList.length; i++) {
