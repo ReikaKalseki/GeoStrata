@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -100,7 +100,8 @@ public class BlockPartialBounds extends BlockContainer {
 		if (te == null || te.renderBlock == null || te.renderBlock.blockID instanceof BlockPartialBounds)
 			return 0xffffff;
 		Block b = te.renderBlock.blockID;
-		return b instanceof RockBlock ? ((RockBlock)b).getColor(world, x, y, z, RockTypes.getTypeFromID(b)) : b.colorMultiplier(world, x, y, z);
+		IBlockAccess call = new IconDelegateAccess(world, x, y, z);
+		return b instanceof RockBlock ? ((RockBlock)b).getColor(call, x, y, z, RockTypes.getTypeFromID(b)) : b.colorMultiplier(call, x, y, z);
 	}
 
 	@Override

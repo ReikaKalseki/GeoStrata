@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -102,6 +102,16 @@ public class BlockGeoSlab extends BlockSlab {
 			return new ItemStack(this, 1, ItemBlockAnyGeoVariant.getStack(te.getRockType(), te.getRockShape()));
 		}
 		return null;
+	}
+
+	@Override
+	public boolean isOpaqueCube() {
+		return false;
+	}
+
+	@Override
+	public boolean renderAsNormalBlock() {
+		return false;
 	}
 
 }

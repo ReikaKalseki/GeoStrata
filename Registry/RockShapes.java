@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -22,6 +22,7 @@ import Reika.DragonAPI.Instantiable.Data.Maps.BlockMap;
 import Reika.DragonAPI.ModInteract.LegacyWailaHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Blocks.BlockConnectedRock;
+import Reika.GeoStrata.Blocks.BlockRockPillar;
 import Reika.GeoStrata.Blocks.BlockShapedRock;
 import Reika.GeoStrata.Blocks.BlockSmooth;
 import Reika.GeoStrata.Items.ItemBlockRock;
@@ -50,7 +51,9 @@ public enum RockShapes {
 	FAN(BlockShapedRock.class, 			14,		"Fan"),
 	MOSSY(BlockShapedRock.class, 		15,		"Mossy"),
 	CONNECTED(BlockConnectedRock.class,			"Connected"),
-	CONNECTED2(BlockConnectedRock.class,		"Connected 2");
+	CONNECTED2(BlockConnectedRock.class,		"Connected 2"),
+	PILLAR(BlockRockPillar.class,				"Pillar"),
+	;
 
 	//public final String typeName;
 	//private final GeoBlocks blockType;

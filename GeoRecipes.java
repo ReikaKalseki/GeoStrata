@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -51,43 +51,46 @@ public class GeoRecipes {
 			ItemStack fan = type.getItem(RockShapes.FAN);
 			ItemStack spiral = type.getItem(RockShapes.SPIRAL);
 			ItemStack moss = type.getItem(RockShapes.MOSSY);
+			ItemStack pillar = type.getItem(RockShapes.PILLAR);
 
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(brick, 4), new Object[]{
-				"SS", "SS", 'S', smooth});
+					"SS", "SS", 'S', smooth});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(round, 4), new Object[]{
-				"SS", "SS", 'S', brick});
+					"SS", "SS", 'S', brick});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(fitted, 2), new Object[]{
-				"SS", 'S', brick});
+					"SS", 'S', brick});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(tile, 4), new Object[]{
-				" S ", "S S", " S ", 'S', smooth});
+					" S ", "S S", " S ", 'S', smooth});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(inscribed, 3), new Object[]{
-				"B", "S", "B", 'S', smooth, 'B', brick});
+					"B", "S", "B", 'S', smooth, 'B', brick});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(engraved, 4), new Object[]{
-				"SB", "BS", 'S', smooth, 'B', brick});
+					"SB", "BS", 'S', smooth, 'B', brick});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(engraved, 4), new Object[]{
-				"BS", "SB", 'S', smooth, 'B', brick});
+					"BS", "SB", 'S', smooth, 'B', brick});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(connected, 8), new Object[]{
-				"SSS", "S S", "SSS", 'S', smooth});
+					"SSS", "S S", "SSS", 'S', smooth});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(connected2, 8), new Object[]{
-				"SSS", "S S", "SSS", 'S', connected});
+					"SSS", "S S", "SSS", 'S', connected});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(etched, 3), new Object[]{
-				"SSS", 'S', inscribed});
+					"SSS", 'S', inscribed});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(cubed, 9), new Object[]{
-				"SSS", "SSS", "SSS", 'S', smooth});
+					"SSS", "SSS", "SSS", 'S', smooth});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(centered, 5), new Object[]{
-				" S ", "SRS", " S ", 'S', smooth, 'R', round});
+					" S ", "SRS", " S ", 'S', smooth, 'R', round});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(lined, 5), new Object[]{
-				" S ", "SES", " S ", 'S', smooth, 'E', engraved});
+					" S ", "SES", " S ", 'S', smooth, 'E', engraved});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(embossed, 3), new Object[]{
-				"S", "T", "S", 'S', smooth, 'T', tile});
+					"S", "T", "S", 'S', smooth, 'T', tile});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(raised, 4), new Object[]{
-				"SS", "SS", 'S', tile});
+					"SS", "SS", 'S', tile});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(fan, 8), new Object[]{
-				"AAB", "B B", "BAA", 'A', smooth, 'B', brick});
+					"AAB", "B B", "BAA", 'A', smooth, 'B', brick});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(spiral, 8), new Object[]{
-				"ABA", "B B", "ABA", 'A', smooth, 'B', brick});
+					"ABA", "B B", "ABA", 'A', smooth, 'B', brick});
 			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(moss, 2), new Object[]{
-				"AB", "BA", 'A', smooth, 'B', Blocks.vine});
+					"AB", "BA", 'A', smooth, 'B', Blocks.vine});
+			GameRegistry.addRecipe(ReikaItemHelper.getSizedItemStack(pillar, 3), new Object[]{
+					"S", "S", "S", 'S', smooth});
 
 			for (int k = 0; k < RockShapes.shapeList.length; k++) {
 				RockShapes shape = RockShapes.shapeList[k];

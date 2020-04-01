@@ -513,5 +513,10 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 		return Blocks.stone;
 	}
 
+	@Override
+	public boolean allowSilkTouch(int meta) {
+		return true;
+	}
+
 
 }
