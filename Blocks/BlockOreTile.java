@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -35,6 +35,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import Reika.DragonAPI.Instantiable.Data.Immutable.BlockKey;
 import Reika.DragonAPI.Instantiable.Data.Maps.PluralMap;
 import Reika.DragonAPI.Instantiable.Data.Maps.TileEntityCache;
 import Reika.DragonAPI.Interfaces.Block.SpecialOreBlock;
@@ -391,8 +392,8 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 	}
 
 	@Override
-	public ItemStack getReplacementBlock(World world, int x, int y, int z) {
-		return new ItemStack(Blocks.stone);
+	public BlockKey getReplacementBlock(World world, int x, int y, int z) {
+		return new BlockKey(Blocks.stone);
 	}
 
 	@Override
