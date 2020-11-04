@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -20,6 +20,7 @@ public class GeoCommon {
 	public static int decoRender;
 	public static int vineRender;
 	//public static int shapedRender;
+	public static int voidopalRender;
 
 	/**
 	 * Client side only register stuff...

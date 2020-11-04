@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -13,7 +13,8 @@ import java.util.Random;
 
 import net.minecraft.world.World;
 
-import Reika.DragonAPI.Instantiable.Math.SimplexNoiseGenerator;
+import Reika.DragonAPI.Instantiable.Math.Noise.NoiseGeneratorBase;
+import Reika.DragonAPI.Instantiable.Math.Noise.SimplexNoiseGenerator;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.API.RockGenerationPatterns.RockGenerationPattern;
 import Reika.GeoStrata.Registry.GeoOptions;
@@ -21,7 +22,7 @@ import Reika.GeoStrata.Registry.RockTypes;
 
 public class BandedGenerator implements RockGenerationPattern {
 
-	private SimplexNoiseGenerator bandOffsets;
+	private NoiseGeneratorBase bandOffsets;
 	private static final int OFFSET_MARGIN = 16;
 
 	private final WorldGenGeoRock[] generators = new WorldGenGeoRock[RockTypes.rockList.length];

@@ -37,6 +37,7 @@ import Reika.GeoStrata.Blocks.BlockRockDeco;
 import Reika.GeoStrata.Blocks.BlockShapedRock;
 import Reika.GeoStrata.Blocks.BlockSmooth;
 import Reika.GeoStrata.Blocks.BlockVent;
+import Reika.GeoStrata.Blocks.BlockVoidOpal;
 import Reika.GeoStrata.Items.ItemBlockAnyGeoVariant;
 import Reika.GeoStrata.Items.ItemBlockFluxCrystal;
 import Reika.GeoStrata.Items.ItemBlockGeoOre;
@@ -57,7 +58,8 @@ public enum GeoBlocks implements BlockEnum {
 	PARTIAL(BlockPartialBounds.class, null, "Partial Bounds Block"),
 	GLOWVINE(BlockGlowingVines.class, ItemBlockGlowingVines.class, "Glowing Vines"),
 	RFCRYSTAL(BlockRFCrystal.class,	null, "Flux Crystals"),
-	RFCRYSTALSEED(BlockRFCrystalSeed.class,	ItemBlockFluxCrystal.class, "Flux Crystal Seed");
+	RFCRYSTALSEED(BlockRFCrystalSeed.class,	ItemBlockFluxCrystal.class, "Flux Crystal Seed"),
+	VOIDOPAL(BlockVoidOpal.class, null, "Void Opals");
 
 	private final Class blockClass;
 	private final String blockName;

@@ -22,7 +22,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import Reika.DragonAPI.Instantiable.Data.BlockStruct.BlockArray;
 import Reika.DragonAPI.Instantiable.Data.Immutable.Coordinate;
-import Reika.DragonAPI.Instantiable.Math.SimplexNoiseGenerator;
+import Reika.DragonAPI.Instantiable.Math.Noise.SimplexNoiseGenerator;
 import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.GeoStrata.Registry.GeoBlocks;

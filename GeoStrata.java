@@ -25,9 +25,11 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 
+import Reika.ChromatiCraft.Magic.Artefact.UATrades;
 import Reika.DragonAPI.DragonAPICore;
 import Reika.DragonAPI.DragonOptions;
 import Reika.DragonAPI.ModList;
+import Reika.DragonAPI.ASM.DependentMethodStripper.ModDependent;
 import Reika.DragonAPI.Auxiliary.WorldGenInterceptionRegistry;
 import Reika.DragonAPI.Auxiliary.WorldGenInterceptionRegistry.InterceptionException;
 import Reika.DragonAPI.Auxiliary.Trackers.CommandableUpdateChecker;
@@ -63,6 +65,7 @@ import Reika.GeoStrata.World.LavaRockGeneratorRedesign;
 import Reika.GeoStrata.World.RFCrystalGenerator;
 import Reika.GeoStrata.World.RockGenerator;
 import Reika.GeoStrata.World.VentGenerator;
+import Reika.GeoStrata.World.VoidOpalGenerator;
 import Reika.RotaryCraft.API.BlockColorInterface;
 import Reika.RotaryCraft.API.RecipeInterface;
 
@@ -146,6 +149,7 @@ public class GeoStrata extends DragonAPIMod {
 		RetroGenController.instance.addHybridGenerator(GlowCrystalGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(GlowingVineGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(RFCrystalGenerator.instance, 0, GeoOptions.RETROGEN.getState());
+		RetroGenController.instance.addHybridGenerator(VoidOpalGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 
 		GeoRecipes.addRecipes();
 		proxy.registerRenderers();
@@ -161,6 +165,10 @@ public class GeoStrata extends DragonAPIMod {
 		VanillaIntegrityTracker.instance.addWatchedBlock(instance, Blocks.emerald_block);
 
 		DonatorController.instance.registerMod(this, DonatorController.reikaURL);
+
+		if (ModList.CHROMATICRAFT.isLoaded()) {
+			this.addVoidOpalTrade();
+		}
 
 		if (ModList.THERMALEXPANSION.isLoaded()) {
 			for (int i = 0; i < RockTypes.rockList.length; i++) {
@@ -193,6 +201,11 @@ public class GeoStrata extends DragonAPIMod {
 		}
 
 		this.finishTiming();
+	}
+
+	@ModDependent(ModList.CHROMATICRAFT)
+	private void addVoidOpalTrade() {
+		UATrades.instance.registerCommodityHook(new VoidOpalTrade());
 	}
 
 	@Override

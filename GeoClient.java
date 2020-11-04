@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -21,6 +21,7 @@ import Reika.GeoStrata.Rendering.LavaRockRenderer;
 import Reika.GeoStrata.Rendering.OreRenderer;
 import Reika.GeoStrata.Rendering.StairItemRenderer;
 import Reika.GeoStrata.Rendering.VentRenderer;
+import Reika.GeoStrata.Rendering.VoidOpalRenderer;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -35,6 +36,7 @@ public class GeoClient extends GeoCommon {
 	private static LavaRockRenderer lavarock;
 	private static DecoGenRenderer deco;
 	private static GlowVineRenderer vine;
+	private static VoidOpalRenderer opal;
 
 	@Override
 	public void registerSounds() {
@@ -70,6 +72,10 @@ public class GeoClient extends GeoCommon {
 		//shapedRender = RenderingRegistry.getNextAvailableRenderId();
 		//shaped = new ShapedStoneRenderer(shapedRender);
 		//RenderingRegistry.registerBlockHandler(shapedRender, shaped);
+
+		voidopalRender = RenderingRegistry.getNextAvailableRenderId();
+		opal = new VoidOpalRenderer();
+		RenderingRegistry.registerBlockHandler(voidopalRender, opal);
 
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(GeoBlocks.SLAB.getBlockInstance()), stair);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(GeoBlocks.STAIR.getBlockInstance()), stair);
