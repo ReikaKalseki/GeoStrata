@@ -19,7 +19,9 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.util.ForgeDirection;
 
+import Reika.ChromatiCraft.Registry.ChromaIcons;
 import Reika.DragonAPI.Interfaces.ISBRH;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Blocks.BlockVoidOpal;
@@ -80,23 +82,152 @@ public class VoidOpalRenderer implements ISBRH {
 		rand.setSeed(this.calcSeed(x, y, z));
 		rand.nextBoolean();
 
-		Tessellator.instance.setBrightness(b.getMixedBrightnessForBlock(world, x, y, z));
-		Tessellator.instance.setColorOpaque_I(0xffffff);
-		IIcon ico = BlockVoidOpal.getBaseTexture(/*renderPass == 1*/true);
+		v5.setBrightness(b.getMixedBrightnessForBlock(world, x, y, z));
+		v5.setColorOpaque_I(0xffffff);
 		if (renderPass == 1) {
-			rb.setRenderBounds(0, 0, 0, 1, 1, 1);
+			IIcon ico = BlockVoidOpal.getBaseTexture(true);
+			for (double o = 0; o <= 0.125; o += 0.03125) {
+				this.drawSide(world, x, y, z, o, b, ico, v5, ForgeDirection.UP);
+				this.drawSide(world, x, y, z, o, b, ico, v5, ForgeDirection.DOWN);
+				this.drawSide(world, x, y, z, o, b, ico, v5, ForgeDirection.EAST);
+				this.drawSide(world, x, y, z, o, b, ico, v5, ForgeDirection.WEST);
+				this.drawSide(world, x, y, z, o, b, ico, v5, ForgeDirection.NORTH);
+				this.drawSide(world, x, y, z, o, b, ico, v5, ForgeDirection.SOUTH);
+			};
+			return true;
 		}
 		else {
-			double o = 0.0625;
-			rb.setRenderBounds(o, o, o, 1-o, 1-o, 1-o);
+			boolean flag = false;
+			if (flag) {
+				IIcon ico = BlockVoidOpal.getBaseTexture(false);
+				this.drawSide(world, x, y, z, 1, b, ico, v5, ForgeDirection.UP);
+				this.drawSide(world, x, y, z, 1, b, ico, v5, ForgeDirection.DOWN);
+				this.drawSide(world, x, y, z, 1, b, ico, v5, ForgeDirection.EAST);
+				this.drawSide(world, x, y, z, 1, b, ico, v5, ForgeDirection.WEST);
+				this.drawSide(world, x, y, z, 1, b, ico, v5, ForgeDirection.NORTH);
+				this.drawSide(world, x, y, z, 1, b, ico, v5, ForgeDirection.SOUTH);
+			}
+			flag = true;
+			double co = 0.025;
+			IIcon ico = ChromaIcons.BLANK.getIcon();
+			double x1 = rand.nextDouble();
+			double x2 = rand.nextDouble();
+			double x3 = rand.nextDouble();
+			double x4 = rand.nextDouble();
+			double y1 = rand.nextDouble();
+			double y2 = rand.nextDouble();
+			double y3 = rand.nextDouble();
+			double y4 = rand.nextDouble();
+			v5.addVertexWithUV(x+x1, y+1-co, z+y1, ico.getMinU(), ico.getMaxV());
+			v5.addVertexWithUV(x+x2, y+1-co, z+y2, ico.getMaxU(), ico.getMaxV());
+			v5.addVertexWithUV(x+x3, y+1-co, z+y3, ico.getMaxU(), ico.getMinV());
+			v5.addVertexWithUV(x+x4, y+1-co, z+y4, ico.getMinU(), ico.getMinV());
+			return flag;
 		}
-		rb.renderFaceXNeg(b, x, y, z, ico);
-		rb.renderFaceYNeg(b, x, y, z, ico);
-		rb.renderFaceZNeg(b, x, y, z, ico);
-		rb.renderFaceXPos(b, x, y, z, ico);
-		rb.renderFaceYPos(b, x, y, z, ico);
-		rb.renderFaceZPos(b, x, y, z, ico);
-		return true;
+	}
+
+	private void drawSide(IBlockAccess world, int x, int y, int z, double o, Block b, IIcon ico, Tessellator v5, ForgeDirection side) {
+		if (o < 1 && !b.shouldSideBeRendered(world, x, y, z, side.ordinal()))
+			return;
+		double rnx = 0+o;
+		double rpx = 1-o;
+		double rny = 0+o;
+		double rpy = 1-o;
+		double rnz = 0+o;
+		double rpz = 1-o;
+		if (o < 1) {
+			switch(side) {
+				case UP:
+				case DOWN:
+					if (world.getBlock(x+1, y, z) == b) {
+						rpx = 1;
+					}
+					if (world.getBlock(x-1, y, z) == b) {
+						rnx = 0;
+					}
+					if (world.getBlock(x, y, z+1) == b) {
+						rpz = 1;
+					}
+					if (world.getBlock(x, y, z-1) == b) {
+						rnz = 0;
+					}
+					break;
+				case EAST:
+				case WEST:
+					if (world.getBlock(x, y+1, z) == b) {
+						rpx = 1;
+					}
+					if (world.getBlock(x, y-1, z) == b) {
+						rnx = 0;
+					}
+					if (world.getBlock(x, y, z+1) == b) {
+						rpz = 1;
+					}
+					if (world.getBlock(x, y, z-1) == b) {
+						rnz = 0;
+					}
+					break;
+				case NORTH:
+				case SOUTH:
+					if (world.getBlock(x, y+1, z) == b) {
+						rpx = 1;
+					}
+					if (world.getBlock(x, y-1, z) == b) {
+						rnx = 0;
+					}
+					if (world.getBlock(x+1, y, z) == b) {
+						rpz = 1;
+					}
+					if (world.getBlock(x-1, y, z) == b) {
+						rnz = 0;
+					}
+					break;
+			}
+		}
+		int dx = BlockVoidOpal.getXIndex(x, y, z, side.ordinal());
+		int dy = BlockVoidOpal.getYIndex(x, y, z, side.ordinal());
+		double u = ico.getInterpolatedU(rnx * 4 + dx*4);
+		double du = ico.getInterpolatedU(rpx * 4 + dx*4);
+		double v = ico.getInterpolatedV(rnz * 4 + dy*4);
+		double dv = ico.getInterpolatedV(rpz * 4 + dy*4);
+		switch(side) {
+			case UP:
+				v5.addVertexWithUV(x+rpx, y+1-o, z+rpz, du, dv);
+				v5.addVertexWithUV(x+rpx, y+1-o, z+rnz, du, v);
+				v5.addVertexWithUV(x+rnx, y+1-o, z+rnz, u, v);
+				v5.addVertexWithUV(x+rnx, y+1-o, z+rpz, u, dv);
+				break;
+			case DOWN:
+				v5.addVertexWithUV(x+rnx, y+o, z+rpz, u, dv);
+				v5.addVertexWithUV(x+rnx, y+o, z+rnz, u, v);
+				v5.addVertexWithUV(x+rpx, y+o, z+rnz, du, v);
+				v5.addVertexWithUV(x+rpx, y+o, z+rpz, du, dv);
+				break;
+			case EAST:
+				v5.addVertexWithUV(x+1-o, y+rnx, z+rpz, u, dv);
+				v5.addVertexWithUV(x+1-o, y+rnx, z+rnz, du, dv);
+				v5.addVertexWithUV(x+1-o, y+rpx, z+rnz, du, v);
+				v5.addVertexWithUV(x+1-o, y+rpx, z+rpz, u, v);
+				break;
+			case WEST:
+				v5.addVertexWithUV(x+o, y+rpx, z+rpz, du, v);
+				v5.addVertexWithUV(x+o, y+rpx, z+rnz, u, v);
+				v5.addVertexWithUV(x+o, y+rnx, z+rnz, u, dv);
+				v5.addVertexWithUV(x+o, y+rnx, z+rpz, du, dv);
+				break;
+			case NORTH:
+				v5.addVertexWithUV(x+rpz, y+rnx, z+o, u, dv);
+				v5.addVertexWithUV(x+rnz, y+rnx, z+o, du, dv);
+				v5.addVertexWithUV(x+rnz, y+rpx, z+o, du, v);
+				v5.addVertexWithUV(x+rpz, y+rpx, z+o, u, v);
+				break;
+			case SOUTH:
+				v5.addVertexWithUV(x+rpz, y+rpx, z+1-o, du, v);
+				v5.addVertexWithUV(x+rnz, y+rpx, z+1-o, u, v);
+				v5.addVertexWithUV(x+rnz, y+rnx, z+1-o, u, dv);
+				v5.addVertexWithUV(x+rpz, y+rnx, z+1-o, du, dv);
+				break;
+		}
 	}
 
 	@Override

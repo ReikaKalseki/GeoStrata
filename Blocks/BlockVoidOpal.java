@@ -180,6 +180,53 @@ public class BlockVoidOpal extends Block implements RockProofStone, IWrappableBl
 	}
 
 	@Override
+	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int s)  {
+		ForgeDirection side = ForgeDirection.VALID_DIRECTIONS[s];
+		if (this.isBlockedOnSide(world, x, y, z, side)) {
+			int a = 0;
+			int b = 0;
+			int c = 0;
+			for (int i = -1; i <= 1; i++) {
+				for (int k = -1; k <= 1; k++) {
+					switch(side) {
+						case UP:
+						case DOWN:
+							a = i;
+							c = k;
+							break;
+						case EAST:
+						case WEST:
+							b = i;
+							c = k;
+							break;
+						case NORTH:
+						case SOUTH:
+							b = i;
+							a = k;
+							break;
+					}
+					int dx = x+a;
+					int dy = y+b;
+					int dz = z+c;
+					if (world.getBlock(dx, dy, dz) == this && !this.isBlockedOnSide(world, dx, dy, dz, side)) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		return true;
+	}
+
+	private boolean isBlockedOnSide(IBlockAccess world, int x, int y, int z, ForgeDirection side) {
+		Block at = world.getBlock(x+side.offsetX, y+side.offsetY, z+side.offsetZ);
+		if (at == this || at.isOpaqueCube()) {
+			return true;
+		}
+		return false;
+	}
+
+	@Override
 	public int getLightValue(IBlockAccess iba, int x, int y, int z) {
 		return 4;
 	}
