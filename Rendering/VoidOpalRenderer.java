@@ -17,11 +17,13 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import Reika.ChromatiCraft.Registry.ChromaIcons;
+import Reika.DragonAPI.Instantiable.Rendering.TessellatorVertexList;
 import Reika.DragonAPI.Interfaces.ISBRH;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Blocks.BlockVoidOpal;
@@ -109,19 +111,33 @@ public class VoidOpalRenderer implements ISBRH {
 			}
 			flag = true;
 			double co = 0.025;
+			int clr = 0x22aaff;
 			IIcon ico = ChromaIcons.BLANK.getIcon();
-			double x1 = rand.nextDouble();
-			double x2 = rand.nextDouble();
-			double x3 = rand.nextDouble();
-			double x4 = rand.nextDouble();
-			double y1 = rand.nextDouble();
-			double y2 = rand.nextDouble();
-			double y3 = rand.nextDouble();
-			double y4 = rand.nextDouble();
-			v5.addVertexWithUV(x+x1, y+1-co, z+y1, ico.getMinU(), ico.getMaxV());
-			v5.addVertexWithUV(x+x2, y+1-co, z+y2, ico.getMaxU(), ico.getMaxV());
-			v5.addVertexWithUV(x+x3, y+1-co, z+y3, ico.getMaxU(), ico.getMinV());
-			v5.addVertexWithUV(x+x4, y+1-co, z+y4, ico.getMinU(), ico.getMinV());
+			TessellatorVertexList tv5 = new TessellatorVertexList();
+			double x0 = rand.nextDouble();
+			double z0 = rand.nextDouble();
+			double[] dx = new double[4];
+			double[] dz = new double[4];
+			double dw = 0.375;//0.25;
+			double dl = 0.5;//0.375;0.25;
+			double ol = 0.125;
+			dx[0] = x0-rand.nextDouble()*dl-ol;
+			dx[1] = x0-dw/2+rand.nextDouble()*dw;
+			dx[2] = x0+rand.nextDouble()*dl+ol;
+			dx[3] = x0-dw/2+rand.nextDouble()*dw;
+			dz[0] = z0-dw/2+rand.nextDouble()*dw;
+			dz[1] = z0+rand.nextDouble()*dl+ol;
+			dz[2] = z0-dw/2+rand.nextDouble()*dw;
+			dz[3] = z0-rand.nextDouble()*dl-ol;
+			for (int i = 0; i < 4; i++) {
+				dx[i] = MathHelper.clamp_double(dx[i], 0, 1);
+				dz[i] = MathHelper.clamp_double(dz[i], 0, 1);
+			}
+			tv5.addVertexWithUVColor(x+dx[0], y+1-co, z+dz[0], ico.getMinU(), ico.getMaxV(), clr);
+			tv5.addVertexWithUVColor(x+dx[1], y+1-co, z+dz[1], ico.getMaxU(), ico.getMaxV(), clr);
+			tv5.addVertexWithUVColor(x+dx[2], y+1-co, z+dz[2], ico.getMaxU(), ico.getMinV(), clr);
+			tv5.addVertexWithUVColor(x+dx[3], y+1-co, z+dz[3], ico.getMinU(), ico.getMinV(), clr);
+			tv5.render();
 			return flag;
 		}
 	}
