@@ -17,14 +17,12 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import Reika.ChromatiCraft.Registry.ChromaIcons;
-import Reika.DragonAPI.Instantiable.Rendering.TessellatorVertexList;
 import Reika.DragonAPI.Interfaces.ISBRH;
+import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Blocks.BlockVoidOpal;
 
@@ -87,6 +85,104 @@ public class VoidOpalRenderer implements ISBRH {
 		v5.setBrightness(b.getMixedBrightnessForBlock(world, x, y, z));
 		v5.setColorOpaque_I(0xffffff);
 		if (renderPass == 1) {
+
+			v5.setBrightness(240);
+			double fo = 0.025*0+ReikaRandomHelper.getRandomPlusMinus(0.025, 0.01, rand);
+			int[] clrs = {0x004aff, 0x22aaff, 0x00ff00, 0x00ffff, 0xB200FF};
+			for (int i = 0; i < 6; i++) {
+				int n = ReikaRandomHelper.getRandomBetween(1, 3, rand);
+				for (int k = 0; k < n; k++) {
+					//int clr = ReikaColorAPI.getModifiedHue(0xff0000, ReikaRandomHelper.getRandomBetween(/*190*/128, 285, rand));
+					int clr = clrs[rand.nextInt(clrs.length)];
+					v5.setColorOpaque_I(clr);
+					IIcon ico = BlockVoidOpal.getRandomFleckTexture(rand);
+					double minsz = 0.375;
+					double nx = 0;
+					double ny = 0;
+					double mx = 1;
+					double my = 1;
+					ForgeDirection side = ForgeDirection.VALID_DIRECTIONS[i];
+					double slide = 0.75;
+					boolean saxis = rand.nextBoolean();
+					double slidea = saxis ? slide : 0;
+					double slideb = !saxis ? slide : 0;
+					switch(side) {
+						case UP:
+						case DOWN:
+							if (world.getBlock(x+1, y, z) == b) {
+								mx += slidea;
+							}
+							if (world.getBlock(x-1, y, z) == b) {
+								nx -= slidea;
+							}
+							if (world.getBlock(x, y, z+1) == b) {
+								my += slideb;
+							}
+							if (world.getBlock(x, y, z-1) == b) {
+								ny -= slideb;
+							}
+							break;
+						case EAST:
+						case WEST:
+							if (world.getBlock(x, y+1, z) == b) {
+								mx += slidea;
+							}
+							if (world.getBlock(x, y-1, z) == b) {
+								nx -= slidea;
+							}
+							if (world.getBlock(x, y, z+1) == b) {
+								my += slideb;
+							}
+							if (world.getBlock(x, y, z-1) == b) {
+								ny -= slideb;
+							}
+							break;
+						case NORTH:
+						case SOUTH:
+							if (world.getBlock(x, y+1, z) == b) {
+								mx += slidea;
+							}
+							if (world.getBlock(x, y-1, z) == b) {
+								nx -= slidea;
+							}
+							if (world.getBlock(x+1, y, z) == b) {
+								my += slideb;
+							}
+							if (world.getBlock(x-1, y, z) == b) {
+								ny -= slideb;
+							}
+							break;
+					}
+					double x0 = ReikaRandomHelper.getRandomBetween(nx, mx-minsz, rand);//rand.nextDouble()*(mx-minsz)+0.01;
+					double y0 = ReikaRandomHelper.getRandomBetween(ny, my-minsz, rand);//rand.nextDouble()*(my-minsz)+0.01;
+					//x0 = rand.nextInt(4)/4D+0.01;
+					//y0 = rand.nextInt(4)/4D+0.01;
+
+					double s = ReikaRandomHelper.getRandomBetween(minsz, 1, rand);
+					double sx = ReikaRandomHelper.getRandomPlusMinus(s, 0.0625, rand);
+					double sy = ReikaRandomHelper.getRandomPlusMinus(s, 0.0625, rand);
+
+					/*
+					double sx = ReikaRandomHelper.getRandomBetween(minsz, Math.min(mx-nx, mx-x0), rand);
+					double sy = ReikaRandomHelper.getRandomBetween(minsz, Math.min(my-ny, my-y0), rand);
+					double f = sx/sy;
+					while (f > 2 || f < 0.5) {
+						if (f > 1) {
+							sx *= 0.9;
+							sy /= 0.9;
+						}
+						else {
+							sy *= 0.9;
+							sx /= 0.9;
+						}
+						f = sx/sy;
+					}*/
+					this.drawSide(world, x, y, z, fo, b, ico, v5, side, x0, y0, sx, sy, nx, ny, mx, my);
+				}
+			}
+
+			v5.setBrightness(b.getMixedBrightnessForBlock(world, x, y, z));
+			v5.setColorOpaque_I(0xffffff);
 			IIcon ico = BlockVoidOpal.getBaseTexture(true);
 			for (double o = 0; o <= 0.125; o += 0.03125) {
 				this.drawSide(world, x, y, z, o, b, ico, v5, ForgeDirection.UP);
@@ -109,6 +205,7 @@ public class VoidOpalRenderer implements ISBRH {
 				this.drawSide(world, x, y, z, 1, b, ico, v5, ForgeDirection.NORTH);
 				this.drawSide(world, x, y, z, 1, b, ico, v5, ForgeDirection.SOUTH);
 			}
+			/*
 			flag = true;
 			double co = 0.025;
 			int clr = 0x22aaff;
@@ -137,21 +234,29 @@ public class VoidOpalRenderer implements ISBRH {
 			tv5.addVertexWithUVColor(x+dx[1], y+1-co, z+dz[1], ico.getMaxU(), ico.getMaxV(), clr);
 			tv5.addVertexWithUVColor(x+dx[2], y+1-co, z+dz[2], ico.getMaxU(), ico.getMinV(), clr);
 			tv5.addVertexWithUVColor(x+dx[3], y+1-co, z+dz[3], ico.getMinU(), ico.getMinV(), clr);
-			tv5.render();
+			tv5.render();*/
 			return flag;
 		}
 	}
 
 	private void drawSide(IBlockAccess world, int x, int y, int z, double o, Block b, IIcon ico, Tessellator v5, ForgeDirection side) {
+		this.drawSide(world, x, y, z, o, b, ico, v5, side, 0, 0, 1, 1, 0, 0, 1, 1);
+	}
+
+	private void drawSide(IBlockAccess world, int x, int y, int z, double o, Block b, IIcon ico, Tessellator v5, ForgeDirection side, double x0, double y0, double sx, double sy, double minX, double minY, double maxX, double maxY) {
 		if (o < 1 && !b.shouldSideBeRendered(world, x, y, z, side.ordinal()))
 			return;
-		double rnx = 0+o;
-		double rpx = 1-o;
-		double rny = 0+o;
-		double rpy = 1-o;
-		double rnz = 0+o;
-		double rpz = 1-o;
-		if (o < 1) {
+		double rnx = minX+o;
+		double rpx = maxX-o;
+		double rnz = minY+o;
+		double rpz = maxY-o;
+		if (x0 != 0 || y0 != 0) {
+			rnx = x0;
+			rnz = y0;
+			rpx = Math.min(maxX, x0+sx);
+			rpz = Math.min(maxY, y0+sy);
+		}
+		if (o < 1 && x0 == 0 && y0 == 0) {
 			switch(side) {
 				case UP:
 				case DOWN:
@@ -206,6 +311,12 @@ public class VoidOpalRenderer implements ISBRH {
 		double du = ico.getInterpolatedU(rpx * 4 + dx*4);
 		double v = ico.getInterpolatedV(rnz * 4 + dy*4);
 		double dv = ico.getInterpolatedV(rpz * 4 + dy*4);
+		if (x0 != 0 || y0 != 0) {
+			u = ico.getMinU();
+			du = ico.getMaxU();
+			v = ico.getMinV();
+			dv = ico.getMaxV();
+		}
 		switch(side) {
 			case UP:
 				v5.addVertexWithUV(x+rpx, y+1-o, z+rpz, du, dv);

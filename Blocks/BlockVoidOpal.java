@@ -44,6 +44,8 @@ public class BlockVoidOpal extends Block implements RockProofStone, IWrappableBl
 	private static IIcon baseTexture;
 	private static IIcon baseTexture_Trans;
 
+	private static IIcon[] fleckTextures = new IIcon[32];
+
 	public BlockVoidOpal(Material m) {
 		super(m);
 
@@ -57,6 +59,10 @@ public class BlockVoidOpal extends Block implements RockProofStone, IWrappableBl
 
 	public static IIcon getBaseTexture(boolean trans) {
 		return trans ? baseTexture_Trans : baseTexture;
+	}
+
+	public static IIcon getRandomFleckTexture(Random rand) {
+		return fleckTextures[rand.nextInt(fleckTextures.length)];
 	}
 
 	@Override
@@ -171,6 +177,9 @@ public class BlockVoidOpal extends Block implements RockProofStone, IWrappableBl
 			for (int k = 0; k < 4; k++) {
 				subTextures[i][k] = ico.registerIcon("geostrata:voidopal/"+i+"-"+k);
 			}
+		}
+		for (int k = 0; k < fleckTextures.length; k++) {
+			fleckTextures[k] = ico.registerIcon("geostrata:voidopal/fleck/"+(k+1));
 		}
 	}
 
