@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -20,6 +20,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.event.RenderWorldEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -50,6 +51,14 @@ public class GeoEvents {
 
 	private GeoEvents() {
 
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void renderOpalFlecks(RenderWorldEvent.Post evt) {
+		GL11.glDepthMask(false);
+		GeoClient.getOpalRender().renderFlecks(evt);
+		GL11.glDepthMask(true);
 	}
 
 	@SubscribeEvent

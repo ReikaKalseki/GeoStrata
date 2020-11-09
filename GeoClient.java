@@ -89,4 +89,8 @@ public class GeoClient extends GeoCommon {
 		return FMLClientHandler.instance().getClient().theWorld;
 	}
 
+	public static VoidOpalRenderer getOpalRender() {
+		return opal;
+	}
+
 }

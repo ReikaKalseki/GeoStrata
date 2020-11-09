@@ -9,6 +9,7 @@
  ******************************************************************************/
 package Reika.GeoStrata.Rendering;
 
+import java.util.HashSet;
 import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
@@ -19,16 +20,21 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.client.event.RenderWorldEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import Reika.DragonAPI.Instantiable.Data.Immutable.Coordinate;
 import Reika.DragonAPI.Interfaces.ISBRH;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Blocks.BlockVoidOpal;
+import Reika.GeoStrata.Registry.GeoBlocks;
 
 public class VoidOpalRenderer implements ISBRH {
 
 	public static int renderPass;
+
+	private final HashSet<Coordinate> flecksToRender = new HashSet();
 
 	private final Random rand = new Random();
 
@@ -85,101 +91,8 @@ public class VoidOpalRenderer implements ISBRH {
 		v5.setBrightness(b.getMixedBrightnessForBlock(world, x, y, z));
 		v5.setColorOpaque_I(0xffffff);
 		if (renderPass == 1) {
-
-			v5.setBrightness(240);
-			double fo = 0.025*0+ReikaRandomHelper.getRandomPlusMinus(0.025, 0.01, rand);
-			int[] clrs = {0x004aff, 0x22aaff, 0x00ff00, 0x00ffff, 0xB200FF};
-			for (int i = 0; i < 6; i++) {
-				int n = ReikaRandomHelper.getRandomBetween(1, 3, rand);
-				for (int k = 0; k < n; k++) {
-					//int clr = ReikaColorAPI.getModifiedHue(0xff0000, ReikaRandomHelper.getRandomBetween(/*190*/128, 285, rand));
-					int clr = clrs[rand.nextInt(clrs.length)];
-					v5.setColorOpaque_I(clr);
-					IIcon ico = BlockVoidOpal.getRandomFleckTexture(rand);
-					double minsz = 0.375;
-					double nx = 0;
-					double ny = 0;
-					double mx = 1;
-					double my = 1;
-					ForgeDirection side = ForgeDirection.VALID_DIRECTIONS[i];
-					double slide = 0.75;
-					boolean saxis = rand.nextBoolean();
-					double slidea = saxis ? slide : 0;
-					double slideb = !saxis ? slide : 0;
-					switch(side) {
-						case UP:
-						case DOWN:
-							if (world.getBlock(x+1, y, z) == b) {
-								mx += slidea;
-							}
-							if (world.getBlock(x-1, y, z) == b) {
-								nx -= slidea;
-							}
-							if (world.getBlock(x, y, z+1) == b) {
-								my += slideb;
-							}
-							if (world.getBlock(x, y, z-1) == b) {
-								ny -= slideb;
-							}
-							break;
-						case EAST:
-						case WEST:
-							if (world.getBlock(x, y+1, z) == b) {
-								mx += slidea;
-							}
-							if (world.getBlock(x, y-1, z) == b) {
-								nx -= slidea;
-							}
-							if (world.getBlock(x, y, z+1) == b) {
-								my += slideb;
-							}
-							if (world.getBlock(x, y, z-1) == b) {
-								ny -= slideb;
-							}
-							break;
-						case NORTH:
-						case SOUTH:
-							if (world.getBlock(x, y+1, z) == b) {
-								mx += slidea;
-							}
-							if (world.getBlock(x, y-1, z) == b) {
-								nx -= slidea;
-							}
-							if (world.getBlock(x+1, y, z) == b) {
-								my += slideb;
-							}
-							if (world.getBlock(x-1, y, z) == b) {
-								ny -= slideb;
-							}
-							break;
-					}
-					double x0 = ReikaRandomHelper.getRandomBetween(nx, mx-minsz, rand);//rand.nextDouble()*(mx-minsz)+0.01;
-					double y0 = ReikaRandomHelper.getRandomBetween(ny, my-minsz, rand);//rand.nextDouble()*(my-minsz)+0.01;
-					//x0 = rand.nextInt(4)/4D+0.01;
-					//y0 = rand.nextInt(4)/4D+0.01;
-
-					double s = ReikaRandomHelper.getRandomBetween(minsz, 1, rand);
-					double sx = ReikaRandomHelper.getRandomPlusMinus(s, 0.0625, rand);
-					double sy = ReikaRandomHelper.getRandomPlusMinus(s, 0.0625, rand);
-
-					/*
-					double sx = ReikaRandomHelper.getRandomBetween(minsz, Math.min(mx-nx, mx-x0), rand);
-					double sy = ReikaRandomHelper.getRandomBetween(minsz, Math.min(my-ny, my-y0), rand);
-					double f = sx/sy;
-					while (f > 2 || f < 0.5) {
-						if (f > 1) {
-							sx *= 0.9;
-							sy /= 0.9;
-						}
-						else {
-							sy *= 0.9;
-							sx /= 0.9;
-						}
-						f = sx/sy;
-					}*/
-					this.drawSide(world, x, y, z, fo, b, ico, v5, side, x0, y0, sx, sy, nx, ny, mx, my);
-				}
-			}
+			//this.renderFlecksAt(world, x, y, z, b, v5);
+			this.queueFleckRender(x, y, z);
 
 			v5.setBrightness(b.getMixedBrightnessForBlock(world, x, y, z));
 			v5.setColorOpaque_I(0xffffff);
@@ -236,6 +149,121 @@ public class VoidOpalRenderer implements ISBRH {
 			tv5.addVertexWithUVColor(x+dx[3], y+1-co, z+dz[3], ico.getMinU(), ico.getMinV(), clr);
 			tv5.render();*/
 			return flag;
+		}
+	}
+
+	private void queueFleckRender(int x, int y, int z) {
+		flecksToRender.add(new Coordinate(x, y, z));
+		//ReikaJavaLibrary.pConsole(new Coordinate(x, y, z));
+	}
+
+	public void renderFlecks(RenderWorldEvent.Post evt) {
+		if (!flecksToRender.isEmpty() && evt.pass == 1) {
+			Tessellator.instance.startDrawingQuads();
+			Tessellator.instance.setTranslation(-evt.renderer.posX, -evt.renderer.posY, -evt.renderer.posZ);
+			for (Coordinate c : flecksToRender) {
+				this.renderFlecksAt(evt.chunkCache, c.xCoord, c.yCoord, c.zCoord, GeoBlocks.VOIDOPAL.getBlockInstance(), Tessellator.instance);
+			}
+			//ReikaJavaLibrary.pConsole(flecksToRender);
+			Tessellator.instance.draw();
+			//flecksToRender.clear();
+		}
+	}
+
+	private void renderFlecksAt(IBlockAccess world, int x, int y, int z, Block b, Tessellator v5) {
+		v5.setBrightness(240);
+		double fo = 0.025*0+ReikaRandomHelper.getRandomPlusMinus(0.025, 0.01, rand);
+		int[] clrs = {0x004aff, 0x22aaff, 0x00ff00, 0x00ffff, 0xB200FF};
+		for (int i = 0; i < 6; i++) {
+			int n = ReikaRandomHelper.getRandomBetween(1, 3, rand);
+			for (int k = 0; k < n; k++) {
+				//int clr = ReikaColorAPI.getModifiedHue(0xff0000, ReikaRandomHelper.getRandomBetween(/*190*/128, 285, rand));
+				int clr = clrs[rand.nextInt(clrs.length)];
+				v5.setColorOpaque_I(clr);
+				IIcon ico = BlockVoidOpal.getRandomFleckTexture(rand);
+				double minsz = 0.375;
+				double nx = 0;
+				double ny = 0;
+				double mx = 1;
+				double my = 1;
+				ForgeDirection side = ForgeDirection.VALID_DIRECTIONS[i];
+				double slide = 0.75;
+				boolean saxis = rand.nextBoolean();
+				double slidea = saxis ? slide : 0;
+				double slideb = !saxis ? slide : 0;
+				switch(side) {
+					case UP:
+					case DOWN:
+						if (world.getBlock(x+1, y, z) == b) {
+							mx += slidea;
+						}
+						if (world.getBlock(x-1, y, z) == b) {
+							nx -= slidea;
+						}
+						if (world.getBlock(x, y, z+1) == b) {
+							my += slideb;
+						}
+						if (world.getBlock(x, y, z-1) == b) {
+							ny -= slideb;
+						}
+						break;
+					case EAST:
+					case WEST:
+						if (world.getBlock(x, y+1, z) == b) {
+							mx += slidea;
+						}
+						if (world.getBlock(x, y-1, z) == b) {
+							nx -= slidea;
+						}
+						if (world.getBlock(x, y, z+1) == b) {
+							my += slideb;
+						}
+						if (world.getBlock(x, y, z-1) == b) {
+							ny -= slideb;
+						}
+						break;
+					case NORTH:
+					case SOUTH:
+						if (world.getBlock(x, y+1, z) == b) {
+							mx += slidea;
+						}
+						if (world.getBlock(x, y-1, z) == b) {
+							nx -= slidea;
+						}
+						if (world.getBlock(x+1, y, z) == b) {
+							my += slideb;
+						}
+						if (world.getBlock(x-1, y, z) == b) {
+							ny -= slideb;
+						}
+						break;
+				}
+				double x0 = ReikaRandomHelper.getRandomBetween(nx, mx-minsz, rand);//rand.nextDouble()*(mx-minsz)+0.01;
+				double y0 = ReikaRandomHelper.getRandomBetween(ny, my-minsz, rand);//rand.nextDouble()*(my-minsz)+0.01;
+				//x0 = rand.nextInt(4)/4D+0.01;
+				//y0 = rand.nextInt(4)/4D+0.01;
+
+				double s = ReikaRandomHelper.getRandomBetween(minsz, 1, rand);
+				double sx = ReikaRandomHelper.getRandomPlusMinus(s, 0.0625, rand);
+				double sy = ReikaRandomHelper.getRandomPlusMinus(s, 0.0625, rand);
+
+				/*
+				double sx = ReikaRandomHelper.getRandomBetween(minsz, Math.min(mx-nx, mx-x0), rand);
+				double sy = ReikaRandomHelper.getRandomBetween(minsz, Math.min(my-ny, my-y0), rand);
+				double f = sx/sy;
+				while (f > 2 || f < 0.5) {
+					if (f > 1) {
+						sx *= 0.9;
+						sy /= 0.9;
+					}
+					else {
+						sy *= 0.9;
+						sx /= 0.9;
+					}
+					f = sx/sy;
+				}*/
+				this.drawSide(world, x, y, z, fo, b, ico, v5, side, x0, y0, sx, sy, nx, ny, mx, my);
+			}
 		}
 	}
 
