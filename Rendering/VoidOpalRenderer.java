@@ -88,35 +88,34 @@ public class VoidOpalRenderer implements ISBRH {
 		rand.setSeed(this.calcSeed(x, y, z));
 		rand.nextBoolean();
 
-		v5.setBrightness(b.getMixedBrightnessForBlock(world, x, y, z));
 		v5.setColorOpaque_I(0xffffff);
+		double s = 0.125/2;
+		double ds = 0.03125;
+		boolean flag2 = false;
 		if (renderPass == 1) {
 			//this.renderFlecksAt(world, x, y, z, b, v5);
-			this.queueFleckRender(x, y, z);
+			//this.queueFleckRender(x, y, z);
 
-			v5.setBrightness(b.getMixedBrightnessForBlock(world, x, y, z));
+			int mix = b.getMixedBrightnessForBlock(world, x, y, z);
+			v5.setBrightness(mix);
 			v5.setColorOpaque_I(0xffffff);
 			IIcon ico = BlockVoidOpal.getBaseTexture(true);
-			for (double o = 0; o <= 0.125; o += 0.03125) {
-				this.drawSide(world, x, y, z, o, b, ico, v5, ForgeDirection.UP);
-				this.drawSide(world, x, y, z, o, b, ico, v5, ForgeDirection.DOWN);
-				this.drawSide(world, x, y, z, o, b, ico, v5, ForgeDirection.EAST);
-				this.drawSide(world, x, y, z, o, b, ico, v5, ForgeDirection.WEST);
-				this.drawSide(world, x, y, z, o, b, ico, v5, ForgeDirection.NORTH);
-				this.drawSide(world, x, y, z, o, b, ico, v5, ForgeDirection.SOUTH);
+			int i = 0;
+			for (double o = 0; o < s; o += ds) {
+				for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+					flag2 |= this.drawSide(world, x, y, z, o, b, ico, v5, dir);
 			};
-			return true;
 		}
 		else {
-			boolean flag = false;
+			boolean flag = true;
+			v5.setBrightness(240);
 			if (flag) {
 				IIcon ico = BlockVoidOpal.getBaseTexture(false);
-				this.drawSide(world, x, y, z, 1, b, ico, v5, ForgeDirection.UP);
-				this.drawSide(world, x, y, z, 1, b, ico, v5, ForgeDirection.DOWN);
-				this.drawSide(world, x, y, z, 1, b, ico, v5, ForgeDirection.EAST);
-				this.drawSide(world, x, y, z, 1, b, ico, v5, ForgeDirection.WEST);
-				this.drawSide(world, x, y, z, 1, b, ico, v5, ForgeDirection.NORTH);
-				this.drawSide(world, x, y, z, 1, b, ico, v5, ForgeDirection.SOUTH);
+				for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+					flag2 |= this.drawSide(world, x, y, z, s, b, ico, v5, dir);
+
+				for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS)
+					flag2 |= this.drawSide(world, x, y, z, 1, b, b.blockIcon, v5, dir);
 			}
 			/*
 			flag = true;
@@ -148,8 +147,8 @@ public class VoidOpalRenderer implements ISBRH {
 			tv5.addVertexWithUVColor(x+dx[2], y+1-co, z+dz[2], ico.getMaxU(), ico.getMinV(), clr);
 			tv5.addVertexWithUVColor(x+dx[3], y+1-co, z+dz[3], ico.getMinU(), ico.getMinV(), clr);
 			tv5.render();*/
-			return flag;
 		}
+		return flag2;
 	}
 
 	private void queueFleckRender(int x, int y, int z) {
@@ -166,10 +165,11 @@ public class VoidOpalRenderer implements ISBRH {
 			}
 			//ReikaJavaLibrary.pConsole(flecksToRender);
 			Tessellator.instance.draw();
-			//flecksToRender.clear();
+			flecksToRender.clear();
 		}
 	}
 
+	@SuppressWarnings("incomplete-switch")
 	private void renderFlecksAt(IBlockAccess world, int x, int y, int z, Block b, Tessellator v5) {
 		v5.setBrightness(240);
 		double fo = 0.025*0+ReikaRandomHelper.getRandomPlusMinus(0.025, 0.01, rand);
@@ -267,13 +267,15 @@ public class VoidOpalRenderer implements ISBRH {
 		}
 	}
 
-	private void drawSide(IBlockAccess world, int x, int y, int z, double o, Block b, IIcon ico, Tessellator v5, ForgeDirection side) {
-		this.drawSide(world, x, y, z, o, b, ico, v5, side, 0, 0, 1, 1, 0, 0, 1, 1);
+	private boolean drawSide(IBlockAccess world, int x, int y, int z, double o, Block b, IIcon ico, Tessellator v5, ForgeDirection side) {
+		return this.drawSide(world, x, y, z, o, b, ico, v5, side, 0, 0, 1, 1, 0, 0, 1, 1);
 	}
 
-	private void drawSide(IBlockAccess world, int x, int y, int z, double o, Block b, IIcon ico, Tessellator v5, ForgeDirection side, double x0, double y0, double sx, double sy, double minX, double minY, double maxX, double maxY) {
-		if (o < 1 && !b.shouldSideBeRendered(world, x, y, z, side.ordinal()))
-			return;
+	@SuppressWarnings("incomplete-switch")
+	private boolean drawSide(IBlockAccess world, int x, int y, int z, double o, Block b, IIcon ico, Tessellator v5, ForgeDirection side, double x0, double y0, double sx, double sy, double minX, double minY, double maxX, double maxY) {
+		boolean draw = o < 1 ? b.shouldSideBeRendered(world, x, y, z, side.ordinal()) : world.getBlock(x-side.offsetX, y-side.offsetY, z-side.offsetZ) != b;
+		if (!draw)
+			return false;
 		double rnx = minX+o;
 		double rpx = maxX-o;
 		double rnz = minY+o;
@@ -345,6 +347,8 @@ public class VoidOpalRenderer implements ISBRH {
 			v = ico.getMinV();
 			dv = ico.getMaxV();
 		}
+		if (o == 1)
+			o = 0.99;
 		switch(side) {
 			case UP:
 				v5.addVertexWithUV(x+rpx, y+1-o, z+rpz, du, dv);
@@ -383,6 +387,7 @@ public class VoidOpalRenderer implements ISBRH {
 				v5.addVertexWithUV(x+rpz, y+rnx, z+1-o, du, dv);
 				break;
 		}
+		return true;
 	}
 
 	@Override

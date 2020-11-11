@@ -207,6 +207,7 @@ public enum GeoBlocks implements BlockEnum {
 			case GLOWVINE:
 			case RFCRYSTAL:
 			case RFCRYSTALSEED:
+			case VOIDOPAL:
 				return false;
 			default:
 				return true;

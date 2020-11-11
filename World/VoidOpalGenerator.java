@@ -89,7 +89,7 @@ public class VoidOpalGenerator implements RetroactiveGenerator {
 			seed = new Random(s);
 			seed.nextBoolean();
 			seed.nextBoolean();
-			encasedThickness = seed.nextDouble()*4-0.5;
+			encasedThickness = seed.nextDouble()*2+0.75;//seed.nextDouble()*4-0.5;
 		}
 
 		private void calculate(World world, int x, int y, int z) {

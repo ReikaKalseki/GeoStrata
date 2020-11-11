@@ -20,7 +20,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.client.event.RenderWorldEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -53,6 +52,7 @@ public class GeoEvents {
 
 	}
 
+	/*
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void renderOpalFlecks(RenderWorldEvent.Post evt) {
@@ -60,7 +60,7 @@ public class GeoEvents {
 		GeoClient.getOpalRender().renderFlecks(evt);
 		GL11.glDepthMask(true);
 	}
-
+	 */
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void fixAirRender(RenderGameOverlayEvent.Pre evt) {

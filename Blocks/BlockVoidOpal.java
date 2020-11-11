@@ -171,8 +171,9 @@ public class BlockVoidOpal extends Block implements RockProofStone, IWrappableBl
 	@Override
 	public void registerBlockIcons(IIconRegister ico) {
 		blockIcon = ico.registerIcon("geostrata:voidopal/full");
-		baseTexture = ico.registerIcon("geostrata:voidopal/base");
-		baseTexture_Trans = ico.registerIcon("geostrata:voidopal/base_trans");
+		baseTexture = ico.registerIcon("geostrata:voidopal/glowmix");
+		baseTexture_Trans = ico.registerIcon("geostrata:voidopal/glowcover");
+		/*
 		for (int i = 0; i < 4; i++) {
 			for (int k = 0; k < 4; k++) {
 				subTextures[i][k] = ico.registerIcon("geostrata:voidopal/"+i+"-"+k);
@@ -180,7 +181,7 @@ public class BlockVoidOpal extends Block implements RockProofStone, IWrappableBl
 		}
 		for (int k = 0; k < fleckTextures.length; k++) {
 			fleckTextures[k] = ico.registerIcon("geostrata:voidopal/fleck/"+(k+1));
-		}
+		}*/
 	}
 
 	@Override
@@ -189,6 +190,7 @@ public class BlockVoidOpal extends Block implements RockProofStone, IWrappableBl
 	}
 
 	@Override
+	@SuppressWarnings("incomplete-switch")
 	public boolean shouldSideBeRendered(IBlockAccess world, int x, int y, int z, int s)  {
 		ForgeDirection side = ForgeDirection.VALID_DIRECTIONS[s];
 		if (this.isBlockedOnSide(world, x, y, z, side)) {
