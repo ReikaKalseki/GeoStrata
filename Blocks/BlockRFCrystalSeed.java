@@ -172,7 +172,7 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 
 		private void growNewCrystal() {
 			Coordinate loc = null;
-			ArrayList<Coordinate> li = new ArrayList(crystal.keySet());
+			ArrayList<Coordinate> li = new ArrayList(crystal.list());
 			Coordinate th = new Coordinate(this);
 			li.add(th);
 			Collections.shuffle(li);
@@ -327,7 +327,7 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 				crystal.remove(c.xCoord, c.yCoord, c.zCoord);
 				BlockArray b = new BlockArray();
 				b.recursiveMultiAddWithBounds(worldObj, xCoord, yCoord, zCoord, crystal.getMinX(), crystal.getMinY(), crystal.getMinZ(), crystal.getMaxX(), crystal.getMaxY(), crystal.getMaxZ(), this.getBlockType(), GeoBlocks.RFCRYSTAL.getBlockInstance());
-				for (Coordinate c2 : new ArrayList<Coordinate>(crystal.keySet())) {
+				for (Coordinate c2 : crystal.list()) {
 					if (!b.hasBlock(c2.xCoord, c2.yCoord, c2.zCoord)) {
 						crystal.remove(c2.xCoord, c2.yCoord, c2.zCoord);
 						ReikaWorldHelper.dropAndDestroyBlockAt(worldObj, c2.xCoord, c2.yCoord, c2.zCoord, null, true, true);
