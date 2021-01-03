@@ -13,15 +13,6 @@ import net.minecraft.world.World;
 
 public class GeoCommon {
 
-	public static int connectedRender;
-	public static int ventRender;
-	public static int oreRender;
-	public static int lavarockRender;
-	public static int decoRender;
-	public static int vineRender;
-	//public static int shapedRender;
-	public static int voidopalRender;
-
 	/**
 	 * Client side only register stuff...
 	 */

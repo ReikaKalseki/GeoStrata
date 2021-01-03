@@ -45,6 +45,7 @@ import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaParticleHelper;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.Registry.GeoISBRH;
 import Reika.RotaryCraft.API.Interfaces.EnvironmentalHeatSource;
 
 public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSource {
@@ -112,7 +113,7 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 
 	@Override
 	public int getRenderType() {
-		return GeoStrata.proxy.ventRender;
+		return GeoISBRH.vent.getRenderID();
 	}
 
 	@Override

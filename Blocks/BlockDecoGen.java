@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -17,7 +17,7 @@ import net.minecraft.world.IBlockAccess;
 
 import Reika.DragonAPI.Interfaces.Block.Submergeable;
 import Reika.GeoStrata.GeoStrata;
-import Reika.GeoStrata.Rendering.DecoGenRenderer;
+import Reika.GeoStrata.Registry.GeoISBRH;
 
 
 public class BlockDecoGen extends Block implements Submergeable {
@@ -68,7 +68,7 @@ public class BlockDecoGen extends Block implements Submergeable {
 
 	@Override
 	public int getRenderType() {
-		return GeoStrata.proxy.decoRender;
+		return GeoISBRH.deco.getRenderID();
 	}
 
 	@Override
@@ -83,7 +83,7 @@ public class BlockDecoGen extends Block implements Submergeable {
 
 	@Override
 	public boolean canRenderInPass(int pass) {
-		DecoGenRenderer.renderPass = pass;
+		GeoISBRH.deco.setRenderPass(pass);
 		return pass <= 1;
 	}
 

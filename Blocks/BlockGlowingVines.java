@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -34,12 +34,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import Reika.DragonAPI.APIPacketHandler.PacketIDs;
-import Reika.DragonAPI.Instantiable.Math.Noise.SimplexNoiseGenerator;
 import Reika.DragonAPI.DragonAPIInit;
+import Reika.DragonAPI.Instantiable.Math.Noise.SimplexNoiseGenerator;
 import Reika.DragonAPI.Interfaces.Block.ShearablePlant;
 import Reika.DragonAPI.Libraries.ReikaDirectionHelper;
 import Reika.DragonAPI.Libraries.ReikaNBTHelper.NBTTypes;
-import Reika.DragonAPI.Libraries.IO.ReikaColorAPI;
+import Reika.DragonAPI.Libraries.Rendering.ReikaColorAPI;
 import Reika.DragonAPI.Libraries.IO.ReikaPacketHelper;
 import Reika.DragonAPI.Libraries.IO.ReikaSoundHelper;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
@@ -48,7 +48,7 @@ import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaParticleHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.GeoBlocks;
-import Reika.GeoStrata.Rendering.GlowVineRenderer;
+import Reika.GeoStrata.Registry.GeoISBRH;
 
 
 public class BlockGlowingVines extends BlockContainer implements ShearablePlant {
@@ -235,13 +235,13 @@ public class BlockGlowingVines extends BlockContainer implements ShearablePlant 
 
 	@Override
 	public boolean canRenderInPass(int pass) {
-		GlowVineRenderer.renderPass = pass;
+		GeoISBRH.vine.setRenderPass(pass);
 		return pass == 1;
 	}
 
 	@Override
 	public int getRenderType() {
-		return GeoStrata.proxy.vineRender;
+		return GeoISBRH.vent.getRenderID();
 	}
 
 	@Override

@@ -46,6 +46,7 @@ import Reika.DragonAPI.Libraries.Registry.ReikaOreHelper;
 import Reika.DragonAPI.ModRegistry.ModOreList;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.TileEntityGeoOre;
+import Reika.GeoStrata.Registry.GeoISBRH;
 import Reika.GeoStrata.Registry.RockTypes;
 import Reika.GeoStrata.World.RockGenerator;
 
@@ -281,7 +282,7 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 
 	@Override
 	public int getRenderType() {
-		return GeoStrata.proxy.oreRender;
+		return GeoISBRH.ore.getRenderID();
 	}
 
 	@Override

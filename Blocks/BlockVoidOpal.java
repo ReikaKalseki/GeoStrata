@@ -30,7 +30,7 @@ import Reika.DragonAPI.Libraries.IO.ReikaPacketHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaParticleHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.API.RockProofStone;
-import Reika.GeoStrata.Rendering.VoidOpalRenderer;
+import Reika.GeoStrata.Registry.GeoISBRH;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -87,7 +87,7 @@ public class BlockVoidOpal extends Block implements RockProofStone, IWrappableBl
 
 	@Override
 	public int getRenderType() {
-		return GeoStrata.proxy.voidopalRender;
+		return GeoISBRH.voidopal.getRenderID();
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class BlockVoidOpal extends Block implements RockProofStone, IWrappableBl
 
 	@Override
 	public boolean canRenderInPass(int pass) {
-		VoidOpalRenderer.renderPass = pass;
+		GeoISBRH.voidopal.setRenderPass(pass);
 		return pass <= 1;
 	}
 

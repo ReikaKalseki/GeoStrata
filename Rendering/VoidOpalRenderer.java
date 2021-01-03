@@ -10,7 +10,6 @@
 package Reika.GeoStrata.Rendering;
 
 import java.util.HashSet;
-import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
@@ -18,25 +17,23 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.RenderWorldEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import Reika.DragonAPI.Base.ISBRH;
 import Reika.DragonAPI.Instantiable.Data.Immutable.Coordinate;
-import Reika.DragonAPI.Interfaces.ISBRH;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
-import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Blocks.BlockVoidOpal;
 import Reika.GeoStrata.Registry.GeoBlocks;
 
-public class VoidOpalRenderer implements ISBRH {
-
-	public static int renderPass;
+public class VoidOpalRenderer extends ISBRH {
 
 	private final HashSet<Coordinate> flecksToRender = new HashSet();
 
-	private final Random rand = new Random();
+	public VoidOpalRenderer(int id) {
+		super(id);
+	}
 
 	@Override
 	public void renderInventoryBlock(Block b, int metadata, int modelId, RenderBlocks rb) {
@@ -394,16 +391,5 @@ public class VoidOpalRenderer implements ISBRH {
 	public boolean shouldRender3DInInventory(int modelId) {
 		return true;
 	}
-
-	@Override
-	public int getRenderId() {
-		return GeoStrata.proxy.voidopalRender;
-	}
-
-	private long calcSeed(int x, int y, int z) {
-		return ChunkCoordIntPair.chunkXZ2Int(x, z) ^ y;
-	}
-
-
 
 }

@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -23,6 +23,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.RockBlock;
+import Reika.GeoStrata.Registry.GeoISBRH;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 import Reika.GeoStrata.Rendering.ConnectedStoneRenderer;
@@ -49,7 +50,7 @@ public class BlockConnectedRock extends RockBlock {
 
 	@Override
 	public final int getRenderType() {
-		return GeoStrata.proxy.connectedRender;
+		return GeoISBRH.connected.getRenderID();
 	}
 
 	@Override

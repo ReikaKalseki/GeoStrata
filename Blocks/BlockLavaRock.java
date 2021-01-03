@@ -32,6 +32,7 @@ import net.minecraft.world.World;
 
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.Registry.GeoISBRH;
 import Reika.RotaryCraft.API.Interfaces.EnvironmentalHeatSource;
 
 
@@ -111,7 +112,7 @@ public class BlockLavaRock extends Block implements EnvironmentalHeatSource {
 
 	@Override
 	public int getRenderType() {
-		return GeoStrata.proxy.lavarockRender;
+		return GeoISBRH.lavarock.getRenderID();
 	}
 
 	@Override

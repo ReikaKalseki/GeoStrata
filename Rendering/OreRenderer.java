@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -11,7 +11,6 @@ package Reika.GeoStrata.Rendering;
 
 import java.util.Collection;
 import java.util.Locale;
-import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
@@ -26,23 +25,24 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import Reika.DragonAPI.Base.ISBRH;
 import Reika.DragonAPI.Instantiable.Data.Maps.BlockMap;
-import Reika.DragonAPI.Interfaces.ISBRH;
 import Reika.DragonAPI.Libraries.ReikaIconHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaOreHelper;
 import Reika.DragonAPI.ModRegistry.ModOreList;
-import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.TileEntityGeoOre;
 import Reika.GeoStrata.Blocks.BlockOreTile;
 import Reika.GeoStrata.Registry.RockTypes;
 
-public class OreRenderer implements ISBRH {
-
-	private static final Random rand = new Random();
+public class OreRenderer extends ISBRH {
 
 	//private static final EnumMap<ModOreList, ArrayList<IIcon>> modOreIcons = new EnumMap(ModOreList.class);
 	//private static final EnumMap<ReikaOreHelper, ArrayList<IIcon>> oreIcons = new EnumMap(ReikaOreHelper.class);
 	private static final BlockMap<IIcon> icons = new BlockMap();
+
+	public OreRenderer(int id) {
+		super(id);
+	}
 
 	@SuppressWarnings("unused")
 	public static void regenIcons(TextureStitchEvent.Pre evt) {
@@ -237,11 +237,6 @@ public class OreRenderer implements ISBRH {
 	@Override
 	public boolean shouldRender3DInInventory(int modelId) {
 		return true;
-	}
-
-	@Override
-	public int getRenderId() {
-		return GeoStrata.proxy.oreRender;
 	}
 
 

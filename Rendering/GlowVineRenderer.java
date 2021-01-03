@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -16,14 +16,15 @@ import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import Reika.DragonAPI.Interfaces.ISBRH;
-import Reika.GeoStrata.GeoStrata;
+import Reika.DragonAPI.Base.ISBRH;
 import Reika.GeoStrata.Blocks.BlockGlowingVines.TileGlowingVines;
 
 
-public class GlowVineRenderer implements ISBRH {
+public class GlowVineRenderer extends ISBRH {
 
-	public static int renderPass;
+	public GlowVineRenderer(int id) {
+		super(id);
+	}
 
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
@@ -130,11 +131,6 @@ public class GlowVineRenderer implements ISBRH {
 	@Override
 	public boolean shouldRender3DInInventory(int modelId) {
 		return false;
-	}
-
-	@Override
-	public int getRenderId() {
-		return GeoStrata.proxy.vineRender;
 	}
 
 }

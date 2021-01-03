@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -18,18 +18,17 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidRegistry;
 
+import Reika.DragonAPI.Base.ISBRH;
 import Reika.DragonAPI.Instantiable.Rendering.RotatedQuad;
-import Reika.DragonAPI.Interfaces.ISBRH;
-import Reika.DragonAPI.Libraries.IO.ReikaColorAPI;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
+import Reika.DragonAPI.Libraries.Rendering.ReikaColorAPI;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 
 
-public class DecoGenRenderer implements ISBRH {
+public class DecoGenRenderer extends ISBRH {
 
 	private static final RotatedQuad[][][] crystalShapes = new RotatedQuad[4][4][4];
-	public static int renderPass;
 
 	static {
 		for (int i = 0; i < crystalShapes.length; i++) {
@@ -51,6 +50,10 @@ public class DecoGenRenderer implements ISBRH {
 		int j = ((y%crystalShapes[i].length)+crystalShapes[i].length)%crystalShapes[i].length;
 		int k = ((z%crystalShapes[i][j].length)+crystalShapes[i][j].length)%crystalShapes[i][j].length;
 		return crystalShapes[i][j][k];
+	}
+
+	public DecoGenRenderer(int id) {
+		super(id);
 	}
 
 	@Override
@@ -197,11 +200,6 @@ public class DecoGenRenderer implements ISBRH {
 	@Override
 	public boolean shouldRender3DInInventory(int modelId) {
 		return false;
-	}
-
-	@Override
-	public int getRenderId() {
-		return 0;
 	}
 
 }
