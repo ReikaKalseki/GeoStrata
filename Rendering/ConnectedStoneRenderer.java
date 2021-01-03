@@ -23,8 +23,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import Reika.DragonAPI.Auxiliary.CoreModDetection;
 import Reika.DragonAPI.Base.BaseBlockRenderer;
-import Reika.DragonAPI.Libraries.IO.ReikaColorAPI;
 import Reika.DragonAPI.Libraries.Java.ReikaGLHelper.BlendMode;
+import Reika.DragonAPI.Libraries.Rendering.ReikaColorAPI;
 import Reika.GeoStrata.Blocks.BlockConnectedRock;
 import Reika.GeoStrata.Registry.RockTypes;
 

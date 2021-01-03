@@ -30,8 +30,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import Reika.DragonAPI.ASM.APIStripper.Strippable;
 import Reika.DragonAPI.Instantiable.Math.Noise.SimplexNoiseGenerator;
-import Reika.DragonAPI.Libraries.IO.ReikaColorAPI;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
+import Reika.DragonAPI.Libraries.Rendering.ReikaColorAPI;
 import Reika.DragonAPI.ModInteract.ItemHandlers.CarpenterBlockHandler;
 import Reika.GeoStrata.GeoStrata;
 
