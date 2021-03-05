@@ -100,7 +100,7 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 
 	@Override
 	public IIcon getIcon(int s, int meta) {
-		return this.fetchIcon(s, meta, 0);
+		return this.fetchIcon(s, meta, meta == VentType.ENDER.ordinal() ? 1 : meta == VentType.PYRO.ordinal() ? -1 : 0);
 	}
 
 	@Override
@@ -271,15 +271,8 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 
 		private void explode(float factor) {
 			worldObj.setBlockToAir(xCoord, yCoord, zCoord);
-			boolean fire = type == VentType.FIRE || type == VentType.LAVA;
-			float f = 2;
-			if (type == VentType.FIRE || type == VentType.LAVA)
-				f = 3;
-			else if (type == VentType.STEAM)
-				f = 4;
-			else if (type == VentType.GAS)
-				f = 6;
-			worldObj.newExplosion(null, xCoord, yCoord, zCoord, f*factor, fire, true);
+			boolean fire = type == VentType.FIRE || type == VentType.LAVA || type == VentType.PYRO;
+			worldObj.newExplosion(null, xCoord, yCoord, zCoord, factor*type.getExplosionSizeFactor(), fire, true);
 		}
 
 		public boolean canFire() {
@@ -370,7 +363,7 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 
 				if (rand.nextInt(20) == 0) {
 					int temp = type.getTemperature();
-					for (int i = 0; i < 5; i++)
+					for (int i = 1; i < 5; i++)
 						ReikaWorldHelper.temperatureEnvironment(worldObj, xCoord, yCoord+i, zCoord, temp);
 				}
 			}
@@ -548,9 +541,10 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 						double ry = ReikaRandomHelper.getRandomPlusMinus(oy, 1);
 						double rz = ReikaRandomHelper.getRandomPlusMinus(oz, 6);
 						e.setPositionAndUpdate(rx, ry, rz);
-						e.playSound("mob.endermen.portal", 1, 1);
 						flag = !e.worldObj.getCollidingBoundingBoxes(e, e.boundingBox).isEmpty() || e.worldObj.isAnyLiquid(e.boundingBox);
 					}
+					ReikaSoundHelper.playSoundFromServer(e.worldObj, e.posX, e.posX, e.posZ, "mob.endermen.portal", 1, 1, true);
+					e.worldObj.playSoundEffect(ox, oy, oz, "mob.endermen.portal", 1.0F, 1.0F);
 					break;
 				case PYRO:
 					e.setFire(60);
@@ -594,6 +588,7 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 						}
 					}
 				}
+				break;
 				case CRYO: {
 					if (rand.nextInt(20) == 0) {
 						int rx = ReikaRandomHelper.getRandomPlusMinus(x, 6);
@@ -619,11 +614,11 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 		public int getTemperature() {
 			switch(this) {
 				case FIRE:
-					return 800;
+					return 400;
 				case LAVA:
-					return 900;
+					return 800;
 				case PYRO:
-					return 1500;
+					return 1200;
 				case WATER:
 					return 15;
 				case CRYO:
@@ -665,13 +660,34 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 					return ReikaParticleHelper.RAIN;
 				case ENDER:
 					return ReikaParticleHelper.PORTAL;
+				case CRYO:
+					return ReikaParticleHelper.FIREWORK;
 				default:
 					return null;
 			}
 		}
 
+		public float getExplosionSizeFactor() {
+			switch(this) {
+				case WATER:
+				case CRYO:
+					return 1.5F;
+				case FIRE:
+					return 3;
+				case LAVA:
+					return 3.5F;
+				case STEAM:
+				case GAS:
+					return 4;
+				case PYRO:
+					return 6;
+				default:
+					return 2;
+			}
+		}
+
 		private double getParticleYOffset() {
-			return this == ENDER ? 1.5 : 0;
+			return this == ENDER ? 0.5 : 0;
 		}
 
 		public int getParticleRate() {
@@ -759,7 +775,8 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 			PYRO.heightCurveNether.addPoint(4, 30);
 			PYRO.heightCurveNether.addPoint(20, 45);
 			PYRO.heightCurveNether.addPoint(30, 30);
-			PYRO.heightCurveNether.addPoint(40, 0);
+			PYRO.heightCurveNether.addPoint(40, 10);
+			PYRO.heightCurveNether.addPoint(80, 0);
 		}
 	}
 
