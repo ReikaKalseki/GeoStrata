@@ -34,8 +34,7 @@ import Reika.DragonAPI.Libraries.Rendering.ReikaGuiAPI;
 import Reika.GeoStrata.Blocks.BlockDecoGen.Types;
 import Reika.GeoStrata.Blocks.BlockPartialBounds;
 import Reika.GeoStrata.Blocks.BlockPartialBounds.TilePartialBounds;
-import Reika.GeoStrata.Blocks.BlockVent.TileEntityVent;
-import Reika.GeoStrata.Blocks.BlockVent.VentType;
+import Reika.GeoStrata.Blocks.BlockVent;
 import Reika.GeoStrata.Registry.GeoBlocks;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
@@ -93,6 +92,7 @@ public class GeoEvents {
 
 	@SubscribeEvent
 	public void smokeVentAir(EntityDecreaseAirEvent evt) {
+		/*
 		int x = MathHelper.floor_double(evt.entityLiving.posX);
 		int y = MathHelper.floor_double(evt.entityLiving.posY-(evt.entityLiving.worldObj.isRemote ? 1.75 : 0.5));
 		int z = MathHelper.floor_double(evt.entityLiving.posZ);
@@ -103,6 +103,10 @@ public class GeoEvents {
 				evt.setResult(Result.ALLOW);
 				return;
 			}
+		}*/
+		long last = evt.entityLiving.getEntityData().getLong(BlockVent.SMOKE_VENT_TAG);
+		if (evt.entityLiving.worldObj.getTotalWorldTime()-last <= 8) {
+			evt.setResult(Result.ALLOW);
 		}
 	}
 

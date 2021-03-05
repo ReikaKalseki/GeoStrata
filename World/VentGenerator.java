@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -17,7 +17,10 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.IChunkProvider;
 
+import Reika.DragonAPI.Instantiable.Data.WeightedRandom;
+import Reika.DragonAPI.Instantiable.Data.WeightedRandom.DynamicWeight;
 import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
+import Reika.DragonAPI.Libraries.World.ReikaBiomeHelper;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.Blocks.BlockVent.VentType;
 import Reika.GeoStrata.Registry.GeoBlocks;
@@ -29,8 +32,16 @@ public class VentGenerator implements RetroactiveGenerator {
 
 	private static final int PER_CHUNK = getVentAttemptsPerChunk(); //calls per chunk; vast majority fail
 
-	private VentGenerator() {
+	private final WeightedRandom<VentGen> ventTypes = new WeightedRandom();
+	private final WeightedRandom<VentGen> ventTypesNether = new WeightedRandom();
 
+	private VentGenerator() {
+		for (VentType v : VentType.list) {
+			if (v.canGenerateInOverworld())
+				ventTypes.addDynamicEntry(new VentGen(v));
+			if (v.canGenerateInNether())
+				ventTypesNether.addDynamicEntry(new VentGen(v));
+		}
 	}
 
 	private static int getVentAttemptsPerChunk() {
@@ -48,8 +59,9 @@ public class VentGenerator implements RetroactiveGenerator {
 				int maxy = 64;
 				int posY = 4+random.nextInt(maxy-4);
 				if (this.canGenerateAt(world, posX, posY, posZ)) {
+					VentType v = this.getVentTypeFor(world, posX, posY, posZ, random);
 					Block id = GeoBlocks.VENT.getBlockInstance();
-					int meta = this.getVentTypeFor(world, posX, posY, posZ, random).ordinal();
+					int meta = v.ordinal();
 					world.setBlock(posX, posY, posZ, id, meta, 3);
 				}
 			}
@@ -57,16 +69,17 @@ public class VentGenerator implements RetroactiveGenerator {
 	}
 
 	private VentType getVentTypeFor(World world, int posX, int posY, int posZ, Random random) {
-		float f = Math.min(1, Math.max(0.25F, world.provider.getAverageGroundLevel()/64F));
-		if (posY < VentType.LAVA.getMaxHeight()*f && random.nextInt(4) == 0)
-			return VentType.LAVA;
-		if (posY < VentType.FIRE.getMaxHeight()*f && random.nextInt(4) == 0)
-			return VentType.FIRE;
-		if (posY < VentType.GAS.getMaxHeight()*f && random.nextInt(6) == 0)
-			return VentType.GAS;
-		if (posY > VentType.WATER.getMinHeight()*f && random.nextInt(4) == 0)
-			return world.provider.dimensionId == -1 ? VentType.STEAM : VentType.WATER;
-		return random.nextBoolean() ? VentType.STEAM : VentType.SMOKE;
+		if (world.provider.dimensionId == 1) {
+			return VentType.ENDER;
+		}
+
+		WeightedRandom<VentGen> wr = world.provider.dimensionId == -1 ? ventTypesNether : ventTypes;
+		wr.setRNG(random);
+		for (VentGen gr : wr.getValues()) {
+			gr.calcWeight(world, posX, posY, posZ);
+		}
+
+		return wr.getRandomEntry().type;
 	}
 
 	public static boolean canGenerateAt(World world, int x, int y, int z) {
@@ -87,20 +100,10 @@ public class VentGenerator implements RetroactiveGenerator {
 			return true;
 		if (id == Blocks.gravel)
 			return true;
-		if (id == Blocks.planks) //mineshafts
-			;//return true;
-		if (id == Blocks.bedrock)
-			;//return true;
-		if (id == Blocks.obsidian)
-			;//return true;
-		if (id == Blocks.stonebrick) //strongholds
-			;//return true;
-		if (id == Blocks.monster_egg)
+		if (id == Blocks.netherrack)
 			return true;
 		if (id == Blocks.cobblestone)
-			return true;
-		if (id == Blocks.mossy_cobblestone)
-			return true;
+			return y < world.provider.getAverageGroundLevel()-10;
 		return id.isReplaceableOreGen(world, x, y, z, Blocks.stone);
 	}
 
@@ -112,6 +115,31 @@ public class VentGenerator implements RetroactiveGenerator {
 	@Override
 	public String getIDString() {
 		return "GeoStrata Vents";
+	}
+
+	private static class VentGen implements DynamicWeight {
+
+		private final VentType type;
+
+		private double weight;
+
+		private VentGen(VentType v) {
+			type = v;
+		}
+
+		private void calcWeight(World world, int x, int y, int z) {
+			float f = Math.min(1, Math.max(0.25F, world.provider.getAverageGroundLevel()/64F));
+			weight = type.getSpawnWeight(world, (int)(y/f));
+			if (type == VentType.CRYO && !ReikaBiomeHelper.isSnowBiome(world.getBiomeGenForCoords(x, z))) {
+				weight = 0;
+			}
+		}
+
+		@Override
+		public double getWeight() {
+			return weight;
+		}
+
 	}
 
 }

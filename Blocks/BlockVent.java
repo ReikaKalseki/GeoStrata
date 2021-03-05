@@ -16,6 +16,7 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityEnderman;
@@ -34,11 +35,14 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import Reika.ChromatiCraft.API.Interfaces.MinerBlock;
+import Reika.DragonAPI.Instantiable.Interpolation;
 import Reika.DragonAPI.Instantiable.Event.BlockTickEvent;
 import Reika.DragonAPI.Instantiable.Event.BlockTickEvent.UpdateFlags;
 import Reika.DragonAPI.Libraries.ReikaAABBHelper;
+import Reika.DragonAPI.Libraries.ReikaEntityHelper;
 import Reika.DragonAPI.Libraries.IO.ReikaSoundHelper;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
@@ -48,9 +52,16 @@ import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.GeoISBRH;
 import Reika.RotaryCraft.API.Interfaces.EnvironmentalHeatSource;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSource {
 
+	public static final String SMOKE_VENT_TAG = "GEOSMOKEVENT";
+
 	private final IIcon[] icons = new IIcon[VentType.list.length];
+	private final IIcon[] iconsNether = new IIcon[VentType.list.length];
+
 	private static final IIcon[] internal = new IIcon[VentType.list.length];
 	//private static IIcon inactive;
 
@@ -89,16 +100,30 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 
 	@Override
 	public IIcon getIcon(int s, int meta) {
-		return s == 1 ? icons[meta] : Blocks.stone.getIcon(0, 0);
+		return this.fetchIcon(s, meta, 0);
 	}
 
 	@Override
+	@SideOnly(Side.CLIENT)
 	public IIcon getIcon(IBlockAccess world, int x, int y, int z, int s) {
 		//if (s == 1)
-		return this.getIcon(s, world.getBlockMetadata(x, y, z));
+		return this.fetchIcon(s, world.getBlockMetadata(x, y, z), Minecraft.getMinecraft().theWorld.provider.dimensionId);
 		//if (world.getBlock(x, y-1, z).getMaterial() == Material.rock)
 		//	return world.getBlock(x, y-1, z).getIcon(world, x, y-1, z, s);
 		//return this.getIcon(s, world.getBlockMetadata(x, y, z));
+	}
+
+	private IIcon fetchIcon(int side, int meta, int dim) {
+		IIcon[] arr = icons;
+		Block b = Blocks.stone;
+		if (dim == -1) {
+			arr = iconsNether;
+			b = Blocks.netherrack;
+		}
+		else if (dim == 1) {
+			b = Blocks.end_stone;
+		}
+		return side == 1 ? arr[meta] : b.getIcon(0, 0);
 	}
 
 	@Override
@@ -106,6 +131,7 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 		for (int i = 0; i < icons.length; i++) {
 			VentType v = VentType.list[i];
 			icons[i] = ico.registerIcon("geostrata:vent/"+v.name().toLowerCase(Locale.ENGLISH)+"_top");
+			iconsNether[i] = ico.registerIcon("geostrata:vent/nether/"+v.name().toLowerCase(Locale.ENGLISH)+"_top");
 			internal[i] = ico.registerIcon("geostrata:vent/"+v.name().toLowerCase(Locale.ENGLISH)+"_inside");
 		}
 		//inactive = ico.registerIcon("geostrata:vent/inactive");
@@ -165,6 +191,55 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 			super.harvestBlock(world, ep, x, y, z, meta);
 		}
 	}*/
+
+	@Override
+	public boolean isMineable(int meta) {
+		return true;
+	}
+
+	@Override
+	public ArrayList<ItemStack> getHarvestItems(World world, int x, int y, int z, int meta, int fortune) {
+		return ReikaJavaLibrary.makeListFrom(new ItemStack(this, 1, meta));
+	}
+
+	@Override
+	public SourceType getSourceType(IBlockAccess iba, int x, int y, int z) {
+		TileEntityVent te = (TileEntityVent)iba.getTileEntity(x, y, z);
+		switch(te.getType()) {
+			case FIRE:
+				return SourceType.FIRE;
+			case LAVA:
+			case PYRO:
+				return SourceType.LAVA;
+			case WATER:
+				return SourceType.WATER;
+			case CRYO:
+				return SourceType.ICY;
+			default:
+				return null;
+		}
+	}
+
+	@Override
+	public boolean isActive(IBlockAccess iba, int x, int y, int z) {
+		TileEntityVent te = (TileEntityVent)iba.getTileEntity(x, y, z);
+		return te.isActive();
+	}
+
+	@Override
+	public MineralCategory getCategory() {
+		return MineralCategory.MISC_UNDERGROUND;
+	}
+
+	@Override
+	public Block getReplacedBlock(World world, int x, int y, int z) {
+		return Blocks.stone;
+	}
+
+	@Override
+	public boolean allowSilkTouch(int meta) {
+		return true;
+	}
 
 	public static class TileEntityVent extends TileEntity {
 
@@ -234,10 +309,11 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 		}
 
 		private void onTick() {
-			if (activeTimer%4 == 0) {
+			if (activeTimer%type.getSoundInterval() == 0) {
 				switch(type) {
 					case FIRE:
 					case LAVA:
+					case PYRO:
 						ReikaSoundHelper.playSoundAtBlock(worldObj, xCoord, yCoord, zCoord, "mob.ghast.fireball", 0.25F, 1);
 						break;
 					case STEAM:
@@ -253,22 +329,36 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 							ReikaSoundHelper.playSoundAtBlock(worldObj, xCoord, yCoord, zCoord, "liquid.water", 2F, 1F);
 						}
 						break;
-					default:
+					case ENDER:
+						ReikaSoundHelper.playSoundAtBlock(worldObj, xCoord, yCoord, zCoord, "portal.portal", 0.25F, rand.nextFloat() * 0.4F + 0.8F);
+						break;
+					case CRYO:
+						ReikaSoundHelper.playSoundAtBlock(worldObj, xCoord, yCoord, zCoord, "mob.silverfish.step", 0.25F, 0.25F);
 						break;
 				}
 			}
 
-			//ReikaJavaLibrary.pConsole(activeTimer+":"+this, yCoord == 63);
-			if (type.dealsDamage()) {
-				AxisAlignedBB box = this.getEffectBox();
-				List<EntityLivingBase> li = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, box);
-				for (EntityLivingBase e : li) {
-					e.attackEntityFrom(type.getDamageSrc(), type.damage);
-					if (type == VentType.FIRE || type == VentType.LAVA)
-						e.setFire(type.damage);
+			if (!worldObj.isRemote) {
+				//ReikaJavaLibrary.pConsole(activeTimer+":"+this, yCoord == 63);
+				if (type.dealsDamage()) {
+					AxisAlignedBB box = this.getEffectBox();
+					List<EntityLivingBase> li = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, box);
+					for (EntityLivingBase e : li) {
+						e.attackEntityFrom(type.getDamageSrc(), type.damage);
+						if (type == VentType.FIRE || type == VentType.LAVA || type == VentType.PYRO)
+							e.setFire(type.damage);
+					}
 				}
-			}
-			/*
+
+				AxisAlignedBB box = type.getEffectBox(this);
+				if (box != null) {
+					List<EntityLivingBase> li = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, box);
+					for (EntityLivingBase e : li) {
+						type.applyEntityEffect(e, rand);
+					}
+				}
+
+				/*
 			else if (type == VentType.SMOKE) {
 				AxisAlignedBB box = this.getEffectBox();
 				List<EntityLivingBase> li = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, box);
@@ -276,56 +366,19 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 					e.setAir(Math.max(0, e.getAir()-1));
 				}
 			}*/
-			else if (type == VentType.WATER) {
-				AxisAlignedBB box = this.getEffectBox();
-				List<EntityLivingBase> li = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, box);
-				for (int i = 0; i < li.size(); i++) {
-					EntityLivingBase e = li.get(i);
-					if (e instanceof EntityEnderman) {
-						e.attackEntityFrom(DamageSource.drown, 1);
-						((EntityEnderman)e).teleportRandomly();
-					}
-					else {
-						e.extinguish();
-					}
-				}
+				type.doAoE(worldObj, xCoord, yCoord, zCoord, rand);
 
 				if (rand.nextInt(20) == 0) {
-					int rx = ReikaRandomHelper.getRandomPlusMinus(xCoord, 6);
-					int ry = ReikaRandomHelper.getRandomPlusMinus(yCoord, 1);
-					int rz = ReikaRandomHelper.getRandomPlusMinus(zCoord, 6);
-					if (worldObj.checkChunksExist(rx, ry, rz, rx, ry, rz)) {
-						Block b = worldObj.getBlock(rx, ry, rz);
-						if (b == Blocks.farmland) {
-							int meta = worldObj.getBlockMetadata(rx, ry, rz);
-							worldObj.setBlockMetadataWithNotify(rx, ry, rz, 7, 3);
-						}
-						if (rand.nextInt(3) == 0) {
-							b.updateTick(worldObj, rx, ry, rz, rand);
-							BlockTickEvent.fire(worldObj, rx, ry, rz, b, UpdateFlags.FORCED.flag+UpdateFlags.NATURAL.flag);
-						}
-					}
-				}
-			}
-			else if (type == VentType.GAS) {
-				AxisAlignedBB box = ReikaAABBHelper.getBlockAABB(xCoord, yCoord, zCoord).expand(3, 3, 3).offset(0, 2, 0);
-				List<EntityLivingBase> li = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, box);
-				for (int i = 0; i < li.size(); i++) {
-					EntityLivingBase e = li.get(i);
-					e.addPotionEffect(new PotionEffect(Potion.poison.id, 20+rand.nextInt(200), rand.nextInt(4) == 0 ? 1 : 0));
-				}
-			}
-
-			if (rand.nextInt(20) == 0) {
-				if (type == VentType.FIRE || type == VentType.LAVA) {
+					int temp = type.getTemperature();
 					for (int i = 0; i < 5; i++)
-						ReikaWorldHelper.temperatureEnvironment(worldObj, xCoord, yCoord+i, zCoord, 800);
+						ReikaWorldHelper.temperatureEnvironment(worldObj, xCoord, yCoord+i, zCoord, temp);
 				}
 			}
 
 			ReikaParticleHelper p = type.getParticle();
 			if (p != null) {
 				int n = p == ReikaParticleHelper.FLAME ? 3 : p == ReikaParticleHelper.RAIN ? 8 : 1;
+				n *= type.getParticleRate();
 				for (int i = 0; i < n; i++) {
 					double px = xCoord+rand.nextDouble();
 					double py = yCoord+0.5+rand.nextDouble();//+rand.nextDouble()*3;
@@ -336,7 +389,7 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 					double vz = 0;
 					double vy = 0.25+rand.nextDouble()/2;
 					//p.spawnAt(worldObj, px, py, pz);
-					worldObj.spawnParticle(p.name, px, py, pz, vx, vy, vz);
+					worldObj.spawnParticle(p.name, px, py+type.getParticleYOffset(), pz, vx, vy, vz);
 				}
 			}
 		}
@@ -398,35 +451,186 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 	public static enum VentType {
 		STEAM(1),
 		SMOKE(0),
-		FIRE(2, 32),
-		LAVA(8, 20),
-		GAS(0, 32),
-		WATER(0, 24);
+		FIRE(2),
+		LAVA(8),
+		GAS(0),
+		WATER(0),
+		ENDER(0),
+		PYRO(15),
+		CRYO(4);
 
 		public final int damage;
-		private final int heightThresh;
+
+		private final Interpolation heightCurve = new Interpolation(false);
+		private final Interpolation heightCurveNether = new Interpolation(false);
 
 		public static final VentType[] list = values();
 
 		private VentType(int dmg) {
-			this(dmg, 256);
-		}
-
-		private VentType(int dmg, int maxh) {
 			damage = dmg;
-			heightThresh = maxh;
-		}
-
-		public int getMaxHeight() {
-			return heightThresh > 0 ? heightThresh : 256;
-		}
-
-		public int getMinHeight() {
-			return heightThresh < 0 ? -heightThresh : 0;
+			heightCurve.addPoint(0, 0);
+			heightCurveNether.addPoint(0, 0);
+			heightCurve.addPoint(72, 0);
+			heightCurveNether.addPoint(128, 0);
 		}
 
 		public boolean dealsDamage() {
 			return damage > 0;
+		}
+
+		public double getSpawnWeight(World world, int y) {
+			return world.provider.dimensionId == -1 ? heightCurveNether.getValue(y) : heightCurve.getValue(y);
+		}
+
+		public boolean canGenerateInOverworld() {
+			switch(this) {
+				case ENDER:
+				case PYRO:
+					return false;
+				default:
+					return true;
+			}
+		}
+
+		public boolean canGenerateInNether() {
+			switch(this) {
+				case STEAM:
+				case SMOKE:
+				case FIRE:
+				case LAVA:
+				case GAS:
+				case PYRO:
+					return true;
+				default:
+					return false;
+			}
+		}
+
+		private AxisAlignedBB getEffectBox(TileEntityVent te) {
+			switch(this) {
+				case WATER:
+				case SMOKE:
+					return te.getEffectBox();
+				case GAS:
+				case PYRO:
+					return ReikaAABBHelper.getBlockAABB(te).expand(3, 3, 3).offset(0, 2, 0);
+				case ENDER:
+					return ReikaAABBHelper.getBlockAABB(te).expand(2, 2, 2).offset(0, 1, 0);
+				default:
+					return null;
+			}
+		}
+
+		private void applyEntityEffect(EntityLivingBase e, Random rand) {
+			switch(this) {
+				case WATER:
+					if (e instanceof EntityEnderman) {
+						e.attackEntityFrom(DamageSource.drown, 1);
+						((EntityEnderman)e).teleportRandomly();
+					}
+					else {
+						e.extinguish();
+					}
+					break;
+				case SMOKE:
+					e.getEntityData().setLong(SMOKE_VENT_TAG, e.worldObj.getTotalWorldTime());
+					break;
+				case GAS:
+					e.addPotionEffect(new PotionEffect(Potion.poison.id, 20+rand.nextInt(200), rand.nextInt(4) == 0 ? 1 : 0));
+					break;
+				case ENDER:
+					double ox = e.posX;
+					double oy = e.posY;
+					double oz = e.posZ;
+					boolean flag = true;
+					while (flag) {
+						double rx = ReikaRandomHelper.getRandomPlusMinus(ox, 6);
+						double ry = ReikaRandomHelper.getRandomPlusMinus(oy, 1);
+						double rz = ReikaRandomHelper.getRandomPlusMinus(oz, 6);
+						e.setPositionAndUpdate(rx, ry, rz);
+						e.playSound("mob.endermen.portal", 1, 1);
+						flag = !e.worldObj.getCollidingBoundingBoxes(e, e.boundingBox).isEmpty() || e.worldObj.isAnyLiquid(e.boundingBox);
+					}
+					break;
+				case PYRO:
+					e.setFire(60);
+					ReikaEntityHelper.damageArmor(e, 4);
+					break;
+				default:
+					break;
+			}
+		}
+
+		private void doAoE(World world, int x, int y, int z, Random rand) {
+			switch(this) {
+				case WATER:
+					if (rand.nextInt(20) == 0) {
+						int rx = ReikaRandomHelper.getRandomPlusMinus(x, 6);
+						int ry = ReikaRandomHelper.getRandomPlusMinus(y, 1);
+						int rz = ReikaRandomHelper.getRandomPlusMinus(z, 6);
+						if (world.checkChunksExist(rx, ry, rz, rx, ry, rz)) {
+							Block b = world.getBlock(rx, ry, rz);
+							if (b == Blocks.farmland) {
+								int meta = world.getBlockMetadata(rx, ry, rz);
+								world.setBlockMetadataWithNotify(rx, ry, rz, 7, 3);
+							}
+							if (rand.nextInt(3) == 0) {
+								b.updateTick(world, rx, ry, rz, rand);
+								BlockTickEvent.fire(world, rx, ry, rz, b, UpdateFlags.FORCED.flag+UpdateFlags.NATURAL.flag);
+							}
+						}
+					}
+					break;
+				case PYRO: {
+					if (rand.nextInt(10) == 0) {
+						int rx = ReikaRandomHelper.getRandomPlusMinus(x, 6);
+						int ry = ReikaRandomHelper.getRandomPlusMinus(y, 1);
+						int rz = ReikaRandomHelper.getRandomPlusMinus(z, 6);
+						if (world.checkChunksExist(rx, ry, rz, rx, ry, rz) && ReikaWorldHelper.isExposedToAir(world, rx, ry, rz)) {
+							Block b = world.getBlock(rx, ry, rz);
+							if (b == Blocks.stone || b == Blocks.cobblestone || b == Blocks.stonebrick) {
+								world.setBlock(rx, ry, rz, Blocks.lava);
+							}
+						}
+					}
+				}
+				case CRYO: {
+					if (rand.nextInt(20) == 0) {
+						int rx = ReikaRandomHelper.getRandomPlusMinus(x, 6);
+						int ry = ReikaRandomHelper.getRandomPlusMinus(y, 1);
+						int rz = ReikaRandomHelper.getRandomPlusMinus(z, 6);
+						if (world.checkChunksExist(rx, ry, rz, rx, ry, rz)) {
+							Block b = world.getBlock(rx, ry, rz);
+							if (b == Blocks.water || b == Blocks.flowing_water) {
+								world.setBlock(rx, ry, rz, Blocks.ice);
+							}
+							else if (b.isSideSolid(world, rx, ry, rz, ForgeDirection.UP) && world.getBlock(rx, ry+1, rz) == Blocks.air) {
+								world.setBlock(rx, ry+1, rz, Blocks.snow_layer);
+							}
+						}
+					}
+				}
+				break;
+				default:
+					break;
+			}
+		}
+
+		public int getTemperature() {
+			switch(this) {
+				case FIRE:
+					return 800;
+				case LAVA:
+					return 900;
+				case PYRO:
+					return 1500;
+				case WATER:
+					return 15;
+				case CRYO:
+					return -40;
+				default:
+					return 25;
+			}
 		}
 
 		public DamageSource getDamageSrc() {
@@ -435,7 +639,10 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 				case FIRE:
 					return DamageSource.inFire;
 				case LAVA:
+				case PYRO:
 					return DamageSource.lava;
+				case CRYO:
+					return DamageSource.generic;
 				default:
 					return null;
 			}
@@ -450,13 +657,35 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 				case FIRE:
 					return ReikaParticleHelper.FLAME;
 				case LAVA:
+				case PYRO:
 					return ReikaParticleHelper.LAVA;
 				case GAS:
 					return ReikaParticleHelper.MOBSPELL;
 				case WATER:
 					return ReikaParticleHelper.RAIN;
+				case ENDER:
+					return ReikaParticleHelper.PORTAL;
 				default:
 					return null;
+			}
+		}
+
+		private double getParticleYOffset() {
+			return this == ENDER ? 1.5 : 0;
+		}
+
+		public int getParticleRate() {
+			return this == PYRO ? 3 : 1;
+		}
+
+		public int getSoundInterval() {
+			switch(this) {
+				case PYRO:
+					return 2;
+				case ENDER:
+					return 20;
+				default:
+					return 4;
 			}
 		}
 
@@ -469,54 +698,67 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 		//}
 
 		public boolean isSelfLit() {
-			return this == FIRE || this == LAVA;
+			return this == FIRE || this == LAVA || this == PYRO;
 		}
-	}
 
-	@Override
-	public boolean isMineable(int meta) {
-		return true;
-	}
+		static {
+			STEAM.heightCurve.addPoint(4, 0);
+			STEAM.heightCurve.addPoint(24, 40);
 
-	@Override
-	public ArrayList<ItemStack> getHarvestItems(World world, int x, int y, int z, int meta, int fortune) {
-		return ReikaJavaLibrary.makeListFrom(new ItemStack(this, 1, meta));
-	}
+			SMOKE.heightCurve.addPoint(4, 0);
+			SMOKE.heightCurve.addPoint(24, 40);
 
-	@Override
-	public SourceType getSourceType(IBlockAccess iba, int x, int y, int z) {
-		TileEntityVent te = (TileEntityVent)iba.getTileEntity(x, y, z);
-		switch(te.getType()) {
-			case FIRE:
-				return SourceType.FIRE;
-			case LAVA:
-				return SourceType.LAVA;
-			case WATER:
-				return SourceType.WATER;
-			default:
-				return null;
+			FIRE.heightCurve.addPoint(4, 20);
+			FIRE.heightCurve.addPoint(24, 40);
+			FIRE.heightCurve.addPoint(32, 0);
+
+			LAVA.heightCurve.addPoint(4, 80);
+			LAVA.heightCurve.addPoint(14, 30);
+			LAVA.heightCurve.addPoint(20, 0);
+
+			GAS.heightCurve.addPoint(4, 10);
+			GAS.heightCurve.addPoint(16, 20);
+			GAS.heightCurve.addPoint(24, 10);
+			GAS.heightCurve.addPoint(32, 0);
+
+			WATER.heightCurve.addPoint(24, 10);
+			WATER.heightCurve.addPoint(40, 20);
+			WATER.heightCurve.addPoint(60, 30);
+
+			CRYO.heightCurve.addPoint(40, 0);
+			CRYO.heightCurve.addPoint(50, 5);
+			CRYO.heightCurve.addPoint(60, 20);
+
+
+			STEAM.heightCurveNether.addPoint(40, 0);
+			STEAM.heightCurveNether.addPoint(60, 40);
+			STEAM.heightCurveNether.addPoint(120, 40);
+
+			SMOKE.heightCurveNether.addPoint(10, 40);
+			SMOKE.heightCurveNether.addPoint(120, 40);
+
+			FIRE.heightCurveNether.addPoint(10, 60);
+			FIRE.heightCurveNether.addPoint(30, 80);
+			FIRE.heightCurveNether.addPoint(80, 80);
+			FIRE.heightCurveNether.addPoint(110, 20);
+
+			LAVA.heightCurveNether.addPoint(4, 80);
+			LAVA.heightCurveNether.addPoint(30, 80);
+			LAVA.heightCurveNether.addPoint(40, 40);
+			LAVA.heightCurveNether.addPoint(70, 40);
+			LAVA.heightCurveNether.addPoint(100, 10);
+
+			GAS.heightCurveNether.addPoint(4, 20);
+			GAS.heightCurveNether.addPoint(20, 50);
+			GAS.heightCurveNether.addPoint(30, 40);
+			GAS.heightCurveNether.addPoint(40, 20);
+			GAS.heightCurveNether.addPoint(110, 20);
+
+			PYRO.heightCurveNether.addPoint(4, 30);
+			PYRO.heightCurveNether.addPoint(20, 40);
+			PYRO.heightCurveNether.addPoint(30, 30);
+			PYRO.heightCurveNether.addPoint(40, 0);
 		}
-	}
-
-	@Override
-	public boolean isActive(IBlockAccess iba, int x, int y, int z) {
-		TileEntityVent te = (TileEntityVent)iba.getTileEntity(x, y, z);
-		return te.isActive();
-	}
-
-	@Override
-	public MineralCategory getCategory() {
-		return MineralCategory.MISC_UNDERGROUND;
-	}
-
-	@Override
-	public Block getReplacedBlock(World world, int x, int y, int z) {
-		return Blocks.stone;
-	}
-
-	@Override
-	public boolean allowSilkTouch(int meta) {
-		return true;
 	}
 
 
