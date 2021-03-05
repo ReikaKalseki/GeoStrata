@@ -17,9 +17,11 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.IChunkProvider;
 
+import Reika.DragonAPI.Instantiable.Data.Proportionality;
 import Reika.DragonAPI.Instantiable.Data.WeightedRandom;
 import Reika.DragonAPI.Instantiable.Data.WeightedRandom.DynamicWeight;
 import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
+import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.World.ReikaBiomeHelper;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.Blocks.BlockVent.VentType;
@@ -44,6 +46,16 @@ public class VentGenerator implements RetroactiveGenerator {
 		}
 	}
 
+	private String getRatiosAt(int y, boolean nether) {
+		WeightedRandom<VentGen> wr = nether ? ventTypesNether : ventTypes;
+		Proportionality<VentType> p = new Proportionality();
+		for (VentGen gr : wr.getValues()) {
+			double w = gr.type.getSpawnWeight(y, nether);
+			p.addValue(gr.type, w);
+		}
+		return p.toString();
+	}
+
 	private static int getVentAttemptsPerChunk() {
 		return (int)(60*GeoOptions.getVentDensity());
 	}
@@ -56,8 +68,11 @@ public class VentGenerator implements RetroactiveGenerator {
 			for (int i = 0; i < PER_CHUNK; i++) {
 				int posX = chunkX + random.nextInt(16);
 				int posZ = chunkZ + random.nextInt(16);
-				int maxy = 64;
-				int posY = 4+random.nextInt(maxy-4);
+				int maxy = world.provider.dimensionId == -1 ? 128 : 64;
+				int posY = ReikaRandomHelper.getRandomBetween(4, maxy, random);
+				if (random.nextBoolean()) {
+					posY *= random.nextFloat();
+				}
 				if (this.canGenerateAt(world, posX, posY, posZ)) {
 					VentType v = this.getVentTypeFor(world, posX, posY, posZ, random);
 					Block id = GeoBlocks.VENT.getBlockInstance();
@@ -129,7 +144,7 @@ public class VentGenerator implements RetroactiveGenerator {
 
 		private void calcWeight(World world, int x, int y, int z) {
 			float f = Math.min(1, Math.max(0.25F, world.provider.getAverageGroundLevel()/64F));
-			weight = type.getSpawnWeight(world, (int)(y/f));
+			weight = type.getSpawnWeight((int)(y/f), world.provider.dimensionId == -1);
 			if (type == VentType.CRYO && !ReikaBiomeHelper.isSnowBiome(world.getBiomeGenForCoords(x, z))) {
 				weight = 0;
 			}

@@ -478,8 +478,8 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 			return damage > 0;
 		}
 
-		public double getSpawnWeight(World world, int y) {
-			return world.provider.dimensionId == -1 ? heightCurveNether.getValue(y) : heightCurve.getValue(y);
+		public double getSpawnWeight(int y, boolean nether) {
+			return nether ? heightCurveNether.getValue(y) : heightCurve.getValue(y);
 		}
 
 		public boolean canGenerateInOverworld() {
@@ -712,7 +712,8 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 			FIRE.heightCurve.addPoint(24, 40);
 			FIRE.heightCurve.addPoint(32, 0);
 
-			LAVA.heightCurve.addPoint(4, 80);
+			LAVA.heightCurve.addPoint(4, 70);
+			LAVA.heightCurve.addPoint(10, 40);
 			LAVA.heightCurve.addPoint(14, 30);
 			LAVA.heightCurve.addPoint(20, 0);
 
@@ -721,7 +722,8 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 			GAS.heightCurve.addPoint(24, 10);
 			GAS.heightCurve.addPoint(32, 0);
 
-			WATER.heightCurve.addPoint(24, 10);
+			WATER.heightCurve.addPoint(24, 0);
+			WATER.heightCurve.addPoint(30, 10);
 			WATER.heightCurve.addPoint(40, 20);
 			WATER.heightCurve.addPoint(60, 30);
 
@@ -744,7 +746,7 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 
 			LAVA.heightCurveNether.addPoint(4, 80);
 			LAVA.heightCurveNether.addPoint(30, 80);
-			LAVA.heightCurveNether.addPoint(40, 40);
+			LAVA.heightCurveNether.addPoint(40, 50);
 			LAVA.heightCurveNether.addPoint(70, 40);
 			LAVA.heightCurveNether.addPoint(100, 10);
 
@@ -755,7 +757,7 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 			GAS.heightCurveNether.addPoint(110, 20);
 
 			PYRO.heightCurveNether.addPoint(4, 30);
-			PYRO.heightCurveNether.addPoint(20, 40);
+			PYRO.heightCurveNether.addPoint(20, 45);
 			PYRO.heightCurveNether.addPoint(30, 30);
 			PYRO.heightCurveNether.addPoint(40, 0);
 		}
