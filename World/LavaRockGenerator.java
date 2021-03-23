@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -30,6 +30,8 @@ public class LavaRockGenerator implements RetroactiveGenerator {
 	private static final int BASE_CHANCE = Math.max(1, (int)(1F/GeoOptions.getLavaRockDensity()));
 	private static final int COUNT_CHANCE = Math.max(1, (int)(2F/GeoOptions.getLavaRockDensity()));
 
+	public boolean doingLavaRockGen;
+
 	private LavaRockGenerator() {
 
 	}
@@ -53,6 +55,7 @@ public class LavaRockGenerator implements RetroactiveGenerator {
 	}
 
 	private void generate(World world, int x, int y, int z) {
+		doingLavaRockGen = true;
 		BlockArray b = new BlockArray();
 		b.maxDepth = 40;
 		b.taxiCabDistance = true;
@@ -76,6 +79,7 @@ public class LavaRockGenerator implements RetroactiveGenerator {
 				}
 			}
 		}
+		doingLavaRockGen = false;
 	}
 
 	private boolean isValidBlock(World world, int x, int y, int z) {

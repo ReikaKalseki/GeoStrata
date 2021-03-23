@@ -24,6 +24,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -190,7 +191,12 @@ public class BlockRFCrystalSeed extends BlockRFCrystal {
 				//loc.setBlock(worldObj, GeoBlocks.RFCRYSTAL.getBlockInstance());
 				//crystal.addBlockCoordinate(loc.xCoord, loc.yCoord, loc.zCoord);
 				BlockRFCrystal.place(worldObj, loc.xCoord, loc.yCoord, loc.zCoord, this);
+				energy = Math.max(energy-this.getGrowthCost(), 0);
 			}
+		}
+
+		private long getGrowthCost() {
+			return MathHelper.clamp_int(crystal.getSize()*1000, 2000, 600000);
 		}
 
 		private boolean canGrowInto(World worldObj, Coordinate c2) {

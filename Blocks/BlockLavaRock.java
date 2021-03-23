@@ -29,10 +29,13 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
+import Reika.DragonAPI.Libraries.World.ReikaBlockHelper;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.GeoISBRH;
+import Reika.GeoStrata.World.LavaRockGenerator;
 import Reika.RotaryCraft.API.Interfaces.EnvironmentalHeatSource;
 
 
@@ -186,12 +189,36 @@ public class BlockLavaRock extends Block implements EnvironmentalHeatSource {
 
 	@Override
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block b) {
-		if (ReikaWorldHelper.checkForAdjMaterial(world, x, y, z, Material.water) != null) {
-			int meta = world.getBlockMetadata(x, y, z);
-			int chance = 3+3*meta*meta; // 1 in: 3, 6, 15, 30
-			boolean obsidian = world.rand.nextInt(chance) == 0;
-			world.setBlock(x, y, z, obsidian ? Blocks.obsidian : (meta <= 1 ? Blocks.cobblestone : Blocks.stone));
+		this.onBlockAdded(world, x, y, z);
+	}
+
+	@Override
+	public void onBlockAdded(World world, int x, int y, int z) {
+		if (LavaRockGenerator.instance.doingLavaRockGen || !ReikaWorldHelper.isChunkPastCompletelyFinishedGenerating(world, x >> 4, z >> 4))
+			return;
+		int meta = world.getBlockMetadata(x, y, z)%4;
+		for (int i = 0; i < 6; i++) {
+			ForgeDirection dir = ForgeDirection.VALID_DIRECTIONS[i];
+			int dx = x+dir.offsetX;
+			int dy = y+dir.offsetY;
+			int dz = z+dir.offsetZ;
+			if (world.checkChunksExist(dx, dy, dz, dx, dy, dz)) {
+				Material mat2 = ReikaWorldHelper.getMaterial(world, dx, dy, dz);
+				if (ReikaBlockHelper.matchMaterialsLoosely(Material.water, mat2)) {
+					int chance = 3+3*meta*meta; // 1 in: 3, 6, 15, 30
+					boolean obsidian = world.rand.nextInt(chance) == 0;
+					world.setBlock(x, y, z, obsidian ? Blocks.obsidian : (meta <= 1 ? Blocks.cobblestone : Blocks.stone));
+				}
+				else {
+
+				}
+			}
 		}
+		ReikaWorldHelper.temperatureEnvironment(world, x, y, z, this.getEffectiveTemperature(meta));
+	}
+
+	private int getEffectiveTemperature(int meta) { //0 is lava
+		return 750-(meta%4)*150;
 	}
 
 }
