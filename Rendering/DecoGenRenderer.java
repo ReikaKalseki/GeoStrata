@@ -157,7 +157,7 @@ public class DecoGenRenderer extends ISBRH {
 			v5.addTranslation(-0.5F, 0, -0.5F);
 		}
 		if (renderPass == 1) {
-			this.renderWater(world, x, y, z, block, meta, v5);
+			//this.renderWater(world, x, y, z, block, meta, v5);
 		}
 
 		v5.addTranslation(-x, -y, -z);

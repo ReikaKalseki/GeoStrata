@@ -48,6 +48,11 @@ public class VoidOpalTrade implements EDCommodityHook {
 		return new Trade(inputStack, emeraldValue);
 	}
 
+	@Override
+	public double getChancePerVillager() {
+		return 0.5;
+	}
+
 	private static class Trade extends MerchantRecipe implements PlayerSpecificTrade {
 
 		private final int baseValue;

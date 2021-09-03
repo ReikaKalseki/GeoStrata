@@ -77,6 +77,11 @@ public class BlockDecoGen extends Block implements Submergeable {
 	}
 
 	@Override
+	public boolean renderLiquid(int meta) {
+		return meta == 0;
+	}
+
+	@Override
 	public int getRenderBlockPass() {
 		return 1;
 	}

@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -108,8 +108,8 @@ public class DecoGenerator implements RetroactiveGenerator {
 			switch(this) {
 				case OCEANSPIKE:
 					int h = 0;
-					int d = 1+rand.nextInt(4);
-					while (h < 12 && world.getBlock(x, y+h+1, z) == Blocks.water) {
+					int d = rand.nextInt(8);
+					while (h < 15 && world.getBlock(x, y+h+d, z) == Blocks.water) {
 						world.setBlock(x, y+h, z, GeoBlocks.DECOGEN.getBlockInstance(), 0, 3);
 						h++;
 					}

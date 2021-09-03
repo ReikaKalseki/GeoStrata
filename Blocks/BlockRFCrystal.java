@@ -1,36 +1,48 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
  ******************************************************************************/
 package Reika.GeoStrata.Blocks;
 
+import java.util.List;
 import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import Reika.DragonAPI.ASM.APIStripper.Strippable;
 import Reika.DragonAPI.Instantiable.Data.Immutable.Coordinate;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Blocks.BlockRFCrystalSeed.TileRFCrystal;
 import Reika.GeoStrata.Registry.GeoBlocks;
 
 import cofh.api.energy.IEnergyHandler;
+import framesapi.IMoveCheck;
+import mcp.mobius.waila.api.IWailaConfigHandler;
+import mcp.mobius.waila.api.IWailaDataAccessor;
+import mcp.mobius.waila.api.IWailaDataProvider;
+import vazkii.botania.api.mana.ILaputaImmobile;
 
-
-public class BlockRFCrystal extends Block {
+@Strippable(value = {"mcp.mobius.waila.api.IWailaDataProvider", "framesapi.IMoveCheck", "vazkii.botania.api.mana.ILaputaImmobile"})
+public class BlockRFCrystal extends Block implements IWailaDataProvider, IMoveCheck, ILaputaImmobile {
 
 	public BlockRFCrystal(Material mat) {
 		super(mat);
@@ -98,6 +110,58 @@ public class BlockRFCrystal extends Block {
 		return (1+random.nextInt(6))*(1+random.nextInt(1+fortune));
 	}
 
+	@Override
+	public final boolean canMove(World worldObj, int x, int y, int z) {
+		return false;
+	}
+
+	@Override
+	public final ItemStack getWailaStack(IWailaDataAccessor accessor, IWailaConfigHandler config) {
+		return null;
+	}
+
+	@Override
+	public final List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+		return currenttip;
+	}
+
+	@Override
+	public final List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+		for (String s : currenttip) {
+			if (s.endsWith(" RF"))
+				return currenttip;
+		}
+		TileEntity te = accessor.getTileEntity();
+		long amt = 0;
+		if (te instanceof TileRFCrystal) {
+			amt = ((TileRFCrystal)te).getEnergy();
+		}
+		if (te instanceof TileRFCrystalAux) {
+			TileRFCrystal tile = ((TileRFCrystalAux)te).getParent();
+			if (tile != null) {
+				amt = tile.getEnergy();
+			}
+			else {
+				currenttip.add("[No root found]");
+			}
+		}
+		else if (te instanceof IEnergyHandler) {
+			amt = ((IEnergyHandler)te).getEnergyStored(ForgeDirection.UP);
+		}
+		currenttip.add(amt+" RF");
+		return currenttip;
+	}
+
+	@Override
+	public final List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+		return currenttip;
+	}
+
+	@Override
+	public final NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
+		return tag;
+	}
+
 	public static class TileRFCrystalAux extends TileEntity implements IEnergyHandler {
 
 		private Coordinate controller;
@@ -162,12 +226,26 @@ public class BlockRFCrystal extends Block {
 
 		@Override
 		public int getEnergyStored(ForgeDirection from) {
-			return this.getParent().getEnergyStored(from);
+			return controller == null ? 0 : this.getParent().getEnergyStored(from);
 		}
 
 		@Override
 		public int getMaxEnergyStored(ForgeDirection from) {
-			return this.getParent().getMaxEnergyStored(from);
+			return controller == null ? 0 : this.getParent().getMaxEnergyStored(from);
+		}
+
+		@Override
+		public Packet getDescriptionPacket() {
+			NBTTagCompound NBT = new NBTTagCompound();
+			this.writeToNBT(NBT);
+			S35PacketUpdateTileEntity pack = new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 0, NBT);
+			return pack;
+		}
+
+		@Override
+		public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity p)  {
+			this.readFromNBT(p.field_148860_e);
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
 
 	}
