@@ -555,32 +555,40 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 			}
 		}
 
+		private int getHorizontalAoERange() {
+			switch(this) {
+				default:
+					return 6;
+			}
+		}
+
 		private void doAoE(World world, int x, int y, int z, Random rand) {
+			int r = this.getHorizontalAoERange();
+			if (!world.checkChunksExist(x-r-2, y-r-2, z-r-2, x+r+2, y+r+2, z+r+2)) {
+				return;
+			}
 			switch(this) {
 				case WATER:
 					if (rand.nextInt(20) == 0) {
-						int rx = ReikaRandomHelper.getRandomPlusMinus(x, 6);
+						int rx = ReikaRandomHelper.getRandomPlusMinus(x, r);
 						int ry = ReikaRandomHelper.getRandomPlusMinus(y, 1);
-						int rz = ReikaRandomHelper.getRandomPlusMinus(z, 6);
-						if (world.checkChunksExist(rx, ry, rz, rx, ry, rz)) {
-							Block b = world.getBlock(rx, ry, rz);
-							if (b == Blocks.farmland) {
-								int meta = world.getBlockMetadata(rx, ry, rz);
-								world.setBlockMetadataWithNotify(rx, ry, rz, 7, 3);
-							}
-							if (rand.nextInt(3) == 0) {
-								b.updateTick(world, rx, ry, rz, rand);
-								BlockTickEvent.fire(world, rx, ry, rz, b, UpdateFlags.FORCED.flag+UpdateFlags.NATURAL.flag);
-							}
+						int rz = ReikaRandomHelper.getRandomPlusMinus(z, r);
+						Block b = world.getBlock(rx, ry, rz);
+						if (b == Blocks.farmland) {
+							int meta = world.getBlockMetadata(rx, ry, rz);
+							world.setBlockMetadataWithNotify(rx, ry, rz, 7, 3);
+						}
+						if (rand.nextInt(3) == 0) {
+							BlockTickEvent.fire(b, world, rx, ry, rz, world.rand, UpdateFlags.getForcedUnstoppableTick()+UpdateFlags.NATURAL.flag);
 						}
 					}
 					break;
 				case PYRO: {
 					if (rand.nextInt(10) == 0) {
-						int rx = ReikaRandomHelper.getRandomPlusMinus(x, 6);
+						int rx = ReikaRandomHelper.getRandomPlusMinus(x, r);
 						int ry = ReikaRandomHelper.getRandomPlusMinus(y, 1);
-						int rz = ReikaRandomHelper.getRandomPlusMinus(z, 6);
-						if (world.checkChunksExist(rx, ry, rz, rx, ry, rz) && ReikaWorldHelper.isExposedToAir(world, rx, ry, rz)) {
+						int rz = ReikaRandomHelper.getRandomPlusMinus(z, r);
+						if (ReikaWorldHelper.isExposedToAir(world, rx, ry, rz)) {
 							Block b = world.getBlock(rx, ry, rz);
 							if (b == Blocks.stone || b == Blocks.cobblestone || b == Blocks.stonebrick) {
 								world.setBlock(rx, ry, rz, Blocks.lava);
@@ -591,17 +599,15 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 				break;
 				case CRYO: {
 					if (rand.nextInt(20) == 0) {
-						int rx = ReikaRandomHelper.getRandomPlusMinus(x, 6);
+						int rx = ReikaRandomHelper.getRandomPlusMinus(x, r);
 						int ry = ReikaRandomHelper.getRandomPlusMinus(y, 1);
-						int rz = ReikaRandomHelper.getRandomPlusMinus(z, 6);
-						if (world.checkChunksExist(rx, ry, rz, rx, ry, rz)) {
-							Block b = world.getBlock(rx, ry, rz);
-							if (b == Blocks.water || b == Blocks.flowing_water) {
-								world.setBlock(rx, ry, rz, Blocks.ice);
-							}
-							else if (b.isSideSolid(world, rx, ry, rz, ForgeDirection.UP) && world.getBlock(rx, ry+1, rz) == Blocks.air) {
-								world.setBlock(rx, ry+1, rz, Blocks.snow_layer);
-							}
+						int rz = ReikaRandomHelper.getRandomPlusMinus(z, r);
+						Block b = world.getBlock(rx, ry, rz);
+						if (b == Blocks.water || b == Blocks.flowing_water) {
+							world.setBlock(rx, ry, rz, Blocks.ice);
+						}
+						else if (b.isSideSolid(world, rx, ry, rz, ForgeDirection.UP) && world.getBlock(rx, ry+1, rz) == Blocks.air) {
+							world.setBlock(rx, ry+1, rz, Blocks.snow_layer);
 						}
 					}
 				}
