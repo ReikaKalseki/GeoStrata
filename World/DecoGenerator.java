@@ -15,9 +15,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
+import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.World.ReikaBiomeHelper;
+import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoOptions;
 
@@ -98,7 +101,7 @@ public class DecoGenerator implements RetroactiveGenerator {
 			switch(this) {
 				case OCEANSPIKE:
 				case OCEANSPIKES:
-					return ReikaBiomeHelper.isOcean(b);
+					return ReikaBiomeHelper.isOcean(b) && ReikaWorldHelper.getDepthFromBelow(world, x, y-1, z, FluidRegistry.WATER) > 2;
 				default:
 					return true;
 			}
@@ -109,7 +112,8 @@ public class DecoGenerator implements RetroactiveGenerator {
 				case OCEANSPIKE:
 					int h = 0;
 					int d = rand.nextInt(8);
-					while (h < 15 && world.getBlock(x, y+h+d, z) == Blocks.water) {
+					int min = ReikaRandomHelper.getRandomBetween(4, 7, rand);
+					while (h < 15 && (world.getBlock(x, y+h+d, z) == Blocks.water || (h < min && world.getBlock(x, y+h+1, z) == Blocks.water))) {
 						world.setBlock(x, y+h, z, GeoBlocks.DECOGEN.getBlockInstance(), 0, 3);
 						h++;
 					}

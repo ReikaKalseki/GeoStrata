@@ -361,10 +361,10 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 			}*/
 				type.doAoE(worldObj, xCoord, yCoord, zCoord, rand);
 
-				if (rand.nextInt(20) == 0) {
+				if (type.appliesWorldTemperature() && rand.nextInt(20) == 0) {
 					int temp = type.getTemperature();
 					for (int i = 1; i < 5; i++)
-						ReikaWorldHelper.temperatureEnvironment(worldObj, xCoord, yCoord+i, zCoord, temp);
+						ReikaWorldHelper.temperatureEnvironment(worldObj, xCoord, yCoord+i, zCoord, temp, true, null);
 				}
 			}
 
@@ -619,6 +619,8 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 
 		public int getTemperature() {
 			switch(this) {
+				case STEAM:
+					return 150;
 				case FIRE:
 					return 400;
 				case LAVA:
@@ -631,6 +633,19 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 					return -40;
 				default:
 					return 25;
+			}
+		}
+
+		public boolean appliesWorldTemperature() {
+			switch(this) {
+				case STEAM:
+				case FIRE:
+				case LAVA:
+				case PYRO:
+				case CRYO:
+					return true;
+				default:
+					return false;
 			}
 		}
 

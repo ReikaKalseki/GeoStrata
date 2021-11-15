@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -33,6 +33,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.ASM.APIStripper.Strippable;
 import Reika.DragonAPI.ASM.DependentMethodStripper.ModDependent;
+import Reika.DragonAPI.Interfaces.Block.CraftableStone;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.GeoOptions;
@@ -46,7 +47,7 @@ import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
 
 @Strippable(value={"com.carpentersblocks.api.IWrappableBlock", "mcp.mobius.waila.api.IWailaDataProvider"})
-public abstract class RockBlock extends Block implements Laserable, IWrappableBlock, IWailaDataProvider {
+public abstract class RockBlock extends Block implements CraftableStone, Laserable, IWrappableBlock, IWailaDataProvider {
 
 	protected IIcon[] icons = new IIcon[RockTypes.rockList.length];
 
