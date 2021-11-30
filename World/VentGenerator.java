@@ -68,7 +68,7 @@ public class VentGenerator implements RetroactiveGenerator {
 			for (int i = 0; i < PER_CHUNK; i++) {
 				int posX = chunkX + random.nextInt(16);
 				int posZ = chunkZ + random.nextInt(16);
-				int maxy = world.provider.dimensionId == -1 ? 128 : 64;
+				int maxy = world.provider.dimensionId == -1 ? 128 : (world.provider.dimensionId == 1 ? 72 : 64);
 				int posY = ReikaRandomHelper.getRandomBetween(4, maxy, random);
 				if (random.nextBoolean()) {
 					posY *= random.nextFloat();
@@ -116,6 +116,8 @@ public class VentGenerator implements RetroactiveGenerator {
 		if (id == Blocks.gravel)
 			return true;
 		if (id == Blocks.netherrack)
+			return true;
+		if (id == Blocks.end_stone)
 			return true;
 		if (id == Blocks.cobblestone)
 			return y < world.provider.getAverageGroundLevel()-10;

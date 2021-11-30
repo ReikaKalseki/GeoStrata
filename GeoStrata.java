@@ -249,6 +249,26 @@ public class GeoStrata extends DragonAPIMod {
 			ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.VENT.getBlockInstance(), VentType.SMOKE.ordinal(), Aspect.AIR, 2, Aspect.EARTH, 2);
 			ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.VENT.getBlockInstance(), VentType.STEAM.ordinal(), Aspect.AIR, 2, Aspect.WATER, 2, Aspect.EARTH, 2, Aspect.FIRE, 2);
 			ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.VENT.getBlockInstance(), VentType.LAVA.ordinal(), Aspect.EARTH, 4, Aspect.FIRE, 5);
+			ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.VENT.getBlockInstance(), VentType.ENDER.ordinal(), Aspect.EARTH, 4, Aspect.ELDRITCH, 4, Aspect.TRAVEL, 3);
+			ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.VENT.getBlockInstance(), VentType.PYRO.ordinal(), Aspect.EARTH, 4, Aspect.FIRE, 8);
+			if (Aspect.getAspect("ira") != null)
+				ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.VENT.getBlockInstance(), VentType.PYRO.ordinal(), Aspect.getAspect("ira"), 5);
+			ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.VENT.getBlockInstance(), VentType.CRYO.ordinal(), Aspect.EARTH, 4, Aspect.COLD, 5);
+
+			ReikaThaumHelper.addAspectsToBlock(GeoBlocks.GLOWCRYS.getBlockInstance(), Aspect.EARTH, 1, Aspect.CRYSTAL, 2, Aspect.LIGHT, 1);
+
+			ReikaThaumHelper.addAspectsToBlock(GeoBlocks.GLOWVINE.getBlockInstance(), Aspect.PLANT, 2, Aspect.LIGHT, 2);
+
+			ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.DECOGEN.getBlockInstance(), 0, Aspect.CRYSTAL, 2, Aspect.WATER, 1);
+
+			ReikaThaumHelper.addAspectsToBlock(GeoBlocks.VOIDOPAL.getBlockInstance(), Aspect.EARTH, 2, Aspect.CRYSTAL, 1, Aspect.GREED, 5, Aspect.MINE, 4);
+			if (Aspect.getAspect("principia") != null)
+				ReikaThaumHelper.addAspectsToBlock(GeoBlocks.VOIDOPAL.getBlockInstance(), Aspect.getAspect("principia"), 1);
+
+			ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.LAVAROCK.getBlockInstance(), 0, Aspect.EARTH, 2, Aspect.FIRE, 4);
+			ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.LAVAROCK.getBlockInstance(), 1, Aspect.EARTH, 2, Aspect.FIRE, 3);
+			ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.LAVAROCK.getBlockInstance(), 2, Aspect.EARTH, 2, Aspect.FIRE, 2);
+			ReikaThaumHelper.addAspectsToBlockMeta(GeoBlocks.LAVAROCK.getBlockInstance(), 3, Aspect.EARTH, 2, Aspect.FIRE, 1);
 		}
 
 		if (ModList.EXTRAUTILS.isLoaded()) {
