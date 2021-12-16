@@ -536,15 +536,19 @@ public class BlockVent extends Block implements MinerBlock, EnvironmentalHeatSou
 					double oy = e.posY;
 					double oz = e.posZ;
 					boolean flag = true;
-					while (flag) {
+					int tries = 0;
+					while (flag && tries < 40) {
 						double rx = ReikaRandomHelper.getRandomPlusMinus(ox, 6);
 						double ry = ReikaRandomHelper.getRandomPlusMinus(oy, 1);
 						double rz = ReikaRandomHelper.getRandomPlusMinus(oz, 6);
 						e.setPositionAndUpdate(rx, ry, rz);
 						flag = !e.worldObj.getCollidingBoundingBoxes(e, e.boundingBox).isEmpty() || e.worldObj.isAnyLiquid(e.boundingBox);
+						tries++;
 					}
-					ReikaSoundHelper.playSoundFromServer(e.worldObj, e.posX, e.posX, e.posZ, "mob.endermen.portal", 1, 1, true);
-					e.worldObj.playSoundEffect(ox, oy, oz, "mob.endermen.portal", 1.0F, 1.0F);
+					if (!flag) {
+						ReikaSoundHelper.playSoundFromServer(e.worldObj, e.posX, e.posX, e.posZ, "mob.endermen.portal", 1, 1, true);
+						e.worldObj.playSoundEffect(ox, oy, oz, "mob.endermen.portal", 1.0F, 1.0F);
+					}
 					break;
 				case PYRO:
 					e.setFire(60);

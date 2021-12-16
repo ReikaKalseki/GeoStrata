@@ -147,7 +147,7 @@ public class BlockGlowingVines extends BlockContainer implements ShearablePlant 
 			int dy = y+dir.offsetY;
 			int dz = z+dir.offsetZ;
 			Block b = world.getBlock(dx, dy, dz);
-			if (b == Blocks. stone || b == Blocks.dirt || b == Blocks.grass){
+			if (b == Blocks.stone || b == Blocks.dirt || b == Blocks.grass) {
 				flag = true;
 				break;
 			}
