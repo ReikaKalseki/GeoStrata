@@ -294,7 +294,8 @@ public class BlockGlowingVines extends BlockContainer implements ShearablePlant 
 	@Override
 	public void shearAll(World world, int x, int y, int z, EntityPlayer ep) {
 		TileGlowingVines te = (TileGlowingVines)world.getTileEntity(x, y, z);
-		ReikaItemHelper.dropItem(world, x+0.5, y+0.5, z+0.5, new ItemStack(this, te.filledSides.size(), 0));
+		if (!ep.capabilities.isCreativeMode)
+			ReikaItemHelper.dropItem(world, x+0.5, y+0.5, z+0.5, new ItemStack(this, te.filledSides.size(), 0));
 		world.setBlock(x, y, z, Blocks.air);
 	}
 
@@ -304,7 +305,8 @@ public class BlockGlowingVines extends BlockContainer implements ShearablePlant 
 		if (te.filledSides.contains(dir)) {
 			te.filledSides.remove(dir);
 			world.markBlockForUpdate(x, y, z);
-			ReikaItemHelper.dropItem(world, x+0.5, y+0.5, z+0.5, new ItemStack(this));
+			if (!ep.capabilities.isCreativeMode)
+				ReikaItemHelper.dropItem(world, x+0.5, y+0.5, z+0.5, new ItemStack(this));
 			if (te.filledSides.isEmpty())
 				world.setBlock(x, y, z, Blocks.air);
 		}

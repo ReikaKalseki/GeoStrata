@@ -9,6 +9,8 @@
  ******************************************************************************/
 package Reika.GeoStrata.Blocks;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -31,6 +33,8 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import Reika.ChromatiCraft.API.Interfaces.CustomExcavationStarBehavior;
+import Reika.DragonAPI.Instantiable.Data.Immutable.BlockKey;
 import Reika.DragonAPI.Libraries.World.ReikaBlockHelper;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.GeoStrata;
@@ -39,7 +43,7 @@ import Reika.GeoStrata.World.LavaRockGenerator;
 import Reika.RotaryCraft.API.Interfaces.EnvironmentalHeatSource;
 
 
-public class BlockLavaRock extends Block implements EnvironmentalHeatSource {
+public class BlockLavaRock extends Block implements EnvironmentalHeatSource, CustomExcavationStarBehavior {
 
 	private final IIcon[] overlay = new IIcon[4];
 
@@ -219,6 +223,20 @@ public class BlockLavaRock extends Block implements EnvironmentalHeatSource {
 
 	private int getEffectiveTemperature(int meta) { //0 is lava
 		return 750-(meta%4)*150;
+	}
+
+	@Override
+	public int getRange(World world, int x, int y, int z, EntityPlayer ep) {
+		return -1;
+	}
+
+	@Override
+	public Collection<BlockKey> getSpreadBlocks(World world, int x, int y, int z) {
+		Collection<BlockKey> ret = new ArrayList();
+		for (int i = 0; i < 16; i++) {
+			ret.add(new BlockKey(this, i));
+		}
+		return ret;
 	}
 
 }
