@@ -13,10 +13,13 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -29,6 +32,7 @@ import Reika.DragonAPI.Instantiable.Data.Immutable.Coordinate;
 import Reika.DragonAPI.Instantiable.Event.EntityDecreaseAirEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.ItemEffectRenderEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.RenderBlockAtPosEvent;
+import Reika.DragonAPI.Instantiable.Event.Client.RenderBlockAtPosEvent.BlockRenderWatcher;
 import Reika.DragonAPI.Libraries.IO.ReikaTextureHelper;
 import Reika.DragonAPI.Libraries.Rendering.ReikaGuiAPI;
 import Reika.GeoStrata.Blocks.BlockDecoGen.Types;
@@ -43,12 +47,12 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 
-public class GeoEvents {
+public class GeoEvents implements BlockRenderWatcher {
 
 	public static final GeoEvents instance = new GeoEvents();
 
 	private GeoEvents() {
-
+		RenderBlockAtPosEvent.addListener(this);
 	}
 
 	/*
@@ -110,36 +114,43 @@ public class GeoEvents {
 		}
 	}
 
-	@SubscribeEvent
+	@Override
 	@SideOnly(Side.CLIENT)
-	public void partialBoundsFenceRender(RenderBlockAtPosEvent evt) {
-		if (evt.block instanceof BlockPartialBounds && evt.renderPass == 1) {
-			TilePartialBounds te = (TilePartialBounds)evt.getTileEntity();
+	public boolean onBlockTriedRender(Block block, int x, int y, int z, WorldRenderer wr, RenderBlocks render, int renderPass) {
+		if (block instanceof BlockPartialBounds && renderPass == 1) {
+			TilePartialBounds te = (TilePartialBounds)render.blockAccess.getTileEntity(x, y, z);
 			if (te.isFence()) {
+				IBlockAccess access = render.blockAccess;
 				double o = 0.005;
-				boolean flag = evt.render.enableAO;
-				evt.render.enableAO = false;
-				Tessellator.instance.setColorRGBA_I(evt.block.colorMultiplier(evt.access, evt.xCoord, evt.yCoord, evt.zCoord), 96);
-				Tessellator.instance.setBrightness(evt.block.getMixedBrightnessForBlock(evt.access, evt.xCoord, evt.yCoord, evt.zCoord));
+				boolean flag = render.enableAO;
+				render.enableAO = false;
+				Tessellator.instance.setColorRGBA_I(block.colorMultiplier(access, x, y, z), 96);
+				Tessellator.instance.setBrightness(block.getMixedBrightnessForBlock(access, x, y, z));
 				Tessellator.instance.setNormal(0, 1, 0);
-				evt.block.setBlockBoundsBasedOnState(evt.access, evt.xCoord, evt.yCoord, evt.zCoord);
-				evt.render.renderMaxX = evt.block.getBlockBoundsMaxX();
-				evt.render.renderMaxY = evt.block.getBlockBoundsMaxY();
-				evt.render.renderMaxZ = evt.block.getBlockBoundsMaxZ();
-				evt.render.renderMinX = evt.block.getBlockBoundsMinX();
-				evt.render.renderMinY = evt.block.getBlockBoundsMinY();
-				evt.render.renderMinZ = evt.block.getBlockBoundsMinZ();
-				if (evt.block.shouldSideBeRendered(evt.access, evt.xCoord-1, evt.yCoord, evt.zCoord, ForgeDirection.WEST.ordinal()))
-					evt.render.renderFaceXNeg(evt.block, evt.xCoord-o, evt.yCoord, evt.zCoord, BlockPartialBounds.fenceOverlay);
-				if (evt.block.shouldSideBeRendered(evt.access, evt.xCoord+1, evt.yCoord, evt.zCoord, ForgeDirection.EAST.ordinal()))
-					evt.render.renderFaceXPos(evt.block, evt.xCoord+o, evt.yCoord, evt.zCoord, BlockPartialBounds.fenceOverlay);
-				if (evt.block.shouldSideBeRendered(evt.access, evt.xCoord, evt.yCoord, evt.zCoord-1, ForgeDirection.NORTH.ordinal()))
-					evt.render.renderFaceZNeg(evt.block, evt.xCoord, evt.yCoord, evt.zCoord-o, BlockPartialBounds.fenceOverlay);
-				if (evt.block.shouldSideBeRendered(evt.access, evt.xCoord, evt.yCoord, evt.zCoord+1, ForgeDirection.SOUTH.ordinal()))
-					evt.render.renderFaceZPos(evt.block, evt.xCoord, evt.yCoord, evt.zCoord+o, BlockPartialBounds.fenceOverlay);
-				evt.render.enableAO = flag;
+				block.setBlockBoundsBasedOnState(access, x, y, z);
+				render.renderMaxX = block.getBlockBoundsMaxX();
+				render.renderMaxY = block.getBlockBoundsMaxY();
+				render.renderMaxZ = block.getBlockBoundsMaxZ();
+				render.renderMinX = block.getBlockBoundsMinX();
+				render.renderMinY = block.getBlockBoundsMinY();
+				render.renderMinZ = block.getBlockBoundsMinZ();
+				if (block.shouldSideBeRendered(access, x-1, y, z, ForgeDirection.WEST.ordinal()))
+					render.renderFaceXNeg(block, x-o, y, z, BlockPartialBounds.fenceOverlay);
+				if (block.shouldSideBeRendered(access, x+1, y, z, ForgeDirection.EAST.ordinal()))
+					render.renderFaceXPos(block, x+o, y, z, BlockPartialBounds.fenceOverlay);
+				if (block.shouldSideBeRendered(access, x, y, z-1, ForgeDirection.NORTH.ordinal()))
+					render.renderFaceZNeg(block, x, y, z-o, BlockPartialBounds.fenceOverlay);
+				if (block.shouldSideBeRendered(access, x, y, z+1, ForgeDirection.SOUTH.ordinal()))
+					render.renderFaceZPos(block, x, y, z+o, BlockPartialBounds.fenceOverlay);
+				render.enableAO = flag;
 			}
 		}
+		return false;
+	}
+
+	@Override
+	public int watcherSortIndex() {
+		return 0;
 	}
 
 	@SubscribeEvent
