@@ -167,7 +167,9 @@ public class GeoStrata extends DragonAPIMod {
 		proxy.registerRenderers();
 		OreDictionary.registerOre("seedCreepvine", creepvineSeeds);
 		if (ModList.IC2.isLoaded()) {
-			Recipes.extractor.addRecipe(new RecipeInputItemStack(new ItemStack(creepvineSeeds)), null, ReikaItemHelper.getSizedItemStack(IC2Handler.IC2Stacks.RUBBER.getItem(), 2));
+			ItemStack in = new ItemStack(creepvineSeeds);
+			ReikaRecipeHelper.addSmelting(in, ReikaItemHelper.getSizedItemStack(IC2Handler.IC2Stacks.RUBBER.getItem(), 2), 0);
+			Recipes.extractor.addRecipe(new RecipeInputItemStack(in), null, ReikaItemHelper.getSizedItemStack(IC2Handler.IC2Stacks.RUBBER.getItem(), 4));
 		}
 
 		MinecraftForge.EVENT_BUS.register(GeoEvents.instance);
