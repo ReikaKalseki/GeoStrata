@@ -18,6 +18,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 
+import Reika.ChromatiCraft.API.ChromatiAPI;
+import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.Instantiable.Data.Immutable.Coordinate;
 import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
@@ -68,7 +70,13 @@ public class VoidOpalGenerator implements RetroactiveGenerator {
 
 	@Override
 	public boolean canGenerateAt(World world, int chunkX, int chunkZ) {
-		return world.provider.dimensionId == 1;
+		return world.provider.dimensionId == 1 && this.isAppropriateChunk(world, chunkX, chunkZ);
+	}
+
+	private boolean isAppropriateChunk(World world, int chunkX, int chunkZ) {
+		if (ModList.CHROMATICRAFT.isLoaded() && ChromatiAPI.getAPI().worldgen().getEndIslandBias(world, chunkX, chunkZ) > 0)
+			return false;
+		return true;
 	}
 
 	@Override

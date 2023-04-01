@@ -82,7 +82,9 @@ public class DecoGenerator implements RetroactiveGenerator {
 
 	public static enum Decorations {
 		OCEANSPIKE(20),
-		OCEANSPIKES(80);
+		OCEANSPIKES(80),
+		CREEPVINE(15);
+		;
 
 		public final int chancePerChunk;
 
@@ -102,6 +104,9 @@ public class DecoGenerator implements RetroactiveGenerator {
 				case OCEANSPIKE:
 				case OCEANSPIKES:
 					return ReikaBiomeHelper.isOcean(b) && ReikaWorldHelper.getDepthFromBelow(world, x, y-1, z, FluidRegistry.WATER) > 2;
+				case CREEPVINE:
+					int depth = ReikaWorldHelper.getDepthFromBelow(world, x, y-1, z, FluidRegistry.WATER);
+					return ReikaBiomeHelper.isOcean(b) && depth > 5 && depth < 35;
 				default:
 					return true;
 			}
@@ -126,6 +131,9 @@ public class DecoGenerator implements RetroactiveGenerator {
 						int dy = world.getTopSolidOrLiquidBlock(dx, dz);
 						OCEANSPIKE.generate(world, dx, dy, dz, rand);
 					}
+					return true;
+				case CREEPVINE:
+
 					return true;
 			}
 			return false;

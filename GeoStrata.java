@@ -18,6 +18,7 @@ import java.util.Locale;
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -42,8 +43,10 @@ import Reika.DragonAPI.Instantiable.IO.ModLogger;
 import Reika.DragonAPI.Libraries.ReikaRecipeHelper;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
+import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.DragonAPI.ModInteract.DeepInteract.ReikaThaumHelper;
 import Reika.DragonAPI.ModInteract.ItemHandlers.ExtraUtilsHandler;
+import Reika.DragonAPI.ModInteract.ItemHandlers.IC2Handler;
 import Reika.DragonAPI.ModInteract.RecipeHandlers.ThermalRecipeHelper;
 import Reika.GeoStrata.Blocks.BlockGlowingVines.TileGlowingVines;
 import Reika.GeoStrata.Blocks.BlockPartialBounds.TilePartialBounds;
@@ -52,6 +55,7 @@ import Reika.GeoStrata.Blocks.BlockRFCrystalSeed.TileRFCrystal;
 import Reika.GeoStrata.Blocks.BlockVent.TileEntityVent;
 import Reika.GeoStrata.Blocks.BlockVent.VentType;
 import Reika.GeoStrata.Items.ItemBlockAnyGeoVariant;
+import Reika.GeoStrata.Items.ItemCreepvineSeeds;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockGeneratorTypes;
@@ -82,6 +86,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import forestry.api.storage.BackpackManager;
+import ic2.api.recipe.RecipeInputItemStack;
+import ic2.api.recipe.Recipes;
 import thaumcraft.api.aspects.Aspect;
 
 @Mod(modid = GeoStrata.MOD_NAME, name = GeoStrata.MOD_NAME, version = "v@MAJOR_VERSION@@MINOR_VERSION@", certificateFingerprint = "@GET_FINGERPRINT@", dependencies="required-after:DragonAPI")
@@ -111,6 +117,8 @@ public class GeoStrata extends DragonAPIMod {
 	@SidedProxy(clientSide="Reika.GeoStrata.GeoClient", serverSide="Reika.GeoStrata.GeoCommon")
 	public static GeoCommon proxy;
 
+	public static Item creepvineSeeds;
+
 	@Override
 	@EventHandler
 	public void preload(FMLPreInitializationEvent evt) {
@@ -128,6 +136,10 @@ public class GeoStrata extends DragonAPIMod {
 		if (ModList.CHISEL.isLoaded() && ReikaJavaLibrary.doesClassExist("com.cricketcraft.chisel.api.carving.ICarvingGroup")) {
 			GeoChisel.loadChiselCompat();
 		}
+
+		creepvineSeeds = new ItemCreepvineSeeds();
+		creepvineSeeds.setUnlocalizedName("creepvineseeds");
+		GameRegistry.registerItem(creepvineSeeds, "creepvineseeds");
 
 		this.basicSetup(evt);
 		this.finishTiming();
@@ -153,6 +165,10 @@ public class GeoStrata extends DragonAPIMod {
 
 		GeoRecipes.addRecipes();
 		proxy.registerRenderers();
+		OreDictionary.registerOre("seedCreepvine", creepvineSeeds);
+		if (ModList.IC2.isLoaded()) {
+			Recipes.extractor.addRecipe(new RecipeInputItemStack(new ItemStack(creepvineSeeds)), null, ReikaItemHelper.getSizedItemStack(IC2Handler.IC2Stacks.RUBBER.getItem(), 2));
+		}
 
 		MinecraftForge.EVENT_BUS.register(GeoEvents.instance);
 

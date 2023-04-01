@@ -3,6 +3,7 @@ package Reika.GeoStrata.Registry;
 import Reika.DragonAPI.Base.ISBRH;
 import Reika.DragonAPI.Interfaces.Registry.ISBRHEnum;
 import Reika.GeoStrata.Rendering.ConnectedStoneRenderer;
+import Reika.GeoStrata.Rendering.CreepvineRenderer;
 import Reika.GeoStrata.Rendering.DecoGenRenderer;
 import Reika.GeoStrata.Rendering.GlowVineRenderer;
 import Reika.GeoStrata.Rendering.LavaRockRenderer;
@@ -19,7 +20,9 @@ public enum GeoISBRH implements ISBRHEnum {
 	deco(DecoGenRenderer.class),
 	vine(GlowVineRenderer.class),
 	//shaped(),
-	voidopal(VoidOpalRenderer.class);
+	voidopal(VoidOpalRenderer.class),
+	creepvine(CreepvineRenderer.class),
+	;
 
 	private final Class<? extends ISBRH> renderClass;
 

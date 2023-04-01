@@ -23,6 +23,7 @@ import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.Java.ReikaStringParser;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Base.RockBlock;
+import Reika.GeoStrata.Blocks.BlockCreepvine;
 import Reika.GeoStrata.Blocks.BlockDecoGen;
 import Reika.GeoStrata.Blocks.BlockGeoSlab;
 import Reika.GeoStrata.Blocks.BlockGeoStairs;
@@ -59,7 +60,9 @@ public enum GeoBlocks implements BlockEnum {
 	GLOWVINE(BlockGlowingVines.class, ItemBlockGlowingVines.class, "Glowing Vines"),
 	RFCRYSTAL(BlockRFCrystal.class,	null, "Flux Crystals"),
 	RFCRYSTALSEED(BlockRFCrystalSeed.class,	ItemBlockFluxCrystal.class, "Flux Crystal Seed"),
-	VOIDOPAL(BlockVoidOpal.class, null, "Void Opals");
+	VOIDOPAL(BlockVoidOpal.class, null, "Void Opals"),
+	CREEPVINE(BlockCreepvine.class, MetadataItemBlock.class, "Creepvine"),
+	;
 
 	private final Class blockClass;
 	private final String blockName;
@@ -134,7 +137,7 @@ public enum GeoBlocks implements BlockEnum {
 
 	@Override
 	public Class[] getConstructorParamTypes() {
-		if (this == GLOWVINE)
+		if (this == GLOWVINE || this == CREEPVINE)
 			return new Class[0];
 		if (typeName != null)
 			return new Class[]{Material.class, String.class};
@@ -143,7 +146,7 @@ public enum GeoBlocks implements BlockEnum {
 
 	@Override
 	public Object[] getConstructorParams() {
-		if (this == GLOWVINE)
+		if (this == GLOWVINE || this == CREEPVINE)
 			return new Object[0];
 		if (typeName != null)
 			return new Object[]{this.getBlockMaterial(), typeName};
@@ -208,6 +211,7 @@ public enum GeoBlocks implements BlockEnum {
 			case RFCRYSTAL:
 			case RFCRYSTALSEED:
 			case VOIDOPAL:
+			case CREEPVINE:
 				return false;
 			default:
 				return true;
@@ -222,6 +226,8 @@ public enum GeoBlocks implements BlockEnum {
 			return DecoBlocks.list.length;
 		if (this == DECOGEN)
 			return BlockDecoGen.Types.list.length;
+		if (this == CREEPVINE)
+			return 4;
 		return 1;
 	}
 
