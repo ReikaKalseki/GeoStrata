@@ -14,7 +14,6 @@ import java.util.Random;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.init.Blocks;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.IBlockAccess;
@@ -23,6 +22,7 @@ import Reika.DragonAPI.Base.ISBRH;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.Rendering.ReikaRenderHelper;
 import Reika.GeoStrata.Blocks.BlockCreepvine;
+import Reika.GeoStrata.Blocks.BlockCreepvine.Pieces;
 
 
 public class CreepvineRenderer extends ISBRH {
@@ -47,33 +47,53 @@ public class CreepvineRenderer extends ISBRH {
 		float dy0 = (float)ReikaRandomHelper.getRandomPlusMinus(0.125, 0.0625, renderRandNoY);
 		Tessellator.instance.addTranslation(dx0, dy0, dz0);
 
-		int meta = world.getBlockMetadata(x, y, z);
+		Pieces piece = Pieces.list[world.getBlockMetadata(x, y, z)];
 		BlockCreepvine b = (BlockCreepvine)block;
 
-		IIcon ico = Blocks.bedrock.blockIcon;
-		switch(meta) {
-			case 0:
-				ico = b.getRandomBaseIcon(renderRand);
+		IIcon ico = b.blockIcon;
+		double r = 0.5;
+		double w = 0.0625;
+		switch(piece) {
+			case ROOT:
+				ico = b.getRandomRootIcon(renderRand);
 				break;
-			case 1:
-				ico = b.blockIcon;
+			case STEM:
+			case STEM_EMPTY:
+				ico = b.getRandomStemIcon(renderRand, piece == Pieces.STEM_EMPTY);
 				break;
-			case 2:
-				ico = b.getRandomTopIcon(renderRand);
+			case TOP_YOUNG:
+				ico = b.getRandomTopIcon(renderRand, true);
+				w = 0;
+				r = 0.75;
 				break;
+			case TOP:
+				ico = b.getRandomTopIcon(renderRand, false);
+				w = 0.25;
+				break;
+			default:
+				break;
+		}
+		if (piece.isCore()) {
+			ico = b.blockIcon;
+			w = 0.125;
 		}
 		Tessellator.instance.setColorOpaque_I(0xffffff);
 		Tessellator.instance.setBrightness(b.getMixedBrightnessForBlock(world, x, y, z));
 		float dx = (float)ReikaRandomHelper.getRandomPlusMinus(0, 0.03125, renderRand);
 		float dz = (float)ReikaRandomHelper.getRandomPlusMinus(0, 0.03125, renderRand);
-		double w = ReikaRandomHelper.getRandomBetween(0, 0.125, rand);
 		Tessellator.instance.addTranslation(dx, 0, dz);
-		ReikaRenderHelper.renderCropTypeTex(world, x, y, z, ico, Tessellator.instance, rb, w, 1);
+		ReikaRenderHelper.renderCropTypeTex(world, x, y, z, ico, Tessellator.instance, rb, w, 1, r);
 
-		if (meta >= 3) {
+		if (piece == Pieces.TOP && world.getBlock(x, y+1, z) != b) {
+			rb.renderMaxY = 0.9375;
+			rb.renderFaceYPos(b, x, y, z, b.getBlockTop());
+		}
+
+		int seeds = piece.getSeedCount();
+		if (seeds > 0) {
 			Tessellator.instance.setBrightness(240);
-			for (int i = 3; i <= meta; i++) {
-				ReikaRenderHelper.renderCropTypeTex(world, x, y, z, b.getSeedIcon(i-3), Tessellator.instance, rb, w, 1);
+			for (int i = 0; i < seeds; i++) {
+				ReikaRenderHelper.renderCropTypeTex(world, x, y, z, b.getSeedIcon(i), Tessellator.instance, rb, ReikaRandomHelper.getRandomPlusMinus(0, 0.03125, renderRand), 1);
 			}
 		}
 

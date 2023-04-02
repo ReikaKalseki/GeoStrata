@@ -16,24 +16,30 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 
 import Reika.DragonAPI.Instantiable.Data.Immutable.BlockBounds;
 import Reika.DragonAPI.Instantiable.Data.Immutable.Coordinate;
 import Reika.DragonAPI.Instantiable.Event.EntityDecreaseAirEvent;
+import Reika.DragonAPI.Instantiable.Event.Client.BlockIconEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.ItemEffectRenderEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.RenderBlockAtPosEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.RenderBlockAtPosEvent.BlockRenderWatcher;
 import Reika.DragonAPI.Libraries.IO.ReikaTextureHelper;
+import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.DragonAPI.Libraries.Rendering.ReikaGuiAPI;
 import Reika.GeoStrata.Blocks.BlockDecoGen.Types;
 import Reika.GeoStrata.Blocks.BlockPartialBounds;
@@ -51,6 +57,9 @@ public class GeoEvents implements BlockRenderWatcher {
 
 	public static final GeoEvents instance = new GeoEvents();
 
+	private IIcon whitePackedIce;
+	private IIcon glossyPackedIce;
+
 	private GeoEvents() {
 		RenderBlockAtPosEvent.addListener(this);
 	}
@@ -64,6 +73,42 @@ public class GeoEvents implements BlockRenderWatcher {
 		GL11.glDepthMask(true);
 	}
 	 */
+
+	@SubscribeEvent
+	public void correctPackedIceDrops(HarvestDropsEvent evt) {
+		if (evt.block == Blocks.packed_ice) {
+			for (int i = 0; i < evt.drops.size(); i++) {
+				ItemStack is = evt.drops.get(i);
+				if (ReikaItemHelper.matchStackWithBlock(is, Blocks.packed_ice))
+					evt.drops.set(i, new ItemStack(Blocks.packed_ice, is.stackSize, evt.blockMetadata));
+			}
+		}
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void textureHook(TextureStitchEvent.Pre event) {
+		if (event.map.getTextureType() == 0) {
+			whitePackedIce = event.map.registerIcon("geostrata:whiteice");
+			glossyPackedIce = event.map.registerIcon("geostrata:glossyice");
+		}
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void retexturePackedIce(BlockIconEvent evt) {
+		if (evt.blockType == Blocks.packed_ice) {
+			switch(evt.getMetadata()) {
+				case 1:
+					evt.icon = whitePackedIce;
+					break;
+				case 2:
+					evt.icon = glossyPackedIce;
+					break;
+			}
+		}
+	}
+
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void fixAirRender(RenderGameOverlayEvent.Pre evt) {

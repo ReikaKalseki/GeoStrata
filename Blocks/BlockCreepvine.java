@@ -22,6 +22,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import Reika.DragonAPI.Interfaces.Block.Submergeable;
 import Reika.DragonAPI.Libraries.ReikaPlayerAPI;
+import Reika.DragonAPI.Libraries.IO.ReikaSoundHelper;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.GeoISBRH;
@@ -31,15 +32,55 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class BlockCreepvine extends Block implements Submergeable, IPlantable, IShearable {
 
-	private final IIcon[] icons = new IIcon[3];
-	private final IIcon[] seedIcons = new IIcon[6];
-	private final IIcon[] topIcons = new IIcon[3];
+	private final IIcon[] rootIcons = new IIcon[2];
+	private final IIcon[] stemIcons = new IIcon[4];
+	private final IIcon[] stemEmptyIcons = new IIcon[2];
+	private final IIcon[] seedIcons = new IIcon[5];
+	private final IIcon[] topIcons = new IIcon[4];
+	private final IIcon[] topYoungIcons = new IIcon[1];
+	private IIcon topIcon;
 
 	public BlockCreepvine() {
-		super(Material.plants);
+		super(Material.water);
 		this.setTickRandomly(true);
 		this.setCreativeTab(GeoStrata.tabGeo);
 		this.setStepSound(soundTypeGrass);
+	}
+
+	public static enum Pieces {
+		ROOT,
+		STEM,
+		TOP,
+		CORE_EMPTY,
+		CORE_1,
+		CORE_2,
+		CORE_3,
+		CORE_4,
+		CORE_5,
+		TOP_YOUNG,
+		STEM_EMPTY;
+
+		public static final Pieces[] list = values();
+
+		public boolean canGrowSeeds() {
+			return this.ordinal() >= CORE_EMPTY.ordinal() && this.ordinal() <= CORE_4.ordinal();
+		}
+
+		public boolean canBeHarvested() {
+			return this.ordinal() > CORE_EMPTY.ordinal() && this.ordinal() <= CORE_5.ordinal();
+		}
+
+		public boolean isCore() {
+			return this.ordinal() >= CORE_EMPTY.ordinal() && this.ordinal() <= CORE_5.ordinal();
+		}
+
+		public int getSeedCount() {
+			return this.canBeHarvested() ? this.ordinal()-CORE_EMPTY.ordinal() : 0;
+		}
+
+		public int getLightLevel() {
+			return this.canBeHarvested() ? this.getSeedCount()*3 : 0;
+		}
 	}
 
 	@Override
@@ -55,8 +96,15 @@ public class BlockCreepvine extends Block implements Submergeable, IPlantable, I
 	@Override
 	public void registerBlockIcons(IIconRegister ico) {
 		blockIcon = ico.registerIcon("geostrata:creepvine/core");
-		for (int i = 0; i < icons.length; i++) {
-			icons[i] = ico.registerIcon("geostrata:creepvine/"+i);
+		topIcon = ico.registerIcon("geostrata:creepvine/block_top");
+		for (int i = 0; i < stemIcons.length; i++) {
+			stemIcons[i] = ico.registerIcon("geostrata:creepvine/stem_"+i);
+		}
+		for (int i = 0; i < stemEmptyIcons.length; i++) {
+			stemEmptyIcons[i] = ico.registerIcon("geostrata:creepvine/stem_empty_"+i);
+		}
+		for (int i = 0; i < rootIcons.length; i++) {
+			rootIcons[i] = ico.registerIcon("geostrata:creepvine/root_"+i);
 		}
 		for (int i = 0; i < seedIcons.length; i++) {
 			seedIcons[i] = ico.registerIcon("geostrata:creepvine/seed_"+i);
@@ -64,31 +112,43 @@ public class BlockCreepvine extends Block implements Submergeable, IPlantable, I
 		for (int i = 0; i < topIcons.length; i++) {
 			topIcons[i] = ico.registerIcon("geostrata:creepvine/top_"+i);
 		}
+		for (int i = 0; i < topYoungIcons.length; i++) {
+			topYoungIcons[i] = ico.registerIcon("geostrata:creepvine/top_young_"+i);
+		}
 	}
 
-	public IIcon getRandomBaseIcon(Random rand) {
-		return icons[rand.nextInt(icons.length)];
+	public IIcon getRandomRootIcon(Random rand) {
+		return rootIcons[rand.nextInt(rootIcons.length)];
 	}
 
-	public IIcon getRandomTopIcon(Random rand) {
-		return topIcons[rand.nextInt(topIcons.length)];
+	public IIcon getRandomStemIcon(Random rand, boolean empty) {
+		IIcon[] arr = empty ? stemEmptyIcons : stemIcons;
+		return arr[rand.nextInt(arr.length)];
+	}
+
+	public IIcon getRandomTopIcon(Random rand, boolean young) {
+		IIcon[] arr = young ? topYoungIcons : topIcons;
+		return arr[rand.nextInt(arr.length)];
 	}
 
 	public IIcon getSeedIcon(int idx) {
 		return seedIcons[idx];
 	}
 
+	public IIcon getBlockTop() {
+		return topIcon;
+	}
+
 	@Override
 	public int getLightValue(IBlockAccess world, int x, int y, int z) {
-		int meta = world.getBlockMetadata(x, y, z);
-		return Math.max(0, (meta-3)*3);
+		return Pieces.list[world.getBlockMetadata(x, y, z)].getLightLevel();
 	}
 
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand) {
 		if (this.checkStability(world, x, y, z)) {
 			int m = world.getBlockMetadata(x, y, z);
-			if (m >= 3 && m < 7) {
+			if (Pieces.list[m].canGrowSeeds()) {
 				world.setBlockMetadataWithNotify(x, y, z, m+1, 3);
 				world.markBlockForUpdate(x, y, z);
 			}
@@ -98,12 +158,15 @@ public class BlockCreepvine extends Block implements Submergeable, IPlantable, I
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer ep, int s, float a, float b, float c) {
 		int m = world.getBlockMetadata(x, y, z);
-		if (m > 3) {
+		if (Pieces.list[m].canBeHarvested()) {
 			world.setBlockMetadataWithNotify(x, y, z, m-1, 3);
 			world.markBlockForUpdate(x, y, z);
 			ReikaPlayerAPI.addOrDropItem(new ItemStack(GeoStrata.creepvineSeeds), ep);
+			ReikaSoundHelper.playSoundAtBlock(world, x, y, z, "random.click", 0.5F, 2F);
 			return true;
 		}
+		else if (Pieces.list[m] == Pieces.CORE_EMPTY)
+			return true;
 		return false;
 	}
 
@@ -115,7 +178,27 @@ public class BlockCreepvine extends Block implements Submergeable, IPlantable, I
 	@Override
 	public boolean canPlaceBlockAt(World world, int x, int y, int z) {
 		Block b = world.getBlock(x, y-1, z);
-		return b == this || b == Blocks.dirt || b == Blocks.sand || b.canSustainPlant(world, x, y-1, z, ForgeDirection.UP, this);
+		int m = world.getBlockMetadata(x, y-1, z);
+		Pieces p = world.getBlock(x, y, z) == this ? Pieces.list[world.getBlockMetadata(x, y, z)] : Pieces.ROOT;
+		switch(p) {
+			case CORE_EMPTY:
+			case CORE_1:
+			case CORE_2:
+			case CORE_3:
+			case CORE_4:
+			case CORE_5:
+				return b == this && m == Pieces.STEM_EMPTY.ordinal();
+			case ROOT:
+				return b == Blocks.dirt || b == Blocks.gravel || b == Blocks.clay || b == Blocks.sand || b.canSustainPlant(world, x, y-1, z, ForgeDirection.UP, this);
+			case STEM:
+			case STEM_EMPTY:
+				return b == this && (m == Pieces.ROOT.ordinal() || m == p.ordinal());
+			case TOP:
+				return b == this && (Pieces.list[m].isCore() || m == Pieces.TOP.ordinal());
+			case TOP_YOUNG:
+				return b == this && m == Pieces.STEM.ordinal();
+		}
+		return false;
 	}
 
 	@Override
@@ -161,7 +244,7 @@ public class BlockCreepvine extends Block implements Submergeable, IPlantable, I
 
 	@Override
 	public boolean renderLiquid(int meta) {
-		return false;
+		return true;
 	}
 
 	@Override

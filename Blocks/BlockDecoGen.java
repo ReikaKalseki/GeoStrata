@@ -33,7 +33,8 @@ public class BlockDecoGen extends Block implements Submergeable {
 	}
 
 	public static enum Types {
-		CRYSTALSPIKE("Crystal Spike");
+		CRYSTALSPIKE("Crystal Spike"),
+		ICICLE("Icicle");
 
 		public final String name;
 

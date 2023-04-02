@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.MapColor;
+import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -62,6 +64,8 @@ import Reika.GeoStrata.Registry.RockGeneratorTypes;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 import Reika.GeoStrata.Rendering.OreRenderer;
+import Reika.GeoStrata.World.ArcticSpiresGenerator;
+import Reika.GeoStrata.World.CreepvineGenerator;
 import Reika.GeoStrata.World.DecoGenerator;
 import Reika.GeoStrata.World.GlowCrystalGenerator;
 import Reika.GeoStrata.World.GlowingVineGenerator;
@@ -119,6 +123,45 @@ public class GeoStrata extends DragonAPIMod {
 
 	public static Item creepvineSeeds;
 
+	public static final Material creepvineMaterial = new Material(MapColor.foliageColor) {
+
+		@Override
+		public boolean blocksMovement() {
+			return false;
+		}
+
+		@Override
+		public boolean isSolid() {
+			return true;
+		}
+
+		@Override
+		public boolean isOpaque() {
+			return false;
+		}
+
+		@Override
+		public boolean isReplaceable() {
+			return false;
+		}
+
+		@Override
+		public boolean getCanBlockGrass() {
+			return false;
+		}
+
+		@Override
+		public boolean isToolNotRequired() {
+			return true;
+		}
+
+		@Override
+		public int getMaterialMobility() {
+			return 1;
+		}
+
+	};
+
 	@Override
 	@EventHandler
 	public void preload(FMLPreInitializationEvent evt) {
@@ -158,7 +201,9 @@ public class GeoStrata extends DragonAPIMod {
 		RetroGenController.instance.addHybridGenerator(VentGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(LavaRockGeneratorRedesign.instance, 0, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(DecoGenerator.instance, 0, GeoOptions.RETROGEN.getState());
-		RetroGenController.instance.addHybridGenerator(GlowCrystalGenerator.instance, 0, GeoOptions.RETROGEN.getState());
+		RetroGenController.instance.addHybridGenerator(CreepvineGenerator.instance, Integer.MIN_VALUE, GeoOptions.RETROGEN.getState());
+		RetroGenController.instance.addHybridGenerator(ArcticSpiresGenerator.instance, Integer.MIN_VALUE, GeoOptions.RETROGEN.getState());
+		RetroGenController.instance.addHybridGenerator(GlowCrystalGenerator.instance, Integer.MIN_VALUE, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(GlowingVineGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(RFCrystalGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(VoidOpalGenerator.instance, 0, GeoOptions.RETROGEN.getState());
