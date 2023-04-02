@@ -194,15 +194,15 @@ public class DecoGenRenderer extends ISBRH {
 				if (renderPass == 0) {
 					for (int i = 0; i < 3; i++) {
 						int y0 = y;
-						double w = ReikaRandomHelper.getRandomBetween(3D, 5D, renderRand);
+						double w = ReikaRandomHelper.getRandomBetween(2D, 4D, renderRand);
 						double dx = ReikaRandomHelper.getRandomPlusMinus(0, 8-w, renderRand);
 						double dz = ReikaRandomHelper.getRandomPlusMinus(0, 8-w, renderRand);
-						double h = (float)ReikaRandomHelper.getRandomBetween(10D, 16D, renderRand);
+						double h = (float)ReikaRandomHelper.getRandomBetween(7D, 24D, renderRand);
 						double dy = 16-h;
 						while (w >= 1) {
 							ReikaRenderHelper.renderBlockSubCube(x, y, z, 8-w+dx, dy, 8-w+dz, w*2, h, w*2, v5, rb, Blocks.packed_ice, 1);
-							w -= ReikaRandomHelper.getRandomBetween(1D, 2D, renderRand);
-							h *= ReikaRandomHelper.getRandomBetween(0.5, 1, renderRand);
+							w -= ReikaRandomHelper.getRandomBetween(0.5D, 1.25D, renderRand);
+							h *= ReikaRandomHelper.getRandomBetween(0.75, 1, renderRand);
 							dy -= h;
 							y0 = (int)(y-dy/16D);
 						}
