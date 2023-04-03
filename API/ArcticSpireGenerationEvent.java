@@ -18,14 +18,16 @@ public class ArcticSpireGenerationEvent extends Event {
 	public final int centerZ;
 	public final Random chunkRand;
 
+	public final Set<Coordinate> coreColumn;
 	public final Set<Coordinate> underhangSnow;
 
-	public ArcticSpireGenerationEvent(World w, int x, int y, int z, Random r, Set<Coordinate> s) {
+	public ArcticSpireGenerationEvent(World w, int x, int y, int z, Random r, Set<Coordinate> cc, Set<Coordinate> s) {
 		world = w;
 		centerX = x;
 		baseY = y;
 		centerZ = z;
 		underhangSnow = s;
+		coreColumn = cc;
 		chunkRand = r;
 	}
 
