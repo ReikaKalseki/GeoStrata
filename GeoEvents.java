@@ -38,6 +38,7 @@ import Reika.DragonAPI.Instantiable.Event.Client.BlockIconEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.ItemEffectRenderEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.RenderBlockAtPosEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.RenderBlockAtPosEvent.BlockRenderWatcher;
+import Reika.DragonAPI.Instantiable.Event.Client.SinglePlayerLogoutEvent;
 import Reika.DragonAPI.Libraries.IO.ReikaTextureHelper;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.DragonAPI.Libraries.Rendering.ReikaGuiAPI;
@@ -46,9 +47,12 @@ import Reika.GeoStrata.Blocks.BlockPartialBounds;
 import Reika.GeoStrata.Blocks.BlockPartialBounds.TilePartialBounds;
 import Reika.GeoStrata.Blocks.BlockVent;
 import Reika.GeoStrata.Registry.GeoBlocks;
+import Reika.GeoStrata.World.ArcticSpiresGenerator;
 
 import cpw.mods.fml.common.eventhandler.Event.Result;
+import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -73,6 +77,17 @@ public class GeoEvents implements BlockRenderWatcher {
 		GL11.glDepthMask(true);
 	}
 	 */
+
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void clearCachedTiles(SinglePlayerLogoutEvent evt) {
+		ArcticSpiresGenerator.instance.clear();
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void clearCachedTiles(ClientDisconnectionFromServerEvent evt) {
+		ArcticSpiresGenerator.instance.clear();
+	}
 
 	@SubscribeEvent
 	public void correctPackedIceDrops(HarvestDropsEvent evt) {

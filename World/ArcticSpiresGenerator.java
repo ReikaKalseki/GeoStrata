@@ -9,6 +9,7 @@
  ******************************************************************************/
 package Reika.GeoStrata.World;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map.Entry;
@@ -22,14 +23,18 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.common.MinecraftForge;
 
 import Reika.DragonAPI.Instantiable.Data.Immutable.Coordinate;
+import Reika.DragonAPI.Instantiable.Data.Immutable.DecimalPosition;
 import Reika.DragonAPI.Instantiable.Math.LobulatedCurve;
 import Reika.DragonAPI.Instantiable.Math.Noise.SimplexNoiseGenerator;
+import Reika.DragonAPI.Instantiable.Math.Noise.VoronoiNoiseGenerator;
 import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
+import Reika.GeoStrata.API.ArcticSpireGenerationEvent;
 import Reika.GeoStrata.Blocks.BlockDecoGen.Types;
 import Reika.GeoStrata.Registry.GeoBlocks;
 
@@ -41,11 +46,14 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 
 	private long seed;
 	private SimplexNoiseGenerator mainNoise;
+	private VoronoiNoiseGenerator zoneNoise;
 	private SimplexNoiseGenerator iceLayerNoiseLarge;
 	private SimplexNoiseGenerator iceLayerNoiseSharp;
 
 	private final HashMap<Coordinate, Integer> columns = new HashMap();
 	private final HashSet<Coordinate> lipRing = new HashSet();
+
+	private DecimalPosition currentClosestZone;
 
 	private ArcticSpiresGenerator() {
 
@@ -56,48 +64,87 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 		if (world.getWorldInfo().getTerrainType() != WorldType.FLAT && Math.abs(world.provider.dimensionId) != 1) {
 			chunkX *= 16;
 			chunkZ *= 16;
-			int x = chunkX + 8;
-			int z = chunkZ + 8;
+			int x = chunkX + random.nextInt(16);
+			int z = chunkZ + random.nextInt(16);
 			BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
-			if (biome == BiomeGenBase.icePlains) {
+			if (biome == BiomeGenBase.icePlains || biome == BiomeGenBase.iceMountains) {
 				this.setSeed(world);
-				if (mainNoise.getValue(x, z) >= 0.72) {
-					this.generateCluster(world, x, z, random);
+				if (this.isGennableZone(x, z)) {
+					this.generateCluster(world, x, z, random, 3); //was 18
 				}
+
+				/*
+				DecimalPosition pos = zoneNoise.getClosestRoot(x, 64, z);
+				int val = pos.hashCode();
+				int m = ((val%16)+16)%16;
+				ReikaJavaLibrary.pConsole(x+","+z+">"+pos+">"+val+">"+m);
+				for (int dx = chunkX; dx < chunkX+16; dx++) {
+					for (int dz = chunkZ; dz < chunkZ+16; dz++) {
+						int y = world.getTopSolidOrLiquidBlock(dx, dz)-1;
+						while (y > 0 && (ReikaWorldHelper.softBlocks(world, dx, y, dz) || world.getBlock(dx, y, dz).isWood(world, dx, y, dz) || world.getBlock(dx, y, dz).isLeaves(world, dx, y, dz)))
+							y--;
+						world.setBlock(dx, y, dz, Blocks.wool, m, 2);/*
+						world.setBlock(dx, 91, dz, Blocks.standing_sign);
+						TileEntitySign te = (TileEntitySign)world.getTileEntity(dx, 91, dz);
+						te.signText[0] = String.format("%.1f", pos.getDistanceTo(x, pos.yCoord, z));*//*
+			}
+		}*/
 			}
 		}
 	}
 
+	private boolean isGennableZone(int x, int z) {
+		//return mainNoise.getValue(x, z) >= 0.72;
+		currentClosestZone = zoneNoise.getClosestRoot(x, 64, z);
+		return currentClosestZone != null && currentClosestZone.getDistanceTo(x, currentClosestZone.yCoord, z) <= 90;
+	}
+
 	private void setSeed(World world) {
 		long s = world.getSeed();
-		mainNoise = null;
 		if (seed != s || mainNoise == null) {
 			seed = s;
 			Random rand = new Random(seed);
 			rand.nextBoolean();
 			mainNoise = (SimplexNoiseGenerator)new SimplexNoiseGenerator(seed).setFrequency(0.003);
-			iceLayerNoiseLarge = (SimplexNoiseGenerator)new SimplexNoiseGenerator(-seed).setFrequency(0.015);
-			iceLayerNoiseSharp = (SimplexNoiseGenerator)new SimplexNoiseGenerator(~seed).setFrequency(0.2);
+			zoneNoise = (VoronoiNoiseGenerator)new VoronoiNoiseGenerator(seed).setFrequency(0.0024D);
+			iceLayerNoiseLarge = (SimplexNoiseGenerator)new SimplexNoiseGenerator(-seed).setFrequency(0.01);
+			iceLayerNoiseSharp = (SimplexNoiseGenerator)new SimplexNoiseGenerator(~seed).setFrequency(0.15);
+			zoneNoise.randomFactor = 0.45;
 		}
 	}
 
-	private int generateCluster(World world, int x0, int z0, Random random) {
+	private int generateCluster(World world, int x0, int z0, Random random, int amt) {
 		int count = 0;
-		double baseTilt = random.nextDouble()*360;
-		for (int i = 0; i < 18; i++) {
+		double baseTilt = /*random.nextDouble()*360;*/(currentClosestZone.hashCode()*2387.183)%360D;
+		HashSet<Coordinate> genned = new HashSet();
+		for (int i = 0; i < amt; i++) {
 			int x = ReikaRandomHelper.getRandomPlusMinus(x0, 64, random);
 			int z = ReikaRandomHelper.getRandomPlusMinus(z0, 64, random);
+			boolean flag = true;
+			while (flag) {
+				flag = false;
+				for (Coordinate c : genned) {
+					if (c.getTaxicabDistanceTo(x, c.yCoord, z) < 24) {
+						flag = true;
+						x = ReikaRandomHelper.getRandomPlusMinus(x0, 64, random);
+						z = ReikaRandomHelper.getRandomPlusMinus(z0, 64, random);
+						break;
+					}
+				}
+			}
 			int y = world.getTopSolidOrLiquidBlock(x, z);
-			double tilt = ReikaRandomHelper.getRandomPlusMinus(baseTilt, 10, random);
+			double tilt = ReikaRandomHelper.getRandomPlusMinus(baseTilt, 12, random);
 			if (this.generate(world, x, y, z, tilt, random)) {
+				genned.add(new Coordinate(x, y, z));
 				count++;
 				for (Entry<Coordinate, Integer> e : columns.entrySet()) {
 					int dy = e.getValue();
-					if (dy < 80) {
+					if (dy <= 82) {
 						Coordinate c = e.getKey();
 						world.setBlock(c.xCoord, dy, c.zCoord, Blocks.packed_ice, 1, 2);
 					}
 				}
+				HashSet<Coordinate> snowCover = new HashSet();
 				for (Coordinate c : lipRing) {
 					for (int dy = c.yCoord; dy >= c.yCoord-7; dy--) {
 						Block at = world.getBlock(c.xCoord, dy, c.zCoord);
@@ -107,12 +154,14 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 						else if (at == Blocks.grass || at == Blocks.sand || at == Blocks.dirt) {
 							if (world.getBlock(c.xCoord, dy+1, c.zCoord).isAir(world, c.xCoord, dy+1, c.zCoord)) {
 								world.setBlock(c.xCoord, dy+1, c.zCoord, Blocks.snow_layer);
+								snowCover.add(c.setY(dy+1));
 							}
 						}
 						if (at != GeoBlocks.DECOGEN.getBlockInstance() && ReikaWorldHelper.softBlocks(world, c.xCoord, dy, c.zCoord))
 							break;
 					}
 				}
+				MinecraftForge.EVENT_BUS.post(new ArcticSpireGenerationEvent(world, x, y, z, random, Collections.unmodifiableSet(snowCover)));
 			}
 		}
 		return count;
@@ -153,7 +202,7 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 		int y = maxY;
 
 		r = MathHelper.ceiling_double_int(r0);
-		double dT = ReikaRandomHelper.getRandomBetween(0.2, 0.5, rand);
+		double dT = ReikaRandomHelper.getRandomBetween(0.2, 0.6, rand);
 		double tiltX = dT*Math.cos(Math.toRadians(tilt));
 		double tiltZ = dT*Math.sin(Math.toRadians(tilt));
 		double rLip = ReikaRandomHelper.getRandomBetween(r0+4, r0+6, rand);
@@ -167,7 +216,7 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 				double d = ReikaMathLibrary.py3d(i, 0, k);
 				if (d <= r0) {
 					for (int j = minY-y; j < h1; j++) {
-						this.setBlock(world, x+i, dy+j, z+k, Blocks.packed_ice, d <= r0-1.5 ? 2 : 1);
+						this.setBlock(world, x+i, dy+j, z+k, Blocks.packed_ice, d <= r0-1.75 ? 2 : 1);
 					}
 				}
 			}
@@ -189,7 +238,7 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 					if (d <= rL) {
 						int dx = x+i;
 						int dz = z+k;
-						this.setBlock(world, dx, dy+j, dz, Blocks.packed_ice, d <= rL-1.5 ? 2 : 1);
+						this.setBlock(world, dx, dy+j, dz, Blocks.packed_ice, d <= rL-1.75 ? 2 : 1);
 						if (j == 0 && d > r0)
 							lipRing.add(new Coordinate(dx, dy, dz));
 						if (j == 0 && d >= rL-0.5 && rand.nextInt(2) == 0) {
@@ -210,10 +259,12 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 					int dz = z+k;
 					boolean ring = Math.abs(dy+j-this.getIceLayerHeight(dx, dz)) < 2;
 					double rL = ReikaMathLibrary.linterpolate(j, 0, h3-1, r1, 0.2);
+					if (rL < 1.25)
+						continue;
 					if (ring)
 						rL -= 0.875;
-					if (d <= rL && rL >= 1) {
-						this.setBlock(world, dx+MathHelper.floor_double(tiltX*j), dy+j, dz+MathHelper.floor_double(tiltZ*j), Blocks.packed_ice, d <= rL-1.5 || ring ? 2 : 1);
+					if (d <= rL ) {
+						this.setBlock(world, dx+MathHelper.floor_double(tiltX*j), dy+j, dz+MathHelper.floor_double(tiltZ*j), Blocks.packed_ice, d <= rL-1.75 || ring ? 2 : 1);
 					}
 				}
 			}
@@ -257,6 +308,14 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 	@Override
 	public String getIDString() {
 		return "GeoStrata Arctic Spires";
+	}
+
+	public void clear() {
+		seed = -1;
+		mainNoise = null;
+		zoneNoise = null;
+		iceLayerNoiseSharp = null;
+		iceLayerNoiseLarge = null;
 	}
 
 }
