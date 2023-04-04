@@ -9,6 +9,7 @@
  ******************************************************************************/
 package Reika.GeoStrata.World;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,6 +32,7 @@ import Reika.DragonAPI.Instantiable.Math.LobulatedCurve;
 import Reika.DragonAPI.Instantiable.Math.Noise.SimplexNoiseGenerator;
 import Reika.DragonAPI.Instantiable.Math.Noise.VoronoiNoiseGenerator;
 import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
+import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
@@ -136,18 +138,32 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 				genned.add(new Coordinate(x, y, z));
 				count++;
 				HashSet<Coordinate> snowCover = new HashSet();
-				for (Coordinate c : sp.core) {
-					if (c.yCoord == 0 || random.nextInt(8) > 0 || c.yCoord >= sp.lipYBottom)
-						continue;
-					boolean flag2 = false;
-					for (Coordinate c2 : c.getAdjacentCoordinates()) {
-						if (!sp.core.contains(c2.to2D())) {
-							flag2 = true;
-							break;
+				if (VeinType.ICE.isEnabled()) {
+					ArrayList<Coordinate> veinAttempts = new ArrayList(sp.core);
+					int veins = 0;
+					int max = ReikaRandomHelper.getRandomBetween(3, 9, random);
+					while (veins < max && !veinAttempts.isEmpty()) {
+						Coordinate c = ReikaJavaLibrary.getAndRemoveRandomCollectionEntry(random, veinAttempts);
+						if (c.yCoord == 0 || c.yCoord >= sp.lipYBottom || c.yCoord >= Math.max(sp.lipYBottom-2, y+3))
+							continue;
+						boolean flag2 = false;
+						int air = 0;
+						int self = 0;
+						for (Coordinate c2 : c.getAdjacentCoordinates()) {
+							if (!sp.core.contains(c2.to2D()))
+								flag2 = true;
+							if (c2.isEmpty(world)) {
+								air++;
+							}
+							else if (c2.getBlock(world) == GeoBlocks.OREVEIN.getBlockInstance()) {
+								flag2 = false;
+								break;
+							}
 						}
-					}
-					if (flag2) {
-						c.setBlock(world, GeoBlocks.OREVEIN.getBlockInstance(), VeinType.ICE.ordinal(), 2);
+						if (flag2 && air == 1) {
+							c.setBlock(world, GeoBlocks.OREVEIN.getBlockInstance(), VeinType.ICE.ordinal(), 2);
+							veins++;
+						}
 					}
 				}
 				for (Entry<Coordinate, Integer> e : sp.columns.entrySet()) {

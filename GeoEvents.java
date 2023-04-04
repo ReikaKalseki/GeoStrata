@@ -34,13 +34,14 @@ import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import Reika.DragonAPI.Instantiable.Data.Immutable.BlockBounds;
 import Reika.DragonAPI.Instantiable.Data.Immutable.Coordinate;
 import Reika.DragonAPI.Instantiable.Event.EntityDecreaseAirEvent;
+import Reika.DragonAPI.Instantiable.Event.PlayerPlaceBlockEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.BlockIconEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.ItemEffectRenderEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.RenderBlockAtPosEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.RenderBlockAtPosEvent.BlockRenderWatcher;
 import Reika.DragonAPI.Instantiable.Event.Client.SinglePlayerLogoutEvent;
+import Reika.DragonAPI.Libraries.IO.ReikaSoundHelper;
 import Reika.DragonAPI.Libraries.IO.ReikaTextureHelper;
-import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.DragonAPI.Libraries.Rendering.ReikaGuiAPI;
 import Reika.GeoStrata.Blocks.BlockDecoGen.Types;
@@ -99,7 +100,15 @@ public class GeoEvents implements BlockRenderWatcher {
 					evt.drops.set(i, new ItemStack(Blocks.packed_ice, is.stackSize, evt.blockMetadata));
 			}
 		}
-		ReikaJavaLibrary.pConsole(evt.drops);
+	}
+
+	@SubscribeEvent
+	public void correctPackedIcePlacement(PlayerPlaceBlockEvent evt) {
+		if (evt.block == Blocks.packed_ice && evt.getItem().getItemDamage() > 0) {
+			evt.world.setBlock(evt.xCoord, evt.yCoord, evt.zCoord, evt.block, evt.getItem().getItemDamage(), 3);
+			ReikaSoundHelper.playPlaceSound(evt.world, evt.xCoord, evt.yCoord, evt.zCoord, evt.block);
+			evt.setCanceled(true);
+		}
 	}
 
 	@SubscribeEvent

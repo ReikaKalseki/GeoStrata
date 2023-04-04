@@ -2,11 +2,11 @@ package Reika.GeoStrata.Blocks;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+
+import com.google.common.base.Strings;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -34,7 +34,6 @@ import Reika.DragonAPI.Exception.InstallationException;
 import Reika.DragonAPI.Exception.RegistrationException;
 import Reika.DragonAPI.Exception.UserErrorException;
 import Reika.DragonAPI.Instantiable.Data.WeightedRandom;
-import Reika.DragonAPI.Instantiable.Data.Maps.ItemHashMap;
 import Reika.DragonAPI.Instantiable.IO.CustomRecipeList;
 import Reika.DragonAPI.Instantiable.IO.LuaBlock;
 import Reika.DragonAPI.Instantiable.IO.LuaBlock.LuaBlockDatabase;
@@ -53,6 +52,7 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 
 	public BlockOreVein(Material mat) {
 		super(mat);
+		this.setLightOpacity(0);
 		this.setCreativeTab(GeoStrata.tabGeo);
 	}
 
@@ -64,8 +64,9 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 
 		public final Block template;
 		public final int templateMeta;
-		public final Block containedBlockIcon;
+		public Block containedBlockIcon;
 		private final WeightedRandom<HarvestableOre> ores = new WeightedRandom();
+		public int maximumHarvestCycles = 0;
 
 		public static final VeinType[] list = values();
 
@@ -73,6 +74,10 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 			template = b;
 			templateMeta = m;
 			containedBlockIcon = b2;
+		}
+
+		public boolean isEnabled() {
+			return maximumHarvestCycles > 0 && !ores.isEmpty();
 		}
 	}
 
@@ -115,6 +120,16 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 	@Override
 	public int getRenderType() {
 		return GeoISBRH.orevein.getRenderID();
+	}
+
+	@Override
+	public boolean isOpaqueCube() {
+		return false;
+	}
+
+	@Override
+	public boolean renderAsNormalBlock() {
+		return false;
 	}
 
 	@Override
@@ -167,7 +182,7 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 				for (LuaBlock b : root.getChildren()) {
 					try {
 						String type = b.getString("type");
-						GeoStrata.logger.log("Parsing block '"+type+"'");
+						GeoStrata.logger.log("Parsing vein type '"+type+"'");
 						oreData.addBlock(type, b);
 						parseOreEntry(type, b);
 					}
@@ -191,10 +206,9 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 	}
 
 	private static void parseOreEntry(String type, LuaBlock b) throws NumberFormatException, IllegalArgumentException, IllegalStateException {
+		VeinType vein = VeinType.valueOf(type.toUpperCase(Locale.ENGLISH));
+
 		ArrayList<HarvestableOre> blocks = new ArrayList();
-
-		VeinType vein = VeinType.valueOf(b.getString("veinType").toUpperCase(Locale.ENGLISH));
-
 		LuaBlock set = b.getChild("items");
 		if (set == null)
 			throw new IllegalArgumentException("No items specified");
@@ -206,7 +220,7 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 				GeoStrata.logger.logError("No such item '"+item+"', skipping");
 				continue;
 			}
-			blocks.add(new HarvestableOre(find, lb.getDouble("weight"), lb.getDouble("interval")));
+			blocks.add(new HarvestableOre(find, lb.getDouble("weight")));
 		}
 
 		if (blocks.isEmpty())
@@ -215,25 +229,39 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 		for (HarvestableOre o : blocks) {
 			vein.ores.addEntry(o, o.spawnWeight);
 		}
+
+		vein.maximumHarvestCycles = b.getInt("harvestLimit");
+		String s = b.getString("innerIcon");
+		if (!Strings.isNullOrEmpty(s)) {
+			ItemStack find = CustomRecipeList.parseItemString(s, null, true);
+			if (find == null) {
+				GeoStrata.logger.logError("No such item '"+s+"', skipping icon");
+				return;
+			}
+			Block bk = Block.getBlockFromItem(find.getItem());
+			if (bk == null) {
+				GeoStrata.logger.logError("No such block for item '"+s+"', skipping icon");
+				return;
+			}
+			vein.containedBlockIcon = bk;
+		}
 	}
 
 	private static class HarvestableOre {
 
 		private final ItemStack item;
 		private final double spawnWeight;
-		private final int minInterval;
 
-		private HarvestableOre(ItemStack is, double wt, double seconds) {
+		private HarvestableOre(ItemStack is, double wt) {
 			item = is.copy();
 			spawnWeight = wt;
-			minInterval = (int)(seconds*20);
 		}
 
 	}
 
 	public static class TileOreVein extends TileEntity {
 
-		private final ItemHashMap<Long> lastHarvest = new ItemHashMap();
+		private int harvestsUsed;
 
 		@Override
 		public boolean canUpdate() {
@@ -241,46 +269,34 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 		}
 
 		public float getRichness() {
-			return 0.8F;
+			return 1-(harvestsUsed)/(float)this.getType().maximumHarvestCycles;
+		}
+
+		private VeinType getType() {
+			return VeinType.list[this.getBlockMetadata()];
 		}
 
 		@Override
 		public void writeToNBT(NBTTagCompound NBT) {
 			super.writeToNBT(NBT);
 
-			NBTTagCompound tag = new NBTTagCompound();
-			lastHarvest.writeToNBT(tag, null);
-			NBT.setTag("harvests", tag);
+			NBT.setInteger("harvests", harvestsUsed);
 		}
 
 		@Override
 		public void readFromNBT(NBTTagCompound NBT) {
 			super.readFromNBT(NBT);
 
-			NBTTagCompound tag = NBT.getCompoundTag("harvests");
-			lastHarvest.readFromNBT(tag, null);
+			harvestsUsed = NBT.getInteger("harvests");
 		}
 
 		public ItemStack tryHarvest() {
-			VeinType v = VeinType.list[this.getBlockMetadata()];
-			if (v.ores.isEmpty())
+			VeinType v = this.getType();
+			if (v.ores.isEmpty() || harvestsUsed >= v.maximumHarvestCycles)
 				return null;
-			HashSet<HarvestableOre> ores = new HashSet(v.ores.getValues());
-			Iterator<HarvestableOre> it = ores.iterator();
-			long time = worldObj.getTotalWorldTime();
-			while (it.hasNext()) {
-				HarvestableOre ore = it.next();
-				Long last = lastHarvest.get(ore.item);
-				if (last != null && time-last < ore.minInterval)
-					it.remove();
-			}
-			if (ores.isEmpty())
-				return null;
-			HarvestableOre ret = v.ores.getRandomEntry();
-			while (!ores.contains(ret))
-				ret = v.ores.getRandomEntry();
-			lastHarvest.put(ret.item, time);
-			return ret.item.copy();
+			harvestsUsed++;
+			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			return v.ores.getRandomEntry().item.copy();
 		}
 
 		@Override

@@ -37,15 +37,12 @@ public class OreVeinRenderer extends BaseBlockRenderer {
 
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
-
+		*
 	}
 
 	@SuppressWarnings("incomplete-switch")
 	@Override
 	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks rb) {
-		renderRand.setSeed(ChunkCoordIntPair.chunkXZ2Int(x, z) ^ y);
-		renderRand.nextBoolean();
-		renderRand.nextBoolean();
 		this.setParams(world, x, y, z, block, rb);
 		boolean flag = false;
 		for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
@@ -86,6 +83,9 @@ public class OreVeinRenderer extends BaseBlockRenderer {
 
 	@SuppressWarnings("incomplete-switch")
 	private void renderSide(IBlockAccess world, int x, int y, int z, Block block, IIcon ico, RenderBlocks rb, ForgeDirection dir) {
+		renderRand.setSeed((ChunkCoordIntPair.chunkXZ2Int(x, z) ^ y) + dir.ordinal()*19831);
+		renderRand.nextBoolean();
+		renderRand.nextBoolean();
 		double edge = 0.125;
 		double inset = 0.125;
 		double u1 = edge*16;
@@ -142,31 +142,15 @@ public class OreVeinRenderer extends BaseBlockRenderer {
 		switch(dir) {
 			case DOWN:
 				v5.invertY();
-				for (int i = (int)u1; i < u2; i += 2) {
-					for (int k = (int)u1; k < u2; k += 2) {
-						if (renderRand.nextFloat() > te.getRichness())
-							continue;
-						double h = ReikaRandomHelper.getRandomBetween(0.5, inset*16, renderRand);
-						ReikaRenderHelper.renderBlockSubCube(x, y, z, i, inset-h, k, 2, h, 2, Tessellator.instance, rb, b2, 0);
-					}
-				}
-				break;
-			case UP:
-				for (int i = (int)u1; i < u2; i += 2) {
-					for (int k = (int)u1; k < u2; k += 2) {
-						if (renderRand.nextFloat() > te.getRichness())
-							continue;
-						double h = ReikaRandomHelper.getRandomBetween(0.5, inset*16, renderRand);
-						ReikaRenderHelper.renderBlockSubCube(x, y, z, i, 16-inset*16, k, 2, h, 2, Tessellator.instance, rb, b2, 0);
-					}
-				}
 				break;
 			case WEST:
 				v5.rotateYtoX();
+				v5.rotateYtoZ();
 				v5.invertX();
 				break;
 			case EAST:
 				v5.rotateYtoX();
+				v5.rotateYtoZ();
 				break;
 			case NORTH:
 				v5.rotateYtoZ();
@@ -176,6 +160,33 @@ public class OreVeinRenderer extends BaseBlockRenderer {
 				v5.rotateYtoZ();
 				break;
 		}
+		for (int i = (int)u1; i < u2; i += 2) {
+			for (int k = (int)u1; k < u2; k += 2) {
+				double h = ReikaRandomHelper.getRandomBetween(0.5, inset*16, renderRand); //calculate this before the return to prevent reseed as it drops
+				if (renderRand.nextFloat() > te.getRichness())
+					continue;
+				switch(dir) {
+					case DOWN:
+						ReikaRenderHelper.renderBlockSubCube(x, y, z, i, inset*16-h, k, 2, h, 2, Tessellator.instance, rb, b2, 0);
+						break;
+					case UP:
+						ReikaRenderHelper.renderBlockSubCube(x, y, z, i, 16-inset*16, k, 2, h, 2, Tessellator.instance, rb, b2, 0);
+						break;
+					case WEST:
+						ReikaRenderHelper.renderBlockSubCube(x, y, z, inset*16-h, i, k, h, 2, 2, Tessellator.instance, rb, b2, 0);
+						break;
+					case EAST:
+						ReikaRenderHelper.renderBlockSubCube(x, y, z, 16-inset*16, i, k, h, 2, 2, Tessellator.instance, rb, b2, 0);
+						break;
+					case NORTH:
+						ReikaRenderHelper.renderBlockSubCube(x, y, z, k, i, inset*16-h, 2, 2, h, Tessellator.instance, rb, b2, 0);
+						break;
+					case SOUTH:
+						ReikaRenderHelper.renderBlockSubCube(x, y, z, k, i, 16-inset*16, 2, 2, h, Tessellator.instance, rb, b2, 0);
+						break;
+				}
+			}
+		}
 		Tessellator.instance.setBrightness(block.getMixedBrightnessForBlock(world, x+dir.offsetX, y+dir.offsetY, z+dir.offsetZ));
 		this.faceBrightness(dir, Tessellator.instance);
 		v5.offset(x, y, z);
@@ -184,7 +195,7 @@ public class OreVeinRenderer extends BaseBlockRenderer {
 
 	@Override
 	public boolean shouldRender3DInInventory(int modelId) {
-		return false;
+		return true;
 	}
 
 }

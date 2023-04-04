@@ -21,6 +21,7 @@ import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.World.ReikaBiomeHelper;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
+import Reika.GeoStrata.Blocks.BlockOreVein.VeinType;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoOptions;
 
@@ -83,6 +84,7 @@ public class DecoGenerator implements RetroactiveGenerator {
 	public static enum Decorations {
 		OCEANSPIKE(20),
 		OCEANSPIKES(80),
+		OREVEINS(1),
 		;
 
 		public final int chancePerChunk;
@@ -122,10 +124,37 @@ public class DecoGenerator implements RetroactiveGenerator {
 				case OCEANSPIKES:
 					int n = 4+rand.nextInt(9);
 					for (int i = 0; i < n; i++) {
-						int dx = x+rand.nextInt(17)-8;
-						int dz = z+rand.nextInt(17)-8;
+						int dx = ReikaRandomHelper.getRandomPlusMinus(x, 8, rand);
+						int dz = ReikaRandomHelper.getRandomPlusMinus(z, 8, rand);
 						int dy = world.getTopSolidOrLiquidBlock(dx, dz);
 						OCEANSPIKE.generate(world, dx, dy, dz, rand);
+					}
+					return true;
+				case OREVEINS:
+					int amt = 50;
+					int minY = 4;
+					int maxY = 56;
+					VeinType vein = VeinType.STONE;
+					if (world.provider.dimensionId == -1) {
+						vein = VeinType.NETHER;
+						amt = 4;
+						maxY = 126;
+					}
+					else if (world.provider.dimensionId == 1) {
+						vein = VeinType.END;
+						amt = 6;
+						minY = 8;
+						maxY = 64;
+					}
+					if (!vein.isEnabled())
+						return false;
+					int dy = ReikaRandomHelper.getRandomBetween(minY, maxY, rand);
+					int dx = ReikaRandomHelper.getRandomPlusMinus(x, 8, rand);
+					int dz = ReikaRandomHelper.getRandomPlusMinus(z, 8, rand);
+					if (world.getBlock(dx, dy, dz) == vein.template) { //exact block since texture match
+						int adj = ReikaWorldHelper.countAdjacentBlocks(world, dx, dy, dz, Blocks.air, false);
+						if (adj > 0 && adj < 3)
+							world.setBlock(dx, dy, dz, GeoBlocks.OREVEIN.getBlockInstance(), vein.ordinal(), 3);
 					}
 					return true;
 			}
