@@ -51,6 +51,8 @@ import Reika.DragonAPI.ModInteract.ItemHandlers.ExtraUtilsHandler;
 import Reika.DragonAPI.ModInteract.ItemHandlers.IC2Handler;
 import Reika.DragonAPI.ModInteract.RecipeHandlers.ThermalRecipeHelper;
 import Reika.GeoStrata.Blocks.BlockGlowingVines.TileGlowingVines;
+import Reika.GeoStrata.Blocks.BlockOreVein;
+import Reika.GeoStrata.Blocks.BlockOreVein.TileOreVein;
 import Reika.GeoStrata.Blocks.BlockPartialBounds.TilePartialBounds;
 import Reika.GeoStrata.Blocks.BlockRFCrystal.TileRFCrystalAux;
 import Reika.GeoStrata.Blocks.BlockRFCrystalSeed.TileRFCrystal;
@@ -85,6 +87,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -208,6 +211,8 @@ public class GeoStrata extends DragonAPIMod {
 		RetroGenController.instance.addHybridGenerator(RFCrystalGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 		RetroGenController.instance.addHybridGenerator(VoidOpalGenerator.instance, 0, GeoOptions.RETROGEN.getState());
 
+		Item.getItemFromBlock(Blocks.packed_ice).setHasSubtypes(true);
+
 		GeoRecipes.addRecipes();
 		proxy.registerRenderers();
 		OreDictionary.registerOre("seedCreepvine", creepvineSeeds);
@@ -275,6 +280,8 @@ public class GeoStrata extends DragonAPIMod {
 	@EventHandler // Like the modsLoaded thing from ModLoader
 	public void postload(FMLPostInitializationEvent evt) {
 		this.startTiming(LoadPhase.POSTLOAD);
+
+		BlockOreVein.loadConfigs();
 
 		if (ModList.ROTARYCRAFT.isLoaded()) {
 			for (int i = 0; i < RockTypes.rockList.length; i++) {
@@ -345,6 +352,11 @@ public class GeoStrata extends DragonAPIMod {
 		this.finishTiming();
 	}
 
+	@EventHandler
+	public void lastLoad(FMLServerAboutToStartEvent evt) {
+		BlockOreVein.loadConfigs();
+	}
+
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT)
 	public void generateDynamicOreTextures(TextureStitchEvent.Pre evt) {
@@ -384,6 +396,7 @@ public class GeoStrata extends DragonAPIMod {
 		GameRegistry.registerTileEntity(TileGlowingVines.class, "geostratavines");
 		GameRegistry.registerTileEntity(TileRFCrystal.class, "geostratarf");
 		GameRegistry.registerTileEntity(TileRFCrystalAux.class, "geostratarfaux");
+		GameRegistry.registerTileEntity(TileOreVein.class, "geostrataorevein");
 	}
 
 	public static void loadDictionary() {

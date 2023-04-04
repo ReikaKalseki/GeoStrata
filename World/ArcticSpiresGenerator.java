@@ -36,6 +36,7 @@ import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.API.ArcticSpireGenerationEvent;
 import Reika.GeoStrata.Blocks.BlockDecoGen.Types;
+import Reika.GeoStrata.Blocks.BlockOreVein.VeinType;
 import Reika.GeoStrata.Registry.GeoBlocks;
 
 public class ArcticSpiresGenerator implements RetroactiveGenerator {
@@ -135,13 +136,35 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 				genned.add(new Coordinate(x, y, z));
 				count++;
 				HashSet<Coordinate> snowCover = new HashSet();
+				for (Coordinate c : sp.core) {
+					if (c.yCoord == 0 || random.nextInt(8) > 0 || c.yCoord >= sp.lipYBottom)
+						continue;
+					boolean flag2 = false;
+					for (Coordinate c2 : c.getAdjacentCoordinates()) {
+						if (!sp.core.contains(c2.to2D())) {
+							flag2 = true;
+							break;
+						}
+					}
+					if (flag2) {
+						c.setBlock(world, GeoBlocks.OREVEIN.getBlockInstance(), VeinType.ICE.ordinal(), 2);
+					}
+				}
 				for (Entry<Coordinate, Integer> e : sp.columns.entrySet()) {
 					Coordinate c = e.getKey();
 					int ty = e.getValue();
 					if (ty <= 82) {
 						world.setBlock(c.xCoord, ty, c.zCoord, Blocks.packed_ice, 1, 2);
 					}
-					if (!sp.core.contains(c.to2D())) {
+					if (sp.core.contains(c.to2D())) {
+						for (int dy = 50; dy < sp.lipYBottom; dy++) {
+							Block at = world.getBlock(c.xCoord, dy, c.zCoord);
+							if (at == Blocks.grass || at == Blocks.sand || at == Blocks.dirt) {
+								world.setBlock(c.xCoord, dy, c.zCoord, Blocks.packed_ice, 1, 2);
+							}
+						}
+					}
+					else {
 						for (int dy = ty-1; dy >= 60; dy--) {
 							Block at = world.getBlock(c.xCoord, dy, c.zCoord);
 							if (at.isWood(world, c.xCoord, dy, c.zCoord) || at.isLeaves(world, c.xCoord, dy, c.zCoord)) {
@@ -188,6 +211,8 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 
 		private final HashMap<Coordinate, Integer> columns = new HashMap();
 		private final HashSet<Coordinate> core = new HashSet();
+
+		private int lipYBottom;
 
 		private boolean isValidGroundBlock(World world, int x, int y, int z) {
 			Block b = world.getBlock(x, y, z);
@@ -267,12 +292,14 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 						int dz = z+k;
 						core.add(new Coordinate(dx, 0, dz));
 						for (int j = minY-y; j < h1; j++) {
+							core.add(new Coordinate(dx, dy+j, dz));
 							this.setBlock(world, dx, dy+j, dz, Blocks.packed_ice, d <= r0-(j == minY-y ? 3 : 1.75) ? 2 : 1);
 						}
 					}
 				}
 			}
 			dy += h1;
+			lipYBottom = dy;
 			LobulatedCurve lb = LobulatedCurve.fromMinMaxRadii(rLip-3, rLip+2, 4, true);
 			lb.generate(rand);
 			LobulatedCurve slopeFactor = LobulatedCurve.fromMinMaxRadii(0.7, 1.25, 3, true);

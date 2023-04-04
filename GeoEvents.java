@@ -40,6 +40,7 @@ import Reika.DragonAPI.Instantiable.Event.Client.RenderBlockAtPosEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.RenderBlockAtPosEvent.BlockRenderWatcher;
 import Reika.DragonAPI.Instantiable.Event.Client.SinglePlayerLogoutEvent;
 import Reika.DragonAPI.Libraries.IO.ReikaTextureHelper;
+import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
 import Reika.DragonAPI.Libraries.Rendering.ReikaGuiAPI;
 import Reika.GeoStrata.Blocks.BlockDecoGen.Types;
@@ -91,13 +92,14 @@ public class GeoEvents implements BlockRenderWatcher {
 
 	@SubscribeEvent
 	public void correctPackedIceDrops(HarvestDropsEvent evt) {
-		if (evt.block == Blocks.packed_ice) {
+		if (evt.block == Blocks.packed_ice && evt.blockMetadata > 0) {
 			for (int i = 0; i < evt.drops.size(); i++) {
 				ItemStack is = evt.drops.get(i);
 				if (ReikaItemHelper.matchStackWithBlock(is, Blocks.packed_ice))
 					evt.drops.set(i, new ItemStack(Blocks.packed_ice, is.stackSize, evt.blockMetadata));
 			}
 		}
+		ReikaJavaLibrary.pConsole(evt.drops);
 	}
 
 	@SubscribeEvent
@@ -113,7 +115,7 @@ public class GeoEvents implements BlockRenderWatcher {
 	@SideOnly(Side.CLIENT)
 	public void retexturePackedIce(BlockIconEvent evt) {
 		if (evt.blockType == Blocks.packed_ice) {
-			switch(evt.getMetadata()) {
+			switch(evt.meta) {
 				case 1:
 					evt.icon = whitePackedIce;
 					break;

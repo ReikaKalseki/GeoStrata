@@ -8,6 +8,7 @@ import Reika.GeoStrata.Rendering.DecoGenRenderer;
 import Reika.GeoStrata.Rendering.GlowVineRenderer;
 import Reika.GeoStrata.Rendering.LavaRockRenderer;
 import Reika.GeoStrata.Rendering.OreRenderer;
+import Reika.GeoStrata.Rendering.OreVeinRenderer;
 import Reika.GeoStrata.Rendering.VentRenderer;
 import Reika.GeoStrata.Rendering.VoidOpalRenderer;
 
@@ -22,6 +23,7 @@ public enum GeoISBRH implements ISBRHEnum {
 	//shaped(),
 	voidopal(VoidOpalRenderer.class),
 	creepvine(CreepvineRenderer.class),
+	orevein(OreVeinRenderer.class),
 	;
 
 	private final Class<? extends ISBRH> renderClass;
