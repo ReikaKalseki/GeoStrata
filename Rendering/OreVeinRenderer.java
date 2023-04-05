@@ -15,6 +15,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -37,7 +38,7 @@ public class OreVeinRenderer extends BaseBlockRenderer {
 
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
-		*
+
 	}
 
 	@SuppressWarnings("incomplete-switch")
@@ -86,12 +87,15 @@ public class OreVeinRenderer extends BaseBlockRenderer {
 		renderRand.setSeed((ChunkCoordIntPair.chunkXZ2Int(x, z) ^ y) + dir.ordinal()*19831);
 		renderRand.nextBoolean();
 		renderRand.nextBoolean();
-		double edge = 0.125;
+		TileOreVein te = (TileOreVein)world.getTileEntity(x, y, z);
+		VeinType v = te.getType();
+		int base = 4-v.maximumHarvestCycles/3; //min size when < 6, full size when >= 9
+		double edge = ReikaRandomHelper.getRandomBetween(MathHelper.clamp_int(base-1, 1, 3), MathHelper.clamp_int(base+1, 1, 3), renderRand)/8D;
 		double inset = 0.125;
+		double maxOut = 0.125;
 		double u1 = edge*16;
 		double u2 = (1-edge)*16;
 		double u3 = (1-inset)*16;
-		TileOreVein te = (TileOreVein)world.getTileEntity(x, y, z);
 		TessellatorVertexList v5 = new TessellatorVertexList(0.5, 0.5, 0.5);
 		v5.addVertexWithUV(0, 1, edge, ico.getInterpolatedU(0), ico.getInterpolatedV(u1));
 		v5.addVertexWithUV(1, 1, edge, ico.getInterpolatedU(16), ico.getInterpolatedV(u1));
@@ -138,7 +142,7 @@ public class OreVeinRenderer extends BaseBlockRenderer {
 		v5.addVertexWithUV(1-edge, 1, 1-edge, ico.getInterpolatedU(16), ico.getInterpolatedV(u2));
 		v5.addVertexWithUV(1-edge, 1-inset, 1-edge, ico.getInterpolatedU(u3), ico.getInterpolatedV(u2));
 
-		Block b2 = VeinType.list[world.getBlockMetadata(x, y, z)].containedBlockIcon;
+		Block b2 = v.containedBlockIcon;
 		switch(dir) {
 			case DOWN:
 				v5.invertY();
@@ -162,7 +166,7 @@ public class OreVeinRenderer extends BaseBlockRenderer {
 		}
 		for (int i = (int)u1; i < u2; i += 2) {
 			for (int k = (int)u1; k < u2; k += 2) {
-				double h = ReikaRandomHelper.getRandomBetween(0.5, inset*16, renderRand); //calculate this before the return to prevent reseed as it drops
+				double h = ReikaRandomHelper.getRandomBetween(0.5, (inset+maxOut)*16, renderRand); //calculate this before the return to prevent reseed as it drops
 				if (renderRand.nextFloat() > te.getRichness())
 					continue;
 				switch(dir) {
@@ -195,7 +199,7 @@ public class OreVeinRenderer extends BaseBlockRenderer {
 
 	@Override
 	public boolean shouldRender3DInInventory(int modelId) {
-		return true;
+		return false;
 	}
 
 }

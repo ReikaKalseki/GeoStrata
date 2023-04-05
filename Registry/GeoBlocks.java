@@ -32,6 +32,7 @@ import Reika.GeoStrata.Blocks.BlockGlowingVines;
 import Reika.GeoStrata.Blocks.BlockLavaRock;
 import Reika.GeoStrata.Blocks.BlockOreTile;
 import Reika.GeoStrata.Blocks.BlockOreVein;
+import Reika.GeoStrata.Blocks.BlockOreVein.VeinType;
 import Reika.GeoStrata.Blocks.BlockPartialBounds;
 import Reika.GeoStrata.Blocks.BlockRFCrystal;
 import Reika.GeoStrata.Blocks.BlockRFCrystalSeed;
@@ -63,7 +64,7 @@ public enum GeoBlocks implements BlockEnum {
 	RFCRYSTALSEED(BlockRFCrystalSeed.class,	ItemBlockFluxCrystal.class, "Flux Crystal Seed"),
 	VOIDOPAL(BlockVoidOpal.class, null, "Void Opals"),
 	CREEPVINE(BlockCreepvine.class, MetadataItemBlock.class, "Creepvine"),
-	OREVEIN(BlockOreVein.class, null, "Ore Vein"),
+	OREVEIN(BlockOreVein.class, MetadataItemBlock.class, "Ore Vein"),
 	;
 
 	private final Class blockClass;
@@ -194,6 +195,8 @@ public enum GeoBlocks implements BlockEnum {
 				//	return "Connected "+RockTypes.getTypeFromID(this.getBlockInstance(), meta).getName();
 			case DECOGEN:
 				return BlockDecoGen.Types.list[meta].name;
+			case OREVEIN:
+				return VeinType.list[meta].displayName+" Ore Vein";
 			default:
 				return "";
 		}
@@ -214,7 +217,6 @@ public enum GeoBlocks implements BlockEnum {
 			case RFCRYSTALSEED:
 			case VOIDOPAL:
 			case CREEPVINE:
-			case OREVEIN:
 				return false;
 			default:
 				return true;

@@ -57,20 +57,24 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 	}
 
 	public static enum VeinType {
-		STONE(Blocks.stone, 0, Blocks.iron_block),
-		ICE(Blocks.packed_ice, 1, Blocks.diamond_block),
-		NETHER(Blocks.netherrack, 0, Blocks.gold_block),
-		END(Blocks.end_stone, 0, Blocks.obsidian);
+		STONE("Stony", Blocks.stone, 0, Blocks.iron_block),
+		ICE("Icy", Blocks.packed_ice, 1, Blocks.diamond_block),
+		NETHER("Nether", Blocks.netherrack, 0, Blocks.gold_block),
+		END("Mysterious", Blocks.end_stone, 0, Blocks.obsidian);
 
+		public final String displayName;
 		public final Block template;
 		public final int templateMeta;
 		public Block containedBlockIcon;
 		private final WeightedRandom<HarvestableOre> ores = new WeightedRandom();
 		public int maximumHarvestCycles = 0;
 
+		private IIcon itemIcon;
+
 		public static final VeinType[] list = values();
 
-		private VeinType(Block b, int m, Block b2) {
+		private VeinType(String s, Block b, int m, Block b2) {
+			displayName = s;
 			template = b;
 			templateMeta = m;
 			containedBlockIcon = b2;
@@ -92,6 +96,16 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 	}
 
 	@Override
+	public int damageDropped(int meta) {
+		return meta;
+	}
+
+	@Override
+	public IIcon getIcon(int s, int meta) {
+		return VeinType.list[meta].itemIcon;
+	}
+
+	@Override
 	public IIcon getIcon(IBlockAccess iba, int x, int y, int z, int s) {
 		VeinType v = VeinType.list[iba.getBlockMetadata(x, y, z)];
 		return v.template.getIcon(s, v.templateMeta);
@@ -99,7 +113,11 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 
 	@Override
 	public void registerBlockIcons(IIconRegister ico) {
-		blockIcon = ico.registerIcon("geostrata:orevein");
+		blockIcon = ico.registerIcon("geostrata:orevein/base");
+
+		for (VeinType v : VeinType.list) {
+			v.itemIcon = ico.registerIcon("geostrata:orevein/"+v.name().toLowerCase(Locale.ENGLISH));
+		}
 	}
 
 	@Override
@@ -140,7 +158,7 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 	@Override
 	@ModDependent(ModList.WAILA)
 	public ItemStack getWailaStack(IWailaDataAccessor acc, IWailaConfigHandler config) {
-		return null;
+		return new ItemStack(this, 1, acc.getMetadata());
 	}
 
 	@Override
@@ -154,7 +172,22 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 	public final List<String> getWailaBody(ItemStack is, List<String> tip, IWailaDataAccessor acc, IWailaConfigHandler config) {
 		TileEntity te = acc.getTileEntity();
 		if (te instanceof TileOreVein) {
-
+			TileOreVein tv = (TileOreVein)te;
+			VeinType v = tv.getType();
+			int left = tv.isInfinite() ? 1 : v.maximumHarvestCycles-tv.harvestsUsed;
+			if (left == 0 || v.ores.isEmpty()) {
+				tip.add("Depleted");
+			}
+			else {
+				tip.add("Potential Yields: ");
+				for (HarvestableOre ore : v.ores.getValues()) {
+					tip.add(String.format("%s: %3.2f%%", ore.item.getDisplayName(), v.ores.getProbability(ore)*100));
+				}
+				if (tv.isInfinite())
+					tip.add("Inexhaustible");
+				else
+					tip.add(left+" items remaining");
+			}
 		}
 		return tip;
 	}
@@ -207,6 +240,8 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 
 	private static void parseOreEntry(String type, LuaBlock b) throws NumberFormatException, IllegalArgumentException, IllegalStateException {
 		VeinType vein = VeinType.valueOf(type.toUpperCase(Locale.ENGLISH));
+		vein.maximumHarvestCycles = b.getInt("harvestLimit");
+		vein.ores.clear();
 
 		ArrayList<HarvestableOre> blocks = new ArrayList();
 		LuaBlock set = b.getChild("items");
@@ -230,7 +265,6 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 			vein.ores.addEntry(o, o.spawnWeight);
 		}
 
-		vein.maximumHarvestCycles = b.getInt("harvestLimit");
 		String s = b.getString("innerIcon");
 		if (!Strings.isNullOrEmpty(s)) {
 			ItemStack find = CustomRecipeList.parseItemString(s, null, true);
@@ -268,11 +302,19 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 			return false;
 		}
 
-		public float getRichness() {
-			return 1-(harvestsUsed)/(float)this.getType().maximumHarvestCycles;
+		public boolean isInfinite() {
+			return harvestsUsed < 0;
 		}
 
-		private VeinType getType() {
+		public void makeInfinite() {
+			harvestsUsed = -1;
+		}
+
+		public float getRichness() {
+			return 1-Math.max(0, harvestsUsed)/(float)this.getType().maximumHarvestCycles;
+		}
+
+		public VeinType getType() {
 			return VeinType.list[this.getBlockMetadata()];
 		}
 
@@ -294,7 +336,8 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 			VeinType v = this.getType();
 			if (v.ores.isEmpty() || harvestsUsed >= v.maximumHarvestCycles)
 				return null;
-			harvestsUsed++;
+			if (!this.isInfinite())
+				harvestsUsed++;
 			worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 			return v.ores.getRandomEntry().item.copy();
 		}
