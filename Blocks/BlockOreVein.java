@@ -50,8 +50,12 @@ import mcp.mobius.waila.api.IWailaDataProvider;
 @Strippable(value = {"mcp.mobius.waila.api.IWailaDataProvider", "framesapi.IMoveCheck", "vazkii.botania.api.mana.ILaputaImmobile"})
 public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 
+	public static boolean isRenderCenter = false;
+
 	public BlockOreVein(Material mat) {
 		super(mat);
+		this.setResistance(90);
+		this.setHardness(Blocks.stone.blockHardness*2);
 		this.setLightOpacity(0);
 		this.setCreativeTab(GeoStrata.tabGeo);
 	}
@@ -68,6 +72,7 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 		public Block containedBlockIcon;
 		private final WeightedRandom<HarvestableOre> ores = new WeightedRandom();
 		public int maximumHarvestCycles = 0;
+		private boolean glowInDark = false;
 
 		private IIcon itemIcon;
 
@@ -83,6 +88,10 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 		public boolean isEnabled() {
 			return maximumHarvestCycles > 0 && !ores.isEmpty();
 		}
+
+		public boolean glow() {
+			return this == ICE || glowInDark;
+		}
 	}
 
 	@Override
@@ -91,8 +100,18 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 	}
 
 	@Override
+	public int getLightValue(IBlockAccess world, int x, int y, int z) {
+		return isRenderCenter && VeinType.list[world.getBlockMetadata(x, y, z)].glow() ? 12 : 0;
+	}
+
+	@Override
 	public Item getItemDropped(int meta, Random rand, int fortune) {
 		return null;
+	}
+
+	@Override
+	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune) {
+		return VeinType.list[meta].template.getDrops(world, x, y, z, meta, fortune);
 	}
 
 	@Override
@@ -242,6 +261,7 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 		VeinType vein = VeinType.valueOf(type.toUpperCase(Locale.ENGLISH));
 		vein.maximumHarvestCycles = b.getInt("harvestLimit");
 		vein.ores.clear();
+		vein.glowInDark = b.getBoolean("glowInDark");
 
 		ArrayList<HarvestableOre> blocks = new ArrayList();
 		LuaBlock set = b.getChild("items");

@@ -37,7 +37,10 @@ public enum GeoOptions implements BooleanConfig, IntegerConfig, DecimalConfig, S
 	OPALHUE("Opal Hue Offset (degrees)", 0),
 	ROCKGEN("Rock Generation Pattern", "Legacy"),
 	RFACTIVATE("Flux Crystal Requires Activation", false),
-	OVERGEN("Rock Can Generate Into Other Rock", true);
+	OVERGEN("Rock Can Generate Into Other Rock", true),
+	KELPBIOMEID("Kelp Forest Biome ID (0 To Disable)", 190),
+	ARCTICBIOMEID("Arctic Spires Biome ID (0 To Disable)", 191),
+	;
 
 	private String label;
 	private boolean defaultState;

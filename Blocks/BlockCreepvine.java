@@ -20,10 +20,12 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.IShearable;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.Interfaces.Block.Submergeable;
 import Reika.DragonAPI.Libraries.ReikaPlayerAPI;
 import Reika.DragonAPI.Libraries.IO.ReikaSoundHelper;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
+import Reika.DragonAPI.Libraries.Rendering.ReikaColorAPI;
 import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Registry.GeoISBRH;
 
@@ -141,7 +143,8 @@ public class BlockCreepvine extends Block implements Submergeable, IPlantable, I
 
 	@Override
 	public int getLightValue(IBlockAccess world, int x, int y, int z) {
-		return Pieces.list[world.getBlockMetadata(x, y, z)].getLightLevel();
+		int lvl = Pieces.list[world.getBlockMetadata(x, y, z)].getLightLevel();
+		return ModList.COLORLIGHT.isLoaded() ? ReikaColorAPI.getPackedIntForColoredLight(0xffd620, lvl) : lvl;
 	}
 
 	@Override

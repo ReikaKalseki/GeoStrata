@@ -36,6 +36,7 @@ import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
+import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.API.ArcticSpireGenerationEvent;
 import Reika.GeoStrata.Blocks.BlockDecoGen.Types;
 import Reika.GeoStrata.Blocks.BlockOreVein.VeinType;
@@ -51,6 +52,7 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 	private SimplexNoiseGenerator iceLayerNoiseLarge;
 	private SimplexNoiseGenerator iceLayerNoiseSharp;
 
+	public boolean ignoreBiome = false;
 
 	private DecimalPosition currentClosestZone;
 
@@ -98,7 +100,7 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 		return currentClosestZone != null && currentClosestZone.getDistanceTo(x, currentClosestZone.yCoord, z) <= 120;
 	}
 
-	private void setSeed(World world) {
+	public void setSeed(World world) {
 		long s = world.getSeed();
 		if (seed != s || mainNoise == null) {
 			seed = s;
@@ -113,12 +115,22 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 	}
 
 	private int generateCluster(World world, int x0, int z0, Random random, int amt) {
-		int count = 0;
 		double baseTilt = /*random.nextDouble()*360;*/(currentClosestZone.hashCode()*2387.183)%360D;
+		return this.generateCluster(world, x0, z0, random, amt, baseTilt);
+	}
+
+	public int generateCluster(World world, int x0, int z0, Random random, int amt, double baseTilt) {
+		int count = 0;
 		HashSet<Coordinate> genned = new HashSet();
 		for (int i = 0; i < amt; i++) {
 			int x = ReikaRandomHelper.getRandomPlusMinus(x0, 64, random);
 			int z = ReikaRandomHelper.getRandomPlusMinus(z0, 64, random);
+			BiomeGenBase biome = world.getBiomeGenForCoords(x, z);
+			while (!ignoreBiome && biome != BiomeGenBase.icePlains && biome != BiomeGenBase.iceMountains && biome != GeoStrata.arcticSpires) {
+				x = ReikaRandomHelper.getRandomPlusMinus(x0, 64, random);
+				z = ReikaRandomHelper.getRandomPlusMinus(z0, 64, random);
+				biome = world.getBiomeGenForCoords(x, z);
+			}
 			boolean flag = true;
 			while (flag) {
 				flag = false;
@@ -132,11 +144,31 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 				}
 			}
 			int y = world.getTopSolidOrLiquidBlock(x, z);
-			double tilt = ReikaRandomHelper.getRandomPlusMinus(baseTilt, 12, random);
+			double tilt = ReikaRandomHelper.getRandomPlusMinus(baseTilt, 15, random);
 			ArcticSpire sp = new ArcticSpire();
 			if (sp.generate(world, x, y, z, tilt, random)) {
 				genned.add(new Coordinate(x, y, z));
 				count++;
+				if (GeoStrata.arcticSpires != null) {
+					LobulatedCurve lb = LobulatedCurve.fromMinMaxRadii(32, 80, 6, true);
+					lb.generate(random);
+					for (double d = 0; d < 360; d += 0.33) {
+						double r = lb.getRadius(d);
+						double da = Math.toRadians(d);
+						double cos = Math.cos(da);
+						double sin = Math.sin(da);
+						for (double dr = 0; dr <= r; dr += 0.5) {
+							double ax = x+dr*cos;
+							double az = z+dr*sin;
+							int dx = MathHelper.floor_double(ax);
+							int dz = MathHelper.floor_double(az);
+							BiomeGenBase at = world.getBiomeGenForCoords(dx, dz);
+							if (at == BiomeGenBase.icePlains || at == BiomeGenBase.iceMountains) {
+								ReikaWorldHelper.setBiomeForXZ(world, dx, dz, GeoStrata.arcticSpires, false);
+							}
+						}
+					}
+				}
 				HashSet<Coordinate> snowCover = new HashSet();
 				if (VeinType.ICE.isEnabled()) {
 					ArrayList<Coordinate> veinAttempts = new ArrayList(sp.core);
@@ -291,14 +323,14 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 			int y = maxY;
 
 			r = MathHelper.ceiling_double_int(r0);
-			double dT = ReikaRandomHelper.getRandomBetween(0.35, 0.7, rand);
+			double dT = ReikaRandomHelper.getRandomBetween(0.25, 0.7, rand);
 			double tiltX = dT*Math.cos(Math.toRadians(tilt));
 			double tiltZ = dT*Math.sin(Math.toRadians(tilt));
 			double rLip = ReikaRandomHelper.getRandomBetween(r0+4, r0+6, rand);
 			double r1 = Math.min(Math.max(r0, rLip-4.5), ReikaRandomHelper.getRandomBetween(8D, 12D, rand));
 			int h1 = ReikaRandomHelper.getRandomBetween(2, 4, rand);
 			int h2 = ReikaRandomHelper.getRandomBetween(4, 6, rand);
-			double h3 = ReikaRandomHelper.getRandomBetween(30D, 48D, rand);
+			double h3 = ReikaRandomHelper.getRandomBetween(30D, 54D, rand);
 			int dy = y;
 			for (int i = -r; i <= r; i++) {
 				for (int k = -r; k <= r; k++) {

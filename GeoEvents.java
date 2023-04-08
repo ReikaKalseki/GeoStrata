@@ -12,17 +12,21 @@ package Reika.GeoStrata;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.GuiIngameForge;
+import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -31,6 +35,7 @@ import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 
+import Reika.DragonAPI.DragonAPICore;
 import Reika.DragonAPI.Instantiable.Data.Immutable.BlockBounds;
 import Reika.DragonAPI.Instantiable.Data.Immutable.Coordinate;
 import Reika.DragonAPI.Instantiable.Event.EntityDecreaseAirEvent;
@@ -40,9 +45,13 @@ import Reika.DragonAPI.Instantiable.Event.Client.ItemEffectRenderEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.RenderBlockAtPosEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.RenderBlockAtPosEvent.BlockRenderWatcher;
 import Reika.DragonAPI.Instantiable.Event.Client.SinglePlayerLogoutEvent;
+import Reika.DragonAPI.Instantiable.Math.Noise.Simplex3DGenerator;
+import Reika.DragonAPI.Libraries.ReikaEntityHelper;
 import Reika.DragonAPI.Libraries.IO.ReikaSoundHelper;
 import Reika.DragonAPI.Libraries.IO.ReikaTextureHelper;
+import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
+import Reika.DragonAPI.Libraries.Rendering.ReikaColorAPI;
 import Reika.DragonAPI.Libraries.Rendering.ReikaGuiAPI;
 import Reika.GeoStrata.Blocks.BlockDecoGen.Types;
 import Reika.GeoStrata.Blocks.BlockPartialBounds;
@@ -54,6 +63,8 @@ import Reika.GeoStrata.World.ArcticSpiresGenerator;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -65,6 +76,8 @@ public class GeoEvents implements BlockRenderWatcher {
 
 	private IIcon whitePackedIce;
 	private IIcon glossyPackedIce;
+
+	private final Simplex3DGenerator iceGlowNoise = (Simplex3DGenerator)new Simplex3DGenerator(45872187).setFrequency(0.25);
 
 	private GeoEvents() {
 		RenderBlockAtPosEvent.addListener(this);
@@ -82,12 +95,50 @@ public class GeoEvents implements BlockRenderWatcher {
 
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void clearCachedTiles(SinglePlayerLogoutEvent evt) {
+	public void applyArctic(PlayerTickEvent evt) {
+		if (evt.phase == Phase.START && ReikaEntityHelper.isInBiome(evt.player, GeoStrata.arcticSpires) && ReikaEntityHelper.getSkyLightAt(evt.player) >= 10) {
+			if (evt.player.worldObj.isRemote) {
+				if (DragonAPICore.rand.nextInt(800) == 0) {
+					//sound
+				}
+			}
+			else {
+				if (!evt.player.isInsideOfMaterial(Material.water)) {
+					boolean snow = evt.player.worldObj.isRaining();
+					if (evt.player.getAir() < (snow ? 150 : 50)) //1/6 or 1/2 the meter if sun or snow
+						evt.player.attackEntityFrom(GeoStrata.coldDamage, snow ? 1 : 2);
+				}
+			}
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void setBiomeWaterColor(FogColors evt) {
+		EntityPlayer ep = Minecraft.getMinecraft().thePlayer;
+		if (ep == null || ep.worldObj == null)
+			return;
+		if (!ep.isInsideOfMaterial(Material.water))
+			return;
+		if (ReikaEntityHelper.isInBiome(ep, GeoStrata.arcticSpires)) {
+			evt.red = 50/255F;
+			evt.green = 53/255F;
+			evt.blue = 0.9F;
+		}
+		else if (ReikaEntityHelper.isInBiome(ep, GeoStrata.kelpForest)) {
+			evt.red = 76/255F;
+			evt.green = 130/255F;
+			evt.blue = 80/255F;
+		}
+	}
+
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void clearCachedNoise(SinglePlayerLogoutEvent evt) {
 		ArcticSpiresGenerator.instance.clear();
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void clearCachedTiles(ClientDisconnectionFromServerEvent evt) {
+	public void clearCachedNoise(ClientDisconnectionFromServerEvent evt) {
 		ArcticSpiresGenerator.instance.clear();
 	}
 
@@ -179,6 +230,11 @@ public class GeoEvents implements BlockRenderWatcher {
 				return;
 			}
 		}*/
+		if (evt.entityLiving instanceof EntityPlayer && ReikaEntityHelper.isInBiome(evt.entityLiving, GeoStrata.arcticSpires) && ReikaEntityHelper.getSkyLightAt(evt.entityLiving) >= 10) {
+			if (evt.entityLiving.getAir() >= 40)
+				evt.setResult(Result.ALLOW);
+			return;
+		}
 		long last = evt.entityLiving.getEntityData().getLong(BlockVent.SMOKE_VENT_TAG);
 		if (evt.entityLiving.worldObj.getTotalWorldTime()-last <= 8) {
 			evt.setResult(Result.ALLOW);
@@ -215,6 +271,66 @@ public class GeoEvents implements BlockRenderWatcher {
 					render.renderFaceZPos(block, x, y, z+o, BlockPartialBounds.fenceOverlay);
 				render.enableAO = flag;
 			}
+		}
+		else if (block == Blocks.packed_ice && render.blockAccess.getBlockMetadata(x, y, z) == 2) {
+			IBlockAccess access = render.blockAccess;
+			boolean flag = render.enableAO;
+			render.enableAO = false;
+			int c = block.colorMultiplier(access, x, y, z);
+			Tessellator.instance.setNormal(0, 1, 0);
+			block.setBlockBoundsBasedOnState(access, x, y, z);
+			render.renderMaxX = block.getBlockBoundsMaxX();
+			render.renderMaxY = block.getBlockBoundsMaxY();
+			render.renderMaxZ = block.getBlockBoundsMaxZ();
+			render.renderMinX = block.getBlockBoundsMinX();
+			render.renderMinY = block.getBlockBoundsMinY();
+			render.renderMinZ = block.getBlockBoundsMinZ();
+			for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+				int dx = x+dir.offsetX;
+				int dy = y+dir.offsetY;
+				int dz = z+dir.offsetZ;
+				if (block.shouldSideBeRendered(access, dx, dy, dz, dir.ordinal())) {
+					IIcon ico = block.getIcon(access, x, y, z, dir.ordinal());
+
+					int i1 = Minecraft.getMinecraft().theWorld.getSkyBlockTypeBrightness(EnumSkyBlock.Sky, dx, dy, dz);
+					//int j1 = Minecraft.getMinecraft().theWorld.getSkyBlockTypeBrightness(EnumSkyBlock.Block, dx, dy, dz);
+					int lv = (int)ReikaMathLibrary.normalizeToBounds(iceGlowNoise.getValue(dx, dy, dz), 1, 14);
+
+					int br = i1 << 20 | lv << 4;
+
+					Tessellator.instance.setBrightness(br);
+					switch(dir) {
+						case DOWN:
+							Tessellator.instance.setColorOpaque_I(ReikaColorAPI.getColorWithBrightnessMultiplier(c, 0.5F));
+							render.renderFaceYNeg(block, x, y, z, ico);
+							break;
+						case UP:
+							Tessellator.instance.setColorOpaque_I(ReikaColorAPI.getColorWithBrightnessMultiplier(c, 1));
+							render.renderFaceYPos(block, x, y, z, ico);
+							break;
+						case WEST:
+							Tessellator.instance.setColorOpaque_I(ReikaColorAPI.getColorWithBrightnessMultiplier(c, 0.6F));
+							render.renderFaceXNeg(block, x, y, z, ico);
+							break;
+						case EAST:
+							Tessellator.instance.setColorOpaque_I(ReikaColorAPI.getColorWithBrightnessMultiplier(c, 0.6F));
+							render.renderFaceXPos(block, x, y, z, ico);
+							break;
+						case NORTH:
+							Tessellator.instance.setColorOpaque_I(ReikaColorAPI.getColorWithBrightnessMultiplier(c, 0.8F));
+							render.renderFaceZNeg(block, x, y, z, ico);
+							break;
+						case SOUTH:
+							Tessellator.instance.setColorOpaque_I(ReikaColorAPI.getColorWithBrightnessMultiplier(c, 0.8F));
+							render.renderFaceZPos(block, x, y, z, ico);
+							break;
+						default:
+							break;
+					}
+				}
+			}
+			render.enableAO = flag;
+			return true;
 		}
 		return false;
 	}

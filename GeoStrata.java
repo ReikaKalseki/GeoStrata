@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.material.MapColor;
-import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
@@ -25,6 +23,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.BiomeDictionary;
+import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
 
@@ -41,6 +41,7 @@ import Reika.DragonAPI.Auxiliary.Trackers.RetroGenController;
 import Reika.DragonAPI.Auxiliary.Trackers.VanillaIntegrityTracker;
 import Reika.DragonAPI.Base.DragonAPIMod;
 import Reika.DragonAPI.Base.DragonAPIMod.LoadProfiler.LoadPhase;
+import Reika.DragonAPI.Instantiable.CustomStringDamageSource;
 import Reika.DragonAPI.Instantiable.IO.ModLogger;
 import Reika.DragonAPI.Libraries.ReikaRecipeHelper;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
@@ -67,6 +68,8 @@ import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
 import Reika.GeoStrata.Rendering.OreRenderer;
 import Reika.GeoStrata.World.ArcticSpiresGenerator;
+import Reika.GeoStrata.World.BiomeArcticSpires;
+import Reika.GeoStrata.World.BiomeKelpForest;
 import Reika.GeoStrata.World.CreepvineGenerator;
 import Reika.GeoStrata.World.DecoGenerator;
 import Reika.GeoStrata.World.GlowCrystalGenerator;
@@ -79,6 +82,7 @@ import Reika.GeoStrata.World.VoidOpalGenerator;
 import Reika.RotaryCraft.API.BlockColorInterface;
 import Reika.RotaryCraft.API.RecipeInterface;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -126,6 +130,11 @@ public class GeoStrata extends DragonAPIMod {
 
 	public static Item creepvineSeeds;
 
+	public static BiomeArcticSpires arcticSpires;
+	public static BiomeKelpForest kelpForest;
+
+	public static final CustomStringDamageSource coldDamage = new CustomStringDamageSource("froze to death");
+	/*
 	public static final Material creepvineMaterial = new Material(MapColor.foliageColor) {
 
 		@Override
@@ -163,7 +172,7 @@ public class GeoStrata extends DragonAPIMod {
 			return 1;
 		}
 
-	};
+	};*/
 
 	@Override
 	@EventHandler
@@ -213,16 +222,28 @@ public class GeoStrata extends DragonAPIMod {
 
 		Item.getItemFromBlock(Blocks.packed_ice).setHasSubtypes(true);
 
+		int id = GeoOptions.ARCTICBIOMEID.getValue();
+		if (id > 0) {
+			arcticSpires = new BiomeArcticSpires(id);
+			BiomeManager.addStrongholdBiome(arcticSpires);
+			BiomeManager.removeVillageBiome(arcticSpires);
+			BiomeDictionary.registerBiomeType(arcticSpires, BiomeDictionary.Type.SNOWY, BiomeDictionary.Type.COLD, BiomeDictionary.Type.SPARSE, BiomeDictionary.Type.MOUNTAIN);
+		}
+
+		id = GeoOptions.KELPBIOMEID.getValue();
+		if (id > 0) {
+			kelpForest = new BiomeKelpForest(id);
+			BiomeManager.addStrongholdBiome(kelpForest);
+			BiomeManager.removeVillageBiome(kelpForest);
+			BiomeDictionary.registerBiomeType(kelpForest, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.OCEAN, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.LUSH, BiomeDictionary.Type.WATER);
+		}
+
 		GeoRecipes.addRecipes();
 		proxy.registerRenderers();
 		OreDictionary.registerOre("seedCreepvine", creepvineSeeds);
-		if (ModList.IC2.isLoaded()) {
-			ItemStack in = new ItemStack(creepvineSeeds);
-			ReikaRecipeHelper.addSmelting(in, ReikaItemHelper.getSizedItemStack(IC2Handler.IC2Stacks.RUBBER.getItem(), 2), 0);
-			Recipes.extractor.addRecipe(new RecipeInputItemStack(in), null, ReikaItemHelper.getSizedItemStack(IC2Handler.IC2Stacks.RUBBER.getItem(), 4));
-		}
 
 		MinecraftForge.EVENT_BUS.register(GeoEvents.instance);
+		FMLCommonHandler.instance().bus().register(GeoEvents.instance);
 
 		VanillaIntegrityTracker.instance.addWatchedBlock(instance, Blocks.obsidian);
 		VanillaIntegrityTracker.instance.addWatchedBlock(instance, Blocks.stone);
@@ -271,6 +292,13 @@ public class GeoStrata extends DragonAPIMod {
 		this.finishTiming();
 	}
 
+	@ModDependent(ModList.IC2)
+	private void addIC2Recipes() {
+		ItemStack in = new ItemStack(creepvineSeeds);
+		ReikaRecipeHelper.addSmelting(in, ReikaItemHelper.getSizedItemStack(IC2Handler.IC2Stacks.RUBBER.getItem(), 2), 0);
+		Recipes.extractor.addRecipe(new RecipeInputItemStack(in), null, ReikaItemHelper.getSizedItemStack(IC2Handler.IC2Stacks.RUBBER.getItem(), 4));
+	}
+
 	@ModDependent(ModList.CHROMATICRAFT)
 	private void addVoidOpalTrade() {
 		UATrades.instance.registerCommodityHook(new VoidOpalTrade());
@@ -282,6 +310,10 @@ public class GeoStrata extends DragonAPIMod {
 		this.startTiming(LoadPhase.POSTLOAD);
 
 		BlockOreVein.loadConfigs();
+
+		if (ModList.IC2.isLoaded()) {
+			this.addIC2Recipes();
+		}
 
 		if (ModList.ROTARYCRAFT.isLoaded()) {
 			for (int i = 0; i < RockTypes.rockList.length; i++) {

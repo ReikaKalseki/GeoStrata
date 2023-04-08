@@ -24,6 +24,7 @@ import Reika.DragonAPI.Base.BaseBlockRenderer;
 import Reika.DragonAPI.Instantiable.Rendering.TessellatorVertexList;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.Rendering.ReikaRenderHelper;
+import Reika.GeoStrata.Blocks.BlockOreVein;
 import Reika.GeoStrata.Blocks.BlockOreVein.TileOreVein;
 import Reika.GeoStrata.Blocks.BlockOreVein.VeinType;
 
@@ -91,8 +92,8 @@ public class OreVeinRenderer extends BaseBlockRenderer {
 		VeinType v = te.getType();
 		int base = 4-v.maximumHarvestCycles/3; //min size when < 6, full size when >= 9
 		double edge = ReikaRandomHelper.getRandomBetween(MathHelper.clamp_int(base-1, 1, 3), MathHelper.clamp_int(base+1, 1, 3), renderRand)/8D;
-		double inset = 0.125;
-		double maxOut = 0.125;
+		double inset = 0.245;//0.125;
+		double maxOut = 0;//0.125;
 		double u1 = edge*16;
 		double u2 = (1-edge)*16;
 		double u3 = (1-inset)*16;
@@ -164,6 +165,7 @@ public class OreVeinRenderer extends BaseBlockRenderer {
 				v5.rotateYtoZ();
 				break;
 		}
+		BlockOreVein.isRenderCenter = true;
 		for (int i = (int)u1; i < u2; i += 2) {
 			for (int k = (int)u1; k < u2; k += 2) {
 				double h = ReikaRandomHelper.getRandomBetween(0.5, (inset+maxOut)*16, renderRand); //calculate this before the return to prevent reseed as it drops
@@ -191,6 +193,7 @@ public class OreVeinRenderer extends BaseBlockRenderer {
 				}
 			}
 		}
+		BlockOreVein.isRenderCenter = false;
 		Tessellator.instance.setBrightness(block.getMixedBrightnessForBlock(world, x+dir.offsetX, y+dir.offsetY, z+dir.offsetZ));
 		this.faceBrightness(dir, Tessellator.instance);
 		v5.offset(x, y, z);

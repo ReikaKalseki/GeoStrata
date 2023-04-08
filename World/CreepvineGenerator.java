@@ -15,10 +15,14 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.IChunkProvider;
 
+import Reika.DragonAPI.Instantiable.Math.LobulatedCurve;
 import Reika.DragonAPI.Instantiable.Math.Noise.SimplexNoiseGenerator;
 import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
+import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.World.ReikaBiomeHelper;
+import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
+import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.Blocks.BlockCreepvine.Pieces;
 import Reika.GeoStrata.Registry.GeoBlocks;
 
@@ -46,14 +50,31 @@ public class CreepvineGenerator implements RetroactiveGenerator {
 				int z = ReikaRandomHelper.getRandomBetween(chunkZ, chunkZ+15, random);
 				int y = world.getTopSolidOrLiquidBlock(x, z);
 				if (this.isValidLocation(world, x, y, z)) {
-					this.generate(world, x, y, z, random);
+					if (this.generate(world, x, y, z, random)) {
+						if (GeoStrata.kelpForest != null) {
+							int maxR = 7;
+							LobulatedCurve lb = LobulatedCurve.fromMinMaxRadii(3, maxR, 5, true);
+							lb.generate(random);
+							for (int a = -maxR; a <= maxR; a++) {
+								for (int b = -maxR; b <= maxR; b++) {
+									int dx = x+a;
+									int dz = z+b;
+									if (this.isValidLocation(world, dx, y, dz)) {
+										double ang = Math.toDegrees(Math.atan2(b, a));
+										if (ReikaMathLibrary.py3d(a, 0, b) <= lb.getRadius(ang))
+											ReikaWorldHelper.setBiomeForXZ(world, dx, dz, GeoStrata.kelpForest, false);
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}
 	}
 
 	private boolean isValidLocation(World world, int x, int y, int z) {
-		return ReikaBiomeHelper.isOcean(world.getBiomeGenForCoords(x, z)) && instance.mainNoise.getValue(x, z) > 0.4;
+		return ReikaBiomeHelper.isOcean(world.getBiomeGenForCoords(x, z)) && instance.mainNoise.getValue(x, z) > 0.55;
 	}
 
 	private boolean generate(World world, int x, int y, int z, Random rand) {
@@ -79,12 +100,14 @@ public class CreepvineGenerator implements RetroactiveGenerator {
 					world.setBlock(x, core, z, GeoBlocks.CREEPVINE.getBlockInstance(), Pieces.CORE_5.ordinal(), 2);
 					for (int dy = core+1; dy <= y2; dy++)
 						world.setBlock(x, dy, z, GeoBlocks.CREEPVINE.getBlockInstance(), Pieces.TOP.ordinal(), 2);
+					world.func_147451_t(x, core, z);
 				}
 				else {
 					for (int dy = y1+1; dy < y2; dy++)
 						world.setBlock(x, dy, z, GeoBlocks.CREEPVINE.getBlockInstance(), Pieces.STEM.ordinal(), 2);
 					world.setBlock(x, y2, z, GeoBlocks.CREEPVINE.getBlockInstance(), Pieces.TOP_YOUNG.ordinal(), 2);
 				}
+				return true;
 			}
 		}
 		return false;
@@ -96,7 +119,7 @@ public class CreepvineGenerator implements RetroactiveGenerator {
 			seed = s;
 			Random rand = new Random(seed);
 			rand.nextBoolean();
-			mainNoise = (SimplexNoiseGenerator)new SimplexNoiseGenerator(seed).setFrequency(0.02);
+			mainNoise = (SimplexNoiseGenerator)new SimplexNoiseGenerator(seed).setFrequency(0.016);
 		}
 	}
 
