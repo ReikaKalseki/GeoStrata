@@ -32,6 +32,7 @@ import Reika.DragonAPI.Instantiable.Math.LobulatedCurve;
 import Reika.DragonAPI.Instantiable.Math.Noise.SimplexNoiseGenerator;
 import Reika.DragonAPI.Instantiable.Math.Noise.VoronoiNoiseGenerator;
 import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
+import Reika.DragonAPI.Interfaces.Callbacks.BlockPlaceCallback;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
 import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
@@ -53,6 +54,7 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 	private SimplexNoiseGenerator iceLayerNoiseSharp;
 
 	public boolean ignoreBiome = false;
+	public BlockPlaceCallback prePlaceCallback;
 
 	private DecimalPosition currentClosestZone;
 
@@ -84,8 +86,8 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 						int y = world.getTopSolidOrLiquidBlock(dx, dz)-1;
 						while (y > 0 && (ReikaWorldHelper.softBlocks(world, dx, y, dz) || world.getBlock(dx, y, dz).isWood(world, dx, y, dz) || world.getBlock(dx, y, dz).isLeaves(world, dx, y, dz)))
 							y--;
-						world.setBlock(dx, y, dz, Blocks.wool, m, 2);/*
-						world.setBlock(dx, 91, dz, Blocks.standing_sign);
+						setBlock(world, dx, y, dz, Blocks.wool, m, 2);/*
+						setBlock(world, dx, 91, dz, Blocks.standing_sign);
 						TileEntitySign te = (TileEntitySign)world.getTileEntity(dx, 91, dz);
 						te.signText[0] = String.format("%.1f", pos.getDistanceTo(x, pos.yCoord, z));*//*
 			}
@@ -193,7 +195,7 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 							}
 						}
 						if (flag2 && air == 1) {
-							c.setBlock(world, GeoBlocks.OREVEIN.getBlockInstance(), VeinType.ICE.ordinal(), 2);
+							this.setBlock(world, c.xCoord, c.yCoord, c.zCoord, GeoBlocks.OREVEIN.getBlockInstance(), VeinType.ICE.ordinal(), 2);
 							veins++;
 						}
 					}
@@ -202,13 +204,13 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 					Coordinate c = e.getKey();
 					int ty = e.getValue();
 					if (ty <= 82) {
-						world.setBlock(c.xCoord, ty, c.zCoord, Blocks.packed_ice, 1, 2);
+						this.setBlock(world, c.xCoord, ty, c.zCoord, Blocks.packed_ice, 1, 2);
 					}
 					if (sp.core.contains(c.to2D())) {
 						for (int dy = 50; dy < sp.lipYBottom; dy++) {
 							Block at = world.getBlock(c.xCoord, dy, c.zCoord);
 							if (at == Blocks.grass || at == Blocks.sand || at == Blocks.dirt) {
-								world.setBlock(c.xCoord, dy, c.zCoord, Blocks.packed_ice, 1, 2);
+								this.setBlock(world, c.xCoord, dy, c.zCoord, Blocks.packed_ice, 1, 2);
 							}
 						}
 					}
@@ -216,13 +218,13 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 						for (int dy = ty-1; dy >= 60; dy--) {
 							Block at = world.getBlock(c.xCoord, dy, c.zCoord);
 							if (at.isWood(world, c.xCoord, dy, c.zCoord) || at.isLeaves(world, c.xCoord, dy, c.zCoord)) {
-								world.setBlock(c.xCoord, dy, c.zCoord, Blocks.air);
+								this.setBlock(world, c.xCoord, dy, c.zCoord, Blocks.air);
 							}
 							else if (at == Blocks.grass || at == Blocks.sand || at == Blocks.dirt) {
 								Block ab = world.getBlock(c.xCoord, dy+1, c.zCoord);
 								if (ab == Blocks.snow_layer || ab.isAir(world, c.xCoord, dy+1, c.zCoord)) {
 									if (ab != Blocks.snow_layer)
-										world.setBlock(c.xCoord, dy+1, c.zCoord, Blocks.snow_layer);
+										this.setBlock(world, c.xCoord, dy+1, c.zCoord, Blocks.snow_layer);
 									snowCover.add(c.setY(dy+1));
 								}
 							}
@@ -255,6 +257,16 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 		iceLayerNoiseLarge = null;
 	}
 
+	private void setBlock(World world, int x, int y, int z, Block b) {
+		this.setBlock(world, x, y, z, b, 0, 3);
+	}
+
+	private void setBlock(World world, int x, int y, int z, Block b, int meta, int flags) {
+		if (prePlaceCallback != null)
+			prePlaceCallback.onPlacement(world, x, y, z, b, meta, flags);
+		world.setBlock(x, y, z, b, meta, flags);
+	}
+
 	private class ArcticSpire {
 
 		private final HashMap<Coordinate, Integer> columns = new HashMap();
@@ -276,7 +288,7 @@ public class ArcticSpiresGenerator implements RetroactiveGenerator {
 			Block at = world.getBlock(x, y, z);
 			if (at.isReplaceableOreGen(world, x, y, z, Blocks.stone))
 				return;
-			world.setBlock(x, y, z, b, m, 2);
+			instance.setBlock(world, x, y, z, b, m, 2);
 
 			Coordinate c = new Coordinate(x, 0, z);
 			Integer has = columns.get(c);
