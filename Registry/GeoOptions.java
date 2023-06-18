@@ -31,7 +31,7 @@ public enum GeoOptions implements BooleanConfig, IntegerConfig, DecimalConfig, S
 	VINEDENSITY("Glowing Vine Density", 1F),
 	RFDENSITY("Flux Crystal Density", 1F),
 	GEOORE("Ore Mode", 0),
-	RETROGEN("Retrogeneration", false),
+	//RETROGEN("Retrogeneration", false),
 	WAILA("Waila Overlay", true),
 	OPALFREQ("Opal Color Frequency", 1F),
 	OPALHUE("Opal Hue Offset (degrees)", 0),

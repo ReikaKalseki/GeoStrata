@@ -25,11 +25,14 @@ import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.event.sound.PlaySoundEvent17;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -45,6 +48,7 @@ import Reika.DragonAPI.Instantiable.Event.Client.ItemEffectRenderEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.RenderBlockAtPosEvent;
 import Reika.DragonAPI.Instantiable.Event.Client.RenderBlockAtPosEvent.BlockRenderWatcher;
 import Reika.DragonAPI.Instantiable.Event.Client.SinglePlayerLogoutEvent;
+import Reika.DragonAPI.Instantiable.IO.EnumSound;
 import Reika.DragonAPI.Instantiable.Math.Noise.Simplex3DGenerator;
 import Reika.DragonAPI.Libraries.ReikaEntityHelper;
 import Reika.DragonAPI.Libraries.IO.ReikaSoundHelper;
@@ -79,6 +83,8 @@ public class GeoEvents implements BlockRenderWatcher {
 
 	private final Simplex3DGenerator iceGlowNoise = (Simplex3DGenerator)new Simplex3DGenerator(45872187).setFrequency(0.25);
 
+	private long lastIceWormSoundTick;
+
 	private GeoEvents() {
 		RenderBlockAtPosEvent.addListener(this);
 	}
@@ -96,10 +102,14 @@ public class GeoEvents implements BlockRenderWatcher {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void applyArctic(PlayerTickEvent evt) {
-		if (evt.phase == Phase.START && ReikaEntityHelper.isInBiome(evt.player, GeoStrata.arcticSpires) && ReikaEntityHelper.getSkyLightAt(evt.player) >= 10) {
+		if (evt.phase == Phase.START && ReikaEntityHelper.isInBiome(evt.player, GeoStrata.arcticSpires) && ReikaEntityHelper.getSkyLightAt(evt.player) > 0) {
 			if (evt.player.worldObj.isRemote) {
-				if (DragonAPICore.rand.nextInt(800) == 0) {
-					//sound
+				if ((lastIceWormSoundTick <= 0 && evt.player.ticksExisted >= 60) || DragonAPICore.rand.nextInt(2400) == 0) {
+					long time = evt.player.worldObj.getTotalWorldTime();
+					if (time-lastIceWormSoundTick > 20*90) {
+						lastIceWormSoundTick = time;
+						ReikaSoundHelper.playClientSound(GeoStrata.proxy.iceWormTheme, evt.player, 1, 1, false);
+					}
 				}
 			}
 			else {
@@ -130,6 +140,25 @@ public class GeoEvents implements BlockRenderWatcher {
 			evt.green = 130/255F;
 			evt.blue = 80/255F;
 		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void changeArcticSpiresAmbience(PlaySoundEvent17 evt) {
+		World world = Minecraft.getMinecraft().theWorld;
+		if (world != null) {
+			int x = MathHelper.floor_float(evt.sound.getXPosF());
+			int y = MathHelper.floor_float(evt.sound.getYPosF());
+			int z = MathHelper.floor_float(evt.sound.getZPosF());
+			BiomeGenBase b = world.getBiomeGenForCoords(x, z);
+			if (b != null && b == GeoStrata.arcticSpires && ReikaEntityHelper.getSkyLightAt(Minecraft.getMinecraft().thePlayer) > 0) {
+				if (evt.name.contains("ambient.cave.cave")) {
+					evt.result = new EnumSound(GeoStrata.proxy.iceWormTheme, evt.sound, false);
+					lastIceWormSoundTick = world.getTotalWorldTime();
+				}
+			}
+		}
+		//}
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)

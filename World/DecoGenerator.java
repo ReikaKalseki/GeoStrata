@@ -78,7 +78,7 @@ public class DecoGenerator implements RetroactiveGenerator {
 
 	@Override
 	public String getIDString() {
-		return "Decorations";
+		return "GeoStrata Decorations";
 	}
 
 	public static enum Decorations {

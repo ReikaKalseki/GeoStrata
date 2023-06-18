@@ -9,6 +9,7 @@
  ******************************************************************************/
 package Reika.GeoStrata;
 
+import net.minecraft.client.audio.SoundCategory;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -26,7 +27,8 @@ public class GeoClient extends GeoCommon {
 
 	@Override
 	public void registerSounds() {
-
+		iceWormTheme.setSoundCategory(SoundCategory.MASTER);
+		sounds.register();
 	}
 
 	@Override

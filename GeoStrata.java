@@ -33,6 +33,7 @@ import Reika.DragonAPI.DragonAPICore;
 import Reika.DragonAPI.DragonOptions;
 import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.ASM.DependentMethodStripper.ModDependent;
+import Reika.DragonAPI.Auxiliary.VillageTradeHandler;
 import Reika.DragonAPI.Auxiliary.WorldGenInterceptionRegistry;
 import Reika.DragonAPI.Auxiliary.WorldGenInterceptionRegistry.InterceptionException;
 import Reika.DragonAPI.Auxiliary.Trackers.CommandableUpdateChecker;
@@ -47,6 +48,7 @@ import Reika.DragonAPI.Libraries.ReikaRecipeHelper;
 import Reika.DragonAPI.Libraries.ReikaRegistryHelper;
 import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.Registry.ReikaItemHelper;
+import Reika.DragonAPI.Libraries.Registry.ReikaOreHelper;
 import Reika.DragonAPI.ModInteract.DeepInteract.ReikaThaumHelper;
 import Reika.DragonAPI.ModInteract.ItemHandlers.ExtraUtilsHandler;
 import Reika.DragonAPI.ModInteract.ItemHandlers.IC2Handler;
@@ -61,6 +63,7 @@ import Reika.GeoStrata.Blocks.BlockVent.TileEntityVent;
 import Reika.GeoStrata.Blocks.BlockVent.VentType;
 import Reika.GeoStrata.Items.ItemBlockAnyGeoVariant;
 import Reika.GeoStrata.Items.ItemCreepvineSeeds;
+import Reika.GeoStrata.Items.ItemLowTempDiamonds;
 import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockGeneratorTypes;
@@ -129,6 +132,7 @@ public class GeoStrata extends DragonAPIMod {
 	public static GeoCommon proxy;
 
 	public static Item creepvineSeeds;
+	public static Item lowTempDiamonds;
 
 	public static BiomeArcticSpires arcticSpires;
 	public static BiomeKelpForest kelpForest;
@@ -196,6 +200,10 @@ public class GeoStrata extends DragonAPIMod {
 		creepvineSeeds.setUnlocalizedName("creepvineseeds");
 		GameRegistry.registerItem(creepvineSeeds, "creepvineseeds");
 
+		lowTempDiamonds = new ItemLowTempDiamonds();
+		lowTempDiamonds.setUnlocalizedName("lowtempdiamonds");
+		GameRegistry.registerItem(lowTempDiamonds, "lowtempdiamonds");
+
 		this.basicSetup(evt);
 		this.finishTiming();
 	}
@@ -209,16 +217,16 @@ public class GeoStrata extends DragonAPIMod {
 		RockGeneratorTypes type = RockGeneratorTypes.getType(GeoOptions.ROCKGEN.getString());
 		RockGenerator.instance.registerGenerationPattern(type.getGenerator());
 
-		RetroGenController.instance.addHybridGenerator(RockGenerator.instance, Integer.MIN_VALUE, GeoOptions.RETROGEN.getState());
-		RetroGenController.instance.addHybridGenerator(VentGenerator.instance, 0, GeoOptions.RETROGEN.getState());
-		RetroGenController.instance.addHybridGenerator(LavaRockGeneratorRedesign.instance, 0, GeoOptions.RETROGEN.getState());
-		RetroGenController.instance.addHybridGenerator(DecoGenerator.instance, 0, GeoOptions.RETROGEN.getState());
-		RetroGenController.instance.addHybridGenerator(CreepvineGenerator.instance, Integer.MIN_VALUE, GeoOptions.RETROGEN.getState());
-		RetroGenController.instance.addHybridGenerator(ArcticSpiresGenerator.instance, Integer.MIN_VALUE, GeoOptions.RETROGEN.getState());
-		RetroGenController.instance.addHybridGenerator(GlowCrystalGenerator.instance, Integer.MIN_VALUE, GeoOptions.RETROGEN.getState());
-		RetroGenController.instance.addHybridGenerator(GlowingVineGenerator.instance, 0, GeoOptions.RETROGEN.getState());
-		RetroGenController.instance.addHybridGenerator(RFCrystalGenerator.instance, 0, GeoOptions.RETROGEN.getState());
-		RetroGenController.instance.addHybridGenerator(VoidOpalGenerator.instance, 0, GeoOptions.RETROGEN.getState());
+		RetroGenController.instance.addHybridGenerator(RockGenerator.instance, Integer.MIN_VALUE);
+		RetroGenController.instance.addHybridGenerator(VentGenerator.instance, 0);
+		RetroGenController.instance.addHybridGenerator(LavaRockGeneratorRedesign.instance, 0);
+		RetroGenController.instance.addHybridGenerator(DecoGenerator.instance, 0);
+		RetroGenController.instance.addHybridGenerator(CreepvineGenerator.instance, Integer.MIN_VALUE);
+		RetroGenController.instance.addHybridGenerator(ArcticSpiresGenerator.instance, Integer.MIN_VALUE);
+		RetroGenController.instance.addHybridGenerator(GlowCrystalGenerator.instance, Integer.MIN_VALUE);
+		RetroGenController.instance.addHybridGenerator(GlowingVineGenerator.instance, 0);
+		RetroGenController.instance.addHybridGenerator(RFCrystalGenerator.instance, 0);
+		RetroGenController.instance.addHybridGenerator(VoidOpalGenerator.instance, 0);
 
 		Item.getItemFromBlock(Blocks.packed_ice).setHasSubtypes(true);
 
@@ -241,6 +249,7 @@ public class GeoStrata extends DragonAPIMod {
 		GeoRecipes.addRecipes();
 		proxy.registerRenderers();
 		OreDictionary.registerOre("seedCreepvine", creepvineSeeds);
+		OreDictionary.registerOre(ReikaOreHelper.DIAMOND.getDropOreDictName(), lowTempDiamonds);
 
 		MinecraftForge.EVENT_BUS.register(GeoEvents.instance);
 		FMLCommonHandler.instance().bus().register(GeoEvents.instance);
@@ -256,7 +265,10 @@ public class GeoStrata extends DragonAPIMod {
 		DonatorController.instance.registerMod(this, DonatorController.reikaURL);
 
 		if (ModList.CHROMATICRAFT.isLoaded()) {
-			this.addVoidOpalTrade();
+			this.addEDTrades();
+		}
+		else {
+			VillageTradeHandler.instance.addHandler(GeoTradeHandler.instance);
 		}
 
 		if (ModList.THERMALEXPANSION.isLoaded()) {
@@ -300,8 +312,9 @@ public class GeoStrata extends DragonAPIMod {
 	}
 
 	@ModDependent(ModList.CHROMATICRAFT)
-	private void addVoidOpalTrade() {
-		UATrades.instance.registerCommodityHook(new VoidOpalTrade());
+	private void addEDTrades() {
+		UATrades.instance.registerCommodityHook(new EDVoidOpalTrade());
+		UATrades.instance.registerCommodityHook(new EDLTDTrade());
 	}
 
 	@Override

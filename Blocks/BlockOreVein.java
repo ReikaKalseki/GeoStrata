@@ -255,6 +255,8 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 
 			GeoStrata.logger.log("Configs loaded.");
 		}
+
+		VeinType.ICE.ores.addEntry(new HarvestableOre(new ItemStack(GeoStrata.lowTempDiamonds), 20), 20);
 	}
 
 	private static void parseOreEntry(String type, LuaBlock b) throws NumberFormatException, IllegalArgumentException, IllegalStateException {

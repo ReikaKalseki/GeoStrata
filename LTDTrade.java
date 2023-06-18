@@ -15,15 +15,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.village.MerchantRecipe;
 
 import Reika.DragonAPI.Interfaces.PlayerSpecificTrade;
-import Reika.GeoStrata.Registry.GeoBlocks;
 
 
-public class VoidOpalTrade extends MerchantRecipe implements PlayerSpecificTrade {
+public class LTDTrade extends MerchantRecipe implements PlayerSpecificTrade {
 
-	public static final int STACK_SIZE = 24; //was 16
-
-	public VoidOpalTrade() {
-		super(new ItemStack(GeoBlocks.VOIDOPAL.getBlockInstance(), STACK_SIZE), new ItemStack(Items.emerald, 3, 0));
+	public LTDTrade() {
+		super(new ItemStack(GeoStrata.lowTempDiamonds), new ItemStack(Items.emerald, 12, 0));
 	}
 
 	@Override
@@ -38,12 +35,12 @@ public class VoidOpalTrade extends MerchantRecipe implements PlayerSpecificTrade
 
 	@Override
 	public boolean hasSameIDsAs(MerchantRecipe mr) {
-		return mr instanceof VoidOpalTrade;
+		return mr instanceof LTDTrade;
 	}
 
 	@Override
 	public boolean hasSameItemsAs(MerchantRecipe mr) {
-		return mr instanceof VoidOpalTrade;
+		return mr instanceof LTDTrade;
 	}
 
 }
