@@ -17,8 +17,10 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.fluids.FluidRegistry;
 
+import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.Interfaces.RetroactiveGenerator;
 import Reika.DragonAPI.Libraries.Java.ReikaRandomHelper;
+import Reika.DragonAPI.Libraries.MathSci.ReikaMathLibrary;
 import Reika.DragonAPI.Libraries.World.ReikaBiomeHelper;
 import Reika.DragonAPI.Libraries.World.ReikaWorldHelper;
 import Reika.GeoStrata.Blocks.BlockOreVein.VeinType;
@@ -131,7 +133,7 @@ public class DecoGenerator implements RetroactiveGenerator {
 					}
 					return true;
 				case OREVEINS:
-					int amt = 50;
+					int amt = 16;
 					int minY = 4;
 					int maxY = 56;
 					VeinType vein = VeinType.STONE;
@@ -142,19 +144,23 @@ public class DecoGenerator implements RetroactiveGenerator {
 					}
 					else if (world.provider.dimensionId == 1) {
 						vein = VeinType.END;
-						amt = 6;
+						amt = 3;
 						minY = 8;
 						maxY = 64;
 					}
 					if (!vein.isEnabled())
 						return false;
-					int dy = ReikaRandomHelper.getRandomBetween(minY, maxY, rand);
-					int dx = ReikaRandomHelper.getRandomPlusMinus(x, 8, rand);
-					int dz = ReikaRandomHelper.getRandomPlusMinus(z, 8, rand);
-					if (world.getBlock(dx, dy, dz) == vein.template) { //exact block since texture match
-						int adj = ReikaWorldHelper.countAdjacentBlocks(world, dx, dy, dz, Blocks.air, false);
-						if (adj > 0 && adj < 3)
-							world.setBlock(dx, dy, dz, GeoBlocks.OREVEIN.getBlockInstance(), vein.ordinal(), 3);
+					if (vein == VeinType.END && ModList.CHROMATICRAFT.isLoaded())
+						amt = ReikaMathLibrary.py3d(x, 0, z) <= 850 ? 0 : 6;
+					for (int i = 0; i < amt; i++) {
+						int dy = ReikaRandomHelper.getRandomBetween(minY, maxY, rand);
+						int dx = ReikaRandomHelper.getRandomPlusMinus(x, 8, rand);
+						int dz = ReikaRandomHelper.getRandomPlusMinus(z, 8, rand);
+						if (world.getBlock(dx, dy, dz) == vein.template) { //exact block since texture match
+							int adj = ReikaWorldHelper.countAdjacentBlocks(world, dx, dy, dz, Blocks.air, false);
+							if (adj > 0 && adj < 3)
+								world.setBlock(dx, dy, dz, GeoBlocks.OREVEIN.getBlockInstance(), vein.ordinal(), 3);
+						}
 					}
 					return true;
 			}
