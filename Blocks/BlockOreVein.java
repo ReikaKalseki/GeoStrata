@@ -2,10 +2,13 @@ package Reika.GeoStrata.Blocks;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map.Entry;
 import java.util.Random;
 
+import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 
 import net.minecraft.block.Block;
@@ -16,6 +19,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,6 +37,7 @@ import Reika.DragonAPI.ASM.DependentMethodStripper.ModDependent;
 import Reika.DragonAPI.Exception.InstallationException;
 import Reika.DragonAPI.Exception.RegistrationException;
 import Reika.DragonAPI.Exception.UserErrorException;
+import Reika.DragonAPI.IO.ReikaFileReader;
 import Reika.DragonAPI.Instantiable.Data.WeightedRandom;
 import Reika.DragonAPI.Instantiable.IO.CustomRecipeList;
 import Reika.DragonAPI.Instantiable.IO.LuaBlock;
@@ -70,6 +75,8 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 		public final Block template;
 		public final int templateMeta;
 		public Block containedBlockIcon;
+		private final String defaultBlockIcon;
+		private final HashMap<String, Float> defaultItems = new HashMap();
 		private final WeightedRandom<HarvestableOre> ores = new WeightedRandom();
 		public int maximumHarvestCycles = 0;
 		private boolean glowInDark = false;
@@ -83,6 +90,7 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 			template = b;
 			templateMeta = m;
 			containedBlockIcon = b2;
+			defaultBlockIcon = Block.blockRegistry.getNameForObject(b2);
 		}
 
 		public boolean isEnabled() {
@@ -91,6 +99,30 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 
 		public boolean glow() {
 			return this == ICE || glowInDark;
+		}
+
+		static {
+			STONE.addDefaultItem(Blocks.iron_ore, 10);
+			STONE.addDefaultItem(Blocks.gold_ore, 3);
+			STONE.addDefaultItem(Items.redstone, 5);
+			NETHER.addDefaultItem(Items.gold_nugget, 20);
+			NETHER.addDefaultItem(Items.blaze_powder, 5);
+			ICE.addDefaultItem(Blocks.ice, 30);
+			ICE.addDefaultItem(GeoStrata.lowTempDiamonds, 5);
+			END.addDefaultItem(Blocks.obsidian, 25);
+			END.addDefaultItem(Items.ender_pearl, 10);
+		}
+
+		private void addDefaultItem(Block b, float wt) {
+			defaultItems.put(Block.blockRegistry.getNameForObject(b), wt);
+		}
+
+		private void addDefaultItem(Item b, float wt) {
+			defaultItems.put(Item.itemRegistry.getNameForObject(b), wt);
+		}
+
+		private void addDefaultItem(ItemStack b, float wt) {
+			defaultItems.put(Item.itemRegistry.getNameForObject(b.getItem())+":"+b.getItemDamage(), wt);
 		}
 	}
 
@@ -255,8 +287,41 @@ public class BlockOreVein extends BlockContainer implements IWailaDataProvider {
 
 			GeoStrata.logger.log("Configs loaded.");
 		}
+		else {
+			oreData.defaultBlockType = VeinLuaBlock.class;
+			ArrayList<String> li = new ArrayList();
+			for (VeinType type : VeinType.list) {
+				String id = type.name().toLowerCase(Locale.ENGLISH);
+				VeinLuaBlock bk = new VeinLuaBlock(id, null, oreData);
+				bk.putData("harvestLimit", type == VeinType.NETHER ? 15 : 8-type.ordinal()*2);
+				bk.setComment("harvestLimit", "How many items to allow harvesting of before a vein block is depleted.");
+				bk.putData("type", id);
+				bk.putData("glowInDark", type == VeinType.ICE);
+				bk.putData("innerIcon", type.defaultBlockIcon);
+				bk.setComment("innerIcon", "The namespaced registry name of the block type to use as the inner-material icon. Optional.");
+				VeinLuaBlock items = new VeinLuaBlock("items", bk, oreData);
+				for (Entry<String, Float> e : type.defaultItems.entrySet()) {
+					VeinLuaBlock item = new VeinLuaBlock("{", items, oreData);
+					item.putData("item", e.getKey());
+					item.putData("weight", e.getValue());
+				}
+				oreData.addBlock(id, bk);
+				li.addAll(bk.writeToStrings());
+			}
+			ReikaFileReader.writeLinesToFile(f, li, true, Charsets.UTF_8);
+		}
 
 		VeinType.ICE.ores.addEntry(new HarvestableOre(new ItemStack(GeoStrata.lowTempDiamonds), 20), 20);
+	}
+
+	private static class VeinLuaBlock extends LuaBlock {
+
+		protected VeinLuaBlock(String n, LuaBlock parent, LuaBlockDatabase db) {
+			super(n, parent, db);
+			requiredElements.add("maximumHarvestCycles");
+			requiredElements.add("items");
+		}
+
 	}
 
 	private static void parseOreEntry(String type, LuaBlock b) throws NumberFormatException, IllegalArgumentException, IllegalStateException {
