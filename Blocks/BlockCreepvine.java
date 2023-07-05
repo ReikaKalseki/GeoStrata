@@ -1,6 +1,5 @@
 package Reika.GeoStrata.Blocks;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import net.minecraft.block.Block;
@@ -9,7 +8,6 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemShears;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.IIcon;
@@ -17,22 +15,20 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.IPlantable;
-import net.minecraftforge.common.IShearable;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import Reika.DragonAPI.ModList;
 import Reika.DragonAPI.Interfaces.Block.Submergeable;
 import Reika.DragonAPI.Libraries.ReikaPlayerAPI;
 import Reika.DragonAPI.Libraries.IO.ReikaSoundHelper;
-import Reika.DragonAPI.Libraries.Java.ReikaJavaLibrary;
 import Reika.DragonAPI.Libraries.Rendering.ReikaColorAPI;
 import Reika.GeoStrata.GeoStrata;
+import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoISBRH;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-public class BlockCreepvine extends Block implements Submergeable, IPlantable, IShearable {
+public class BlockCreepvine extends Block implements Submergeable, IPlantable/*, IShearable*/ {
 
 	private final IIcon[] rootIcons = new IIcon[2];
 	private final IIcon[] stemIcons = new IIcon[4];
@@ -180,6 +176,8 @@ public class BlockCreepvine extends Block implements Submergeable, IPlantable, I
 
 	@Override
 	public boolean canPlaceBlockAt(World world, int x, int y, int z) {
+		if (!isCreepvineOrWater(world, x, y+1, z, true) || countAdjacentWater(world, x, y, z, true) < 2)
+			return false;
 		Block b = world.getBlock(x, y-1, z);
 		int m = world.getBlockMetadata(x, y-1, z);
 		Pieces p = world.getBlock(x, y, z) == this ? Pieces.list[world.getBlockMetadata(x, y, z)] : Pieces.ROOT;
@@ -192,7 +190,7 @@ public class BlockCreepvine extends Block implements Submergeable, IPlantable, I
 			case CORE_5:
 				return b == this && m == Pieces.STEM_EMPTY.ordinal();
 			case ROOT:
-				return b == Blocks.dirt || b == Blocks.gravel || b == Blocks.clay || b == Blocks.sand || b.canSustainPlant(world, x, y-1, z, ForgeDirection.UP, this);
+				return canGrowOn(world, x, y-1, z);
 			case STEM:
 			case STEM_EMPTY:
 				return b == this && (m == Pieces.ROOT.ordinal() || m == p.ordinal());
@@ -302,7 +300,7 @@ public class BlockCreepvine extends Block implements Submergeable, IPlantable, I
 	public boolean isLeaves(IBlockAccess world, int x, int y, int z) {
 		return false;
 	}
-
+	/*
 	@Override
 	public boolean isShearable(ItemStack item, IBlockAccess world, int x, int y, int z) {
 		return true;
@@ -311,7 +309,7 @@ public class BlockCreepvine extends Block implements Submergeable, IPlantable, I
 	@Override
 	public ArrayList<ItemStack> onSheared(ItemStack item, IBlockAccess world, int x, int y, int z, int fortune) {
 		return ReikaJavaLibrary.makeListFrom(new ItemStack(this));
-	}*/
+	}*//*
 
 	@Override
 	public ArrayList<ItemStack> onSheared(ItemStack item, IBlockAccess world, int x, int y, int z, int fortune) {
@@ -325,5 +323,41 @@ public class BlockCreepvine extends Block implements Submergeable, IPlantable, I
 			return;
 		}
 		super.harvestBlock(world, ep, x, y, z, meta);
+	}
+	 */
+	public static boolean canGrowOn(World world, int x, int y, int z) {
+		Block b = world.getBlock(x, y, z);
+		return b == Blocks.dirt || b == Blocks.grass || b == Blocks.sand || b == Blocks.gravel || b == Blocks.clay;
+	}
+
+	private static boolean isCreepvineOrWater(World world, int x, int y, int z, boolean allowCreepvine) {
+		Block b = world.getBlock(x, y, z);
+		return ((b == Blocks.water || b == Blocks.flowing_water) && world.getBlockMetadata(x, y, z) == 0) || (allowCreepvine && b == GeoBlocks.CREEPVINE.getBlockInstance());
+	}
+
+	private static int countAdjacentWater(World world, int x, int y, int z, boolean allowCreepvine) {
+		int c = 0;
+		if (isCreepvineOrWater(world, x+1, y, z, allowCreepvine))
+			c++;
+		if (isCreepvineOrWater(world, x-1, y, z, allowCreepvine))
+			c++;
+		if (isCreepvineOrWater(world, x, y, z-1, allowCreepvine))
+			c++;
+		if (isCreepvineOrWater(world, x, y, z+1, allowCreepvine))
+			c++;
+		return c;
+	}
+
+	public static boolean hasSurroundingWater(World world, int x, int y, int z, boolean strict) {
+		for (int i = 0; i < 6; i++) {
+			if (!isCreepvineOrWater(world, x, y+i, z, !strict))
+				return false;
+			int thresh = i <= 1 ? 1 : 2;
+			if (strict)
+				thresh += 2;
+			if (countAdjacentWater(world, x, y, z, !strict) < thresh)
+				return false;
+		}
+		return true;
 	}
 }

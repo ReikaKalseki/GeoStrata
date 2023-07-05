@@ -53,6 +53,7 @@ import Reika.DragonAPI.ModInteract.DeepInteract.ReikaThaumHelper;
 import Reika.DragonAPI.ModInteract.ItemHandlers.ExtraUtilsHandler;
 import Reika.DragonAPI.ModInteract.ItemHandlers.IC2Handler;
 import Reika.DragonAPI.ModInteract.RecipeHandlers.ThermalRecipeHelper;
+import Reika.DragonAPI.ModRegistry.ModCropList;
 import Reika.GeoStrata.Blocks.BlockGlowingVines.TileGlowingVines;
 import Reika.GeoStrata.Blocks.BlockOreVein;
 import Reika.GeoStrata.Blocks.BlockOreVein.TileOreVein;
@@ -327,6 +328,8 @@ public class GeoStrata extends DragonAPIMod {
 		if (ModList.IC2.isLoaded()) {
 			this.addIC2Recipes();
 		}
+
+		ModCropList.addCustomCropType(new CreepvineHandler());
 
 		if (ModList.ROTARYCRAFT.isLoaded()) {
 			for (int i = 0; i < RockTypes.rockList.length; i++) {
