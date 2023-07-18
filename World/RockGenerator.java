@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -33,7 +33,7 @@ public class RockGenerator implements RetroactiveGenerator {
 
 	public static final RockGenerator instance = new RockGenerator();
 
-	private final int oreControl;
+	//private final int oreControl;
 
 	private final Comparator<RockGenerationPattern> genSorter = new RockGenComparator();
 
@@ -42,7 +42,7 @@ public class RockGenerator implements RetroactiveGenerator {
 	private final RockParent[] parents = new RockParent[RockTypes.rockList.length];
 
 	protected RockGenerator() {
-		oreControl = GeoOptions.GEOORE.getValue();
+		//oreControl = GeoOptions.GEOORE.getValue();
 
 		for (int i = 0; i < parents.length; i++) {
 			parents[i] = new RockParent(RockTypes.rockList[i]);
@@ -105,7 +105,7 @@ public class RockGenerator implements RetroactiveGenerator {
 				WorldgenProfiler.onRunGenerator(world, parents[geo.ordinal()], chunkX >> 4, chunkZ >> 4);
 		}
 	}
-
+	/*
 	public final boolean postConvertOres() {
 		return oreControl == 2;
 	}
@@ -117,7 +117,7 @@ public class RockGenerator implements RetroactiveGenerator {
 	public final boolean destroyOres() {
 		return oreControl == -1;
 	}
-
+	 */
 	@Override
 	public final boolean canGenerateAt(World world, int chunkX, int chunkZ) {
 		return true;

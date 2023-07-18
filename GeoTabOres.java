@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -17,7 +17,6 @@ import Reika.DragonAPI.Instantiable.GUI.SortedCreativeTab;
 import Reika.DragonAPI.Libraries.Registry.ReikaOreHelper;
 import Reika.DragonAPI.ModRegistry.ModOreList;
 import Reika.GeoStrata.Blocks.BlockOreTile;
-import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.RockTypes;
 
 import cpw.mods.fml.relauncher.Side;
@@ -34,7 +33,7 @@ public class GeoTabOres extends SortedCreativeTab {
 	public ItemStack getIconItemStack() {
 		int list = ReikaOreHelper.oreList.length+ModOreList.oreList.length;
 		int meta = BlockOreTile.getMetadataByTypes(RockTypes.BASALT, ReikaOreHelper.REDSTONE);
-		return new ItemStack(GeoBlocks.ORETILE.getBlockInstance(), 1, meta);
+		return null;//new ItemStack(GeoBlocks.ORETILE.getBlockInstance(), 1, meta);
 	}
 
 	@Override

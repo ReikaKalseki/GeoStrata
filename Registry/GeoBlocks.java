@@ -30,7 +30,6 @@ import Reika.GeoStrata.Blocks.BlockGeoStairs;
 import Reika.GeoStrata.Blocks.BlockGlowCrystal;
 import Reika.GeoStrata.Blocks.BlockGlowingVines;
 import Reika.GeoStrata.Blocks.BlockLavaRock;
-import Reika.GeoStrata.Blocks.BlockOreTile;
 import Reika.GeoStrata.Blocks.BlockOreVein;
 import Reika.GeoStrata.Blocks.BlockOreVein.VeinType;
 import Reika.GeoStrata.Blocks.BlockPartialBounds;
@@ -43,7 +42,6 @@ import Reika.GeoStrata.Blocks.BlockVent;
 import Reika.GeoStrata.Blocks.BlockVoidOpal;
 import Reika.GeoStrata.Items.ItemBlockAnyGeoVariant;
 import Reika.GeoStrata.Items.ItemBlockFluxCrystal;
-import Reika.GeoStrata.Items.ItemBlockGeoOre;
 import Reika.GeoStrata.Items.ItemBlockGlowingVines;
 import Reika.GeoStrata.Items.ItemBlockRockDeco;
 import Reika.GeoStrata.Items.ItemBlockVent;
@@ -54,7 +52,7 @@ public enum GeoBlocks implements BlockEnum {
 	VENT(BlockVent.class, ItemBlockVent.class, "Vent"),
 	STAIR(BlockGeoStairs.class, ItemBlockAnyGeoVariant.class, "Stairs"),
 	SLAB(BlockGeoSlab.class, ItemBlockAnyGeoVariant.class, "Slab"),
-	ORETILE(BlockOreTile.class, ItemBlockGeoOre.class, "Ore"),
+	//ORETILE(BlockOreTile.class, ItemBlockGeoOre.class, "Ore"),
 	LAVAROCK(BlockLavaRock.class, MetadataItemBlock.class, "Lava Rock"),
 	DECOGEN(BlockDecoGen.class,	MetadataItemBlock.class, "geo.decogen"),
 	GLOWCRYS(BlockGlowCrystal.class, MetadataItemBlock.class, "Luminous Crystal"),

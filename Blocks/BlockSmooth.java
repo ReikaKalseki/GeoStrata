@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -17,24 +17,19 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
-import Reika.DragonAPI.Libraries.World.ReikaBlockHelper;
 import Reika.GeoStrata.GeoStrata;
-import Reika.GeoStrata.TileEntityGeoOre;
 import Reika.GeoStrata.Base.RockBlock;
-import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
-import Reika.GeoStrata.World.RockGenerator;
 
 public class BlockSmooth extends RockBlock {
 
 	public BlockSmooth() {
 		super();
-		if (RockGenerator.instance.postConvertOres()) {
-			this.setTickRandomly(true);
-		}
+		//if (RockGenerator.instance.postConvertOres()) {
+		//	this.setTickRandomly(true);
+		//}
 	}
 
 	@Override
@@ -78,7 +73,7 @@ public class BlockSmooth extends RockBlock {
 		}
 
 	}*/
-
+	/*
 	@Override
 	public void updateTick(World world, int x, int y, int z, Random rand) {
 		if (RockGenerator.instance.postConvertOres() && rand.nextInt(100) == 0) {
@@ -96,7 +91,7 @@ public class BlockSmooth extends RockBlock {
 			}
 		}
 	}
-
+/*
 	private void checkAndConvertOre(World world, int x, int y, int z, Block b, int meta, RockTypes r) {
 		int count = 0;
 		for (int i = 0; i < 6; i++) {
@@ -116,7 +111,7 @@ public class BlockSmooth extends RockBlock {
 			world.setTileEntity(x, y, z, te);
 		}
 	}
-
+	 */
 	@Override
 	public void registerBlockIcons(IIconRegister ico) {
 		for (int i = 0; i < RockTypes.rockList.length; i++) {

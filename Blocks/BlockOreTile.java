@@ -48,7 +48,6 @@ import Reika.GeoStrata.GeoStrata;
 import Reika.GeoStrata.TileEntityGeoOre;
 import Reika.GeoStrata.Registry.GeoISBRH;
 import Reika.GeoStrata.Registry.RockTypes;
-import Reika.GeoStrata.World.RockGenerator;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -69,10 +68,10 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 		super(mat);
 		this.setHardness(Blocks.iron_ore.blockHardness);
 		this.setResistance(Blocks.iron_ore.blockResistance);
-		this.setCreativeTab(GeoStrata.tabGeoOres);
-		if (RockGenerator.instance.destroyOres()) {
-			this.setTickRandomly(true);
-		}
+		//this.setCreativeTab(GeoStrata.tabGeoOres);
+		//if (RockGenerator.instance.destroyOres()) {
+		//	this.setTickRandomly(true);
+		//}
 	}
 
 	private static void initSubs() {
@@ -181,7 +180,7 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 	public TileEntity createTileEntity(World world, int meta) {
 		return new TileEntityGeoOre();
 	}
-
+	/*
 	public void updateTick(World world, int x, int y, int z) {
 		if (RockGenerator.instance.destroyOres()) {
 			TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);
@@ -190,7 +189,7 @@ public class BlockOreTile extends Block implements SpecialOreBlock {
 			world.setBlock(x, y, z, b, meta, 3);
 		}
 	}
-
+	 */
 	@Override
 	public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int meta, int fortune) {
 		TileEntityGeoOre te = (TileEntityGeoOre)world.getTileEntity(x, y, z);

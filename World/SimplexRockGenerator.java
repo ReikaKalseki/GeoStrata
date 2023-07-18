@@ -16,12 +16,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 
 import Reika.DragonAPI.Instantiable.Math.Noise.Simplex3DGenerator;
-import Reika.DragonAPI.Libraries.World.ReikaBlockHelper;
-import Reika.GeoStrata.TileEntityGeoOre;
 import Reika.GeoStrata.API.RockGenerationPatterns.RockGenerationPattern;
 import Reika.GeoStrata.API.RockProofStone;
 import Reika.GeoStrata.Base.RockBlock;
-import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
@@ -55,13 +52,13 @@ public class SimplexRockGenerator implements RockGenerationPattern {
 							int meta = world.getBlockMetadata(x, y, z);
 							if (this.canGenerateIn(world, x, y, z, b, meta)) {
 								world.setBlock(x, y, z, gen.blockID, 0, 2);
-							}
+							}/*
 							else if (RockGenerator.instance.generateOres() && ReikaBlockHelper.isOre(b, meta)) {
 								TileEntityGeoOre te = new TileEntityGeoOre();
 								te.initialize(geo, b, meta);
 								world.setBlock(x, y, z, GeoBlocks.ORETILE.getBlockInstance());
 								world.setTileEntity(x, y, z, te);
-							}
+							}*/
 						}
 					}
 				}

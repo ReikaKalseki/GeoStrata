@@ -122,7 +122,7 @@ public class GeoStrata extends DragonAPIMod {
 	public static CreativeTabs tabGeoRock = new GeoTabRock(GeoStrata.MOD_NAME+" Stone");
 	public static CreativeTabs tabGeoStairs = new GeoTabStairs(GeoStrata.MOD_NAME+" Stairs");
 	public static CreativeTabs tabGeoSlabs = new GeoTabSlab(GeoStrata.MOD_NAME+" Slabs");
-	public static CreativeTabs tabGeoOres = new GeoTabOres(GeoStrata.MOD_NAME+" Ores");
+	//public static CreativeTabs tabGeoOres = new GeoTabOres(GeoStrata.MOD_NAME+" Ores");
 
 	public static ModLogger logger;
 

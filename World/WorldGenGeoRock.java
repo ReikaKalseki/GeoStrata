@@ -18,12 +18,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
 import Reika.DragonAPI.Interfaces.Subgenerator;
-import Reika.DragonAPI.Libraries.World.ReikaBlockHelper;
-import Reika.GeoStrata.TileEntityGeoOre;
 import Reika.GeoStrata.API.RockGenerationPatterns.RockGenerationPattern;
 import Reika.GeoStrata.API.RockProofStone;
 import Reika.GeoStrata.Base.RockBlock;
-import Reika.GeoStrata.Registry.GeoBlocks;
 import Reika.GeoStrata.Registry.GeoOptions;
 import Reika.GeoStrata.Registry.RockShapes;
 import Reika.GeoStrata.Registry.RockTypes;
@@ -91,13 +88,13 @@ public class WorldGenGeoRock extends WorldGenerator implements Subgenerator {
 										//long time2 = System.nanoTime();
 										//long dur = time2-time;
 										//ReikaJavaLibrary.pConsole(rock+" block set time for "+dx+", "+dy+", "+dz+": "+dur+" nanos: "+this.isInChunk(x, z, dx, dz));
-									}
+									}/*
 									else if (RockGenerator.instance.generateOres() && ReikaBlockHelper.isOre(b, meta)) {
 										TileEntityGeoOre te = new TileEntityGeoOre();
 										te.initialize(rock, b, meta);
 										world.setBlock(dx, dy, dz, GeoBlocks.ORETILE.getBlockInstance());
 										world.setTileEntity(dx, dy, dz, te);
-									}
+									}*/
 									//}
 								}
 							}
