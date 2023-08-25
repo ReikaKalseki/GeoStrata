@@ -1,8 +1,8 @@
 /*******************************************************************************
  * @author Reika Kalseki
- * 
+ *
  * Copyright 2017
- * 
+ *
  * All rights reserved.
  * Distribution of the software in any form is only allowed with
  * explicit, prior permission from the owner.
@@ -34,7 +34,11 @@ public class GeoConfig extends ControlledConfig {
 	}
 
 	public int getRockBand(RockTypes r) {
-		return rockBands[r.ordinal()].getData();
+		int y = rockBands[r.ordinal()].getData();
+		if (y == 0) {
+			y = (int)(r.minY*0.25+r.maxY*0.75);
+		}
+		return y;
 	}
 
 }
